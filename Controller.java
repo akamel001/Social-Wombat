@@ -7,11 +7,11 @@ class Controller extends Thread {
 	public Controller(){
 		//randomass contructor
 	}
-	
+
 	private static void initializeData(){
-		
+
 	}
-	
+
 	private static ServerSocket spawnSocketListener(){
 		ServerSocket ser = null;
 		try { 
@@ -26,10 +26,10 @@ class Controller extends Thread {
 
 	public static void main(String args[]){
 		initializeData();		
-		
+
 		//spin and wait for new communication 
 		while(true){
-			
+
 			ServerSocket s = spawnSocketListener();
 			try {
 				Socket soc = s.accept();
@@ -40,7 +40,7 @@ class Controller extends Thread {
 				System.out.println(e.getMessage());
 				System.out.println("An error occured while trying to accept a message from a socket");
 			}
-			
+
 
 		}
 	}
