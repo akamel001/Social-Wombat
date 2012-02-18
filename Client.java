@@ -33,7 +33,7 @@ public class Client {
                 break;
             default:
                 System.out.println("Invalid selection");
-                break; // This break is not really necessary
+                break;
         }
     }
 
