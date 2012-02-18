@@ -1,12 +1,18 @@
+import java.net.*;
+
 //Main controller class. Handles communication between data servers and clients
 
 class Controller extends Thread {
 
-	private initializeData(){
+	public Controller(){
+		//randomass contructor
+	}
+	
+	private static void initializeData(){
 		
 	}
 	
-	private ServerSocket spawnSocketListener(){
+	private static ServerSocket spawnSocketListener(){
 		ServerSocket ser = null;
 		try { 
 			ser = new ServerSocket(8020);
@@ -18,24 +24,24 @@ class Controller extends Thread {
 		return ser;
 	}
 
-	public static void main(args[]){
-		initializeData();
-		ServerSocket s = spawnSocketListener();
-		Socket soc = null;
-		String str = null;
-		Date d = null;
+	public static void main(String args[]){
+		initializeData();		
 		
 		//spin and wait for new communication 
-		while(True){
-			s.accept();
-			InputStream o = soc.getInputStream();
-			ObjectInput s = new ObjectInputStream(o);
-			str = (String) s.readObject();
-			d = (Date) s.readObject();
-			s.close();
+		while(true){
 			
-			//create a new socket to replace closed socket
-			spawnSocketListener();
+			ServerSocket s = spawnSocketListener();
+			try {
+				Socket soc = s.accept();
+				//spawn a thread to handle the object
+				SocketHandler p = new SocketHandler(soc);
+			    p.start();
+			} catch (Exception e){
+				System.out.println(e.getMessage());
+				System.out.println("This was a piece of crap");
+			}
+			
+
 		}
 	}
 
