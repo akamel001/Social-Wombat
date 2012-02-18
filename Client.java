@@ -5,16 +5,32 @@ import java.util.Scanner;
 public class Client {
 	
 	public static void sendReceive(String userName){
-		//TODO send to server and wait for recieve 
+		//TODO send to server and wait for receive 
+		
 	}
 	
-	public static void register() throws IOException{
+	public static String getUserName(){
 		BufferedReader in=new BufferedReader(new InputStreamReader(System.in));
 		System.out.print("Enter username: ");
-		String userName = in.readLine();
-		System.out.println("");
 		
-		sendReceive(userName);
+		String userName = null;
+		
+		try {
+			userName = in.readLine();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return userName;
+	}
+	
+	public static void register(){
+		
+		String uName = getUserName();
+		sendReceive(uName);
+	}
+	
+	public static void login(){
+		
 	}
 	
     public void run() {
@@ -42,7 +58,7 @@ public class Client {
                 register();
                 break;
             case 2:
-                System.out.println("Option 2 selected");
+                login();
                 break;
             case 3:
                 System.out.println("Exit selected");
