@@ -30,7 +30,8 @@ public class Client {
 	}
 	
 	public static void login(){
-		
+		String uName = getUserName();
+		sendReceive(uName);
 	}
 	
     public void run() {

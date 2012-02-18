@@ -5,13 +5,13 @@ import java.net.*;
 import java.util.Date;
 
 
-public class SocketHandler extends Thread{
+public class ServerSocketHandler extends Thread{
 	
 	Socket socket;
 	Message msg;
 
 	
-	public SocketHandler(Socket ser){
+	public ServerSocketHandler(Socket ser){
 		this.socket = ser;
 	}
 	
