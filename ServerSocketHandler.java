@@ -3,11 +3,7 @@ import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.net.*;
 
-<<<<<<< HEAD:ServerSocketHandler.java
 public class ServerSocketHandler extends Thread{
-=======
-public class SocketHandler extends Thread{
->>>>>>> 160c7052142c091f921df53d8b18c40f41ac6763:SocketHandler.java
 	
 	Socket socket;
 	Message msg;
