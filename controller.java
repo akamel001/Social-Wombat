@@ -38,7 +38,7 @@ class Controller extends Thread {
 			    p.start();
 			} catch (Exception e){
 				System.out.println(e.getMessage());
-				System.out.println("This was a piece of crap");
+				System.out.println("An error occured while trying to accept a message from a socket");
 			}
 			
 
