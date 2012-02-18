@@ -34,7 +34,7 @@ class Controller extends Thread {
 			try {
 				Socket soc = s.accept();
 				//spawn a thread to handle the object
-				SocketHandler p = new SocketHandler(soc);
+				ServerSocketHandler p = new ServerSocketHandler(soc);
 			    p.start();
 			} catch (Exception e){
 				System.out.println(e.getMessage());
