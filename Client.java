@@ -1,10 +1,18 @@
 import java.util.Scanner;
 
 public class Client {
-
+	
+	
+	public static void register(){
+		Scanner inStream = new Scanner(System.in);
+		System.out.println("Enter username: ");
+		String username = inStream.
+	}
+	
     public void run() {
+		
         
-        Scanner inStream = new Scanner(System.in);
+    	Scanner inStream = new Scanner(System.in);
          
         int input;
 
@@ -23,7 +31,7 @@ public class Client {
         // Switch construct
         switch (input) {
             case 1:
-                System.out.println("Option 1 selected");
+                register();
                 break;
             case 2:
                 System.out.println("Option 2 selected");
