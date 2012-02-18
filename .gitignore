@@ -1,8 +1,7 @@
 .classpath
 .DS_Store
 .project
-.class
 *.class
+.class
 bin
-
 Client.class
