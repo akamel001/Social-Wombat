@@ -1,4 +1,4 @@
 .classpath
 .DS_Store
 .project
-Client.class
+*.class
