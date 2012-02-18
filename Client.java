@@ -1,12 +1,20 @@
+import java.io.*;
+import java.net.*;
 import java.util.Scanner;
 
 public class Client {
 	
+	public static void sendReceive(String userName){
+		//TODO send to server and wait for recieve 
+	}
 	
-	public static void register(){
-		Scanner inStream = new Scanner(System.in);
-		System.out.println("Enter username: ");
-		String username = inStream.
+	public static void register() throws IOException{
+		BufferedReader in=new BufferedReader(new InputStreamReader(System.in));
+		System.out.print("Enter username: ");
+		String userName = in.readLine();
+		System.out.println("");
+		
+		sendReceive(userName);
 	}
 	
     public void run() {
