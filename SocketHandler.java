@@ -7,9 +7,9 @@ import java.util.Date;
 
 public class SocketHandler extends Thread{
 	
-	String str = null;
-	Date d = null;
 	Socket socket;
+	Message msg;
+
 	
 	public SocketHandler(Socket ser){
 		this.socket = ser;
@@ -18,10 +18,9 @@ public class SocketHandler extends Thread{
 	public void run(){
 		//do stuff with socket
 		try {
-			InputStream o = this.socket.getInputStream();
-			ObjectInput s = new ObjectInputStream(o);
-			this.str = (String) s.readObject();
-			this.d = (Date) s.readObject();
+			InputStream obj = this.socket.getInputStream();
+			ObjectInput o = new ObjectInputStream(obj);
+			this.msg = (String) o.readObject();
 		} catch (Exception e){
 			System.out.println(e.getMessage());
 			System.out.println("This was a piece of poo");
