@@ -7,9 +7,14 @@ public class Message{
 	private InetAddress recipient;
 	private String body;
 	private MessageType type;
+	private Cookie cookie;
 	
 	public enum MessageType {
 	    A, B 
+	}
+	
+	public Message(){
+		//
 	}
 	
 	public InetAddress getSender(){
@@ -28,22 +33,27 @@ public class Message{
 		return body;
 	}
 	
+	public Cookie getCookie(){
+		return cookie;
+	}
+	
 	public void setSender(InetAddress s){
 		sender = s;
 	}
 	
-	/*
-	public InetAddress getRecipient(){
-		return recipient;
+	public void setRecipient(InetAddress i){
+		recipient = i;
 	}
 	
-	public MessageType getType(){
-		return type;
+	public void setType(MessageType t){
+		type = t;
 	}
 	
-	public String getBody(){
-		return body;
+	public void getBody(String s){
+		body = s;
 	}
-	*/
 	
+	public void setCookie(Cookie c){
+		cookie = c;
+	}
 }
