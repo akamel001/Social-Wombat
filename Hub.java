@@ -8,7 +8,7 @@ class Hub extends Thread {
 	private static int SERVER_SOCKET = 5050;
 	private static boolean listening = true;
 	private static Object datastructures;
-	
+	//TODO: change datastructurs to a tuple. 
 	public Hub(){
 		//fill in constructor
 	}

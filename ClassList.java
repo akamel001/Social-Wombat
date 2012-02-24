@@ -163,6 +163,10 @@ public class ClassList {
 		}
 	}
 	
+	/*
+	 * Returns the InetAddress of the server that stores the information
+	 * for a given classroom
+	 */
 	public int getServer(String cid){
 		return -1;
 	}

@@ -35,6 +35,7 @@ public class HubSocketHandler extends Thread{
 	 */
 	private InetAddress getServer(Message msg, Object data){
 		//get classroom name from msg
+		msg.getClassroom_ID();
 		//table lookup of classrooms and their appropriate server
 		//return server
 		return null;

@@ -9,6 +9,7 @@ public class Message{
 	private MessageType type;
 	private Cookie cookie;
 	private int code;
+	private String classroom_id;
 	
 	public enum MessageType {
 	    Client_Authentication, Client_B, Server_A, Server_B 
@@ -42,6 +43,10 @@ public class Message{
 		return code;
 	}
 	
+	public String getClassroom_ID(){
+		return classroom_id;
+	}
+	
 	public void setSender(InetAddress s){
 		sender = s;
 	}
@@ -64,5 +69,9 @@ public class Message{
 	
 	public void setCode(int c){
 		code = c;
+	}
+	
+	public void setClassroom_ID(String s){
+		classroom_id = s;
 	}
 }
