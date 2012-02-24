@@ -5,12 +5,14 @@ import java.net.*;
 
 public class ServerSocketHandler extends Thread{
 	
+	Object data;
 	Socket socket;
 	Message msg;
 
 	
-	public ServerSocketHandler(Socket ser){
+	public ServerSocketHandler(Socket ser, Object data){
 		this.socket = ser;
+		this.data = data;
 	}
 	
 	public void run(){
