@@ -1,20 +1,27 @@
 import java.io.*;
 import java.net.*;
 
-public class ServerSocketHandler extends Thread{
+public class HubSocketHandler extends Thread{
 	
 	Object data;
 	Socket socket;
 	Message msg;
 
-	
-	public ServerSocketHandler(Socket ser, Object data){
+	public HubSocketHandler(Socket ser, Object data){
 		this.socket = ser;
 		this.data = data;
 	}
 	
 	public void run(){
-		//do stuff with socket
+		//Read and deserialize Message from Socket
+		
+		//Figure out whether it is a message from Client or Server
+		
+		//If from Client: Authenticate and forward to appropriate Server
+		
+		//If from Server: Forward to appropriate Client
+		
+		
 		try {
 			InputStream obj = this.socket.getInputStream();
 			ObjectInput o = new ObjectInputStream(obj);
