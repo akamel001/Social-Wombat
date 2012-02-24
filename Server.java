@@ -1,3 +1,4 @@
+
 import java.io.*;
 import java.net.*;
 
@@ -14,11 +15,14 @@ public class Server {
 		
 	}
 	
+	private static void initializeData(){
+		//Initialize any data structures we may need
+	}
 	
 	public static void main(String[] args) {
 		// Start Up the Server
 		// Initialize Data Structures
-		
+		initializeData();
 		
 		/* 
 		 * FROM THIS POINT ON IS CODE THAT WAITS FOR AND RESPONDS TO 
