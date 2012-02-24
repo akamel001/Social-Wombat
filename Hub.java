@@ -43,6 +43,7 @@ class Hub extends Thread {
 				//Spawn new ServerSocketHandler thread, we assume that the
 				//hub has directed this message to the correct Server
 				HubSocketHandler newRequest = new HubSocketHandler(clientSocket,datastructures);
+				System.out.println("Accepted a connection from: "+ clientSocket.getInetAddress());
 				//Starts running the new thread
 				newRequest.start(); 
 			} catch (IOException e) {

@@ -11,7 +11,7 @@ public class Message{
 	private final int code;
 	
 	public enum MessageType {
-	    A, B 
+	    Client_Authentication, Client_B, Server_A, Server_B 
 	}
 	
 	public Message(){
