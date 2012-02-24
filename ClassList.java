@@ -163,7 +163,10 @@ public class ClassList {
 		}
 	}
 	
-
+	public int getServer(String cid){
+		return -1;
+	}
+	
 	/*
 	 * Subclass used to store class/user/permission tuple.
 	 */
