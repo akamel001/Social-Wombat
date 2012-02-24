@@ -25,9 +25,6 @@ public class ServerSocketHandler extends Thread{
 		}
 	}
 	
-	public static void main(String[] args) {
-		// Start Up the Server
-
-	}
+	
 } 
 	

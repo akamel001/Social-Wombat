@@ -1,12 +1,13 @@
+import java.io.InputStream;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+
 
 public class HubSocketHandler {
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+	public void run(){
+		//do stuff with socket
+		
 	}
 
 }
