@@ -3,11 +3,12 @@ import java.net.*;
 import java.util.*;
 
 public class Message{
-	private InetAddress sender;
-	private InetAddress recipient;
-	private String body;
-	private MessageType type;
-	private Cookie cookie;
+	private final InetAddress sender;
+	private final InetAddress recipient;
+	private final String body;
+	private final MessageType type;
+	private final Cookie cookie;
+	private final int code;
 	
 	public enum MessageType {
 	    A, B 
@@ -37,6 +38,10 @@ public class Message{
 		return cookie;
 	}
 	
+	public int getCode(){
+		return code;
+	}
+	
 	public void setSender(InetAddress s){
 		sender = s;
 	}
@@ -49,11 +54,15 @@ public class Message{
 		type = t;
 	}
 	
-	public void getBody(String s){
+	public void setBody(String s){
 		body = s;
 	}
 	
 	public void setCookie(Cookie c){
 		cookie = c;
+	}
+	
+	public void setCode(int c){
+		code = c;
 	}
 }

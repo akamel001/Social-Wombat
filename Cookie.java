@@ -3,7 +3,7 @@ import java.util.Calendar;
 public class Cookie{
 	private final Calendar expTime;
 	private final String sessionKey;
-	
+		
 	public Cookie(String s){
 		expTime = Calendar.getInstance();
 		expTime.add(Calendar.MINUTE, 10);
