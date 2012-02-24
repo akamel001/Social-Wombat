@@ -2,6 +2,8 @@ import java.io.*;
 import java.net.*;
 
 public class HubSocketHandler extends Thread{
+	private static int CLIENT_SOCKET = 4444;
+	private static int SERVER_SOCKET = 5050;
 	
 	Object data;
 	Socket socket;
@@ -27,8 +29,24 @@ public class HubSocketHandler extends Thread{
 		return msg;
 	}
 	
-	private void sendMessage(Socket clientSocket, Message msg){
+	/*
+	 * Looks in the message and takes the classroom to find the correct server 
+	 * that the message should be sent to.
+	 */
+	private InetAddress getServer(Message msg, Object data){
+		//get classroom name from msg
+		//table lookup of classrooms and their appropriate server
+		//return server
+		return null;
 		
+	}
+	
+	/*
+	 * Constructs the message that needs to be forwarded 
+	 * and receives the response
+	 */
+	private void forwardToServer(Message msg){
+		//Open a socket connection with appropriate server
 	}
 	
 	/*
@@ -37,35 +55,38 @@ public class HubSocketHandler extends Thread{
 	 * server messages. Authentication responses to clients accept no response.
 	 */
 	public void run(){
+		boolean valid = true;
 		//Read and deserialize Message from Socket
 		Message msg = getMessage(this.socket);
 		if (msg == null){
 			System.out.println("Message was null");
+			valid = false; // Don't waste time on bad transmissions
 		}
-		//Handle the different types of client messages
-		switch(msg.getType()) {
-			case Client_Authentication: 
-				//TODO: Do authentication
-				
-				//TODO: Generate a message response
-				
-				//TODO: Send response
-				break;
-			case Client_B:
-				// TODO: Modify data
-				
-				// TODO: Create a message to forward to appropriate server
-				
-				// TODO: Send message and wait for server response
-				break;
-			default:
-				//TODO: Send request denied back to the client
-				break;
-				
+		if (valid){
+			//Handle the different types of client messages
+			switch(msg.getType()) {
+				case Client_Authentication: 
+					//TODO: Do authentication
+					
+					//TODO: Generate a message response
+					
+					//TODO: Send response
+					break;
+				case Client_B:
+					// TODO: Modify data
+					
+					// TODO: Create a message to forward to appropriate server
+					
+					// TODO: Send message and wait for server response
+					
+					// TODO: Server response is forwarded back to this.socket
+					break;
+				default:
+					//TODO: Send request denied back to the client
+					break;
+					
+			}
 		}
-		
-		
-		
 	}
 	
 	

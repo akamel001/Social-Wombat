@@ -1,22 +1,22 @@
-
 import java.io.*;
 import java.net.*;
 
-
 public class Server {
-	static boolean listening = true;
+	private static int CLIENT_SOCKET = 4444;
+	private static int SERVER_SOCKET = 5050;
+	private static boolean listening = true;
 	// TODO: data for now is any relevant data that needs to be passed to a
 	// handler thread
-	static Object datastructures;
+	private static Object datastructures;
 	
 	// Constructor
 	public Server() {
-		//Any start up constructor code here
+		//TODO: Any start up constructor code here
 		
 	}
 	
 	private static void initializeData(){
-		//Initialize any data structures we may need
+		//TODO: Initialize any data structures we may need
 	}
 	
 	public static void main(String[] args) {
@@ -32,9 +32,9 @@ public class Server {
 		ServerSocket serverSocket = null;
 		//Create and listen in on a port
 		try {
-			serverSocket = new ServerSocket(4444);
+			serverSocket = new ServerSocket(SERVER_SOCKET);
 		} catch (IOException e) {
-			System.out.println("Could not listen on port: 4444");
+			System.out.println("Could not listen on port: " + SERVER_SOCKET);
 			System.exit(-1);
 		}
 		
@@ -42,15 +42,15 @@ public class Server {
 		// ServerSocketHandler thread
 		while(listening){
 			try {
-				Socket clientSocket = serverSocket.accept();
+				Socket hub = serverSocket.accept();
 				//Spawn new ServerSocketHandler thread, we assume that the
 				//hub has directed this message to the correct Server
-				ServerSocketHandler newRequest = new ServerSocketHandler(clientSocket,datastructures);
+				ServerSocketHandler newRequest = new ServerSocketHandler(hub,datastructures);
 				//Starts running the new thread
 				newRequest.start(); 
 			} 
 			catch (IOException e) {
-				System.out.println("Accept failed on port: 4444");
+				System.out.println("Accept failed on port: " + SERVER_SOCKET);
 				System.exit(-1);
 			}
 		}

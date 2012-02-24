@@ -1,12 +1,13 @@
 import java.io.IOException;
 import java.net.*;
 
-
 //Hub class. Handles communication between data servers and clients
 // Hub does authentication and forwards messages to the servers. 
 class Hub extends Thread {
-	static boolean listening = true;
-	static Object datastructures;
+	private static int CLIENT_SOCKET = 4444;
+	private static int SERVER_SOCKET = 5050;
+	private static boolean listening = true;
+	private static Object datastructures;
 	
 	public Hub(){
 		//fill in constructor
@@ -26,12 +27,12 @@ class Hub extends Thread {
 		 * Client REQUESTS
 		 * */
 		
-		ServerSocket serverSocket = null;
+		ServerSocket hubSocket = null;
 		//Create and listen in on a port
 		try {
-			serverSocket = new ServerSocket(4444);
+			hubSocket = new ServerSocket(CLIENT_SOCKET);
 		} catch (IOException e) {
-			System.out.println("Could not listen on port: 4444");
+			System.out.println("Could not listen on port: " + CLIENT_SOCKET);
 			System.exit(-1);
 		}
 		
@@ -39,21 +40,21 @@ class Hub extends Thread {
 		// HubSocketHandler thread
 		while(listening){
 			try {
-				Socket clientSocket = serverSocket.accept();
+				Socket client = hubSocket.accept();
 				//Spawn new ServerSocketHandler thread, we assume that the
 				//hub has directed this message to the correct Server
-				HubSocketHandler newRequest = new HubSocketHandler(clientSocket,datastructures);
-				System.out.println("Accepted a connection from: "+ clientSocket.getInetAddress());
+				HubSocketHandler newRequest = new HubSocketHandler(client,datastructures);
+				System.out.println("Accepted a connection from: "+ client.getInetAddress());
 				//Starts running the new thread
 				newRequest.start(); 
 			} catch (IOException e) {
-				System.out.println("Accept failed on port: 4444");
+				System.out.println("Accept failed on port: " + CLIENT_SOCKET);
 				System.exit(-1);
 			}
 		}
 		//Close socket
 		try {
-			serverSocket.close();
+			hubSocket.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
