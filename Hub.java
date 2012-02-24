@@ -2,10 +2,10 @@ import java.io.IOException;
 import java.net.*;
 
 
-//Main controller class. Handles communication between data servers and clients
-// The hub that does authentication and forwards other messages to the servers. 
+//Hub class. Handles communication between data servers and clients
+// Hub does authentication and forwards messages to the servers. 
 class Hub extends Thread {
-
+	static boolean listening = true;
 	static Object datastructures;
 	
 	public Hub(){
@@ -17,42 +17,46 @@ class Hub extends Thread {
 	}
 
 	public static void main(String[] args) {
-		// Start Up the Server
+		// Start Up the Hub
 		// Initialize Data Structures
 		initializeData();
 		
 		/* 
 		 * FROM THIS POINT ON IS CODE THAT WAITS FOR AND RESPONDS TO 
-		 * HUB REQUESTS
+		 * Client REQUESTS
 		 * */
 		
 		ServerSocket serverSocket = null;
 		//Create and listen in on a port
 		try {
-			serverSocket = new ServerSocket(8020);
+			serverSocket = new ServerSocket(4444);
 		} catch (IOException e) {
-			System.out.println("Could not listen on port: 8020");
+			System.out.println("Could not listen on port: 4444");
 			System.exit(-1);
 		}
 		
 		// Spin until a new message is received and then spawn a 
-		// ServerSocketHandler thread
-		while(true){
+		// HubSocketHandler thread
+		while(listening){
 			try {
 				Socket clientSocket = serverSocket.accept();
 				//Spawn new ServerSocketHandler thread, we assume that the
 				//hub has directed this message to the correct Server
-				ServerSocketHandler newRequest = new ServerSocketHandler(clientSocket,datastructures);
+				HubSocketHandler newRequest = new HubSocketHandler(clientSocket,datastructures);
 				//Starts running the new thread
 				newRequest.start(); 
-			} 
-			catch (IOException e) {
-				System.out.println("Accept failed on port: 8020");
+			} catch (IOException e) {
+				System.out.println("Accept failed on port: 4444");
 				System.exit(-1);
 			}
-
 		}
-		
+		//Close socket
+		try {
+			serverSocket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
 	}
 
 }

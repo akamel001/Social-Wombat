@@ -4,7 +4,7 @@ import java.net.*;
 
 
 public class Server {
-	
+	static boolean listening = true;
 	// TODO: data for now is any relevant data that needs to be passed to a
 	// handler thread
 	static Object datastructures;
@@ -40,7 +40,7 @@ public class Server {
 		
 		// Spin until a new message is received and then spawn a 
 		// ServerSocketHandler thread
-		while(true){
+		while(listening){
 			try {
 				Socket clientSocket = serverSocket.accept();
 				//Spawn new ServerSocketHandler thread, we assume that the
@@ -53,7 +53,13 @@ public class Server {
 				System.out.println("Accept failed on port: 4444");
 				System.exit(-1);
 			}
-
+		}
+		//Close socket
+		try {
+			serverSocket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 	}
