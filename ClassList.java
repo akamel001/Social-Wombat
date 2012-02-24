@@ -4,6 +4,7 @@ import java.util.*;
  * @author cd
  *
  */
+
 public class ClassList {
 	private List <Permissions> classList;  // NOTE: CHANGE TO TWO SYNCHRONIZED MAPS -- one keyed on classes, the other on users!!!!
 
@@ -84,6 +85,10 @@ public class ClassList {
 		return -1;
 	}
 	
+	/*
+	 * Adds a class to the list. The passed userId is set as the owner. 
+	 * If the class exists, returns -1.
+	 */
 	public int addClass(String cid, String uid){
 		if (containsClass(cid)){
 			return -1;
@@ -94,6 +99,10 @@ public class ClassList {
 		return -1;
 	}
 	
+	/*
+	 * Adds a user/class pair with the default permissions (0).
+	 * If a user/class pair exists, returns -1.
+	 */
 	public int addUser(String cid, String uid){
 		if (containsUser(cid, uid)){
 			return -1;
@@ -104,11 +113,18 @@ public class ClassList {
 		return -1;
 	}
 	
+	/*
+	 * Changes permissions on a user/class pair.
+	 * If the new value is out of range (or if n=3, which would change permissions
+	 * to owner), returns -1.
+	 */
 	public int changePermissions(String cid, String uid, int n){
+		if(n<0 || n>2)
+			return -1;
 		synchronized(classList) {
 			Iterator<Permissions> i = classList.iterator(); 
 			while (i.hasNext()){
-				if (i.next().getClassId() == cid && i.next().getUserId() ==uid){
+				if (i.next().getClassId() == cid && i.next().getUserId() == uid){
 					i.next().setPermission(n);
 					return 0;
 				}
@@ -120,27 +136,45 @@ public class ClassList {
 	/*
 	 * Removes all tuples containing a class from the list.
 	 */
-	public boolean removeClass(String cid){
-		return false;
+	public int removeClass(String cid){
+		synchronized(classList) {
+			Iterator<Permissions> i = classList.iterator(); 
+			while (i.hasNext()){
+				if (i.next().getClassId() == cid){
+					classList.remove(i.next());
+				}
+			}
+			return 0;
+		}
 	}
 
 	/*
 	 * Removes all tuples containing a user from the list.
 	 */
-	public boolean removeUser(String uid){
-		return false;
+	public int removeUser(String uid){
+		synchronized(classList) {
+			Iterator<Permissions> i = classList.iterator(); 
+			while (i.hasNext()){
+				if (i.next().getUserId() == uid){
+					classList.remove(i.next());
+				}
+			}
+			return 0;
+		}
 	}
-	
 	
 
 	/*
-	 * 
+	 * Subclass used to store class/user/permission tuple.
 	 */
 	private class Permissions{
 		final private String classId;
 		final private String userId;
 		private int per;
 
+		/*
+		 * Prohibits creation of a Permissions object without a class and user id.
+		 */
 		private Permissions(){
 			classId = null;
 			userId = null;
@@ -174,8 +208,17 @@ public class ClassList {
 			return per;
 		}
 
-		public void setPermission(int p){
-			per = p;
+		/*
+		 * Sets permissions to the passed value. Does not allow change to be either out of
+		 * range, or for permission to be set to 3 (owner).
+		 */
+		public int setPermission(int p){
+			if (p<-1 || p>2)
+				return -1;
+			else{
+				per = p;
+				return p;
+			}
 		}
 	}
 }
