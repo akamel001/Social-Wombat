@@ -1,11 +1,11 @@
 import java.net.*;
 
 //Main controller class. Handles communication between data servers and clients
-
+// The hub that does authentication and forwards other messages to the servers. 
 class Controller extends Thread {
 
 	public Controller(){
-		//randomass contructor
+		//fill in constructor
 	}
 
 	private static void initializeData(){

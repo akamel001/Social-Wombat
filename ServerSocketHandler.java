@@ -24,5 +24,10 @@ public class ServerSocketHandler extends Thread{
 			System.out.println("Deserializing message failed.");
 		}
 	}
+	
+	public static void main(String[] args) {
+		// Start Up the Server
+
+	}
 } 
 	
