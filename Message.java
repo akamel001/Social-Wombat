@@ -3,12 +3,12 @@ import java.net.*;
 import java.util.*;
 
 public class Message{
-	private final InetAddress sender;
-	private final InetAddress recipient;
-	private final String body;
-	private final MessageType type;
-	private final Cookie cookie;
-	private final int code;
+	private InetAddress sender;
+	private InetAddress recipient;
+	private String body;
+	private MessageType type;
+	private Cookie cookie;
+	private int code;
 	
 	public enum MessageType {
 	    Client_Authentication, Client_B, Server_A, Server_B 
