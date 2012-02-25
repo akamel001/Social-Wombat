@@ -10,6 +10,7 @@ class Hub extends Thread {
 	
 	static ClassList classList;
 	static UserList userList;
+	static ServerList serverList;
 	
 	public Hub(){
 		// Constructor
@@ -71,7 +72,7 @@ class Hub extends Thread {
 				Socket client = hubSocket.accept();
 				//Spawn new ServerSocketHandler thread, we assume that the
 				//hub has directed this message to the correct Server
-				HubSocketHandler newRequest = new HubSocketHandler(client,classList,userList);
+				HubSocketHandler newRequest = new HubSocketHandler(client,classList,userList,serverList);
 				System.out.println("Accepted a connection from: "+ client.getInetAddress());
 				//Starts running the new thread
 				newRequest.start(); 

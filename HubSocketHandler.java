@@ -7,15 +7,17 @@ public class HubSocketHandler extends Thread{
 	
 	ClassList classList;
 	UserList userList;
+	ServerList serverList;
 	Socket socket;
 
 	/*
 	 * A handler thread that is spawned for each message sent to a socket.
 	 */
-	public HubSocketHandler(Socket ser, ClassList classList, UserList userList){
+	public HubSocketHandler(Socket ser, ClassList classList, UserList userList, ServerList serverList){
 		this.socket = ser;
 		this.classList = classList;
 		this.userList = userList;
+		this.serverList = serverList;
 	}
 	
 	/*
@@ -53,7 +55,7 @@ public class HubSocketHandler extends Thread{
 	
 	/*
 	 * Looks in the message and takes the classroom to find the correct server 
-	 * that the message should be sent to.
+	 * (by InetAddress) that the message should be sent to.
 	 */
 	private InetAddress getServer(Message msg, Object data){
 		//get classroom name from msg
@@ -61,7 +63,7 @@ public class HubSocketHandler extends Thread{
 		//table lookup of classrooms and their appropriate server
 		int server = classList.getClassServer(classID);
 		//return server
-		return null;
+		return serverList.getAddress(server);
 		
 	}
 	
