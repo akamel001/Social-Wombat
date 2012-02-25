@@ -1,231 +1,151 @@
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+
 
 /**
- * @author cd
+ * ClassList is a list of ClassData objects.
+ * ClassData objects store a class' associated server info and user permissions.
+ * (ClassData objects do NOT contain any posts, threads or other content.)
+ * 
+ * @author chris
  *
  */
-
 public class ClassList {
-	private List <Permissions> classList;  // NOTE: CHANGE TO TWO SYNCHRONIZED MAPS -- one keyed on classes, the other on users!!!!
 
-	public ClassList(){
-		List<Permissions> classList = Collections.synchronizedList(new ArrayList<Permissions>());
-	}
-
-	/*
-	 * Returns a string containing a list of all classes for which a user has permissions.
+	private Map<String, ClassData> classList;
+	
+	/**
+	 * Constructor for the ClassList.
 	 */
-	public String getUserPermissions(String id){
-		String out = ""; 
-		synchronized(classList) {
-			Iterator<Permissions> i = classList.iterator();
+	public ClassList(){
+		classList = Collections.synchronizedMap(new HashMap<String, ClassData>());
+	}
+	
+	/**
+	 * Adds a ClassRoom to the list. NOTE: if the classroom name is not unique, the class
+	 * will not be added and -1 will be returned.
+	 * @param c
+	 * @return
+	 */
+	public int addClass(ClassData c){
+		if (classList.containsKey(c.getClassName()))
+			return -1;
+		else{
+			classList.put(c.getClassName(), c);
+			return 1;
+		}
+	}
+	
+	/**
+	 * Removes a ClassRoom from the list. Returns -1 if classroom does not exist.
+	 * @param c
+	 * @return
+	 */
+	public int removeClass(String c){
+		if( classList.remove(c)!=null)
+			return 1;
+		else
+			return -1;
+	}
+	
+	/**
+	 * Returns the permissions for a user with regards to a particular classroom.
+	 * @param user The user's name
+	 * @param c The name of the classroom
+	 * @return User permissions or -1 if user has no permissions for that classroom
+	 */
+	public int getUserPermissions(String user, String c){
+		return classList.get(c).getPermissions(user);
+	}
+	
+	/**
+	 * Returns a newline-separated String of all pending users for the selected ClassRoom
+	 * @param c the name of the ClassRoom
+	 * @return
+	 */
+	public String pendingToString(String c){
+		ClassData temp = classList.get(c);
+		if (temp==null)
+			return null;
+		else
+			return temp.pendingToString();
+	}
+	
+	/**
+	 * Returns a newline-separated String of ALL users (as well as their permissions) for a selected classroom.
+	 * @param c the name of the classroom
+	 * @return
+	 */
+	public String usersToString(String c){
+		ClassData temp = classList.get(c);
+		if (temp==null)
+			return null;
+		else
+			return temp.allUsersToString();
+	}
+	
+	public String classesToString(String user){
+		String out = System.getProperty("line.separator") + "Class List:";
+		boolean found = false;
+		Set<String> s = classList.keySet();
+		synchronized(classList) {  
+			Iterator<String> i = s.iterator(); 
 			while (i.hasNext()){
-				if (i.next().getUserId() == id && i.next().getPermission()>=0){
-					out += i.next().getClassId() + " - ";
-					switch (i.next().getPermission()) {
+				String className = i.next();
+				ClassData cd =	classList.get(className);
+				int per = cd.getPermissions(user);
+				if (per>0 && per<4){
+					found = true;					
+					out += System.getProperty("line.separator") + " - " + cd.getClassName();
+					switch (per) {
 					case 0: 
-						out += "Pending";
+						out += " (Pending)";
 						break;
 					case 1: 
-						out += "Enrolled";
+						out += " (Enrolled)";
 						break;
 					case 2: 
-						out += "TA";
+						out += " (TA)";
 						break;
 					case 3: 
-						out += "Instructor";
+						out += " (Instructor)";
 						break;
 					}
-					out += System.getProperty("line.separator");
 				}
 			}
 		}
+		if (!found)
+			out += System.getProperty("line.separator") + " - [none available]";
 		return out;
 	}
-
-	/*
-	 * Returns true if there is a single tuple containing the class id
-	 */
-	public boolean containsClass(String cid){
-		synchronized(classList) {
-			Iterator<Permissions> i = classList.iterator(); // Must be in synchronized block
-			while (i.hasNext()){
-				if (i.next().getClassId() == cid)
-					return true;
-			}
-		}
-		return false;
-	}
 	
-	/*
-	 * Returns true if there is a tuple with the class id/user id pair.
+	/**
+	 * Returns the number of the server on which the passed class is stored
+	 * @param c the name of the ClassRoom
+	 * @return
 	 */
-	public boolean containsUser(String cid, String uid){
-		synchronized(classList) {
-			Iterator<Permissions> i = classList.iterator(); // Must be in synchronized block
-			while (i.hasNext()){
-				if (i.next().getClassId() == cid && i.next().getUserId() ==uid)
-					return true;
-			}
-		}
-		return false;
-	}
-
-	/*
-	 * Returns a user's permissions for a class
-	 */
-	public int getClassPermissions(String cid, String uid){
-		synchronized(classList) {
-			Iterator<Permissions> i = classList.iterator(); // Must be in synchronized block
-			while (i.hasNext()){
-				if (i.next().getClassId() == cid && i.next().getUserId() == uid)
-					return i.next().getPermission();
-			}
-		}
-		return -1;
-	}
-	
-	/*
-	 * Adds a class to the list. The passed userId is set as the owner. 
-	 * If the class exists, returns -1.
-	 */
-	public int addClass(String cid, String uid){
-		if (containsClass(cid)){
+	public int getClassServer(String c){
+		ClassData temp = classList.get(c);
+		if (temp==null)
 			return -1;
-		}
-		else{
-			classList.add(new Permissions(cid, uid, 3));
-		}
-		return -1;
+		else
+			return temp.getClassServer();
 	}
 	
-	/*
-	 * Adds a user/class pair with the default permissions (0).
-	 * If a user/class pair exists, returns -1.
+	/**Returns the port associated with a classroom
+	 * 
+	 * @param c The name of the classroom
+	 * @return Returns port for the class, -1 if class is not present in class list
 	 */
-	public int addUser(String cid, String uid){
-		if (containsUser(cid, uid)){
+	public int getClassPort(String c){
+		ClassData temp = classList.get(c);
+		if (temp==null)
 			return -1;
-		}
-		else{
-			classList.add(new Permissions(cid, uid, 0));
-		}
-		return -1;
-	}
-	
-	/*
-	 * Changes permissions on a user/class pair.
-	 * If the new value is out of range (or if n=3, which would change permissions
-	 * to owner), returns -1.
-	 */
-	public int changePermissions(String cid, String uid, int n){
-		if(n<0 || n>2)
-			return -1;
-		synchronized(classList) {
-			Iterator<Permissions> i = classList.iterator(); 
-			while (i.hasNext()){
-				if (i.next().getClassId() == cid && i.next().getUserId() == uid){
-					i.next().setPermission(n);
-					return 0;
-				}
-			}	
-		}
-		return -1;
-	}
-	
-	/*
-	 * Removes all tuples containing a class from the list.
-	 */
-	public int removeClass(String cid){
-		synchronized(classList) {
-			Iterator<Permissions> i = classList.iterator(); 
-			while (i.hasNext()){
-				if (i.next().getClassId() == cid){
-					classList.remove(i.next());
-				}
-			}
-			return 0;
-		}
-	}
-
-	/*
-	 * Removes all tuples containing a user from the list.
-	 */
-	public int removeUser(String uid){
-		synchronized(classList) {
-			Iterator<Permissions> i = classList.iterator(); 
-			while (i.hasNext()){
-				if (i.next().getUserId() == uid){
-					classList.remove(i.next());
-				}
-			}
-			return 0;
-		}
-	}
-	
-	/*
-	 * Returns the InetAddress of the server that stores the information
-	 * for a given classroom
-	 */
-	public int getServer(String cid){
-		return -1;
-	}
-	
-	/*
-	 * Subclass used to store class/user/permission tuple.
-	 */
-	private class Permissions{
-		final private String classId;
-		final private String userId;
-		private int per;
-
-		/*
-		 * Prohibits creation of a Permissions object without a class and user id.
-		 */
-		private Permissions(){
-			classId = null;
-			userId = null;
-			per = 0;
-		}
-
-		public Permissions(String c, String u, int p){
-			classId = c;
-			userId = u;
-			if (p<-1 || p>3)
-				per = 0;
-			else
-				per = p;
-		}
-
-		public Permissions(String c, String u){
-			classId = c;
-			userId = u;
-			per = -1;
-		}
-
-		public String getUserId(){
-			return userId;
-		}
-
-		public String getClassId(){
-			return classId;
-		}
-
-		public int getPermission(){
-			return per;
-		}
-
-		/*
-		 * Sets permissions to the passed value. Does not allow change to be either out of
-		 * range, or for permission to be set to 3 (owner).
-		 */
-		public int setPermission(int p){
-			if (p<-1 || p>2)
-				return -1;
-			else{
-				per = p;
-				return p;
-			}
-		}
+		else
+			return temp.getClassPort();
 	}
 }

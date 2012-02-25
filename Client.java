@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Client {
 	
-	public static void sendReceive(String userName){
+	public static void sendReceive(Message message){
 		//TODO send to server and wait for receive 
 		
 	}
@@ -24,15 +24,20 @@ public class Client {
 		return userName;
 	}
 	
-	public static void register(){
-		
+	public static void handleRegister(){
 		String uName = getUserName();
-		sendReceive(uName);
+		Message message = new Message();
+		message.setType(Message.MessageType.Client_Authentication);
+		message.setBody(uName);
+		sendReceive(message);
 	}
 	
-	public static void login(){
+	public static void handleLogin(){
 		String uName = getUserName();
-		sendReceive(uName);
+		Message message = new Message();
+		message.setType(Message.MessageType.Client_Authentication);
+		message.setBody(uName);
+		sendReceive(message);
 	}
 	
     public void run() {
@@ -57,10 +62,10 @@ public class Client {
         // Switch construct
         switch (input) {
             case 1:
-                register();
+                handleRegister();
                 break;
             case 2:
-                login();
+                handleLogin();
                 break;
             case 3:
                 System.out.println("Exit selected");

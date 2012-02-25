@@ -18,60 +18,52 @@ public class Message{
 	public Message(){
 		//
 	}
-	
-	public InetAddress getSender(){
+
+	public InetAddress getSender() {
 		return sender;
 	}
-	
-	public InetAddress getRecipient(){
+
+	public void setSender(InetAddress sender) {
+		this.sender = sender;
+	}
+
+	public InetAddress getRecipient() {
 		return recipient;
 	}
-	
-	public MessageType getType(){
-		return type;
+
+	public void setRecipient(InetAddress recipient) {
+		this.recipient = recipient;
 	}
-	
-	public String getBody(){
+
+	public String getBody() {
 		return body;
 	}
-	
-	public Cookie getCookie(){
+
+	public void setBody(String body) {
+		this.body = body;
+	}
+
+	public MessageType getType() {
+		return type;
+	}
+
+	public void setType(MessageType type) {
+		this.type = type;
+	}
+
+	public Cookie getCookie() {
 		return cookie;
 	}
-	
-	public int getCode(){
+
+	public void setCookie(Cookie cookie) {
+		this.cookie = cookie;
+	}
+
+	public int getCode() {
 		return code;
 	}
-	
-	public String getClassroom_ID(){
-		return classroom_id;
-	}
-	
-	public void setSender(InetAddress s){
-		sender = s;
-	}
-	
-	public void setRecipient(InetAddress i){
-		recipient = i;
-	}
-	
-	public void setType(MessageType t){
-		type = t;
-	}
-	
-	public void setBody(String s){
-		body = s;
-	}
-	
-	public void setCookie(Cookie c){
-		cookie = c;
-	}
-	
-	public void setCode(int c){
-		code = c;
-	}
-	
-	public void setClassroom_ID(String s){
-		classroom_id = s;
+
+	public void setCode(int code) {
+		this.code = code;
 	}
 }
