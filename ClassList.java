@@ -88,6 +88,49 @@ public class ClassList {
 			return temp.allUsersToString();
 	}
 	
+	/**
+	 * Returns a Map containing all users in a classroom.
+	 * The key is the user's name, the value is their permissions.
+	 * @param c
+	 * @return
+	 */
+	public Map<String, Integer> getClassEnrollment(String c){
+		ClassData temp = classList.get(c);
+		if (temp !=null)	
+			return temp.getEnrolled();
+		else
+			return null;
+	}
+	
+	/**
+	 * Returns A Map of all of the classes a user is enrolled in (pending included)
+	 * @param user
+	 * @return Returns a Map containing all of the classes a user is enrolled in, null if none exist.
+	 */
+	public Map<String, Integer> getUserEnrollment(String user){
+		Map<String, Integer> out = Collections.synchronizedMap(new HashMap<String, Integer>());
+		boolean found = false;
+		Set<String> s = classList.keySet();
+		synchronized(classList) {  
+			Iterator<String> i = s.iterator(); 
+			while (i.hasNext()){
+				String className = i.next();
+				ClassData cd =	classList.get(className);
+				int per = cd.getPermissions(user);
+				if (per>-1){
+					found = true;
+					out.put(cd.getClassName(), per);
+				}
+			}
+		}
+		if (found)
+			return out;
+		else
+			return null;
+	}
+	
+	
+	
 	public String classesToString(String user){
 		String out = System.getProperty("line.separator") + "Class List:";
 		boolean found = false;

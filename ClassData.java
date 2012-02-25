@@ -34,6 +34,14 @@ public class ClassData{
 		server = -1;
 		port = -1;
 	}
+	
+	/**
+	 * Returns a Map containg all of the users enrolled in the class.
+	 * @return
+	 */
+	public Map<String, Integer> getEnrolled(){
+		return userList;
+	}
 
 	/**
 	 * Sets the name of the class.
