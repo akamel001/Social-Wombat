@@ -5,12 +5,19 @@ public class HubSocketHandler extends Thread{
 	private static int CLIENT_SOCKET = 4444;
 	private static int SERVER_SOCKET = 5050;
 	
-	Object data;
+	ClassList classList;
+	UserList userList;
+	ServerList serverList;
 	Socket socket;
 
-	public HubSocketHandler(Socket ser, Object data){
+	/*
+	 * A handler thread that is spawned for each message sent to a socket.
+	 */
+	public HubSocketHandler(Socket ser, ClassList classList, UserList userList, ServerList serverList){
 		this.socket = ser;
-		this.data = data;
+		this.classList = classList;
+		this.userList = userList;
+		this.serverList = serverList;
 	}
 	
 	/*
@@ -20,8 +27,10 @@ public class HubSocketHandler extends Thread{
 		Message msg = null;
 		try {
 			InputStream obj = s.getInputStream();
-			ObjectInput o = new ObjectInputStream(obj);
-			msg = (Message) o.readObject();
+			ObjectInput ois = new ObjectInputStream(obj);
+			msg = (Message) ois.readObject();
+			//TODO: check if the close should be here or later.
+			ois.close();
 		} catch (Exception e){
 			System.out.println(e.getMessage());
 			System.out.println("Deserializing message failed.");
@@ -29,16 +38,32 @@ public class HubSocketHandler extends Thread{
 		return msg;
 	}
 	
+	private void returnMessage(Message msg, Socket s){
+		//Get output stream
+		try {
+			OutputStream obj = s.getOutputStream();
+			ObjectOutput oos = new ObjectOutputStream(obj);
+			oos.writeObject(msg);
+			oos.flush();
+			oos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("returnMessage failed");
+		}
+		
+	}
+	
 	/*
 	 * Looks in the message and takes the classroom to find the correct server 
-	 * that the message should be sent to.
+	 * (by InetAddress) that the message should be sent to.
 	 */
 	private InetAddress getServer(Message msg, Object data){
 		//get classroom name from msg
-		msg.getClassroom_ID();
+		String classID = msg.getClassroom_ID();
 		//table lookup of classrooms and their appropriate server
+		int server = classList.getClassServer(classID);
 		//return server
-		return null;
+		return serverList.getAddress(server);
 		
 	}
 	
