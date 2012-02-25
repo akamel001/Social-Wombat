@@ -12,7 +12,27 @@ public class Message implements Serializable{
 	private String classroom_id;
 	
 	public enum MessageType {
-	    Client_Authentication, Client_B, Server_A, Server_B 
+	    // Client -> Hub only
+		Client_LogIn, 
+	    Client_GetClassEnrollment,
+	    Client_GetUserEnrollment,
+	    Client_SetPermissions,	//of users in a class
+	    Client_GetEnrollmentList,
+	    Client_DeleteSelf,
+	    Client_RequestEnrollment,
+	    
+	    // Client -> Hub -> Server
+	    Client_CreateClassroom,
+	    Client_CreatePost,
+	    Client_CreateComment,
+	    Client_GoToClassroom,
+	    Client_GoToThread,	//also known as post
+	    Client_DeleteClassroom,
+	    Client_DeleteThread,	    
+	    
+	    // Server -> Hub -> Client
+	    Server_A,
+	    Server_B
 	}
 	
 	public Message(){

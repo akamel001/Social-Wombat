@@ -38,17 +38,17 @@ public class HubSocketHandler extends Thread{
 		return msg;
 	}
 	
-	private void returnMessage(Message msg, Socket s){
+	private void returnMessage(Message msg){
 		//Get output stream
 		try {
-			OutputStream obj = s.getOutputStream();
+			OutputStream obj = socket.getOutputStream();
 			ObjectOutput oos = new ObjectOutputStream(obj);
 			oos.writeObject(msg);
 			oos.flush();
 			oos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println("returnMessage failed");
+			System.out.println("Return Message Failed");
 		}
 		
 	}
@@ -91,14 +91,24 @@ public class HubSocketHandler extends Thread{
 		if (valid){
 			//Handle the different types of client messages
 			switch(msg.getType()) {
-				case Client_Authentication: 
-					//TODO: Do authentication
-					
-					//TODO: Generate a message response
-					
-					//TODO: Send response
+				// Client -> Hub
+				
+				//Client user id is stored as the sessionKey in the Cookie
+				//of the message
+				// TODO: Possibly move this above switch statement to authenticate all requests
+				case Client_LogIn: 
+					String sessionKey = msg.getCookie().getKey();
+					if(userList.validateUser(sessionKey)){
+						//Reply with confirmation
+						msg.setBody("true");
+						returnMessage(msg);
+					} else {
+						//Reply with denial
+						msg.setBody("false");
+						returnMessage(msg);
+					}
 					break;
-				case Client_B:
+				case Client_GetClassEnrollment:
 					// TODO: Modify data
 					
 					// TODO: Create a message to forward to appropriate server
@@ -107,6 +117,45 @@ public class HubSocketHandler extends Thread{
 					
 					// TODO: Server response is forwarded back to this.socket
 					break;
+				case Client_GetUserEnrollment:
+					
+					break;
+				case Client_SetPermissions:
+
+					break;
+				case Client_GetEnrollmentList:
+
+					break;
+				case Client_DeleteSelf:
+
+					break;
+				case Client_RequestEnrollment:
+
+					break;
+					
+				// Client -> Hub -> Server
+				case Client_CreateClassroom:
+
+					break;
+				case Client_CreatePost:
+
+					break;
+				case Client_CreateComment:
+
+					break;
+				case Client_GoToClassroom:
+
+					break;
+				case Client_GoToThread:
+
+					break;
+				case Client_DeleteClassroom:
+
+					break;
+				case Client_DeleteThread:
+
+					break;
+					
 				default:
 					//TODO: Send request denied back to the client
 					break;
