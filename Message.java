@@ -18,7 +18,19 @@ public class Message{
 	public Message(){
 		//
 	}
-
+	
+	/* This is neccessary for message forwarding because the client doesn't
+	 * know which server its message should be sent to. So the Hub does the job 
+	 * of mapping the classroom to an appropriate server!
+	 */
+	public String getClassroom_ID() {
+		return classroom_id; 
+	}
+	
+	public void setClassroom_ID(String classroom_id) {
+		this.classroom_id = classroom_id;
+	}
+	
 	public InetAddress getSender() {
 		return sender;
 	}
