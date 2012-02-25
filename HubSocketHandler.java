@@ -5,12 +5,14 @@ public class HubSocketHandler extends Thread{
 	private static int CLIENT_SOCKET = 4444;
 	private static int SERVER_SOCKET = 5050;
 	
-	Object data;
+	static ClassList classList;
+	static UserList userList;
 	Socket socket;
 
-	public HubSocketHandler(Socket ser, Object data){
+	public HubSocketHandler(Socket ser, ClassList classList, UserList userList){
 		this.socket = ser;
-		this.data = data;
+		this.classList = classList;
+		this.userList = userList;
 	}
 	
 	/*

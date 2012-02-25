@@ -7,16 +7,44 @@ class Hub extends Thread {
 	private static int CLIENT_SOCKET = 4444;
 	private static int SERVER_SOCKET = 5050;
 	private static boolean listening = true;
-	private static Object datastructures;
-	//TODO: change datastructurs to a tuple. 
+	
+	static ClassList classList;
+	static UserList userList;
+	
 	public Hub(){
-		//fill in constructor
+		// Constructor
 	}
 
+	/*
+	 * Checks if a given file exists in the current running directory
+	 */
+	private static boolean fileExists(String file){
+		// TODO: Implement finding a given file in the file system
+		return false;
+	}
+	
+	/*
+	 * Initializes our data structures
+	 */
 	private static void initializeData(){
-
+		//Create or import ClassList and UserList
+		//Check if ClassList exists
+		if (fileExists("Class_List")){
+			//import file
+		} else {
+			//create new ClassList
+			classList = new ClassList();
+		}
+		if (fileExists("User_List")){
+			//import file
+		} else {
+			userList = new UserList();
+		}
 	}
 
+	/*
+	 * Main running loop for a Hub
+	 */
 	public static void main(String[] args) {
 		// Start Up the Hub
 		// Initialize Data Structures
@@ -43,7 +71,7 @@ class Hub extends Thread {
 				Socket client = hubSocket.accept();
 				//Spawn new ServerSocketHandler thread, we assume that the
 				//hub has directed this message to the correct Server
-				HubSocketHandler newRequest = new HubSocketHandler(client,datastructures);
+				HubSocketHandler newRequest = new HubSocketHandler(client,classList,userList);
 				System.out.println("Accepted a connection from: "+ client.getInetAddress());
 				//Starts running the new thread
 				newRequest.start(); 
@@ -56,7 +84,7 @@ class Hub extends Thread {
 		try {
 			hubSocket.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Couldn't close the hub socket.");
 			e.printStackTrace();
 		}	
 	}
