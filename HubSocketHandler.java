@@ -57,7 +57,7 @@ public class HubSocketHandler extends Thread{
 	 * Looks in the message and takes the classroom to find the correct server 
 	 * (by InetAddress) that the message should be sent to.
 	 */
-	private InetAddress getServer(Message msg, Object data){
+	private InetAddress getServer(Message msg){
 		//get classroom name from msg
 		String classID = msg.getClassroom_ID();
 		//table lookup of classrooms and their appropriate server
@@ -69,10 +69,28 @@ public class HubSocketHandler extends Thread{
 	
 	/*
 	 * Constructs the message that needs to be forwarded 
-	 * and receives the response
+	 * and receives the response as a message
 	 */
-	private void forwardToServer(Message msg){
+	private Message forwardToServer(Message msg){
 		//Open a socket connection with appropriate server
+		// Server can only be found by classroomID
+		InetSocketAddress newSocketAddress = new InetSocketAddress(getServer(msg),SERVER_SOCKET);
+		//Create socket
+		ServerSocket serverSocket;
+		try {
+			serverSocket = new ServerSocket();
+			serverSocket.bind(newSocketAddress);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//TODO: add sendMessage() method
+		
+		//TODO: wait for response
+		
+		//TODO: return response message
+		
+		return null;
 	}
 	
 	/*
