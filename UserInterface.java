@@ -1,8 +1,8 @@
 import java.io.Console;
+import java.io.IOException;
+import java.util.List;
 
-/**
- * 
- */
+// TODO: action/error messages at top of each page
 
 /**
  * This is the user interface for Social Wombat.
@@ -16,9 +16,13 @@ import java.io.Console;
 public class UserInterface {
 	
 	static Console console;
+	static Client1 client;
+	static String currentUserName;
+	static String currentClassroomName;
 	
+	// Below is a bunch of strings used in the text-based user interface.
 	private static final String sNEW_LINE = System.getProperty("line.separator");
-	private static final String sBIGDIVIDER =				"+==========================================+" + sNEW_LINE;
+	private static final String sBIGDIVIDER =			"+==========================================+" + sNEW_LINE;
 	private static final String sSMALLDIVIDER =			"+------------------------------------------+" + sNEW_LINE;
 	private static final String sLOGIN =  				"|                 LOG IN                   |" + sNEW_LINE;
 	private static final String sHOMEPAGE =  			"|                  HOME                    |" + sNEW_LINE;
@@ -38,7 +42,7 @@ public class UserInterface {
 	
 	private static final String sHOMEPAGEOPTIONS = 		"| 1. select classroom                      |" + sNEW_LINE +
 														"| 2. create classroom                      |" + sNEW_LINE +
-														"| 3. request to be added to a classroom    |" + sNEW_LINE +
+														"| 3. request to join classroom                      |" + sNEW_LINE +
 														"| 4. log out                               |" + sNEW_LINE;
 	
 	private static final String sCLASSROOMPAGEOPTIONS = "| 1. select thread                         |" + sNEW_LINE +
@@ -62,24 +66,34 @@ public class UserInterface {
 														"| 3. go back to classroom                  |" + sNEW_LINE;
 	
 	/**
-	 * 
+	 * This is the login page. The login page requests a user name. If the user name is valid, 
+	 * it goes to the home page. Otherwise, it loops back to the login page and displays an 
+	 * error message.
 	 */
 	private static void loginPage() {
-		console.printf(sBIGDIVIDER + sLOGIN + sBIGDIVIDER);
-		String userName = console.readLine("User Name? ");
+		clearScreen();
+		console.printf(sBIGDIVIDER + sLOGIN + sBIGDIVIDER);		
+		String userNameTemp = console.readLine("User Name? ");
 		
-		if (verify(userName)){
+		if (client.verify(userNameTemp)){
+			currentUserName = userNameTemp;
 			homePage();
 		} else {
-			console.printf(eUSERNAMEDOESNOTEXIST);
+			// TODO: pass in a message saying that login failed.
+			currentUserName = null;
 			loginPage();
 		}
 	}
 	
 	/**
-	 * 
+	 * This is the home page. It displays four options:
+	 * 1. Select classroom.
+	 * 2. Create classroom.
+	 * 3. Request to join classroom.
+	 * 4. Log out.
 	 */
-	private static void homePage() {			
+	private static void homePage() {	
+		clearScreen();		
 		console.printf(sBIGDIVIDER + sHOMEPAGE + sSMALLDIVIDER + sHOMEPAGEOPTIONS + sBIGDIVIDER);			
 		int selection = getValidSelectionFromUser(4);
 		
@@ -90,26 +104,26 @@ public class UserInterface {
 	        break;
 	    // create classroom
 	    case 2: 
-	    	String classroomName = console.readLine("Please specify a classroom name: ");
-	    	if (createClassroom(classroomName)){
+	    	String classroomNameTemp = console.readLine("Please specify a classroom name: ");
+	    	if (client.createClassroom(classroomNameTemp, currentUserName)){
+	    		currentClassroomName = classroomNameTemp;
 				classroomPage();
 			} else {
-				console.printf(eCLASSROOMCREATIONERROR);
 				homePage();
 			}
 	        break;
-	    // join a classroom
+	    // request to join classroom
 	    case 3:
 	    	String classroomRequestName = console.readLine("Please specify the name of the classroom you'd like to join: ");
-	    	if (requestClassroom(classroomRequestName)){
+	    	if (client.requestClassroom(classroomRequestName, currentUserName)){
 				homePage();
 			} else {
-				console.printf(eCLASSROOMREQUSTERROR);
 				homePage();
 			}
 	        break;
 	    // log out
 	    case 4:
+	    	currentUserName = null;
 	        loginPage();
 	        break;
 	    default:
@@ -122,8 +136,10 @@ public class UserInterface {
 	 * 
 	 */
 	private static void classroomListPage() {
-		console.printf(sBIGDIVIDER + sCLASSROOMLISTPAGE + sSMALLDIVIDER);	
-		console.printf("| 1. go to classroom (temp)                |" + sNEW_LINE + sBIGDIVIDER); // temp
+		clearScreen();
+		console.printf(sBIGDIVIDER + sCLASSROOMLISTPAGE + sSMALLDIVIDER);
+		List<String> classroomList = client.getClassroomListForUser(currentUserName);
+		console.printf(listToUIString(classroomList) + sNEW_LINE + sBIGDIVIDER); // temp //TODO: BOOKMARK
 		int selection = getValidSelectionFromUser(6);
 		
 		switch (selection) {
@@ -141,6 +157,7 @@ public class UserInterface {
 	 * 
 	 */
 	private static void classroomPage() {
+		clearScreen();
 		console.printf(sBIGDIVIDER + sCLASSROOMPAGE + sSMALLDIVIDER + sCLASSROOMPAGEOPTIONS + sBIGDIVIDER);
 		int selection = getValidSelectionFromUser(6);
 		
@@ -183,6 +200,7 @@ public class UserInterface {
 	 * 
 	 */
 	private static void threadListPage() {
+		clearScreen();
 		console.printf(sBIGDIVIDER + sTHREADLISTPAGE + sSMALLDIVIDER);	
 		console.printf("| 1. go to thread (temp)                   |" + sNEW_LINE + sBIGDIVIDER); // temp
 		int selection = getValidSelectionFromUser(1); // TODO: change the max int input
@@ -202,6 +220,7 @@ public class UserInterface {
 	 * 
 	 */
 	private static void threadPage() {
+		clearScreen();
 		console.printf(sBIGDIVIDER + sTHREADPAGE + sSMALLDIVIDER + sTHREADPAGEOPTIONS + sBIGDIVIDER);
 		int selection = getValidSelectionFromUser(4);
 		
@@ -233,6 +252,7 @@ public class UserInterface {
 	 * 
 	 */
 	private static void memberListPage() {
+		clearScreen();
 		console.printf(sBIGDIVIDER + sMEMBERLISTPAGE + sSMALLDIVIDER);	
 		console.printf("| 1. go to member (temp)                   |" + sNEW_LINE + sBIGDIVIDER); // temp
 		int selection = getValidSelectionFromUser(1); // TODO: change the max int input
@@ -252,6 +272,7 @@ public class UserInterface {
 	 * 
 	 */
 	private static void memberPage() {
+		clearScreen();
 		console.printf(sBIGDIVIDER + sMEMBERPAGE + sSMALLDIVIDER + sMEMBERPAGEOPTIONS + sBIGDIVIDER);		
 		int selection = getValidSelectionFromUser(3);
 		
@@ -276,6 +297,7 @@ public class UserInterface {
 	}
 	
 	private static void requestListPage() {
+		clearScreen();
 		console.printf(sBIGDIVIDER + sREQUESTLISTPAGE + sSMALLDIVIDER);	
 		console.printf("| 1. go to request (temp)                   |" + sNEW_LINE + sBIGDIVIDER); // temp
 		int selection = getValidSelectionFromUser(1); // TODO: change the max int input
@@ -295,6 +317,7 @@ public class UserInterface {
 	 * 
 	 */
 	private static void requestPage() {
+		clearScreen();
 		console.printf(sBIGDIVIDER + sREQUESTPAGE + sSMALLDIVIDER + sREQUESTPAGEOPTIONS + sBIGDIVIDER);
 		int selection = getValidSelectionFromUser(3);
 		
@@ -318,8 +341,13 @@ public class UserInterface {
 		
 	}
 	
-	
-	// Get valid selection from the user.
+	// Helper functions.
+		
+	/**
+	 *  Get valid selection from the user.
+	 * @param maxInt
+	 * @return integer corresponding to the selection.
+	 */
 	public static int getValidSelectionFromUser(int maxInt) {
 		boolean validSelection = false;
 		int selection = 0;
@@ -338,10 +366,43 @@ public class UserInterface {
 		}
 		return selection;
 	}
+	
+	/**
+	 * Clears the the top of the screen depending on the size of your window.
+	 */
+	public static void clearScreen() {
+		System.out.println(((char) 27)+"[2J");
+	}
+	
+	/**
+	 * Takes in a list and turns it into a TUI-renderable string
+	 */
+	public static String listToUIString(List<String> list){
+		String currentString;
+		
+		String uiString = "";		
+		for (int i = 1; i <= list.size(); i++){
+			uiString.concat("| " + Integer.toString(i) + ". ");
+			currentString = list.get(i-1);
+			uiString.concat(currentString);
+			for (int j = 0; j < 25 - currentString.length(); j++){
+				uiString.concat(" ");
+			}
+			uiString.concat("|");
+		}
+		
+		return uiString;		
+	}
+	
+	
+	
+	
+	
 
+	// Main.
 
 	/**
-	 * Main function.
+	 * Main function. Goes to the login page.
 	 */
 	public static void main(String[] args) {
 		
@@ -350,34 +411,11 @@ public class UserInterface {
             System.err.println("No console.");
             System.exit(1);
         }
+        
+        client = new Client1();
 		
 		System.out.println("Welcome to Studious Wombat!");
 		loginPage();
 	}
-	
-	
-	
-	// DUMMIES
-	public static boolean verify(String userName){
-		if (userName.equals("false")) {
-			return false;
-		}
-		return true;		
-	}
-	
-	public static boolean createClassroom(String classroomName){
-		if (classroomName.equals("false")) {
-			return false;
-		}
-		return true;	
-	}
-		
-	public static boolean requestClassroom(String classroomRequestName){
-		if (classroomRequestName.equals("false")) {
-			return false;
-		}
-		return true;		
-	}	
-	
 
 }
