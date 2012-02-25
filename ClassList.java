@@ -63,29 +63,27 @@ public class ClassList {
 	}
 	
 	/**
-	 * Returns a newline-separated String of all pending users for the selected ClassRoom
-	 * @param c the name of the ClassRoom
-	 * @return
+	 * Sets the permissions for a specific user in a class. <br>
+	 * <br>
+	 * NOTE: passing -1 as the third parameter will cause the user to be removed from the class.<br>
+	 * NOTE: TO ADD A USER to a class (as pending), use this function with permissions set to 0! If 
+	 * the user is not enrolled in the class, it will be added to it with permissions of 0. If the 
+	 * user is enrolled in the class, its permissions will be set to 0.
+	 * @param user The user whose permissions will be changed.
+	 * @param c The class in which that user is enrolled.
+	 * @param per The new permission value.
+	 * @return Returns 1 on success, -1 otherwise.
 	 */
-	public String pendingToString(String c){
-		ClassData temp = classList.get(c);
-		if (temp==null)
-			return null;
-		else
-			return temp.pendingToString();
-	}
-	
-	/**
-	 * Returns a newline-separated String of ALL users (as well as their permissions) for a selected classroom.
-	 * @param c the name of the classroom
-	 * @return
-	 */
-	public String usersToString(String c){
-		ClassData temp = classList.get(c);
-		if (temp==null)
-			return null;
-		else
-			return temp.allUsersToString();
+	public int setUserPermissions(String user, String c, int per){
+		if (per<0 || per>2)
+			return -1;
+		else{
+			ClassData tempClass = classList.get(c);
+			if (tempClass==null)
+				return -1;
+			else
+				return tempClass.setPermission(user, per);
+		}
 	}
 	
 	/**
@@ -130,41 +128,6 @@ public class ClassList {
 	}
 	
 	
-	
-	public String classesToString(String user){
-		String out = System.getProperty("line.separator") + "Class List:";
-		boolean found = false;
-		Set<String> s = classList.keySet();
-		synchronized(classList) {  
-			Iterator<String> i = s.iterator(); 
-			while (i.hasNext()){
-				String className = i.next();
-				ClassData cd =	classList.get(className);
-				int per = cd.getPermissions(user);
-				if (per>0 && per<4){
-					found = true;					
-					out += System.getProperty("line.separator") + " - " + cd.getClassName();
-					switch (per) {
-					case 0: 
-						out += " (Pending)";
-						break;
-					case 1: 
-						out += " (Enrolled)";
-						break;
-					case 2: 
-						out += " (TA)";
-						break;
-					case 3: 
-						out += " (Instructor)";
-						break;
-					}
-				}
-			}
-		}
-		if (!found)
-			out += System.getProperty("line.separator") + " - [none available]";
-		return out;
-	}
 	
 	/**
 	 * Returns the number of the server on which the passed class is stored

@@ -159,11 +159,27 @@ public class ClassData{
 	}
 
 	/**
-	 * Sets the permissions for a user.
+	 * Sets permissions for a user.<br>
+	 * NOTE: Passing a permission of -1 removes the student from the class.
+	 * NOTE: Passing a permission of 0 with an id that does not exist will add that id to the list.
+	 * @param id The id of the user to be changed.
+	 * @param p The value to which the permissions will be changed. Value must be -1<=p<=2<br>
+	 * -1: removes user from list<b>
+	 * @return
 	 */
 	public int setPermission(String id, int p){
-		if (p<0 || p>2)
+		if (p<-1 || p>2)
 			return -1;
+		// if per is -1, remove user from list
+		else if(p==-1){
+			userList.remove(id);
+			return 1;
+		}
+		// if per is 0 and user is not in list, add the user
+		else if (p==0 && !userList.containsKey(id)){
+			addUser(id);
+			return 1;
+		}
 		else{
 			userList.put(id, p);
 			return 1;
@@ -194,7 +210,7 @@ public class ClassData{
 	}
 
 	/**
-	 * Returns a newline-sepatated String of all users associated with a class as well 
+	 * Returns a newline-separated String of all users associated with a class as well 
 	 * as their permissions.
 	 * @return
 	 */
