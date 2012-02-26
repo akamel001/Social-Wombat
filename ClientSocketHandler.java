@@ -56,7 +56,10 @@ public class ClientSocketHandler {
 			System.out.println("Receiving message from server...");
 			messageReceived = (Message) ois.readObject();
 			System.out.print(messageReceived.getBody());
-
+			
+			oos.close();
+			ois.close();
+			socket.close();
 
 		} catch (UnknownHostException e) {
 			System.out.println("Unknown host: " + messageSending.getRecipient());
@@ -68,11 +71,7 @@ public class ClientSocketHandler {
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {
-			oos.close();
-			ois.close();
-			socket.close();
-		}
+		} 
 
 		return messageReceived;
 	}
