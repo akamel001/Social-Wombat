@@ -70,7 +70,7 @@ class Hub extends Thread {
 			// Spin until a new message is received and then spawn a 
 			// HubSocketHandler thread
 			try {
-				System.out.println("Listeninggggg");
+				System.out.println("Listening");
 				Socket client = hubSocket.accept();
 				//Spawn new ServerSocketHandler thread, we assume that the
 				//hub has directed this message to the correct Server
@@ -84,15 +84,13 @@ class Hub extends Thread {
 				System.exit(-1);
 			} 
 		}
-		//Close socket
-		/*
+		//Close socket after done listening
 		try {
-			//hubSocket.close();
+			hubSocket.close();
 		} catch (IOException e) {
-			System.out.println("Couldn't close the hub socket.");
 			e.printStackTrace();
-		}	
-		*/
+			System.out.println("Couldn't close");
+		}
 	}
 
 }
