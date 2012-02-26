@@ -2,11 +2,15 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Date;
 
 
 public class ClientSocketHandler {
 	
 	private static final int SERVER_PORT = 4444;
+	private static ObjectInputStream ois = null;
+	private static ObjectOutputStream oos = null;
+
 	
 	public static Message constructMessage(String uName, Message.MessageType type){
 		
@@ -37,33 +41,31 @@ public class ClientSocketHandler {
 		try{
 		     Socket socket = new Socket(messageSending.getRecipient(), SERVER_PORT);
 
-			 ObjectOutputStream oos;
-			 oos = new ObjectOutputStream(socket.getOutputStream());
-
+		     oos = new ObjectOutputStream(socket.getOutputStream());
+		     ois = new ObjectInputStream(socket.getInputStream());
+		     
 //		     PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 //		     BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			 
 			 System.out.println("sent waiting for hub to respond...");
-		     oos.writeObject(messageSending);
-//		     oos.flush();
-				
-		    
-		     ObjectInputStream ois;
-		     ois = new ObjectInputStream(socket.getInputStream());
+		     //oos.writeObject(messageSending);
+			 oos.writeObject(new Date());
+			 
+		     //messageReceived = (Message) ois.readObject();
+		     String tmp = (String) ois.readObject();
 		     
-		     messageReceived = (Message) ois.readObject();
-		     
-		     System.out.println(messageReceived.getBody());
+		     System.out.println(tmp);
 		     
 		     ois.close();
 		     oos.close();
-		     socket.close();
+		     //socket.close();
 		     //in buffer is ready
 		   } catch (UnknownHostException e) {
 			   System.out.println("Unknown host: " + messageSending.getRecipient());
 		     	System.exit(1);
 		   } catch  (IOException e) {
 			   System.out.println("No I/O");
+			   e.printStackTrace();
 			   System.exit(1);
 		   } catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
