@@ -55,7 +55,9 @@ public class ClientSocketHandler {
 		     
 		     System.out.println(messageReceived.getBody());
 		     
-		     
+		     ois.close();
+		     oos.close();
+		     socket.close();
 		     //in buffer is ready
 		   } catch (UnknownHostException e) {
 			   System.out.println("Unknown host: " + messageSending.getRecipient());
