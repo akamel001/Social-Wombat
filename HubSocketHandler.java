@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.util.Date;
 
 public class HubSocketHandler extends Thread{
 	private static int CLIENT_SOCKET = 4444;
@@ -23,12 +24,14 @@ public class HubSocketHandler extends Thread{
 	/*
 	 * Deserialize transmission in socket and convert to a message
 	 */
-	private Message getMessage(Socket s){
+	private Message getMessage(){
 		Message msg = null;
 		try {
-			InputStream obj = s.getInputStream();
-			ObjectInput ois = new ObjectInputStream(obj);
+			@SuppressWarnings("unused")
+			ObjectOutput oos = new ObjectOutputStream(this.socket.getOutputStream());
+			ObjectInput ois = new ObjectInputStream(this.socket.getInputStream());
 			msg = (Message) ois.readObject();
+			oos.close();
 			ois.close();
 		} catch (Exception e){
 			System.out.println(e.getMessage());
@@ -43,8 +46,7 @@ public class HubSocketHandler extends Thread{
 	private void returnMessage(Message msg){
 		//Get output stream
 		try {
-			OutputStream obj = socket.getOutputStream();
-			ObjectOutput oos = new ObjectOutputStream(obj);
+			ObjectOutput oos = new ObjectOutputStream(socket.getOutputStream());
 			oos.writeObject(msg);
 			oos.flush();
 			oos.close();
@@ -105,6 +107,8 @@ public class HubSocketHandler extends Thread{
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			System.out.println("Reply is not of Message type.");
+		} finally {
+			// Close everything
 		}
 		
 		return reply;
@@ -118,7 +122,38 @@ public class HubSocketHandler extends Thread{
 	public void run(){
 		boolean valid = true;
 		//Read and deserialize Message from Socket
-		Message msg = getMessage(this.socket);
+		
+		/*
+		 * Uncomment after debugging
+		 */
+		//Message msg = getMessage();
+		
+		//Delete after debugging
+		try {
+			@SuppressWarnings("unused")
+			ObjectOutput oos = new ObjectOutputStream(this.socket.getOutputStream());
+			ObjectInput ois = new ObjectInputStream(this.socket.getInputStream());
+			Date msg = (Date) ois.readObject();
+			//oos.close();
+			//ois.close();
+			System.out.println(msg);
+			
+			//send back
+			//oos = new ObjectOutputStream(this.socket.getOutputStream());
+			//ObjectInput ois = new ObjectInputStream(this.socket.getInputStream());
+			oos.writeObject(new Date());
+			oos.flush();
+			
+			oos.close();
+			ois.close();
+			
+		} catch (Exception e){
+			System.out.println(e.getMessage());
+			System.out.println("Deserializing message failed.");
+		}
+		////////////////////////
+		
+		/*
 		if (msg == null){
 			System.out.println("Message was null");
 			valid = false; // Don't waste time on bad transmissions
@@ -198,9 +233,9 @@ public class HubSocketHandler extends Thread{
 				default:
 					//TODO: Send request denied back to the client
 					break;
-					
+				
 			}
-		}
+		}*/
 	}
 	
 	

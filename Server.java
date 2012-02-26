@@ -7,16 +7,34 @@ public class Server {
 	private static boolean listening = true;
 	// TODO: data for now is any relevant data that needs to be passed to a
 	// handler thread
-	private static Object datastructures;
+	private static ServerList serverList;
 	
 	// Constructor
 	public Server() {
-		//TODO: Any start up constructor code here
+		// Constructor
 		
 	}
 	
+	/*
+	 * Checks if a given file exists in the current running directory
+	 */
+	private static boolean fileExists(String file){
+		// TODO: Implement finding a given file in the file system
+		return false;
+	}
+	
+	/*
+	 * Initialize data structures
+	 */
 	private static void initializeData(){
-		//TODO: Initialize any data structures we may need
+		//Create or import ServerList
+		//Check if ServerList exists
+		if (fileExists("Server_List")){
+			//import file
+		} else {
+			//create new ServerList
+			serverList = new ServerList();
+		}
 	}
 	
 	public static void main(String[] args) {
@@ -45,7 +63,7 @@ public class Server {
 				Socket hub = serverSocket.accept();
 				//Spawn new ServerSocketHandler thread, we assume that the
 				//hub has directed this message to the correct Server
-				ServerSocketHandler newRequest = new ServerSocketHandler(hub,datastructures);
+				ServerSocketHandler newRequest = new ServerSocketHandler(hub,serverList);
 				//Starts running the new thread
 				newRequest.start(); 
 			} 

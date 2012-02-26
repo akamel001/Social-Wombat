@@ -57,6 +57,8 @@ class Hub extends Thread {
 		 * */
 		
 		ServerSocket hubSocket = null;
+
+		
 		//Create and listen in on a port
 		try {
 			hubSocket = new ServerSocket(CLIENT_SOCKET);
@@ -64,19 +66,17 @@ class Hub extends Thread {
 			System.out.println("Could not listen on port: " + CLIENT_SOCKET);
 			System.exit(-1);
 		}
-		
-		// Spin until a new message is received and then spawn a 
-		// HubSocketHandler thread
-		while(listening){
+		while(listening){	
+			// Spin until a new message is received and then spawn a 
+			// HubSocketHandler thread
 			try {
-				System.out.println("Listening");
+				System.out.println("Listeninggggg");
 				Socket client = hubSocket.accept();
 				//Spawn new ServerSocketHandler thread, we assume that the
 				//hub has directed this message to the correct Server
 				HubSocketHandler newRequest = new HubSocketHandler(client,classList,userList,serverList);
 				System.out.println("Accepted a connection from: "+ client.getInetAddress());
 				//Starts running the new thread
-	
 				newRequest.start(); 
 				
 			} catch (IOException e) {
@@ -85,12 +85,14 @@ class Hub extends Thread {
 			} 
 		}
 		//Close socket
+		/*
 		try {
-			hubSocket.close();
+			//hubSocket.close();
 		} catch (IOException e) {
 			System.out.println("Couldn't close the hub socket.");
 			e.printStackTrace();
 		}	
+		*/
 	}
 
 }
