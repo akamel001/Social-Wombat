@@ -86,16 +86,16 @@ public class Client {
 		Message responce = handler.sendReceive(uName, Message.MessageType.Client_Register);
 		
 		//TODO finish codes
-//		switch(responce.getCode()){
-//		case 1:
-//			//do something
-//			break;
-//		case 2:
-//			//do something
-//			break;
-//		default:
-//			//message compromised or bad message code
-//		}
+		switch(responce.getCode()){
+		case 1:
+			//do something
+			break;
+		case 2:
+			//do something
+			break;
+		default:
+			//message compromised or bad message code
+		}
 	}
 public static void main(String [] args) {
 		handleRegister("bob");
