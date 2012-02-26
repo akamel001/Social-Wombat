@@ -4,12 +4,7 @@ import java.net.*;
 import java.util.Scanner;
 
 public class Client {
-	
-	public static void sendReceive(Message message){
-		//TODO send to server and wait for receive 
-		
-	}
-	
+
 	public static String getUserName(){
 		BufferedReader in=new BufferedReader(new InputStreamReader(System.in));
 		System.out.print("Enter username: ");
@@ -26,18 +21,38 @@ public class Client {
 	
 	public static void handleRegister(){
 		String uName = getUserName();
-		Message message = new Message();
-		message.setType(Message.MessageType.Client_Authentication);
-		message.setBody(uName);
-		sendReceive(message);
+		ClientSocketHandler handler = new ClientSocketHandler();
+		Message responce = handler.sendReceive(uName, Message.MessageType.Client_Register);
+		
+		//TODO finish codes
+		switch(responce.getCode()){
+		case 1:
+			//do something
+			break;
+		case 2:
+			//do something
+			break;
+		default:
+			//message compromised or bad message code
+		}
 	}
 	
 	public static void handleLogin(){
 		String uName = getUserName();
-		Message message = new Message();
-		message.setType(Message.MessageType.Client_Authentication);
-		message.setBody(uName);
-		sendReceive(message);
+		ClientSocketHandler handler = new ClientSocketHandler();
+		Message responce = handler.sendReceive(uName, Message.MessageType.Client_LogIn);
+		
+		//TODO finish codes
+		switch(responce.getCode()){
+		case 1:
+			//do something
+			break;
+		case 2:
+			//do something
+			break;
+		default:
+			//message compromised or bad message code
+		}
 	}
 	
     public void run() {

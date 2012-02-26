@@ -11,7 +11,12 @@ public class Message{
 	private int code;
 	
 	public enum MessageType {
-	    Client_Authentication, Client_B, Server_A, Server_B 
+	    Client_Authentication, Client_B, Server_A, Server_B, 
+	    Client_LogIn, Client_GetClassEnrollment, Client_GetUserEnrollment, 
+	    Client_SetPermissions, Client_GetEnrollmentList, Client_DeleteSelf, 
+	    Client_RequestEnrollment, Client_CreateClassroom, Client_CreatePost, 
+	    Client_CreateComment, Client_GoToClassroom, Client_GoToThread, 
+	    Client_DeleteClassroom, Client_DeleteThread, Client_Register
 	}
 	
 	public Message(){
@@ -64,5 +69,10 @@ public class Message{
 
 	public void setCode(int code) {
 		this.code = code;
+	}
+
+	public String getClassroom_ID() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

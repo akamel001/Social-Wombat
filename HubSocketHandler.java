@@ -126,6 +126,9 @@ public class HubSocketHandler extends Thread{
 						returnMessage(msg);
 					}
 					break;
+				case Client_Register:
+					
+					break;
 				case Client_GetClassEnrollment:
 					// TODO: Modify data
 					

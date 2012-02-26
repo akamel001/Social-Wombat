@@ -1,4 +1,6 @@
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.*;
 
 //Hub class. Handles communication between data servers and clients
@@ -69,17 +71,20 @@ class Hub extends Thread {
 		// HubSocketHandler thread
 		while(listening){
 			try {
+				System.out.println("Listening");
 				Socket client = hubSocket.accept();
 				//Spawn new ServerSocketHandler thread, we assume that the
 				//hub has directed this message to the correct Server
 				HubSocketHandler newRequest = new HubSocketHandler(client,classList,userList,serverList);
 				System.out.println("Accepted a connection from: "+ client.getInetAddress());
 				//Starts running the new thread
+	
 				newRequest.start(); 
+				
 			} catch (IOException e) {
 				System.out.println("Accept failed on port: " + CLIENT_SOCKET);
 				System.exit(-1);
-			}
+			} 
 		}
 		//Close socket
 		try {
