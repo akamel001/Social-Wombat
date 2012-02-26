@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -39,12 +36,25 @@ public class ClientSocketHandler {
 		
 		try{
 		     Socket socket = new Socket(messageSending.getRecipient(), SERVER_PORT);
-		     PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-		     BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-	
-		     out.write(messageSending.getBody());
-		     System.out.println("sent waiting for hub to respond...");
-		     while(!in.ready()) in.wait(1000);
+
+			 ObjectOutputStream oos;
+			 oos = new ObjectOutputStream(socket.getOutputStream());
+
+//		     PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+//		     BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			 
+			 System.out.println("sent waiting for hub to respond...");
+		     oos.writeObject(messageSending);
+//		     oos.flush();
+				
+		    
+		     ObjectInputStream ois;
+		     ois = new ObjectInputStream(socket.getInputStream());
+		     
+		     messageReceived = (Message) ois.readObject();
+		     
+		     System.out.println(messageReceived.getBody());
+		     
 		     
 		     //in buffer is ready
 		   } catch (UnknownHostException e) {
@@ -53,10 +63,13 @@ public class ClientSocketHandler {
 		   } catch  (IOException e) {
 			   System.out.println("No I/O");
 			   System.exit(1);
-		   } catch (InterruptedException e) {
+		   } catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
+			   e.printStackTrace();
+		   } finally {
+			   
+		   }
+			
 		return messageReceived;
 	}
 }
