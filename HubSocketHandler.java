@@ -134,8 +134,8 @@ public class HubSocketHandler extends Thread{
 			ObjectOutput oos = new ObjectOutputStream(this.socket.getOutputStream());
 			ObjectInput ois = new ObjectInputStream(this.socket.getInputStream());
 			Date msg = (Date) ois.readObject();
-			oos.close();
-			ois.close();
+			//oos.close();
+			//ois.close();
 			System.out.println(msg);
 			String s = "Hello World";
 			//send back
@@ -144,6 +144,7 @@ public class HubSocketHandler extends Thread{
 			oos.writeObject(s);
 			oos.flush();
 			oos.close();
+			ois.close();
 			
 		} catch (Exception e){
 			System.out.println(e.getMessage());
