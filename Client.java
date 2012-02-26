@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class Client extends clientImpl{
+public class Client extends ClientImpl{
 	
     public void run() {
 		

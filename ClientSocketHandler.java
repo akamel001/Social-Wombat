@@ -9,6 +9,8 @@ import java.net.UnknownHostException;
 
 public class ClientSocketHandler {
 	
+	private static final int SERVER_PORT = 4444;
+	
 	public static Message constructMessage(String uName, Message.MessageType type){
 		
 
@@ -36,7 +38,7 @@ public class ClientSocketHandler {
 		Message messageReceived = null; 
 		
 		try{
-		     Socket socket = new Socket(messageSending.getRecipient(), 4444);
+		     Socket socket = new Socket(messageSending.getRecipient(), SERVER_PORT);
 		     PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 		     BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	
