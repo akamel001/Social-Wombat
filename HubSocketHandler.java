@@ -23,11 +23,12 @@ public class HubSocketHandler extends Thread{
 	/*
 	 * Deserialize transmission in socket and convert to a message
 	 */
-	private Message getMessage(Socket s){
+	private Message getMessage(){
 		Message msg = null;
 		try {
-			InputStream obj = s.getInputStream();
-			ObjectInput ois = new ObjectInputStream(obj);
+			@SuppressWarnings("unused")
+			ObjectOutput oos = new ObjectOutputStream(this.socket.getOutputStream());
+			ObjectInput ois = new ObjectInputStream(this.socket.getInputStream());
 			msg = (Message) ois.readObject();
 			ois.close();
 		} catch (Exception e){
@@ -105,6 +106,8 @@ public class HubSocketHandler extends Thread{
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			System.out.println("Reply is not of Message type.");
+		} finally {
+			// Close everything
 		}
 		
 		return reply;
@@ -118,7 +121,7 @@ public class HubSocketHandler extends Thread{
 	public void run(){
 		boolean valid = true;
 		//Read and deserialize Message from Socket
-		Message msg = getMessage(this.socket);
+		Message msg = getMessage();
 		if (msg == null){
 			System.out.println("Message was null");
 			valid = false; // Don't waste time on bad transmissions
