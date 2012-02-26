@@ -1,47 +1,54 @@
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.Collections;
 
 
 /**
- * Used to hold a thread.
- * The title field is the title of the thread.
- * The first item in the list is the body of the first post.
- * All additional list items are comments to that post.
+ * Used to hold a thread.<br>
+ * <br>
+ * The thread consists of a map that maps Integers to Strings. The first two entries are the post 
+ * title (mapped to 1), and the post body (mapped to 2). Comments are mapped starting from 3 on. 
  * 
  * @author chris d
  *
  */
 public class Post {
-	private final int maxTitleLength = 60;
-	private final int maxCommentLength = 2000;
-	private String title;
-	private int lastValue = 1;
-	private Map <Integer, String> commentList;
+	protected static final int maxTitleLength = 60;
+	protected static final int maxCommentLength = 2000;
+	private static int nextComment = 1;
+	
+	/**
+	 * Value for id is set by ClassRoom on Post creation
+	 */
+	private final int id;
+	//private List<String> commentList;
+	private Map<Integer, String> commentList;
 	
 	/**
 	 * Default constructor disallowed. Use Post(String, String)
 	 */
-	private Post(){}
+	private Post(){id=-1;}
 	
 	/**
 	 * Create a new post with the given title and body for the first post.
 	 * @param t Post title; max length is maxTitleLength
 	 * @param b Post body; max length is maxCommentLength
 	 */
-	public Post(String t, String b){
+	public Post(String t, String b, int i){
 		commentList = Collections.synchronizedMap(new HashMap<Integer, String>());
-		title = "";
+		// truncate title if it's too long
 		if (t.length()<=60)
-			title = t.substring(0, maxTitleLength-1);
+			t= t.substring(0, maxTitleLength-1);
+		// if the title is empty
 		else if (t.length()==0)
-			title += lastValue;
-		else
-			title = t;
+			t = "[no title]"; 			// this issue should be caught at ClassRoom 
 		if (b.length()>maxCommentLength)
 			b = b.substring(0,maxCommentLength-1);
-		commentList.put(lastValue, b);
-		lastValue++;
+		commentList.put(nextComment, t);		// add title
+		nextComment++;
+		commentList.put(nextComment, b);		// add body
+		nextComment++;
+		id = i;
 	}
 	
 	/**
@@ -50,26 +57,46 @@ public class Post {
 	 * @return Returns 1 if comment is added, -1 otherwise.
 	 */
 	public int addComment(String c){
-		if (c.length()<1)
+		if (c.length()<1 || c==null)
 			return -1;
 		if (c.length()>maxCommentLength)
 			c = c.substring(0,maxCommentLength-1); 
-		commentList.put(lastValue, c);
-		lastValue++;
+		synchronized (this) {
+			commentList.put(nextComment, c);
+			nextComment++;
+		}
 		return 1;
 	}
 	
 	/**
-	 * Removes a comment from the post.
+	 * Removes a comment from the post.<br>
+	 * NOTE: you cannot remove the title of a post (index 0), or the post's body (index 1).
 	 * @param i The index of the comment.
 	 * @return Returns 1 if the comment was removed, -1 if it did not exist in the post.
 	 */
 	public int removeComment(int i){
-		if (!commentList.containsKey(i))
+		String s = commentList.remove(i);
+		if (s==null)
 			return -1;
-		else {
-			commentList.remove(i);
+		else
 			return 1;
-		}
+	}
+	
+	/**
+	 * Returns the entire post as a Map(Integer,Strings). <br>
+	 * NOTE: Map(0) contains the title of the post. Map(1)1 contains the body. Values 
+	 * greater than 1 are comments.
+	 * @return Returns a Map(Integer, String) containing the post.
+	 */
+	public Map<Integer, String> getPosts(){
+		return commentList;
+	}
+	
+	/**
+	 * Returns the post's id. 
+	 * @return 
+	 */
+	public int getId(){
+		return id;
 	}
 }

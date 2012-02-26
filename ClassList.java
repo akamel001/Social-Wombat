@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * ClassList is a list of ClassData objects.
  * ClassData objects store a class' associated server info and user permissions.
- * (ClassData objects do NOT contain any posts, threads or other content.)
+ * (ClassData objects do NOT contain any posts, comments, or other content.)
  * 
  * @author chris
  *
