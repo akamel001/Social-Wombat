@@ -8,8 +8,7 @@ import java.util.Date;
 public class ClientSocketHandler {
 	
 	private static final int SERVER_PORT = 4444;
-	private static ObjectInputStream ois = null;
-	private static ObjectOutputStream oos = null;
+
 
 	
 	public static Message constructMessage(String uName, Message.MessageType type){
@@ -37,10 +36,14 @@ public class ClientSocketHandler {
 		
 		//TODO construct the received message from the hub
 		Message messageReceived = null; 
-		
+		Socket socket = null;
+	    ObjectOutputStream oos = null;
+	    ObjectInputStream ois = null;
+	    
 		try{
-		     Socket socket = new Socket(messageSending.getRecipient(), SERVER_PORT);
-
+		     socket = new Socket(InetAddress.getLocalHost(), SERVER_PORT);
+		     
+		     // open I/O streams for objects
 		     oos = new ObjectOutputStream(socket.getOutputStream());
 		     ois = new ObjectInputStream(socket.getInputStream());
 		     
@@ -50,16 +53,14 @@ public class ClientSocketHandler {
 			 System.out.println("sent waiting for hub to respond...");
 		     //oos.writeObject(messageSending);
 			 oos.writeObject(new Date());
+			 oos.flush();
 			 
-		     //messageReceived = (Message) ois.readObject();
-		     String tmp = (String) ois.readObject();
-		     
-		     System.out.println(tmp);
-		     
-		     ois.close();
-		     oos.close();
-		     //socket.close();
-		     //in buffer is ready
+		       // read an object from the server
+		        Date date = (Date) ois.readObject();
+		        System.out.print("The date is: " + date);
+		        oos.close();
+		        ois.close();
+		        
 		   } catch (UnknownHostException e) {
 			   System.out.println("Unknown host: " + messageSending.getRecipient());
 		     	System.exit(1);

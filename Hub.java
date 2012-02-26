@@ -70,7 +70,7 @@ class Hub extends Thread {
 			// Spin until a new message is received and then spawn a 
 			// HubSocketHandler thread
 			try {
-				System.out.println("Listening");
+				System.out.println("Listeninggggg");
 				Socket client = hubSocket.accept();
 				//Spawn new ServerSocketHandler thread, we assume that the
 				//hub has directed this message to the correct Server

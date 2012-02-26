@@ -137,11 +137,11 @@ public class HubSocketHandler extends Thread{
 			//oos.close();
 			//ois.close();
 			System.out.println(msg);
-			String s = "Hello World";
+			
 			//send back
-			oos = new ObjectOutputStream(this.socket.getOutputStream());
+			//oos = new ObjectOutputStream(this.socket.getOutputStream());
 			//ObjectInput ois = new ObjectInputStream(this.socket.getInputStream());
-			oos.writeObject(s);
+			oos.writeObject(new Date());
 			oos.flush();
 			oos.close();
 			ois.close();
