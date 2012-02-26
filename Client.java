@@ -64,22 +64,9 @@ public class Client {
 		return classroomList;		
 	}
 	
-	public static String getUserName(){
-		BufferedReader in=new BufferedReader(new InputStreamReader(System.in));
-		System.out.print("Enter username: ");
-		
-		String userName = null;
-		
-		try {
-			userName = in.readLine();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return userName;
-	}
 	
-	public static void handleLogin(){
-		String uName = getUserName();
+	public static void handleLogin(String uName){
+
 		ClientSocketHandler handler = new ClientSocketHandler();
 		Message responce = handler.sendReceive(uName, Message.MessageType.Client_LogIn);
 		
@@ -96,8 +83,8 @@ public class Client {
 		}
 	}
 	
-	public static void handleRegister(){
-		String uName = getUserName();
+	public static void handleRegister(String uName){
+
 		ClientSocketHandler handler = new ClientSocketHandler();
 		Message responce = handler.sendReceive(uName, Message.MessageType.Client_Register);
 		
@@ -113,4 +100,8 @@ public class Client {
 			//message compromised or bad message code
 		}
 	}
+public static void main(String[] args) {
+		handleRegister("bob");
+	}
+
 }
