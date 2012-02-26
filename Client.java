@@ -1,65 +1,10 @@
-
-import java.io.*;
-import java.net.*;
 import java.util.Scanner;
 
-public class Client {
-
-	public static String getUserName(){
-		BufferedReader in=new BufferedReader(new InputStreamReader(System.in));
-		System.out.print("Enter username: ");
-		
-		String userName = null;
-		
-		try {
-			userName = in.readLine();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return userName;
-	}
-	
-	public static void handleRegister(){
-		String uName = getUserName();
-		ClientSocketHandler handler = new ClientSocketHandler();
-		Message responce = handler.sendReceive(uName, Message.MessageType.Client_Register);
-		
-		//TODO finish codes
-		switch(responce.getCode()){
-		case 1:
-			//do something
-			break;
-		case 2:
-			//do something
-			break;
-		default:
-			//message compromised or bad message code
-		}
-	}
-	
-	public static void handleLogin(){
-		String uName = getUserName();
-		ClientSocketHandler handler = new ClientSocketHandler();
-		Message responce = handler.sendReceive(uName, Message.MessageType.Client_LogIn);
-		
-		//TODO finish codes
-		switch(responce.getCode()){
-		case 1:
-			//do something
-			break;
-		case 2:
-			//do something
-			break;
-		default:
-			//message compromised or bad message code
-		}
-	}
+public class Client extends clientImpl{
 	
     public void run() {
 		
-        
-    	Scanner inStream = new Scanner(System.in);
-         
+    	Scanner inStream = new Scanner(System.in); 
         int input;
 
         System.out.println("============================");
