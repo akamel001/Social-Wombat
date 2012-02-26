@@ -16,7 +16,7 @@ import java.util.List;
 public class UserInterface {
 	
 	static Console console;
-	static Client1 client;
+	static Client client;
 	static String currentUserName;
 	static String currentClassroomName;
 	
@@ -412,7 +412,7 @@ public class UserInterface {
             System.exit(1);
         }
         
-        client = new Client1();
+        client = new Client();
 		
 		System.out.println("Welcome to Studious Wombat!");
 		loginPage();
