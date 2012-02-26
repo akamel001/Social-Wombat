@@ -1,6 +1,5 @@
 import java.io.*;
 import java.net.*;
-import java.util.*;
 
 public class Message implements Serializable{
 	private InetAddress sender;

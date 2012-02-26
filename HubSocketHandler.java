@@ -29,7 +29,6 @@ public class HubSocketHandler extends Thread{
 			InputStream obj = s.getInputStream();
 			ObjectInput ois = new ObjectInputStream(obj);
 			msg = (Message) ois.readObject();
-			//TODO: check if the close should be here or later.
 			ois.close();
 		} catch (Exception e){
 			System.out.println(e.getMessage());
@@ -38,6 +37,9 @@ public class HubSocketHandler extends Thread{
 		return msg;
 	}
 	
+	/*
+	 * Send a message back after it's been altered
+	 */
 	private void returnMessage(Message msg){
 		//Get output stream
 		try {
@@ -46,6 +48,7 @@ public class HubSocketHandler extends Thread{
 			oos.writeObject(msg);
 			oos.flush();
 			oos.close();
+			socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Return Message Failed");
@@ -72,25 +75,39 @@ public class HubSocketHandler extends Thread{
 	 * and receives the response as a message
 	 */
 	private Message forwardToServer(Message msg){
-		//Open a socket connection with appropriate server
-		// Server can only be found by classroomID
-		InetSocketAddress newSocketAddress = new InetSocketAddress(getServer(msg),SERVER_SOCKET);
-		//Create socket
-		ServerSocket serverSocket;
+		Socket forwardSocket;
+		Message reply = null;
 		try {
-			serverSocket = new ServerSocket();
-			serverSocket.bind(newSocketAddress);
+			// Open a socket connection with appropriate server
+			forwardSocket = new Socket(getServer(msg),SERVER_SOCKET);
+			
+			// Create inputstream and outputstream
+			OutputStream out = forwardSocket.getOutputStream();
+			ObjectOutput oos = new ObjectOutputStream(out);
+			InputStream in = forwardSocket.getInputStream();
+			ObjectInput ois = new ObjectInputStream(in);
+			
+			// Write out message
+			oos.writeObject(msg);
+			oos.flush();
+			
+			// Get response
+			reply = (Message) ois.readObject();
+			
+			// Close connections
+			oos.close();
+			ois.close();
+			forwardSocket.close();
+			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.out.println("Could not open a forwarding socket");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			System.out.println("Reply is not of Message type.");
 		}
-		//TODO: add sendMessage() method
 		
-		//TODO: wait for response
-		
-		//TODO: return response message
-		
-		return null;
+		return reply;
 	}
 	
 	/*
@@ -127,7 +144,8 @@ public class HubSocketHandler extends Thread{
 					}
 					break;
 				case Client_Register:
-					
+					msg.setBody("Message Received");
+					returnMessage(msg);
 					break;
 				case Client_GetClassEnrollment:
 					// TODO: Modify data
