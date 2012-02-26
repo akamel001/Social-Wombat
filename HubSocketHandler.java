@@ -143,6 +143,7 @@ public class HubSocketHandler extends Thread{
 			//ObjectInput ois = new ObjectInputStream(this.socket.getInputStream());
 			oos.writeObject(new Date());
 			oos.flush();
+			
 			oos.close();
 			ois.close();
 			
