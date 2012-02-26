@@ -85,12 +85,14 @@ class Hub extends Thread {
 			} 
 		}
 		//Close socket
+		/*
 		try {
-			hubSocket.close();
+			//hubSocket.close();
 		} catch (IOException e) {
 			System.out.println("Couldn't close the hub socket.");
 			e.printStackTrace();
 		}	
+		*/
 	}
 
 }
