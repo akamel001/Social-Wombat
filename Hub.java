@@ -58,15 +58,15 @@ class Hub extends Thread {
 		
 		ServerSocket hubSocket = null;
 
-		while(listening){
-			//Create and listen in on a port
-			try {
-				hubSocket = new ServerSocket(CLIENT_SOCKET);
-			} catch (IOException e) {
-				System.out.println("Could not listen on port: " + CLIENT_SOCKET);
-				System.exit(-1);
-			}
-			
+		
+		//Create and listen in on a port
+		try {
+			hubSocket = new ServerSocket(CLIENT_SOCKET);
+		} catch (IOException e) {
+			System.out.println("Could not listen on port: " + CLIENT_SOCKET);
+			System.exit(-1);
+		}
+		while(listening){	
 			// Spin until a new message is received and then spawn a 
 			// HubSocketHandler thread
 			try {
