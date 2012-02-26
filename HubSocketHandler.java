@@ -30,6 +30,7 @@ public class HubSocketHandler extends Thread{
 			ObjectOutput oos = new ObjectOutputStream(this.socket.getOutputStream());
 			ObjectInput ois = new ObjectInputStream(this.socket.getInputStream());
 			msg = (Message) ois.readObject();
+			oos.close();
 			ois.close();
 		} catch (Exception e){
 			System.out.println(e.getMessage());
