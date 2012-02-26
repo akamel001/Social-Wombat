@@ -144,7 +144,8 @@ public class HubSocketHandler extends Thread{
 					}
 					break;
 				case Client_Register:
-					
+					msg.setBody("Message Received");
+					returnMessage(msg);
 					break;
 				case Client_GetClassEnrollment:
 					// TODO: Modify data
