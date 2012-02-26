@@ -112,13 +112,15 @@ public class ClassData{
 		}		
 	}
 
-	/** Adds a user for this class with default permmissions=0.
+	/** DEPRECATED! Use setPermissons()!
 	 * 
 	 * @param id
 	 * @return
 	 */
 	public int addUser(String id){
-		if (id.equals("") || id == null)
+		/*
+		 if (id.equals("") || id == null)
+		 
 			return -1;
 		if(userList.containsKey(id))
 			return -1;
@@ -126,6 +128,8 @@ public class ClassData{
 			userList.put(id, 0);
 			return 0;
 		}
+		*/
+		return -1;
 	}
 
 

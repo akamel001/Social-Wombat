@@ -34,6 +34,7 @@ public class ServerList{
 	public int addServer(InetAddress ip, int port){
 		
 		// check to see if ip/port combo exists
+		// if it does, disallow
 		Set<Integer> set = serverList.keySet();  		
 		synchronized(serverList) { 
 			Iterator<Integer> i = set.iterator();
