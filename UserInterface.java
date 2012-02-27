@@ -178,7 +178,7 @@ public class UserInterface {
 	    case 2:
 	    	String threadNameTemp = console.readLine("Please specify a thread topic: ");
 	    	String postContent = console.readLine("Please write your post's content: ");
-	    	if (client.createThread(threadNameTemp, postContent, currentUserName)){
+	    	if (client.createThread(threadNameTemp, postContent, currentUserName, currentClassroomName)){
 	    		currentThreadName = threadNameTemp;
 				threadPage(null);
 			} else {
@@ -427,11 +427,21 @@ public class UserInterface {
 	/**
 	 * 
 	 * @param map
-	 * @return
+	 * @return uiString
 	 */
 	private static String mapToUIString(Map<String, Integer> map) {
-		// TODO Auto-generated method stub
-		return null;
+		// TODO depends on sorting
+		int i = 1;
+		String uiString = "";
+		String uiStringTemp;
+		for (String key : map.keySet()){
+			uiStringTemp = "";
+			uiStringTemp = uiStringTemp.concat(Integer.toString(i) + ". ");
+			i++;
+			uiStringTemp = uiStringTemp.concat(key);
+			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
+		}
+		return uiString;
 	}
 	
 	/**
