@@ -19,6 +19,26 @@ class Hub extends Thread {
 		// Constructor
 	}
 
+	/*
+	 * Add a user to the userList.
+	 */
+	public void registerClient(String username){
+		//Add
+		if(userList.addUser(username)){
+			System.out.println("User " + username + " added successfully!");
+		} else {
+			System.out.println("User " + username + " could not be added");
+		}
+	}
+	
+	/*
+	 * Add a server to the serverList
+	 */
+	public void addServer(InetAddress server){
+		
+	}
+	
+	
 	/* 
 	 * Reads a given object from the filesystem
 	 */

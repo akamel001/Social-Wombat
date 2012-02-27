@@ -127,6 +127,7 @@ public class HubSocketHandler extends Thread{
 		}
 		if (valid){
 			// Preset to failure
+			@SuppressWarnings("unused")	//Is actually referenced
 			int returnCode = -1;
 			Message reply = null;
 			//Handle the different types of client messages
@@ -143,18 +144,6 @@ public class HubSocketHandler extends Thread{
 						msg.setCode(1);
 					} else {
 						//Reply with denial
-						msg.setCode(-1);
-					}
-					returnMessage(msg);
-					break;
-				case Client_Register:
-					//Extract username/sessionid from cookie
-					String username = msg.getCookie().getKey();
-					//Add to userlist
-					if(userList.addUser(username)){
-						msg.setBody("User " + username + " was created.");
-						msg.setCode(1);
-					} else {
 						msg.setCode(-1);
 					}
 					returnMessage(msg);
