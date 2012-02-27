@@ -54,7 +54,7 @@ public class Client {
 	 * @return boolean corresponding to whether the classroom can be requested
 	 */
 	public boolean requestToJoinClassroom(String classroomRequestName, String requesterUserName) {
-		//TODO Set cookie with uName, Set message id with classroom name, message type
+		//TODO Set cookie with uName, Set message id with classroom name, message type Client_RequestEnrollment, message body 0
 		//check message code on return 
 		//add debug line
 		return true;		
@@ -107,6 +107,7 @@ public class Client {
 	 */
 	public boolean createThread(String threadName, String postContent, String currentUserName, String classroomName) {
 		// TODO Message type createThread, cookie id username, ArrayList<string> with index 0 as threadname and 1 as postContent, message class id is class name 
+		// TODO add debug logic
 		return true;
 	}
 
@@ -115,15 +116,17 @@ public class Client {
 	 */
 	public void deleteClassroom(String classroomName, String userName) {
 		// TODO Auto-generated method stub
-		
+		// TODO Set cookie uname and message type client_del classroom
+		// TODO add debug log
 	}
 
 	/**
 	 * 
 	 */
 	public void disjoinClassroom(String classroomName, String userName) {
-		// TODO Auto-generated method stub
-		
+		//TODO Set cookie with uName, Set message id with classroom name, message type Client_RequestEnrollment, message body -1
+		//check message code on return 
+		//add debug line
 	}
 
 	public List<String> getThreadListForClassroom(String classroomName) {
