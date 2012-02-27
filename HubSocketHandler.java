@@ -1,5 +1,7 @@
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class HubSocketHandler extends Thread{
 	//private static int CLIENT_SOCKET = 4444;
@@ -127,7 +129,6 @@ public class HubSocketHandler extends Thread{
 		}
 		if (valid){
 			// Preset to failure
-			@SuppressWarnings("unused")	//Is actually referenced
 			int returnCode = -1;
 			Message reply = null;
 			//Handle the different types of client messages
@@ -148,35 +149,65 @@ public class HubSocketHandler extends Thread{
 					}
 					returnMessage(msg);
 					break;
+				// Returns in body all users in a classroom
 				case Client_GetClassEnrollment:
-					// TODO: Modify data
-					
-					// TODO: Create a message to forward to appropriate server
-					
-					// TODO: Send message and wait for server response
-					
-					// TODO: Server response is forwarded back to this.socket
+					//String = User, Integer = 
+					Map<String, Integer> classEnroll = classList.getClassEnrollment(msg.getClassroom_ID());
+					if (classEnroll == null){
+						//error
+						msg.setCode(-1);
+					} else {
+						msg.setCode(1);
+						msg.setBody(classEnroll);
+					}
+					returnMessage(msg);
 					break;
 				// Return in body a list of the classes that a client is enrolled in
 				case Client_GetUserEnrollment:
-				
+					String usr = msg.getCookie().getKey();
+					Map<String, Integer> userEnroll = classList.getUserEnrollment(usr);
+					if (userEnroll == null){
+						//error
+						msg.setCode(-1);
+					} else {
+						msg.setCode(1);
+						msg.setBody(userEnroll);
+					}
+					returnMessage(msg);
 					break;
-				// Change the permissions for another user	
+				// Change the permissions for another user
+				// Store user to be changed and the permissions as an arraylist
+				// [0] = username, [1] = permissions
 				case Client_SetPermissions:
-
-					break;
-				// Return the list of users enrolled in a classroom
-				case Client_GetEnrollmentList:
-
+					@SuppressWarnings("unchecked")
+					ArrayList<String> a= (ArrayList<String>) msg.getBody();
+					// Person
+					String personToChange = a.get(0);
+					// Permission to set for Person
+					int per = Integer.parseInt(a.get(1));
+					// Server's return code
+					returnCode = classList.setUserPermissions(personToChange, msg.getClassroom_ID(), per);
+					// Reply
+					msg.setCode(returnCode);
+					returnMessage(msg);
 					break;
 				case Client_DeleteSelf:
-
+					String u = msg.getCookie().getKey();
+					if(userList.removeUser(u)){
+						//success
+						msg.setCode(1);
+					} else{
+						//fail
+						msg.setCode(-1);
+					}
+					returnMessage(msg);
 					break;
 				// Request to be added to a class
 				case Client_RequestEnrollment:
 					String requestName = msg.getCookie().getKey();
-					// 0 for pending
-					returnCode = classList.setUserPermissions(requestName, msg.getClassroom_ID(), 0);
+					// 0 for pending enrollment, -1 for dijoining
+					int p = (Integer)msg.getBody();
+					returnCode = classList.setUserPermissions(requestName, msg.getClassroom_ID(), p);
 					break;
 					
 				// Client -> Hub -> Server
@@ -194,7 +225,7 @@ public class HubSocketHandler extends Thread{
 				 * Array[0] = Post_Name
 				 * Array[1] = Post_body 	
 				 */
-				case Client_CreatePost:
+				case Client_CreateThread:
 					reply = forwardToServer(msg);
 					returnMessage(reply);
 					break;
@@ -224,7 +255,9 @@ public class HubSocketHandler extends Thread{
 					break;	
 					
 				default:
-					//TODO: Send request denied back to the client
+					msg.setBody("Request denied.");
+					msg.setCode(-1);
+					returnMessage(msg);
 					break;
 				
 			}

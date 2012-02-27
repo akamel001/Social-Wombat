@@ -178,7 +178,7 @@ public class UserInterface {
 	    case 2:
 	    	String threadNameTemp = console.readLine("Please specify a thread topic: ");
 	    	String postContent = console.readLine("Please write your post's content: ");
-	    	if (client.createThread(threadNameTemp, postContent, currentUserName)){
+	    	if (client.createThread(threadNameTemp, postContent, currentUserName, currentClassroomName)){
 	    		currentThreadName = threadNameTemp;
 				threadPage(null);
 			} else {
@@ -195,7 +195,7 @@ public class UserInterface {
 	        break;
 	    // delete classroom/remove self
 	    case 5:
-	    	client.deleteClassroom(currentClassroomName);
+	    	client.deleteClassroom(currentClassroomName, currentUserName);
 	    	// TODO: client.disjoinClassroom(currentClassroomName, currentUserName);
 	    	homePage(null);
 	        break;
@@ -218,7 +218,7 @@ public class UserInterface {
 	private static void threadListPage(String messages) {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		List<String> threadList = client.getClassroomListForUser(currentUserName);		
+		List<String> threadList = client.getThreadListForClassroom(currentUserName);		
 		displayPage(sTHREADLISTPAGE, info, messages, null, listToUIString(threadList));
 		
 		int selection = getValidSelectionFromUser(threadList.size());
@@ -427,11 +427,21 @@ public class UserInterface {
 	/**
 	 * 
 	 * @param map
-	 * @return
+	 * @return uiString
 	 */
 	private static String mapToUIString(Map<String, Integer> map) {
-		// TODO Auto-generated method stub
-		return null;
+		// TODO depends on sorting
+		int i = 1;
+		String uiString = "";
+		String uiStringTemp;
+		for (String key : map.keySet()){
+			uiStringTemp = "";
+			uiStringTemp = uiStringTemp.concat(Integer.toString(i) + ". ");
+			i++;
+			uiStringTemp = uiStringTemp.concat(key);
+			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
+		}
+		return uiString;
 	}
 	
 	/**
