@@ -19,7 +19,11 @@ class Hub extends Thread {
 		// Constructor
 	}
 
+	/* 
+	 * Reads a given object from the filesystem
+	 */
 	private static Object readFromDisk(String name){
+		// TODO: Test
 		Object o = null;
 		try {
 		    FileInputStream fin = new FileInputStream(name);
@@ -38,6 +42,7 @@ class Hub extends Thread {
 	 * Writes a given object to the filesystem
 	 */
 	private static void writeToDisk(Object o, String name){
+		// TODO: Test
 		FileOutputStream fos;
 		try {
 			fos = new FileOutputStream(name);
@@ -131,9 +136,9 @@ class Hub extends Thread {
 			System.out.println("Couldn't close");
 		}
 		// Write out to disk
-		writeToDisk(classList, "hub.classlist");
-		writeToDisk(userList, "hub.userlist");
-		writeToDisk(serverList, "hub.serverlist");
+		writeToDisk(classList, classListName);
+		writeToDisk(userList, userListName);
+		writeToDisk(serverList, serverListName);
 	}
 
 }

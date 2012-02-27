@@ -2,35 +2,77 @@ import java.io.*;
 import java.net.*;
 
 public class Server {
-	private static int CLIENT_SOCKET = 4444;
+	//private static int CLIENT_SOCKET = 4444;
 	private static int SERVER_SOCKET = 5050;
-	private static boolean listening = true;
-	// TODO: data for now is any relevant data that needs to be passed to a
-	// handler thread
-	private static ClassDB classDB;;
+	public static boolean listening = true;
+
+	//datastructure that will be passed to every spawned serversockethandler thread
+	private static ClassDB classDB;
 	
+	//default, is reset in constructor
+	static String classDBName = "server.classDB";	
+
 	// Constructor
-	public Server() {
+	public Server(String name) {
 		// Constructor
+		classDBName = name + ".classDB";
 		
+	}
+	
+	/* 
+	 * Reads a ClassDB from the filesystem
+	 */
+	private static ClassDB readFromDisk(String name){
+		// TODO: Test
+		ClassDB c = null;
+		try {
+		    FileInputStream fin = new FileInputStream(name);
+		    ObjectInputStream ois = new ObjectInputStream(fin);
+		    c = (ClassDB) ois.readObject();
+		    ois.close();
+		} catch (IOException e) { 
+			e.printStackTrace(); 
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return c;
+	}
+	
+	/*
+	 * Writes a given object to the filesystem
+	 */
+	private static void writeToDisk(Object o, String name){
+		// TODO: Test
+		FileOutputStream fos;
+		try {
+			fos = new FileOutputStream(name);
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(o);
+			oos.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/*
 	 * Checks if a given file exists in the current running directory
 	 */
 	private static boolean fileExists(String file){
-		// TODO: Implement finding a given file in the file system
-		return false;
+		return new File(file).exists();
 	}
 	
 	/*
 	 * Initialize data structures
 	 */
 	private static void initializeData(){
+		
 		//Create or import ServerList
 		//Check if ServerList exists
-		if (fileExists("classDB")){
+		if (fileExists(classDBName)){
 			//import file
+			classDB = readFromDisk(classDBName);
 		} else {
 			//create new ServerList
 			classDB = new ClassDB();
@@ -69,16 +111,16 @@ public class Server {
 			} 
 			catch (IOException e) {
 				System.out.println("Accept failed on port: " + SERVER_SOCKET);
-				System.exit(-1);
 			}
 		}
 		//Close socket
 		try {
 			serverSocket.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.out.println("Error closing server");
 		}
-		
+		// Write out to disk
+		writeToDisk(classDB, classDBName);
 	}
 }

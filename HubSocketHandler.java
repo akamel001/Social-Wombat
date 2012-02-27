@@ -217,6 +217,10 @@ public class HubSocketHandler extends Thread{
 					reply = forwardToServer(msg);
 					returnMessage(reply);
 					break;
+				case Client_DeleteComment:
+					reply = forwardToServer(msg);
+					returnMessage(reply);
+					break;	
 					
 				default:
 					//TODO: Send request denied back to the client

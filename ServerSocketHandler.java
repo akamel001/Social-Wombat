@@ -4,7 +4,7 @@ import java.net.*;
 import java.util.ArrayList;
 
 public class ServerSocketHandler extends Thread{
-	private static int SERVER_SOCKET = 5050;
+	//private static int SERVER_SOCKET = 5050;
 	
 	ClassDB classDB;
 	Socket socket;
@@ -65,7 +65,9 @@ public class ServerSocketHandler extends Thread{
 			valid = false; // Don't waste time on bad transmissions
 		}
 		if (valid){
+			// Preset return code to failure
 			int returnCode = -1;
+			
 			//Handle the different types of client messages
 			switch(msg.getType()) {
 				
@@ -83,31 +85,63 @@ public class ServerSocketHandler extends Thread{
 				 * Array[1] = Post_body 	
 				 */
 				case Client_CreatePost:
+					@SuppressWarnings("unchecked")
 					ArrayList<String> post = (ArrayList<String>) msg.getBody();
 					String postName = (String)post.get(0);
 					String postBody = (String)post.get(1);
 					returnCode = classDB.addPost(msg.getClassroom_ID(), postName, postBody);
+					msg.setCode(returnCode);
+					returnMessage(msg);
 					break;
+				/*
+				 * Create client expects postID and comment to be stored as index
+				 * [0] and [1] respectively in the msg.body as an ArrayList.
+				 */
 				case Client_CreateComment:
-
+					@SuppressWarnings("unchecked")
+					ArrayList<String> com = (ArrayList<String>)msg.getBody();
+					String postId = com.get(0);
+					String comment = com.get(1);
+					returnCode = classDB.addComment(msg.getClassroom_ID(), postId, comment);
+					msg.setCode(returnCode);
+					returnMessage(msg);
 					break;
 				case Client_GoToClassroom:
-
+					// TODO: Looks like the function isn't implemented in ClassDB yet?
 					break;
 				case Client_GoToThread:
-
+					// TODO: Same
 					break;
 				case Client_DeleteClassroom:
-
+					returnCode = classDB.removeClassRoom(msg.getClassroom_ID());
+					msg.setCode(returnCode);
+					returnMessage(msg);
 					break;
 				case Client_DeleteThread:
-
+					int p = (Integer)msg.getBody();
+					returnCode = classDB.removePost(msg.getClassroom_ID(), p);
+					msg.setCode(returnCode);
+					returnMessage(msg);
 					break;
-					
+				/*
+				 * Requires postId and commentID which will be stored in the 
+				 * msg.body() as an ArrayList<Integer>
+				 */
+				case Client_DeleteComment:
+					@SuppressWarnings("unchecked")
+					ArrayList<Integer> commentParams = (ArrayList<Integer>)msg.getBody();
+					int postID = commentParams.get(0);
+					int commentID = commentParams.get(1);
+					returnCode = classDB.removeComment(msg.getClassroom_ID(), postID, commentID);
+					msg.setCode(returnCode);
+					returnMessage(msg);
+					break;	
 				default:
-					//TODO: Send request denied back to the client
+					//For illegal requests
+					msg.setBody("Illegal Request Sent");
+					msg.setCode(-1);
+					returnMessage(msg);
 					break;
-				
 			}
 		}
 		// Close everything

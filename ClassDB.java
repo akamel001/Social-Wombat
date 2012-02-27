@@ -89,7 +89,9 @@ public class ClassDB implements Serializable{
 	 * @param comment The comment to be added.
 	 * @return Returns 1 if the comment had been added, -1 otherwise. 
 	 */
-	public int addComment(String className, int postId, String comment){
+	public int addComment(String className, String postIdString, String comment){
+		// Added conversion because postID and comment are stored in a string array
+		int postId = Integer.parseInt(postIdString);
 		if (className==null || comment==null)
 			return -1;
 		ClassRoom c = classRoomList.get(className);
