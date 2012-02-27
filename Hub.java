@@ -11,6 +11,9 @@ class Hub extends Thread {
 	static ClassList classList;
 	static UserList userList;
 	static ServerList serverList;
+	static String classListName = "hub.classlist";
+	static String userListName = "hub.userlist";
+	static String serverListName = "hub.serverlist";
 	
 	public Hub(){
 		// Constructor
@@ -42,10 +45,8 @@ class Hub extends Thread {
 			oos.writeObject(o);
 			oos.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -54,30 +55,30 @@ class Hub extends Thread {
 	 * Checks if a given file exists in the current running directory
 	 */
 	private static boolean fileExists(String file){
-		// TODO: Implement finding a given file in the file system
-		return false;
+		return new File(file).exists();
 	}
 	
 	/*
 	 * Initializes our data structures
 	 */
 	private static void initializeData(){
-		//Create or import ClassList and UserList
-		//Check if ClassList exists
-		if (fileExists("ClassList")){
-			//import file
+		//Create or import ClassList, UserList, ServerList
+		if (fileExists(classListName)){
+			classList = (ClassList) readFromDisk(classListName);
 		} else {
 			//create new ClassList
 			classList = new ClassList();
 		}
-		if (fileExists("UserList")){
-			//import file
+		if (fileExists(userListName)){
+			userList = (UserList) readFromDisk(userListName);
 		} else {
+			//create new Userlist
 			userList = new UserList();
 		}
-		if (fileExists("ServerList")){
-			//import file
+		if (fileExists(serverListName)){
+			serverList = (ServerList) readFromDisk(serverListName);
 		} else {
+			//create new ServerList
 			serverList = new ServerList();
 		}
 	}
@@ -130,9 +131,9 @@ class Hub extends Thread {
 			System.out.println("Couldn't close");
 		}
 		// Write out to disk
-		writeToDisk(classList, "ClassList");
-		writeToDisk(userList, "UserList");
-		writeToDisk(serverList, "ServerList");
+		writeToDisk(classList, "hub.classlist");
+		writeToDisk(userList, "hub.classlist");
+		writeToDisk(serverList, "hub.classlist");
 	}
 
 }

@@ -140,16 +140,18 @@ public class HubSocketHandler extends Thread{
 					String sessionKey = msg.getCookie().getKey();
 					if(userList.validateUser(sessionKey)){
 						//Reply with confirmation
-						msg.setBody("true");
+						boolean reply = new Boolean(true);
+						msg.setBody(reply);
 						returnMessage(msg);
 					} else {
 						//Reply with denial
-						msg.setBody("false");
+						boolean reply = new Boolean(false);
+						msg.setBody(reply);
 						returnMessage(msg);
 					}
 					break;
 				case Client_Register:
-					String s = msg.getBody();
+					String s = (String) msg.getBody();
 					msg.setBody("User " + s + " was created.");
 					returnMessage(msg);
 					break;
