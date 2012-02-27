@@ -109,4 +109,15 @@ public class ClassDB implements Serializable{
 		int out = c.removeComment(postId, commentId);
 		return out;
 	}
+	
+	/**
+	 * Returns a list of all the posts in a class.
+	 * @return Returns a list of Integers mapped to Strings 
+	 * where the Integer is the post id and the String is the post title.
+	 */
+	public Map<Integer, String> getTitleList(String className){
+		ClassRoom c = classRoomList.get(className);
+		Map<Integer, String> out = c.getTitleList();
+		return out;
+	}
 }

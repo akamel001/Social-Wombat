@@ -2,8 +2,6 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Collections;
-import java.util.Set;
-import java.util.Iterator;
 
 
 /**
@@ -111,7 +109,7 @@ public class Post implements Serializable{
 	 * Returns the title of the post.
 	 * @return A String containing the title of the post.
 	 */
-	public String getTitle(){
+	protected String getTitle(){
 		return commentList.get(1);
 	}
 	
