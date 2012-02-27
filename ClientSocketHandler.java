@@ -9,13 +9,14 @@ public class ClientSocketHandler {
 
 
 
-	public static Message constructMessage(String uName, Message.MessageType type){
+	public static Message constructMessage(String uName, Message.MessageType type, String body){
 
 
 		Message message = new Message();
 		message.setType(type);
-		message.setBody(uName);
+		message.setBody(body);
 		message.setCode(0); // <- decide what codes are...?
+		
 
 		try {
 			//TODO change to static variables uses localhost for now
@@ -30,7 +31,7 @@ public class ClientSocketHandler {
 
 	public Message sendReceive(String uName, Message.MessageType type){
 
-		Message messageSending = constructMessage(uName, type);
+		Message messageSending = constructMessage(uName, type, "");
 
 		//TODO construct the received message from the hub
 		Message messageReceived = null; 

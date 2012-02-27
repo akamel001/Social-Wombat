@@ -97,7 +97,8 @@ public class Client {
 			//message compromised or bad message code
 		}
 	}
-public static void main(String [] args) {
+	
+	public static void main(String [] args) {
 		handleRegister("bob");
 	}
 
