@@ -218,7 +218,7 @@ public class UserInterface {
 	private static void threadListPage(String messages) {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		List<String> threadList = client.getClassroomListForUser(currentUserName);		
+		List<String> threadList = client.getThreadListForClassroom(currentUserName);		
 		displayPage(sTHREADLISTPAGE, info, messages, null, listToUIString(threadList));
 		
 		int selection = getValidSelectionFromUser(threadList.size());
