@@ -218,7 +218,7 @@ public class UserInterface {
 	private static void threadListPage(String messages) {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		List<String> threadList = client.getThreadListForClassroom(currentUserName);		
+		List<String> threadList = client.getThreadListForClassroom(currentClassroomName, currentUserName);		
 		displayPage(sTHREADLISTPAGE, info, messages, null, listToUIString(threadList));
 		
 		int selection = getValidSelectionFromUser(threadList.size());
@@ -276,7 +276,7 @@ public class UserInterface {
 	private static void memberListPage(String messages) {		
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		List<String> memberList = client.getMemberListForClassroom(currentClassroomName);	
+		List<String> memberList = client.getMemberListForClassroom(currentClassroomName, currentUserName);	
 		displayPage(sMEMBERLISTPAGE, info, messages, null, listToUIString(memberList));
 
 		int selection = getValidSelectionFromUser(memberList.size());
@@ -305,7 +305,7 @@ public class UserInterface {
 	        break;
 	    // change status
 	    case 2:
-	    	client.changeStatus(currentMemberName);
+	    	client.changeStatus(currentMemberName, currentUserName);
 	    	memberPage(messages);
 	        break;
 	    // go back to classroom
@@ -327,7 +327,7 @@ public class UserInterface {
 	private static void requestListPage(String messages) {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		List<String> requestList = client.getRequestListForClassroom(currentClassroomName);
+		List<String> requestList = client.getRequestListForClassroom(currentClassroomName, currentUserName);
 		displayPage(sREQUESTLISTPAGE, info, messages, null, listToUIString(requestList));
 		
 		int selection = getValidSelectionFromUser(requestList.size());
@@ -352,13 +352,13 @@ public class UserInterface {
 		switch (selection) {
 		// confirm as a member
 	    case 1:
-	    	client.confirmAsMemberOfClassroom(currentMemberName, currentClassroomName);
+	    	client.confirmAsMemberOfClassroom(currentMemberName, currentClassroomName, currentUserName);
 	    	currentMemberName = null;
 	        requestListPage(null);
 	        break;
 	    // deny membership
 	    case 2:
-	    	client.denyMembershipToClassroom(currentMemberName, currentClassroomName);
+	    	client.denyMembershipToClassroom(currentMemberName, currentClassroomName, currentUserName);
 	    	currentMemberName = null;
 	    	requestListPage(null);
 	        break;
