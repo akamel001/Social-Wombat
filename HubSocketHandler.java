@@ -191,18 +191,15 @@ public class HubSocketHandler extends Thread{
 					msg.setCode(returnCode);
 					returnMessage(msg);
 					break;
-				// Return the list of users enrolled in a classroom
-				case Client_GetEnrollmentList:
-					//TODO:
-					break;
 				case Client_DeleteSelf:
-					//TODO:
+					
 					break;
 				// Request to be added to a class
 				case Client_RequestEnrollment:
 					String requestName = msg.getCookie().getKey();
-					// 0 for pending
-					returnCode = classList.setUserPermissions(requestName, msg.getClassroom_ID(), 0);
+					// 0 for pending enrollment, -1 for dijoining
+					int p = (Integer)msg.getBody();
+					returnCode = classList.setUserPermissions(requestName, msg.getClassroom_ID(), p);
 					break;
 					
 				// Client -> Hub -> Server

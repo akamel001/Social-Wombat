@@ -44,7 +44,7 @@ public class UserList implements Serializable{
 	}
 	
 	public boolean removeUser(String id){
-		//
+		//TODO: implement
 		return false;
 	}
 	
