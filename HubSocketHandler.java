@@ -10,6 +10,8 @@ public class HubSocketHandler extends Thread{
 	UserList userList;
 	ServerList serverList;
 	Socket socket;
+	ObjectOutput oos;
+	ObjectInput ois;
 
 	/*
 	 * A handler thread that is spawned for each message sent to a socket.
@@ -19,6 +21,14 @@ public class HubSocketHandler extends Thread{
 		this.classList = classList;
 		this.userList = userList;
 		this.serverList = serverList;
+		// Create datastreams
+		try {
+			this.oos = new ObjectOutputStream(this.socket.getOutputStream());
+			this.ois = new ObjectInputStream(this.socket.getInputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Could not create input and output streams");
+		}
 	}
 	
 	/*
@@ -27,12 +37,7 @@ public class HubSocketHandler extends Thread{
 	private Message getMessage(){
 		Message msg = null;
 		try {
-			@SuppressWarnings("unused")
-			ObjectOutput oos = new ObjectOutputStream(this.socket.getOutputStream());
-			ObjectInput ois = new ObjectInputStream(this.socket.getInputStream());
 			msg = (Message) ois.readObject();
-			oos.close();
-			ois.close();
 		} catch (Exception e){
 			System.out.println(e.getMessage());
 			System.out.println("Deserializing message failed.");
@@ -46,16 +51,12 @@ public class HubSocketHandler extends Thread{
 	private void returnMessage(Message msg){
 		//Get output stream
 		try {
-			ObjectOutput oos = new ObjectOutputStream(socket.getOutputStream());
 			oos.writeObject(msg);
 			oos.flush();
-			oos.close();
-			socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Return Message Failed");
-		}
-		
+		}	
 	}
 	
 	/*
@@ -69,7 +70,6 @@ public class HubSocketHandler extends Thread{
 		int server = classList.getClassServer(classID);
 		//return server
 		return serverList.getAddress(server);
-		
 	}
 	
 	/*
@@ -84,21 +84,19 @@ public class HubSocketHandler extends Thread{
 			forwardSocket = new Socket(getServer(msg),SERVER_SOCKET);
 			
 			// Create inputstream and outputstream
-			OutputStream out = forwardSocket.getOutputStream();
-			ObjectOutput oos = new ObjectOutputStream(out);
-			InputStream in = forwardSocket.getInputStream();
-			ObjectInput ois = new ObjectInputStream(in);
+			ObjectOutput forwardOut = new ObjectOutputStream(forwardSocket.getOutputStream());
+			ObjectInput forwardIn = new ObjectInputStream(forwardSocket.getInputStream());
 			
 			// Write out message
-			oos.writeObject(msg);
-			oos.flush();
+			forwardOut.writeObject(msg);
+			forwardOut.flush();
 			
 			// Get response
-			reply = (Message) ois.readObject();
+			reply = (Message) forwardIn.readObject();
 			
 			// Close connections
-			oos.close();
-			ois.close();
+			forwardOut.close();
+			forwardIn.close();
 			forwardSocket.close();
 			
 		} catch (IOException e) {
@@ -123,37 +121,9 @@ public class HubSocketHandler extends Thread{
 		boolean valid = true;
 		//Read and deserialize Message from Socket
 		
-		/*
-		 * Uncomment after debugging
-		 */
-		//Message msg = getMessage();
+		Message msg = getMessage();
 		
-		//Delete after debugging
-		try {
-			@SuppressWarnings("unused")
-			ObjectOutput oos = new ObjectOutputStream(this.socket.getOutputStream());
-			ObjectInput ois = new ObjectInputStream(this.socket.getInputStream());
-			Date msg = (Date) ois.readObject();
-			//oos.close();
-			//ois.close();
-			System.out.println(msg);
-			
-			//send back
-			//oos = new ObjectOutputStream(this.socket.getOutputStream());
-			//ObjectInput ois = new ObjectInputStream(this.socket.getInputStream());
-			oos.writeObject(new Date());
-			oos.flush();
-			
-			oos.close();
-			ois.close();
-			
-		} catch (Exception e){
-			System.out.println(e.getMessage());
-			System.out.println("Deserializing message failed.");
-		}
-		////////////////////////
 		
-		/*
 		if (msg == null){
 			System.out.println("Message was null");
 			valid = false; // Don't waste time on bad transmissions
@@ -170,16 +140,19 @@ public class HubSocketHandler extends Thread{
 					String sessionKey = msg.getCookie().getKey();
 					if(userList.validateUser(sessionKey)){
 						//Reply with confirmation
-						msg.setBody("true");
+						boolean reply = new Boolean(true);
+						msg.setBody(reply);
 						returnMessage(msg);
 					} else {
 						//Reply with denial
-						msg.setBody("false");
+						boolean reply = new Boolean(false);
+						msg.setBody(reply);
 						returnMessage(msg);
 					}
 					break;
 				case Client_Register:
-					msg.setBody("Message Received");
+					String s = (String) msg.getBody();
+					msg.setBody("User " + s + " was created.");
 					returnMessage(msg);
 					break;
 				case Client_GetClassEnrollment:
@@ -235,7 +208,17 @@ public class HubSocketHandler extends Thread{
 					break;
 				
 			}
-		}*/
+		}
+		// Close everything
+		try {
+			oos.close();
+			ois.close();
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Couldn't close");
+		}
+
 	}
 	
 	

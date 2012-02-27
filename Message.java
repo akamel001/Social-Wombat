@@ -2,9 +2,11 @@ import java.io.*;
 import java.net.*;
 
 public class Message implements Serializable{
+
+	private static final long serialVersionUID = 8227312404679677099L;
 	private InetAddress sender;
 	private InetAddress recipient;
-	private String body;
+	private Object body;
 	private MessageType type;
 	private Cookie cookie;
 	private int code;
@@ -67,11 +69,11 @@ public class Message implements Serializable{
 		this.recipient = recipient;
 	}
 
-	public String getBody() {
+	public Object getBody() {
 		return body;
 	}
 
-	public void setBody(String body) {
+	public void setBody(Object body) {
 		this.body = body;
 	}
 
