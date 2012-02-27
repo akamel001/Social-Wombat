@@ -80,6 +80,7 @@ public class Client {
 	}
 	
 	public static void main(String [] args) {
+<<<<<<< HEAD
 		if (handleLogin("bob") == false)
 			System.out.println("login with bob failed");
 		if (handleRegister("bob") == true)
@@ -88,6 +89,23 @@ public class Client {
 			System.out.println("bob was logged in!!");
 			
 		
+=======
+		handleRegister("bob");
+>>>>>>> Added thread creation.
+	}
+
+	
+	// New Stuff
+	/**
+	 * This method creates a new thread with threadName and postContent.
+	 * @param threadName
+	 * @param postContent
+	 * @param currentUserName
+	 * @return
+	 */
+	public boolean createThread(String threadName, String postContent, String currentUserName) {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 }

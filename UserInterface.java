@@ -18,51 +18,52 @@ public class UserInterface {
 	static Client client;
 	static String currentUserName;
 	static String currentClassroomName;
+	static String currentThreadName;
 	
 	// Below is a bunch of strings used in the text-based user interface.
-	private static final String sNEW_LINE = System.getProperty("line.separator");
-	private static final String sBIGDIVIDER =			"+==========================================+" + sNEW_LINE;
-	private static final String sSMALLDIVIDER =			"+------------------------------------------+" + sNEW_LINE;
-	private static final String sLOGIN =  				"|                 LOG IN                   |" + sNEW_LINE;
-	private static final String sHOMEPAGE =  			"|                  HOME                    |" + sNEW_LINE;
-	private static final String sCLASSROOMLISTPAGE =   	"|             CLASSROOM LIST               |" + sNEW_LINE;
-	private static final String sCLASSROOMPAGE =   		"|                CLASSROOM                 |" + sNEW_LINE;
-	private static final String sTHREADLISTPAGE =   	"|               THREAD LIST                |" + sNEW_LINE;
-	private static final String sTHREADPAGE =   		"|                 THREAD                   |" + sNEW_LINE;
-	private static final String sMEMBERLISTPAGE =   	"|               MEMBER LIST                |" + sNEW_LINE;
-	private static final String sMEMBERPAGE =  			"|                 MEMBER                   |" + sNEW_LINE;
-	private static final String sREQUESTLISTPAGE =   	"|               REQUEST LIST               |" + sNEW_LINE;
-	private static final String sREQUESTPAGE =   		"|                REQUEST                   |" + sNEW_LINE;
+	private static final String sNEWLINE = System.getProperty("line.separator");
+	private static final String sBIGDIVIDER =			"+==========================================+" + sNEWLINE;
+	private static final String sSMALLDIVIDER =			"+------------------------------------------+" + sNEWLINE;
+	private static final String sLOGIN =  				"|                 LOG IN                   |" + sNEWLINE;
+	private static final String sHOMEPAGE =  			"|                  HOME                    |" + sNEWLINE;
+	private static final String sCLASSROOMLISTPAGE =   	"|             CLASSROOM LIST               |" + sNEWLINE;
+	private static final String sCLASSROOMPAGE =   		"|                CLASSROOM                 |" + sNEWLINE;
+	private static final String sTHREADLISTPAGE =   	"|               THREAD LIST                |" + sNEWLINE;
+	private static final String sTHREADPAGE =   		"|                 THREAD                   |" + sNEWLINE;
+	private static final String sMEMBERLISTPAGE =   	"|               MEMBER LIST                |" + sNEWLINE;
+	private static final String sMEMBERPAGE =  			"|                 MEMBER                   |" + sNEWLINE;
+	private static final String sREQUESTLISTPAGE =   	"|               REQUEST LIST               |" + sNEWLINE;
+	private static final String sREQUESTPAGE =   		"|                REQUEST                   |" + sNEWLINE;
 	
-	private static final String eUSERNAMEDOESNOTEXIST =   	"The user name provided does not exist." + sNEW_LINE;
-	private static final String eCLASSROOMCREATIONERROR = 	"An error occured when creating the classroom." + sNEW_LINE;
-	private static final String eCLASSROOMREQUSTERROR = 	"An error occured when requesting to join the classroom." + sNEW_LINE;
-	private static final String eNONVALIDSELECTION = 	    "That is not a valid selection." + sNEW_LINE;
+	private static final String eUSERNAMEDOESNOTEXIST =   	"The user name provided does not exist." + sNEWLINE;
+	private static final String eCLASSROOMCREATIONERROR = 	"An error occured when creating the classroom." + sNEWLINE;
+	private static final String eCLASSROOMREQUSTERROR = 	"An error occured when requesting to join the classroom." + sNEWLINE;
+	private static final String eNONVALIDSELECTION = 	    "That is not a valid selection." + sNEWLINE;
 	
-	private static final String sHOMEPAGEOPTIONS = 		"| 1. select classroom                      |" + sNEW_LINE +
-														"| 2. create classroom                      |" + sNEW_LINE +
-														"| 3. request to join classroom                      |" + sNEW_LINE +
-														"| 4. log out                               |" + sNEW_LINE;
+	private static final String sHOMEPAGEOPTIONS = 		"| 1. select classroom                      |" + sNEWLINE +
+														"| 2. create classroom                      |" + sNEWLINE +
+														"| 3. request to join classroom             |" + sNEWLINE +
+														"| 4. log out                               |" + sNEWLINE;
 	
-	private static final String sCLASSROOMPAGEOPTIONS = "| 1. select thread                         |" + sNEW_LINE +
-														"| 2. create thread                         |" + sNEW_LINE +
-														"| 3. select member                         |" + sNEW_LINE +
-														"| 4. view requests                         |" + sNEW_LINE +
-														"| 5. delete classroom/remove self          |" + sNEW_LINE +
-														"| 6. go back to homepage                   |" + sNEW_LINE;
+	private static final String sCLASSROOMPAGEOPTIONS = "| 1. select thread                         |" + sNEWLINE +
+														"| 2. create thread                         |" + sNEWLINE +
+														"| 3. select member                         |" + sNEWLINE +
+														"| 4. view requests                         |" + sNEWLINE +
+														"| 5. delete classroom/remove self          |" + sNEWLINE +
+														"| 6. go back to homepage                   |" + sNEWLINE;
 
-	private static final String sTHREADPAGEOPTIONS = 	"| 1. create new comment                    |" + sNEW_LINE +
-														"| 2. delete comment                        |" + sNEW_LINE +
-														"| 3. delete thread                         |" + sNEW_LINE +
-														"| 4. go back to classroom                  |" + sNEW_LINE;
+	private static final String sTHREADPAGEOPTIONS = 	"| 1. create new comment                    |" + sNEWLINE +
+														"| 2. delete comment                        |" + sNEWLINE +
+														"| 3. delete thread                         |" + sNEWLINE +
+														"| 4. go back to classroom                  |" + sNEWLINE;
 	
-	private static final String sMEMBERPAGEOPTIONS = 	"| 1. remove member                         |" + sNEW_LINE +
-														"| 2. change status                         |" + sNEW_LINE +
-														"| 3. go back to classroom                  |" + sNEW_LINE;
+	private static final String sMEMBERPAGEOPTIONS = 	"| 1. remove member                         |" + sNEWLINE +
+														"| 2. change status                         |" + sNEWLINE +
+														"| 3. go back to classroom                  |" + sNEWLINE;
 	
-	private static final String sREQUESTPAGEOPTIONS = 	"| 1. confirm as a member                   |" + sNEW_LINE +
-														"| 2. deny membership                       |" + sNEW_LINE +
-														"| 3. go back to classroom                  |" + sNEW_LINE;
+	private static final String sREQUESTPAGEOPTIONS = 	"| 1. confirm as a member                   |" + sNEWLINE +
+														"| 2. deny membership                       |" + sNEWLINE +
+														"| 3. go back to classroom                  |" + sNEWLINE;
 	
 	/**
 	 * This is the login page. The login page requests a user name. If the user name is valid, 
@@ -138,17 +139,11 @@ public class UserInterface {
 		clearScreen();
 		console.printf(sBIGDIVIDER + sCLASSROOMLISTPAGE + sSMALLDIVIDER);
 		List<String> classroomList = client.getClassroomListForUser(currentUserName);
-		console.printf(listToUIString(classroomList) + sNEW_LINE + sBIGDIVIDER); // temp //TODO: BOOKMARK
-		int selection = getValidSelectionFromUser(6);
+		console.printf(listToUIString(classroomList) + sBIGDIVIDER);
+		int selection = getValidSelectionFromUser(classroomList.size());
 		
-		switch (selection) {
-	    case 1:
-	        classroomPage();
-	        break;
-	    default:
-	        // TODO
-	        break;
-		}
+		currentClassroomName = classroomList.get(selection - 1);		
+	    classroomPage();
 		
 	}
 	
@@ -167,8 +162,14 @@ public class UserInterface {
 	        break;
 	    // create thread
 	    case 2:
-	    	//String threadTopic = console.readLine("Please specify a thread topic: ");
-			threadPage();
+	    	String threadNameTemp = console.readLine("Please specify a thread topic: ");
+	    	String postContent = console.readLine("Please write your post's content: ");
+	    	if (client.createThread(threadNameTemp, postContent, currentUserName)){
+	    		currentThreadName = threadNameTemp;
+				threadPage();
+			} else {
+				classroomPage();
+			}
 	        break;
 	    // select member
 	    case 3:
@@ -201,7 +202,7 @@ public class UserInterface {
 	private static void threadListPage() {
 		clearScreen();
 		console.printf(sBIGDIVIDER + sTHREADLISTPAGE + sSMALLDIVIDER);	
-		console.printf("| 1. go to thread (temp)                   |" + sNEW_LINE + sBIGDIVIDER); // temp
+		console.printf("| 1. go to thread (temp)                   |" + sNEWLINE + sBIGDIVIDER); // temp
 		int selection = getValidSelectionFromUser(1); // TODO: change the max int input
 		
 		switch (selection) {
@@ -253,7 +254,7 @@ public class UserInterface {
 	private static void memberListPage() {
 		clearScreen();
 		console.printf(sBIGDIVIDER + sMEMBERLISTPAGE + sSMALLDIVIDER);	
-		console.printf("| 1. go to member (temp)                   |" + sNEW_LINE + sBIGDIVIDER); // temp
+		console.printf("| 1. go to member (temp)                   |" + sNEWLINE + sBIGDIVIDER); // temp
 		int selection = getValidSelectionFromUser(1); // TODO: change the max int input
 		
 		switch (selection) {
@@ -298,7 +299,7 @@ public class UserInterface {
 	private static void requestListPage() {
 		clearScreen();
 		console.printf(sBIGDIVIDER + sREQUESTLISTPAGE + sSMALLDIVIDER);	
-		console.printf("| 1. go to request (temp)                   |" + sNEW_LINE + sBIGDIVIDER); // temp
+		console.printf("| 1. go to request (temp)                   |" + sNEWLINE + sBIGDIVIDER); // temp
 		int selection = getValidSelectionFromUser(1); // TODO: change the max int input
 		
 		switch (selection) {
@@ -381,13 +382,13 @@ public class UserInterface {
 		
 		String uiString = "";		
 		for (int i = 1; i <= list.size(); i++){
-			uiString.concat("| " + Integer.toString(i) + ". ");
+			uiString = uiString.concat("| " + Integer.toString(i) + ". ");
 			currentString = list.get(i-1);
-			uiString.concat(currentString);
-			for (int j = 0; j < 25 - currentString.length(); j++){
-				uiString.concat(" ");
+			uiString = uiString.concat(currentString);
+			for (int j = 0; j < 38 - currentString.length(); j++){
+				uiString = uiString.concat(" ");
 			}
-			uiString.concat("|");
+			uiString = uiString.concat("|" + sNEWLINE);
 		}
 		
 		return uiString;		
