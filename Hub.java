@@ -132,8 +132,8 @@ class Hub extends Thread {
 		}
 		// Write out to disk
 		writeToDisk(classList, "hub.classlist");
-		writeToDisk(userList, "hub.classlist");
-		writeToDisk(serverList, "hub.classlist");
+		writeToDisk(userList, "hub.userlist");
+		writeToDisk(serverList, "hub.serverlist");
 	}
 
 }
