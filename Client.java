@@ -113,7 +113,7 @@ public class Client {
 	/**
 	 * 
 	 */
-	public void deleteClassroom(String classroomName) {
+	public void deleteClassroom(String classroomName, String userName) {
 		// TODO Auto-generated method stub
 		
 	}
