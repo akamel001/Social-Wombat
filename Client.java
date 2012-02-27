@@ -14,7 +14,8 @@ public class Client {
 	 * @return boolean corresponding to verification status
 	 */
 	public boolean verifyLogin(String userName) {
-		return handleLogin(userName);		
+		//return handleLogin(userName);	TODO
+		return true;
 	}
 	
 	/**
@@ -118,6 +119,33 @@ public class Client {
 	}
 
 	public List<String> getThreadListForClassroom(String classroomName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public boolean createComment(String commentContent,
+			String threadName, String userName) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	public List<String> getMemberListForClassroom(String classroomName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void removeMember(String memberName,
+			String classroomName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void changeStatus(String currentMemberName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public List<String> getRequestListForClassroom(String currentClassroomName) {
 		// TODO Auto-generated method stub
 		return null;
 	}

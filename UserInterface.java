@@ -20,6 +20,8 @@ public class UserInterface {
 	static String currentUserName;
 	static String currentClassroomName;
 	static String currentThreadName;
+	static String currentMemberName;
+	static String currentPermissions;
 	
 	// Below is a bunch of strings used in the text-based user interface.
 	private static final String sNEWLINE = System.getProperty("line.separator");
@@ -207,9 +209,8 @@ public class UserInterface {
 		console.printf(listToUIString(threadList) + sBIGDIVIDER);
 		int selection = getValidSelectionFromUser(threadList.size());
 		
-		currentThreadName = threadList.get(selection - 1);		
-	    threadPage();
-		
+		currentThreadName = threadList.get(selection - 1); // TODO: only works if thread names are unique.
+	    threadPage();		
 	}
 	
 	/**
@@ -223,7 +224,12 @@ public class UserInterface {
 		switch (selection) {
 		// create new comment
 	    case 1:
-	        threadPage();
+	    	String commentContent = console.readLine("Please write your comment: ");
+	    	if (client.createComment(commentContent, currentThreadName, currentUserName)){
+				threadPage();
+			} else {
+				classroomPage();
+			}
 	        break;
 	    // delete comment
 	    case 2:
@@ -235,6 +241,7 @@ public class UserInterface {
 	        break;
 	    // go back to classroom
 	    case 4:
+	    	currentThreadName = null;
 	    	classroomPage();
 	        break;
 	    default:
@@ -247,21 +254,15 @@ public class UserInterface {
 	/**
 	 * 
 	 */
-	private static void memberListPage() {
+	private static void memberListPage() {		
 		clearScreen();
-		console.printf(sBIGDIVIDER + sMEMBERLISTPAGE + sSMALLDIVIDER);	
-		console.printf("| 1. go to member (temp)                   |" + sNEWLINE + sBIGDIVIDER); // temp
-		int selection = getValidSelectionFromUser(1); // TODO: change the max int input
+		console.printf(sBIGDIVIDER + sMEMBERLISTPAGE + sSMALLDIVIDER);
+		List<String> memberList = client.getMemberListForClassroom(currentClassroomName);
+		console.printf(listToUIString(memberList) + sBIGDIVIDER);
+		int selection = getValidSelectionFromUser(memberList.size());
 		
-		switch (selection) {
-	    case 1:
-	        memberPage();
-	        break;
-	    default:
-	        // TODO
-	        break;
-		}
-		
+		currentThreadName = memberList.get(selection - 1);
+	    memberPage();
 	}
 	
 	/**
@@ -275,14 +276,17 @@ public class UserInterface {
 		switch (selection) {
 		// remove member
 	    case 1:
+	    	client.removeMember(currentMemberName, currentClassroomName);
 	        memberPage();
 	        break;
 	    // change status
 	    case 2:
-	    	 memberPage();
+	    	client.changeStatus(currentMemberName);
+	    	memberPage();
 	        break;
 	    // go back to classroom
 	    case 3:
+	    	currentMemberName = null;
 	        classroomPage();
 	        break;
 	    default:
@@ -294,18 +298,13 @@ public class UserInterface {
 	
 	private static void requestListPage() {
 		clearScreen();
-		console.printf(sBIGDIVIDER + sREQUESTLISTPAGE + sSMALLDIVIDER);	
-		console.printf("| 1. go to request (temp)                   |" + sNEWLINE + sBIGDIVIDER); // temp
-		int selection = getValidSelectionFromUser(1); // TODO: change the max int input
+		console.printf(sBIGDIVIDER + sREQUESTLISTPAGE + sSMALLDIVIDER);
+		List<String> requestList = client.getRequestListForClassroom(currentClassroomName);
+		console.printf(listToUIString(requestList) + sBIGDIVIDER);
+		int selection = getValidSelectionFromUser(requestList.size());
 		
-		switch (selection) {
-	    case 1:
-	        requestPage();
-	        break;
-	    default:
-	        // TODO
-	        break;
-		}
+		currentMemberName = requestList.get(selection - 1);
+	    requestPage();
 		
 	}
 	
