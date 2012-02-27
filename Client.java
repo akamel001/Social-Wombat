@@ -4,6 +4,7 @@ import java.util.List;
 
 public class Client {
 	
+	private static final boolean DEBUG = true;
 
 	/**
 	 *  
@@ -13,9 +14,15 @@ public class Client {
 	 * @param userName
 	 * @return boolean corresponding to verification status
 	 */
-	public boolean verifyLogin(String userName) {
-		//return handleLogin(userName);	TODO
-		return true;
+	public boolean handleLogin(String uName){
+
+		if(DEBUG)
+			return true; 
+		
+		ClientSocketHandler handler = new ClientSocketHandler();
+		Message responce = handler.sendReceive(uName, Message.MessageType.Client_LogIn);
+		
+		return (responce.getCode() == 1)? true : false;	
 	}
 	
 	/**
@@ -26,7 +33,7 @@ public class Client {
 	 * @param classroomCreatorName
 	 * @return boolean corresponding to classroom creation status
 	 */
-	public boolean createClassroom(String classroomName, String classroomCreatorName) {
+	public boolean createClassroom(String classroomName, String uName) {
 		// TODO
 		return true;		
 	}
@@ -62,22 +69,7 @@ public class Client {
 	}
 	
 	
-	public static boolean handleLogin(String uName){
 
-		ClientSocketHandler handler = new ClientSocketHandler();
-		Message responce = handler.sendReceive(uName, Message.MessageType.Client_LogIn);
-		
-			return (responce.getCode() == 1)? true : false;
-			
-	}
-	
-	public static boolean handleRegister(String uName){
-
-		ClientSocketHandler handler = new ClientSocketHandler();
-		Message responce = handler.sendReceive(uName, Message.MessageType.Client_Register);
-		
-		return (responce.getCode() == 1)? true : false;
-	}
 	
 	public static void main(String [] args) {
 		/* Uncomment to preform a register / login test
