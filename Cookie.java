@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.Calendar;
 
 /**
@@ -5,7 +6,9 @@ import java.util.Calendar;
  * @author chris
  *
  */
-public class Cookie{
+public class Cookie implements Serializable{
+	
+	private static final long serialVersionUID = 1585622412283602252L;
 	private final Calendar expTime;
 	private final String sessionKey;
 		
