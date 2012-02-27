@@ -80,12 +80,14 @@ public class Client {
 	}
 	
 	public static void main(String [] args) {
+		/* Uncomment to preform a register / login test
 		if (handleLogin("bob") == false)
 			System.out.println("login with bob failed");
 		if (handleRegister("bob") == true)
 			System.out.println("registering bob successful!");
 		if (handleLogin("bob") == true)
 			System.out.println("bob was logged in!!");
+		*/
 	}
 
 	
