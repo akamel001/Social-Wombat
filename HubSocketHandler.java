@@ -120,38 +120,43 @@ public class HubSocketHandler extends Thread{
 		boolean valid = true;
 		//Read and deserialize Message from Socket
 		Message msg = getMessage();
-		Message reply = null;
+		
 		if (msg == null){
 			System.out.println("Message was null");
 			valid = false; // Don't waste time on bad transmissions
 		}
 		if (valid){
+			// Preset to failure
+			int returnCode = -1;
+			Message reply = null;
 			//Handle the different types of client messages
 			switch(msg.getType()) {
+				
 				// Client -> Hub
 				
-				//Client user id is stored as the sessionKey in the Cookie
-				//of the message
+				//Client user id is stored as the sessionKey in the Cookie of the message
 				// TODO: Possibly move this above switch statement to authenticate all requests
 				case Client_LogIn: 
 					String sessionKey = msg.getCookie().getKey();
 					if(userList.validateUser(sessionKey)){
 						//Reply with confirmation
 						msg.setCode(1);
-						returnMessage(msg);
 					} else {
 						//Reply with denial
 						msg.setCode(-1);
-						returnMessage(msg);
 					}
+					returnMessage(msg);
 					break;
 				case Client_Register:
 					//Extract username/sessionid from cookie
 					String username = msg.getCookie().getKey();
 					//Add to userlist
-					this.userList.addUser(username);
-					msg.setBody("User " + username + " was created.");
-					msg.setCode(1);
+					if(userList.addUser(username)){
+						msg.setBody("User " + username + " was created.");
+						msg.setCode(1);
+					} else {
+						msg.setCode(-1);
+					}
 					returnMessage(msg);
 					break;
 				case Client_GetClassEnrollment:
@@ -163,26 +168,33 @@ public class HubSocketHandler extends Thread{
 					
 					// TODO: Server response is forwarded back to this.socket
 					break;
+				// Return in body a list of the classes that a client is enrolled in
 				case Client_GetUserEnrollment:
-					
+				
 					break;
+				// Change the permissions for another user	
 				case Client_SetPermissions:
 
 					break;
+				// Return the list of users enrolled in a classroom
 				case Client_GetEnrollmentList:
 
 					break;
 				case Client_DeleteSelf:
 
 					break;
+				// Request to be added to a class
 				case Client_RequestEnrollment:
-
+					String requestName = msg.getCookie().getKey();
+					// 0 for pending
+					returnCode = classList.setUserPermissions(requestName, msg.getClassroom_ID(), 0);
 					break;
 					
 				// Client -> Hub -> Server
 				// NOTE: ANYTHING SENT IN THIS PATHWAY REQUIRES THE 
-				// CLASSROOM_ID TO BE SET!!!!!
+				// CLASSROOM_ID TO BE SET IN THE MESSAGE ALREADY!!!!!
 				case Client_CreateClassroom:
+					//Choose any server to create the classroom in
 					reply = forwardToServer(msg);
 					returnMessage(reply);
 					break;

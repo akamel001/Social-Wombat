@@ -21,6 +21,7 @@ public class ClassData{
 	/**
 	 * This constructor disallows creating a class without an instructor.
 	 */
+	@SuppressWarnings("unused")
 	private ClassData(){}
 
 	/**
