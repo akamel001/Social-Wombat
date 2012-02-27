@@ -21,7 +21,7 @@ public class ClassList {
 	/**
 	 * Constructor for the ClassList.
 	 */
-	public ClassList(){
+	protected ClassList(){
 		classList = Collections.synchronizedMap(new HashMap<String, ClassData>());
 	}
 	
@@ -31,7 +31,7 @@ public class ClassList {
 	 * @param c
 	 * @return
 	 */
-	public int addClass(ClassData c){
+	protected int addClass(ClassData c){
 		if (classList.containsKey(c.getClassName()))
 			return -1;
 		else{
@@ -45,7 +45,7 @@ public class ClassList {
 	 * @param c
 	 * @return
 	 */
-	public int removeClass(String c){
+	protected int removeClass(String c){
 		if( classList.remove(c)!=null)
 			return 1;
 		else
@@ -58,7 +58,7 @@ public class ClassList {
 	 * @param c The name of the classroom
 	 * @return User permissions or -1 if user has no permissions for that classroom
 	 */
-	public int getUserPermissions(String user, String c){
+	protected int getUserPermissions(String user, String c){
 		return classList.get(c).getPermissions(user);
 	}
 	
@@ -74,7 +74,7 @@ public class ClassList {
 	 * @param per The new permission value.
 	 * @return Returns 1 on success, -1 otherwise.
 	 */
-	public int setUserPermissions(String user, String c, int per){
+	protected int setUserPermissions(String user, String c, int per){
 		if (per<0 || per>2)
 			return -1;
 		else{
@@ -92,7 +92,7 @@ public class ClassList {
 	 * @param c
 	 * @return
 	 */
-	public Map<String, Integer> getClassEnrollment(String c){
+	protected Map<String, Integer> getClassEnrollment(String c){
 		ClassData temp = classList.get(c);
 		if (temp !=null)	
 			return temp.getEnrolled();
@@ -105,7 +105,7 @@ public class ClassList {
 	 * @param user
 	 * @return Returns a Map containing all of the classes a user is enrolled in, null if none exist.
 	 */
-	public Map<String, Integer> getUserEnrollment(String user){
+	protected Map<String, Integer> getUserEnrollment(String user){
 		Map<String, Integer> out = Collections.synchronizedMap(new HashMap<String, Integer>());
 		boolean found = false;
 		Set<String> s = classList.keySet();
@@ -134,7 +134,7 @@ public class ClassList {
 	 * @param c the name of the ClassRoom
 	 * @return
 	 */
-	public int getClassServer(String c){
+	protected int getClassServer(String c){
 		ClassData temp = classList.get(c);
 		if (temp==null)
 			return -1;
@@ -147,7 +147,7 @@ public class ClassList {
 	 * @param c The name of the classroom
 	 * @return Returns port for the class, -1 if class is not present in class list
 	 */
-	public int getClassPort(String c){
+	protected int getClassPort(String c){
 		ClassData temp = classList.get(c);
 		if (temp==null)
 			return -1;
