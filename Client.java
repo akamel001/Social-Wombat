@@ -129,7 +129,7 @@ public class Client {
 		//add debug line
 	}
 
-	public List<String> getThreadListForClassroom(String classroomName) {
+	public List<String> getThreadListForClassroom(String classroomName, String userName) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -140,35 +140,35 @@ public class Client {
 		return true;
 	}
 
-	public List<String> getMemberListForClassroom(String classroomName) {
+	public List<String> getMemberListForClassroom(String classroomName, String userName) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public void removeMember(String memberName,
-			String classroomName) {
+			String classroomName, String userName) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void changeStatus(String currentMemberName) {
+	public void changeStatus(String currentMemberName, String userName) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public List<String> getRequestListForClassroom(String currentClassroomName) {
+	public List<String> getRequestListForClassroom(String currentClassroomName, String userName) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public void confirmAsMemberOfClassroom(String memberName,
-			String classroomName) {
+			String classroomName, String userName) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	public void denyMembershipToClassroom(String memberName,
-			String classroomName) {
+			String classroomName, String userName) {
 		// TODO Auto-generated method stub
 		
 	}
