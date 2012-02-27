@@ -29,7 +29,6 @@ public class HubSocketHandler extends Thread{
 			e.printStackTrace();
 			System.out.println("Could not create input and output streams");
 		}
-		
 	}
 	
 	/*
@@ -71,7 +70,6 @@ public class HubSocketHandler extends Thread{
 		int server = classList.getClassServer(classID);
 		//return server
 		return serverList.getAddress(server);
-		
 	}
 	
 	/*

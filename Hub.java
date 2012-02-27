@@ -57,7 +57,6 @@ class Hub extends Thread {
 		 * */
 		
 		ServerSocket hubSocket = null;
-
 		
 		//Create and listen in on a port
 		try {
