@@ -1,9 +1,8 @@
 import java.io.*;
 import java.net.*;
-import java.util.Date;
 
 public class HubSocketHandler extends Thread{
-	private static int CLIENT_SOCKET = 4444;
+	//private static int CLIENT_SOCKET = 4444;
 	private static int SERVER_SOCKET = 5050;
 	
 	ClassList classList;
@@ -121,7 +120,7 @@ public class HubSocketHandler extends Thread{
 		boolean valid = true;
 		//Read and deserialize Message from Socket
 		Message msg = getMessage();
-		
+		Message reply = null;
 		if (msg == null){
 			System.out.println("Message was null");
 			valid = false; // Don't waste time on bad transmissions
@@ -149,7 +148,7 @@ public class HubSocketHandler extends Thread{
 				case Client_Register:
 					//Extract username/sessionid from cookie
 					String username = msg.getCookie().getKey();
-					
+					//Add to userlist
 					this.userList.addUser(username);
 					msg.setBody("User " + username + " was created.");
 					msg.setCode(1);
@@ -181,26 +180,42 @@ public class HubSocketHandler extends Thread{
 					break;
 					
 				// Client -> Hub -> Server
+				// NOTE: ANYTHING SENT IN THIS PATHWAY REQUIRES THE 
+				// CLASSROOM_ID TO BE SET!!!!!
 				case Client_CreateClassroom:
-					
+					reply = forwardToServer(msg);
+					returnMessage(reply);
 					break;
+				/*
+				 * Create post requires Post Name, and Post Body.
+				 * Since only a msg body is available for storage of both,
+				 * they will be stored as a 2 element arraylist with 
+				 * Array[0] = Post_Name
+				 * Array[1] = Post_body 	
+				 */
 				case Client_CreatePost:
-
+					reply = forwardToServer(msg);
+					returnMessage(reply);
 					break;
 				case Client_CreateComment:
-
+					reply = forwardToServer(msg);
+					returnMessage(reply);
 					break;
 				case Client_GoToClassroom:
-
+					reply = forwardToServer(msg);
+					returnMessage(reply);
 					break;
 				case Client_GoToThread:
-
+					reply = forwardToServer(msg);
+					returnMessage(reply);
 					break;
 				case Client_DeleteClassroom:
-
+					reply = forwardToServer(msg);
+					returnMessage(reply);
 					break;
 				case Client_DeleteThread:
-
+					reply = forwardToServer(msg);
+					returnMessage(reply);
 					break;
 					
 				default:

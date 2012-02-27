@@ -1,6 +1,7 @@
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 
 public class ServerSocketHandler extends Thread{
 	private static int SERVER_SOCKET = 5050;
@@ -64,15 +65,28 @@ public class ServerSocketHandler extends Thread{
 			valid = false; // Don't waste time on bad transmissions
 		}
 		if (valid){
+			int returnCode = -1;
 			//Handle the different types of client messages
 			switch(msg.getType()) {
 				
 				// Client -> Hub -> Server
 				case Client_CreateClassroom:
-					
+					returnCode = classDB.addClassRoom(msg.getClassroom_ID());
+					msg.setCode(returnCode);
+					returnMessage(msg);
 					break;
+				/*
+				 * Create post requires Post Name, and Post Body.
+				 * Since only a msg body is available for storage of both,
+				 * they will be stored as a 2 element arraylist with 
+				 * Array[0] = Post_Name
+				 * Array[1] = Post_body 	
+				 */
 				case Client_CreatePost:
-
+					ArrayList<String> post = (ArrayList<String>) msg.getBody();
+					String postName = (String)post.get(0);
+					String postBody = (String)post.get(1);
+					returnCode = classDB.addPost(msg.getClassroom_ID(), postName, postBody);
 					break;
 				case Client_CreateComment:
 

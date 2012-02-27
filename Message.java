@@ -25,6 +25,13 @@ public class Message implements Serializable{
 
 	    // Client -> Hub -> Server
 	    Client_CreateClassroom,
+	    /*
+		 * CreatePost requires Post Name, and Post Body.
+		 * Since only a msg body is available for storage of both,
+		 * they will be stored as a 2 element arraylist with 
+		 * Array[0] = Post_Name
+		 * Array[1] = Post_body 	
+		 */
 	    Client_CreatePost,
 	    Client_CreateComment,
 	    Client_GoToClassroom,
