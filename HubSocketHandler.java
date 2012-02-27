@@ -140,13 +140,11 @@ public class HubSocketHandler extends Thread{
 					String sessionKey = msg.getCookie().getKey();
 					if(userList.validateUser(sessionKey)){
 						//Reply with confirmation
-						boolean reply = new Boolean(true);
-						msg.setBody(reply);
+						msg.setCode(1);
 						returnMessage(msg);
 					} else {
 						//Reply with denial
-						boolean reply = new Boolean(false);
-						msg.setBody(reply);
+						msg.setCode(-1);
 						returnMessage(msg);
 					}
 					break;
