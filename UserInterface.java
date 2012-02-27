@@ -2,6 +2,7 @@ import java.io.Console;
 import java.util.List;
 
 // TODO: action/error messages at top of each page
+// TODO: different menus based on privileges
 
 /**
  * This is the user interface for Social Wombat.
@@ -143,8 +144,7 @@ public class UserInterface {
 		int selection = getValidSelectionFromUser(classroomList.size());
 		
 		currentClassroomName = classroomList.get(selection - 1);		
-	    classroomPage();
-		
+	    classroomPage();		
 	}
 	
 	/**
@@ -181,7 +181,8 @@ public class UserInterface {
 	        break;
 	    // delete classroom/remove self
 	    case 5:
-	        // TODO
+	    	client.deleteClassroom(currentClassroomName);
+	    	// TODO: client.disjoinClassroom(currentClassroomName, currentUserName);
 	    	homePage();
 	        break;
 	    // go back to homepage
@@ -201,18 +202,13 @@ public class UserInterface {
 	 */
 	private static void threadListPage() {
 		clearScreen();
-		console.printf(sBIGDIVIDER + sTHREADLISTPAGE + sSMALLDIVIDER);	
-		console.printf("| 1. go to thread (temp)                   |" + sNEWLINE + sBIGDIVIDER); // temp
-		int selection = getValidSelectionFromUser(1); // TODO: change the max int input
+		console.printf(sBIGDIVIDER + sTHREADLISTPAGE + sSMALLDIVIDER);
+		List<String> threadList = client.getThreadListForClassroom(currentClassroomName);
+		console.printf(listToUIString(threadList) + sBIGDIVIDER);
+		int selection = getValidSelectionFromUser(threadList.size());
 		
-		switch (selection) {
-	    case 1:
-	        threadPage();
-	        break;
-	    default:
-	        // TODO
-	        break;
-		}
+		currentThreadName = threadList.get(selection - 1);		
+	    threadPage();
 		
 	}
 	

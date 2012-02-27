@@ -101,4 +101,25 @@ public class Client {
 		return true;
 	}
 
+	/**
+	 * 
+	 */
+	public void deleteClassroom(String classroomName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
+	 * 
+	 */
+	public void disjoinClassroom(String classroomName, String userName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public List<String> getThreadListForClassroom(String classroomName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
