@@ -14,7 +14,7 @@ public class Client {
 	 * @return boolean corresponding to verification status
 	 */
 	public boolean verify(String userName) {
-		// TODO
+		
 		return true;		
 	}
 	
@@ -85,17 +85,17 @@ public class Client {
 		ClientSocketHandler handler = new ClientSocketHandler();
 		Message responce = handler.sendReceive(uName, Message.MessageType.Client_Register);
 		
-//		//TODO finish codes
-//		switch(responce.getCode()){
-//		case 1:
-//			//do something
-//			break;
-//		case 2:
-//			//do something
-//			break;
-//		default:
-//			//message compromised or bad message code
-//		}
+		//TODO finish codes
+		switch(responce.getCode()){
+		case 1:
+			//do something
+			break;
+		case 2:
+			//do something
+			break;
+		default:
+			//message compromised or bad message code
+		}
 	}
 public static void main(String [] args) {
 		handleRegister("bob");

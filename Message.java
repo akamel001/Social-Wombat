@@ -2,6 +2,8 @@ import java.io.*;
 import java.net.*;
 
 public class Message implements Serializable{
+
+	private static final long serialVersionUID = 8227312404679677099L;
 	private InetAddress sender;
 	private InetAddress recipient;
 	private String body;
