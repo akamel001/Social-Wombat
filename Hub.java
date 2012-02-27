@@ -5,7 +5,7 @@ import java.net.*;
 // Hub does authentication and forwards messages to the servers. 
 class Hub extends Thread {
 	private static int CLIENT_SOCKET = 4444;
-	//private static int SERVER_SOCKET = 5050;
+	private static int SERVER_SOCKET = 5050;
 	private static volatile boolean listening = true;
 	
 	static ClassList classList;
@@ -22,7 +22,7 @@ class Hub extends Thread {
 	/*
 	 * Add a user to the userList.
 	 */
-	public void registerClient(String username){
+	public void addUser(String username){
 		//Add
 		if(userList.addUser(username)){
 			System.out.println("User " + username + " added successfully!");
@@ -35,7 +35,12 @@ class Hub extends Thread {
 	 * Add a server to the serverList
 	 */
 	public void addServer(InetAddress server){
-		
+		int r = serverList.addServer(server, SERVER_SOCKET);
+		if (r == -1){
+			System.out.println("Adding server " + server + "failed."); 
+		} else {
+			System.out.println("Server" + server + " added under server id: " + r);
+		}
 	}
 	
 	
