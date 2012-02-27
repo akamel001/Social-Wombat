@@ -195,7 +195,7 @@ public class UserInterface {
 	        break;
 	    // delete classroom/remove self
 	    case 5:
-	    	client.deleteClassroom(currentClassroomName);
+	    	client.deleteClassroom(currentClassroomName, currentUserName);
 	    	// TODO: client.disjoinClassroom(currentClassroomName, currentUserName);
 	    	homePage(null);
 	        break;
