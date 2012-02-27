@@ -149,8 +149,12 @@ public class HubSocketHandler extends Thread{
 					}
 					break;
 				case Client_Register:
-					String s = (String) msg.getBody();
-					msg.setBody("User " + s + " was created.");
+					//Extract username/sessionid from cookie
+					String username = msg.getCookie().getKey();
+					
+					this.userList.addUser(username);
+					msg.setBody("User " + username + " was created.");
+					msg.setCode(1);
 					returnMessage(msg);
 					break;
 				case Client_GetClassEnrollment:
