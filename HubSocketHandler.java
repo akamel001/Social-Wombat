@@ -193,10 +193,10 @@ public class HubSocketHandler extends Thread{
 					break;
 				// Return the list of users enrolled in a classroom
 				case Client_GetEnrollmentList:
-
+					//TODO:
 					break;
 				case Client_DeleteSelf:
-
+					//TODO:
 					break;
 				// Request to be added to a class
 				case Client_RequestEnrollment:
@@ -250,7 +250,9 @@ public class HubSocketHandler extends Thread{
 					break;	
 					
 				default:
-					//TODO: Send request denied back to the client
+					msg.setBody("Request denied.");
+					msg.setCode(-1);
+					returnMessage(msg);
 					break;
 				
 			}
