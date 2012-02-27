@@ -13,6 +13,7 @@ public class ClientSocketHandler {
 
 
 		Message message = new Message();
+		Cookie cookie = new Cookie(uName);
 		message.setType(type);
 		message.setBody(body);
 

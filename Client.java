@@ -62,44 +62,32 @@ public class Client {
 	}
 	
 	
-	public static void handleLogin(String uName){
+	public static boolean handleLogin(String uName){
 
 		ClientSocketHandler handler = new ClientSocketHandler();
 		Message responce = handler.sendReceive(uName, Message.MessageType.Client_LogIn);
 		
-		//TODO finish codes
-		switch(responce.getCode()){
-		case 1:
-			//do something
-			break;
-		case 2:
-			//do something
-			break;
-		default:
-			//message compromised or bad message code
-		}
+			return (responce.getCode() == 1)? true : false;
+			
 	}
 	
-	public static void handleRegister(String uName){
+	public static boolean handleRegister(String uName){
 
 		ClientSocketHandler handler = new ClientSocketHandler();
 		Message responce = handler.sendReceive(uName, Message.MessageType.Client_Register);
 		
-		//TODO finish codes
-		switch(responce.getCode()){
-		case 1:
-			//do something
-			break;
-		case 2:
-			//do something
-			break;
-		default:
-			//message compromised or bad message code
-		}
+		return (responce.getCode() == 1)? true : false;
 	}
 	
 	public static void main(String [] args) {
-		handleLogin("bob");
+		if (handleLogin("bob") == false)
+			System.out.println("login with bob failed");
+		if (handleRegister("bob") == true)
+			System.out.println("registering bob successful!");
+		if (handleLogin("bob") == true)
+			System.out.println("bob was logged in!!");
+			
+		
 	}
 
 }
