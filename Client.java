@@ -80,18 +80,12 @@ public class Client {
 	}
 	
 	public static void main(String [] args) {
-<<<<<<< HEAD
 		if (handleLogin("bob") == false)
 			System.out.println("login with bob failed");
 		if (handleRegister("bob") == true)
 			System.out.println("registering bob successful!");
 		if (handleLogin("bob") == true)
 			System.out.println("bob was logged in!!");
-			
-		
-=======
-		handleRegister("bob");
->>>>>>> Added thread creation.
 	}
 
 	
