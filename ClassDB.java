@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -5,7 +6,9 @@ import java.util.Map;
 /*
  * 
  */
-public class ClassDB {
+public class ClassDB implements Serializable{
+
+	private static final long serialVersionUID = -808645813216407780L;
 	private Map <String, ClassRoom> classRoomList; 
 	private int nextClass = 1;
 	

@@ -1,9 +1,12 @@
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class ClassRoom {
+public class ClassRoom implements Serializable{
+
+	static final long serialVersionUID = 2158685748414139162L;
 	private static final int maxNameLength = 30;
 	private int nextPost = 1;
 	private int idNum;
@@ -14,6 +17,7 @@ public class ClassRoom {
 	/**
 	 * Default constructor disallowed.
 	 */
+	@SuppressWarnings("unused")
 	private ClassRoom(){}
 	
 	/**

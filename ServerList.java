@@ -14,9 +14,10 @@ import java.util.Iterator;
  */
 public class ServerList implements Serializable{
 
+	private static final long serialVersionUID = -5018052157599076338L;
 	private Map<Integer, Server> serverList;
 	private int nextId; 
-
+	
 	public ServerList(){
 		serverList = Collections.synchronizedMap(new HashMap<Integer, Server>());
 		nextId = 0;

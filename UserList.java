@@ -2,6 +2,8 @@ import java.io.Serializable;
 import java.util.*;
 
 public class UserList implements Serializable{
+	
+	private static final long serialVersionUID = 3273339989709185986L;
 	private Map <String, User> userList; 
 
 	public UserList(){
@@ -48,11 +50,11 @@ public class UserList implements Serializable{
 	
 	public class User{
 		private final String id;
-		private String password;
+		//private String password;
 	
 		public User(String u){
 			id = u;
-			password = null;
+			//password = null;
 		}
 		
 		public String getId(){

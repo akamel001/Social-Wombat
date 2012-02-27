@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Collections;
@@ -12,21 +13,30 @@ import java.util.Collections;
  * @author chris d
  *
  */
-public class Post {
-	protected static final int maxTitleLength = 60;
-	protected static final int maxCommentLength = 2000;
-	private static int nextComment = 1;
+public class Post implements Serializable{
 	
-	/**
-	 * Value for id is set by ClassRoom on Post creation
-	 */
+	/** Serializable version number */
+	private static final long serialVersionUID = -3423294746856380398L;
+	
+	/** Max length for a post title.*/
+	protected static final int maxTitleLength = 60;
+	
+	/** Max length for a comment.*/ 
+	protected static final int maxCommentLength = 2000;
+	
+	/** The id number for the next comment. */
+	private int nextComment = 1;
+	
+	/** Post id number. Should be unique -- value for id is set by ClassRoom on Post creation.  */
 	private final int id;
-	//private List<String> commentList;
+
+	/** Holds a list of comments mapped to Integer identifiers. */
 	private Map<Integer, String> commentList;
 	
 	/**
 	 * Default constructor disallowed. Use Post(String, String)
 	 */
+	@SuppressWarnings("unused")
 	private Post(){id=-1;}
 	
 	/**

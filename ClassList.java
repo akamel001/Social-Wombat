@@ -5,8 +5,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-
-
 /**
  * ClassList is a list of ClassData objects.
  * ClassData objects store a class' associated server info and user permissions.
@@ -17,6 +15,7 @@ import java.util.Set;
  */
 public class ClassList implements Serializable{
 
+private static final long serialVersionUID = 8630970578639764636L;
 	private Map<String, ClassData> classList;
 	
 	/**
@@ -127,8 +126,6 @@ public class ClassList implements Serializable{
 		else
 			return null;
 	}
-	
-	
 	
 	/**
 	 * Returns the number of the server on which the passed class is stored
