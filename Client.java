@@ -6,16 +6,15 @@ public class Client {
 	
 
 	/**
-	 *  --------> MIGHT BE OVERLAP WITH handleLogin() <---------
+	 *  
 	 * This method is used in the login page to verify a user name.
 	 * It takes in a user name and returns true if the user name can be verified,
 	 * and false otherwise.
 	 * @param userName
 	 * @return boolean corresponding to verification status
 	 */
-	public boolean verify(String userName) {
-		
-		return true;		
+	public boolean verifyLogin(String userName) {
+		return handleLogin(userName);		
 	}
 	
 	/**

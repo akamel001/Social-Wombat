@@ -75,7 +75,7 @@ public class UserInterface {
 		console.printf(sBIGDIVIDER + sLOGIN + sBIGDIVIDER);		
 		String userNameTemp = console.readLine("User Name? ");
 		
-		if (client.verify(userNameTemp)){
+		if (client.verifyLogin(userNameTemp)){
 			currentUserName = userNameTemp;
 			homePage();
 		} else {
