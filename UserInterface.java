@@ -1,5 +1,6 @@
 import java.io.Console;
 import java.util.List;
+import java.util.Map;
 
 // TODO: action/error messages at top of each page
 // TODO: pull out commonalities for cleaner code
@@ -148,15 +149,15 @@ public class UserInterface {
 	 */
 	private static void classroomListPage(String messages) {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
-		List<String> classroomList = client.getClassroomListForUser(currentUserName);		
-		displayPage(sCLASSROOMLISTPAGE, info, messages, null, listToUIString(classroomList));
+		Map<String, Integer> classroomMap = client.getClassroomMapForUser(currentUserName);		
+		displayPage(sCLASSROOMLISTPAGE, info, messages, null, mapToUIString(classroomMap));
 
-		int selection = getValidSelectionFromUser(classroomList.size());
+		int selection = getValidSelectionFromUser(classroomMap.size());
 		
-		currentClassroomName = classroomList.get(selection - 1);		
+		//currentClassroomName = classroomMap.get(selection - 1); TODO		
 	    classroomPage(null);		
 	}
-	
+
 	/**
 	 * @param messages TODO
 	 * 
@@ -421,6 +422,16 @@ public class UserInterface {
 			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
 		}		
 		return uiString;		
+	}
+	
+	/**
+	 * 
+	 * @param map
+	 * @return
+	 */
+	private static String mapToUIString(Map<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	/**
