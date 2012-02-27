@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.net.*;
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,7 +12,7 @@ import java.util.Iterator;
  * @author chris
  *
  */
-public class ServerList{
+public class ServerList implements Serializable{
 
 	private Map<Integer, Server> serverList;
 	private int nextId; 

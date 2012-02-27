@@ -1,4 +1,4 @@
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
 
 //Hub class. Handles communication between data servers and clients
@@ -6,7 +6,7 @@ import java.net.*;
 class Hub extends Thread {
 	private static int CLIENT_SOCKET = 4444;
 	private static int SERVER_SOCKET = 5050;
-	private static boolean listening = true;
+	private static volatile boolean listening = true;
 	
 	static ClassList classList;
 	static UserList userList;
@@ -16,6 +16,40 @@ class Hub extends Thread {
 		// Constructor
 	}
 
+	private static Object readFromDisk(String name){
+		Object o = null;
+		try {
+		    FileInputStream fin = new FileInputStream(name);
+		    ObjectInputStream ois = new ObjectInputStream(fin);
+		    o = (Object) ois.readObject();
+		    ois.close();
+		} catch (IOException e) { 
+			e.printStackTrace(); 
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return o;
+	}
+	
+	/*
+	 * Writes a given object to the filesystem
+	 */
+	private static void writeToDisk(Object o, String name){
+		FileOutputStream fos;
+		try {
+			fos = new FileOutputStream(name);
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(o);
+			oos.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	/*
 	 * Checks if a given file exists in the current running directory
 	 */
@@ -30,16 +64,21 @@ class Hub extends Thread {
 	private static void initializeData(){
 		//Create or import ClassList and UserList
 		//Check if ClassList exists
-		if (fileExists("Class_List")){
+		if (fileExists("ClassList")){
 			//import file
 		} else {
 			//create new ClassList
 			classList = new ClassList();
 		}
-		if (fileExists("User_List")){
+		if (fileExists("UserList")){
 			//import file
 		} else {
 			userList = new UserList();
+		}
+		if (fileExists("ServerList")){
+			//import file
+		} else {
+			serverList = new ServerList();
 		}
 	}
 
@@ -90,6 +129,10 @@ class Hub extends Thread {
 			e.printStackTrace();
 			System.out.println("Couldn't close");
 		}
+		// Write out to disk
+		writeToDisk(classList, "ClassList");
+		writeToDisk(userList, "UserList");
+		writeToDisk(serverList, "ServerList");
 	}
 
 }

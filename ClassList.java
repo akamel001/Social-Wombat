@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,7 +15,7 @@ import java.util.Set;
  * @author chris
  *
  */
-public class ClassList {
+public class ClassList implements Serializable{
 
 	private Map<String, ClassData> classList;
 	
