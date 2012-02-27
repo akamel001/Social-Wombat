@@ -5,7 +5,10 @@ public class UserList implements Serializable{
 	
 	private static final long serialVersionUID = 3273339989709185986L;
 	private Map <String, User> userList; 
-
+	
+	/**
+	 * Creates a new UserList with an empty Map of Users.
+	 */
 	public UserList(){
 		userList = Collections.synchronizedMap(new HashMap<String, User>());
 	}

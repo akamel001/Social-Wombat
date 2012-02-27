@@ -49,7 +49,7 @@ public class ClassDB implements Serializable{
 	
 	/**
 	 * Adds a post to a classroom.
-	 * @param className The classname to which the post is to be added.
+	 * @param className The className to which the post is to be added.
 	 * @param postTitle The title of the post to be added.
 	 * @param postBody The body of the post to be added.
 	 * @return Returns 1 if the post was added, -1 if it was not.
@@ -113,13 +113,25 @@ public class ClassDB implements Serializable{
 	}
 	
 	/**
-	 * Returns a list of all the posts in a class.
+	 * Returns a list of all the threads in a class.
+	 * @param The name of the classroom which contains the threads.
 	 * @return Returns a list of Integers mapped to Strings 
 	 * where the Integer is the post id and the String is the post title.
 	 */
-	public Map<Integer, String> getTitleList(String className){
+	public Map<Integer, String> getThreadList(String className){
 		ClassRoom c = classRoomList.get(className);
-		Map<Integer, String> out = c.getTitleList();
+		Map<Integer, String> out = c.getThreadList();
 		return out;
+	}
+	
+	/**
+	 * Returns the entire thread from a specific classRoom.
+	 * @param className The name of the class containing the thread.
+	 * @param threadId The id number of the thread to be returned
+	 * @return Returns a map containing Integer keys mapped to Strings. 
+	 */
+	public Map<Integer, String> getThread(String className, int threadId){
+		ClassRoom c = classRoomList.get(className);
+		return c.getThread(threadId);		
 	}
 }

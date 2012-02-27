@@ -93,22 +93,35 @@ public class ClassRoom implements Serializable{
 		return out;
 	}
 	
-	/**
-	 * Returns the post list for a class.
-	 * @return Returns a map (Integer,String) containing all the posts for the class.
-	 */
+	/*
+	
+	  Returns the post list for a class.
+	  @return Returns a map (Integer,String) containing all the posts for the class.
+	 
+	 DEPRECATED
 	protected Map<Integer, Post> getClassRoom(){
 		return postList;
 	}
+	*/
 
 	/**
-	 * Returns a list of all the posts in a class.
-	 * @return Returns a list of Integers mapped to Strings w
-	 * here the Integer is the post id and the String is the post title.
+	 * Returns a thread.
+	 * @param The id of the thread to be returned.
+	 * @return Returns a map with an Integer key and a String value. The Integer is the id of the comment,
+	 * the String is the content.
 	 */
-	protected Map<Integer, String> getTitleList(){
+	protected Map<Integer, String> getThread(int threadId){
+		Post p = postList.get(threadId);
+		return p.getThread();
+	}
+	/**
+	 * Returns a list of the titles of all the threads in a class.
+	 * @return Returns a list of Integers mapped to Strings w
+	 * here the Integer is the post id and the String is the thread title.
+	 */
+	protected Map<Integer, String> getThreadList(){
 		Map<Integer, String> titleList = Collections.synchronizedMap(new HashMap<Integer, String>());
-
+		
 		Set<Integer> s = postList.keySet();
 		synchronized(postList) {  
 			Iterator<Integer> i = s.iterator(); 

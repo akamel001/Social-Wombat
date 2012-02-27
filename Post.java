@@ -101,7 +101,7 @@ public class Post implements Serializable{
 	 * greater than 1 are comments.
 	 * @return Returns a Map(Integer, String) containing the post.
 	 */
-	public Map<Integer, String> getPosts(){
+	public Map<Integer, String> getThread(){
 		return commentList;
 	}
 
