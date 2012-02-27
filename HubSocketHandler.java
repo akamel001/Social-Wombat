@@ -192,7 +192,15 @@ public class HubSocketHandler extends Thread{
 					returnMessage(msg);
 					break;
 				case Client_DeleteSelf:
-					
+					String u = msg.getCookie().getKey();
+					if(userList.removeUser(u)){
+						//success
+						msg.setCode(1);
+					} else{
+						//fail
+						msg.setCode(-1);
+					}
+					returnMessage(msg);
 					break;
 				// Request to be added to a class
 				case Client_RequestEnrollment:

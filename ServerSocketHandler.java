@@ -100,7 +100,7 @@ public class ServerSocketHandler extends Thread{
 				case Client_CreateComment:
 					@SuppressWarnings("unchecked")
 					ArrayList<String> com = (ArrayList<String>)msg.getBody();
-					String postId = com.get(0);
+					int postId = Integer.parseInt(com.get(0));
 					String comment = com.get(1);
 					returnCode = classDB.addComment(msg.getClassroom_ID(), postId, comment);
 					msg.setCode(returnCode);
