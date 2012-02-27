@@ -14,6 +14,8 @@ public class ClientSocketHandler {
 
 		Message message = new Message();
 		Cookie cookie = new Cookie(uName);
+		
+		message.setCookie(cookie);
 		message.setType(type);
 		message.setBody(body);
 
@@ -53,7 +55,7 @@ public class ClientSocketHandler {
 			// read an object from the server
 			System.out.println("Receiving message from server...");
 			messageReceived = (Message) ois.readObject();
-			System.out.print(messageReceived.getBody());
+			//System.out.print(messageReceived.getBody());
 			
 			oos.close();
 			ois.close();
