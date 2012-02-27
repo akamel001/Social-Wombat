@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class Client {
@@ -54,6 +56,7 @@ public class Client {
 	public boolean requestToJoinClassroom(String classroomRequestName, String requesterUserName) {
 		//TODO Set cookie with uName, Set message id with classroom name, message type
 		//check message code on return 
+		//add debug line
 		return true;		
 	}
 	
@@ -61,14 +64,19 @@ public class Client {
 	 * This method is used to get a list of classrooms for a particular member.
 	 * It takes in a user name and returns the list of classrooms of which the user is a member.
 	 * @param userName
-	 * @return boolean corresponding to whether the classroom can be requested
+	 * @return Map of classroomName -> permissions 
 	 */
-	public List<String> getClassroomListForUser(String userName) {
-		List<String> classroomList = new ArrayList<String>();
+	public Map<String, Integer> getClassroomMapForUser(String userName) {
+		//message type Client_GetUserEnrollment
+		//add debug line
+		//cookie with uName, 
+	
+		Map<String, Integer> classroomList = new HashMap<String, Integer>();
+		
 		// TODO: this is a temp list
-		classroomList.add("CS 4820");
-		classroomList.add("LING 4844");
-		classroomList.add("HD 3260");
+		classroomList.put("CS 4820", 1);
+		classroomList.put("LING 4844", 2);
+		classroomList.put("HD 3260", 3);
 		// end of temp list
 		
 		return classroomList;		
