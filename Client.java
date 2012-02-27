@@ -152,4 +152,16 @@ public class Client {
 		return null;
 	}
 
+	public void confirmAsMemberOfClassroom(String memberName,
+			String classroomName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void denyMembershipToClassroom(String memberName,
+			String classroomName) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
