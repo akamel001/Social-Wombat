@@ -78,18 +78,19 @@ public class UserInterface {
 	 * This is the login page. The login page requests a user name. If the user name is valid, 
 	 * it goes to the home page. Otherwise, it loops back to the login page and displays an 
 	 * error message.
+	 * @param messages TODO
 	 */
-	private static void loginPage() {
+	private static void loginPage(String messages) {
 		displayPage(sLOGIN, null, null, null, null);	
 		String userNameTemp = console.readLine("User Name? ");
 		
-		if (client.verifyLogin(userNameTemp)){
+		if (client.handleLogin(userNameTemp)){
 			currentUserName = userNameTemp;
 			homePage(null);
 		} else {
 			// TODO: pass in a message saying that login failed.
 			currentUserName = null;
-			loginPage();
+			loginPage(messages);
 		}
 	}
 	
@@ -133,7 +134,7 @@ public class UserInterface {
 	    // log out
 	    case 4:
 	    	currentUserName = null;
-	        loginPage();
+	        loginPage(null);
 	        break;
 	    default:
 	        break;
@@ -524,7 +525,7 @@ public class UserInterface {
         client = new Client();
 		
 		System.out.println("Welcome to Studious Wombat!");
-		loginPage();
+		loginPage(null);
 	}
 
 }
