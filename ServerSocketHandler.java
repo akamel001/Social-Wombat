@@ -2,6 +2,7 @@
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class ServerSocketHandler extends Thread{
 	//private static int SERVER_SOCKET = 5050;
@@ -107,10 +108,30 @@ public class ServerSocketHandler extends Thread{
 					returnMessage(msg);
 					break;
 				case Client_GoToClassroom:
-					// TODO: Looks like the function isn't implemented in ClassDB yet?
+					Map<Integer, String> threadList = classDB.getThreadList(msg.getClassroom_ID());
+					if (threadList == null){
+						//return failure
+						msg.setCode(-1);
+					} else {
+						//return map
+						msg.setCode(1);
+						msg.setBody(threadList);
+					}
+					returnMessage(msg);
 					break;
 				case Client_GoToThread:
-					// TODO: Same
+					//Thread id embedded in body
+					int threadID = (Integer)msg.getBody();
+					Map<Integer, String> thread = classDB.getThread(msg.getClassroom_ID(), threadID);
+					if (thread == null){
+						//return failure
+						msg.setCode(-1);
+					} else {
+						//return map
+						msg.setCode(1);
+						msg.setBody(thread);
+					}
+					returnMessage(msg);
 					break;
 				case Client_DeleteClassroom:
 					returnCode = classDB.removeClassRoom(msg.getClassroom_ID());
