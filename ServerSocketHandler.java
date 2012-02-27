@@ -84,7 +84,7 @@ public class ServerSocketHandler extends Thread{
 				 * Array[0] = Post_Name
 				 * Array[1] = Post_body 	
 				 */
-				case Client_CreatePost:
+				case Client_CreateThread:
 					@SuppressWarnings("unchecked")
 					ArrayList<String> post = (ArrayList<String>) msg.getBody();
 					String postName = (String)post.get(0);

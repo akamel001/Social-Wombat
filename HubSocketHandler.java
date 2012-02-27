@@ -149,6 +149,7 @@ public class HubSocketHandler extends Thread{
 					}
 					returnMessage(msg);
 					break;
+				// Returns in body all users in a classroom
 				case Client_GetClassEnrollment:
 					//String = User, Integer = 
 					Map<String, Integer> classEnroll = classList.getClassEnrollment(msg.getClassroom_ID());
@@ -219,7 +220,7 @@ public class HubSocketHandler extends Thread{
 				 * Array[0] = Post_Name
 				 * Array[1] = Post_body 	
 				 */
-				case Client_CreatePost:
+				case Client_CreateThread:
 					reply = forwardToServer(msg);
 					returnMessage(reply);
 					break;
