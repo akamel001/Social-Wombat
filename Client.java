@@ -99,7 +99,7 @@ public class Client {
 	}
 	
 	public static void main(String [] args) {
-		handleRegister("bob");
+		handleLogin("bob");
 	}
 
 }
