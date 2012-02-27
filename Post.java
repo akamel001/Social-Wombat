@@ -2,6 +2,8 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Collections;
+import java.util.Set;
+import java.util.Iterator;
 
 
 /**
@@ -30,7 +32,10 @@ public class Post implements Serializable{
 	/** Post id number. Should be unique -- value for id is set by ClassRoom on Post creation.  */
 	private final int id;
 
-	/** Holds a list of comments mapped to Integer identifiers. */
+	/** Holds a list of comments mapped to Integer identifiers. <br>
+	 *  The first item is the post "title". <br>
+	 *  The Second item is the post body.
+	 */
 	private Map<Integer, String> commentList;
 	
 	/**
@@ -100,6 +105,14 @@ public class Post implements Serializable{
 	 */
 	public Map<Integer, String> getPosts(){
 		return commentList;
+	}
+
+	/**
+	 * Returns the title of the post.
+	 * @return A String containing the title of the post.
+	 */
+	public String getTitle(){
+		return commentList.get(1);
 	}
 	
 	/**

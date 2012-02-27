@@ -2,7 +2,8 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.Set;
+import java.util.Iterator;
 
 public class ClassRoom implements Serializable{
 
@@ -99,6 +100,29 @@ public class ClassRoom implements Serializable{
 	protected Map<Integer, Post> getClassRoom(){
 		return postList;
 	}
+
+	/**
+	 * Returns a list of all the posts in a class.
+	 * @return Returns a list of Integers mapped to Strings w
+	 * here the Integer is the post id and the String is the post title.
+	 */
+	protected Map<Integer, String> getTitleList(){
+		Map<Integer, String> titleList = Collections.synchronizedMap(new HashMap<Integer, String>());
+
+		Set<Integer> s = postList.keySet();
+		synchronized(postList) {  
+			Iterator<Integer> i = s.iterator(); 
+			while (i.hasNext()){
+				int postId = i.next();
+				Post tempPost = postList.get(postId);
+				String postTitle = tempPost.getTitle();
+				titleList.put(postId, postTitle);
+			}
+		}
+		return titleList;
+	}
+
+		
 	
 	/**
 	 * Returns the id number of the class.
