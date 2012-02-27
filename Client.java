@@ -30,11 +30,16 @@ public class Client {
 	 * It takes in a classroom name and returns true if the classroom can be created,
 	 * and false otherwise.
 	 * @param classroomName
-	 * @param classroomCreatorName
+	 * @param uName
 	 * @return boolean corresponding to classroom creation status
 	 */
 	public boolean createClassroom(String classroomName, String uName) {
-		// TODO
+
+		if(DEBUG)
+			return true;
+		
+		//TODO Set cookie with uName, Set message id with classroom name, message type
+		//check message code on return
 		return true;		
 	}
 	
@@ -46,8 +51,9 @@ public class Client {
 	 * @param requesterUserName
 	 * @return boolean corresponding to whether the classroom can be requested
 	 */
-	public boolean requestClassroom(String classroomRequestName, String requesterUserName) {
-		// TODO
+	public boolean requestToJoinClassroom(String classroomRequestName, String requesterUserName) {
+		//TODO Set cookie with uName, Set message id with classroom name, message type
+		//check message code on return 
 		return true;		
 	}
 	
