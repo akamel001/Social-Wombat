@@ -125,7 +125,7 @@ public class UserInterface {
 	    // request to join classroom
 	    case 3:
 	    	String classroomRequestName = console.readLine("Please specify the name of the classroom you'd like to join: ");
-	    	if (client.requestClassroom(classroomRequestName, currentUserName)){
+	    	if (client.requestToJoinClassroom(classroomRequestName, currentUserName)){
 				homePage(messages);
 			} else {
 				homePage(messages);
