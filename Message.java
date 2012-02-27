@@ -31,7 +31,7 @@ public class Message implements Serializable{
 		 * Array[0] = Post_Name
 		 * Array[1] = Post_body 	
 		 */
-	    Client_CreatePost,
+	    Client_CreateThread,
 	    /*
 		 * Create client expects postID and comment to be stored as index
 		 * [0] and [1] respectively in the msg.body as an ArrayList.
