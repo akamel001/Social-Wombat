@@ -105,8 +105,8 @@ public class Client {
 	 * @param currentUserName
 	 * @return
 	 */
-	public boolean createThread(String threadName, String postContent, String currentUserName) {
-		// TODO Auto-generated method stub
+	public boolean createThread(String threadName, String postContent, String currentUserName, String classroomName) {
+		// TODO Message type createThread, cookie id username, ArrayList<string> with index 0 as threadname and 1 as postContent, message class id is class name 
 		return true;
 	}
 
