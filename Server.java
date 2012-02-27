@@ -7,7 +7,7 @@ public class Server {
 	private static boolean listening = true;
 	// TODO: data for now is any relevant data that needs to be passed to a
 	// handler thread
-	private static ServerList serverList;
+	private static ClassDB classDB;;
 	
 	// Constructor
 	public Server() {
@@ -29,11 +29,11 @@ public class Server {
 	private static void initializeData(){
 		//Create or import ServerList
 		//Check if ServerList exists
-		if (fileExists("Server_List")){
+		if (fileExists("classDB")){
 			//import file
 		} else {
 			//create new ServerList
-			serverList = new ServerList();
+			classDB = new ClassDB();
 		}
 	}
 	
@@ -63,7 +63,7 @@ public class Server {
 				Socket hub = serverSocket.accept();
 				//Spawn new ServerSocketHandler thread, we assume that the
 				//hub has directed this message to the correct Server
-				ServerSocketHandler newRequest = new ServerSocketHandler(hub,serverList);
+				ServerSocketHandler newRequest = new ServerSocketHandler(hub,classDB);
 				//Starts running the new thread
 				newRequest.start(); 
 			} 

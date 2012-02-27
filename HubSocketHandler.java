@@ -120,9 +120,7 @@ public class HubSocketHandler extends Thread{
 	public void run(){
 		boolean valid = true;
 		//Read and deserialize Message from Socket
-		
 		Message msg = getMessage();
-		
 		
 		if (msg == null){
 			System.out.println("Message was null");
@@ -184,7 +182,7 @@ public class HubSocketHandler extends Thread{
 					
 				// Client -> Hub -> Server
 				case Client_CreateClassroom:
-
+					
 					break;
 				case Client_CreatePost:
 
