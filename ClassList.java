@@ -152,11 +152,14 @@ public class ClassList implements Serializable{
 	}
 
 	/**
-	 * DEPRECATED: USE getClassEnrolled(String)
-	 * @param user
-	 * @return Returns a Map containing all of the classes a user is enrolled in, null if none exist.
+	 * Returns a map of classnames mapped to permissions. 
+	 * @param user The relevant username.
+	 * @return Returns a Map of Strings to Integers. The Strings are the classes in which the user is 
+	 * enrolled. The Integers represent the user's permission with respect to that classroom. A value 
+	 * of 1 indicates a 
+	 * student, 2 indicates a TA, 3 indicates an instructor.
 	 */
-	protected Map<String, Integer> getUserEnrollment(String user){
+	protected Map<String, Integer> getUserEnrollment(String userName){
 		Map<String, Integer> out = Collections.synchronizedMap(new TreeMap<String, Integer>());
 		boolean found = false;
 		Set<String> s = classList.keySet();
@@ -165,10 +168,15 @@ public class ClassList implements Serializable{
 			while (i.hasNext()){
 				String className = i.next();
 				ClassData cd =	classList.get(className);
-				int per = cd.getPermissions(user);
-				if (per>-1){
-					found = true;
-					out.put(cd.getClassName(), per);
+				if (cd.getInstructor().equals(userName)){
+					out.put(cd.getClassName(), 3);
+				}
+				else{
+				int per = cd.getPermissions(userName);
+					if (per>0){
+						found = true;
+						out.put(cd.getClassName(), per);
+					}	
 				}
 			}
 		}
