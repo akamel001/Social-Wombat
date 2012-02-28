@@ -24,6 +24,7 @@ public class UserInterface {
 	private static String currentThreadName;
 	private static Integer currentThreadID;
 	private static String currentMemberName;
+	private static String currentMemberPermissions;
 	private static String currentPendingMemberName;
 	
 	static int iWINDOWWIDTH = 81;
@@ -171,8 +172,7 @@ public class UserInterface {
 	    default:
 	    	console.printf(eGENERAL_ERROR);
 	        break;
-		}
-		
+		}		
 	}
 	
 	/**
@@ -286,8 +286,7 @@ public class UserInterface {
 	    default:
 	    	console.printf(eGENERAL_ERROR);
 	    	break;
-		}
-		
+		}		
 	}
 
 	/**
@@ -379,8 +378,7 @@ public class UserInterface {
 	    default:
 	    	console.printf(eGENERAL_ERROR);
 	        break;
-		}
-		
+		}		
 	}
 
 	/**
@@ -402,6 +400,7 @@ public class UserInterface {
 		int selection = getValidSelectionFromUser(memberList.size());
 		
 		currentMemberName = memberList.get(selection -1);
+		currentMemberPermissions = convertIntToStringPermissions(memberTreeMap.get(currentMemberName));
 	    memberPage(null);
 	}
 	
@@ -425,9 +424,8 @@ public class UserInterface {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
 		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions + "."));
-		info = info.concat(addFormattingAlignLeft("Currently viewing member: " + currentMemberName + "."));
 		
-		String memberContent = null; //TODO: member content such as status?
+		String memberContent = addFormattingAlignLeft("Currently viewing member: " + currentMemberName + " (" + currentMemberPermissions + ").");
 		
 		if (currentPermissions == sTEACHING_ASSISTANT) {
 			displayPage(sMEMBER_PAGE, messages, info, memberContent, sMEMBER_PAGE_OPTIONS_TEACHING_ASSISTANT); 
@@ -446,6 +444,7 @@ public class UserInterface {
 	    case 1:
 	    	client.removeMember(currentMemberName, currentClassroomName, currentUserName);
 	    	currentMemberName = null;
+	    	currentMemberPermissions = null;
 	        memberListPage(mREMOVE_MEMBER_SUCCESS);
 	        break;
 	    // Change this member's status.
@@ -456,13 +455,13 @@ public class UserInterface {
 	    // Go back to this classroom's main page.
 	    case 3:
 	    	currentMemberName = null;
+	    	currentMemberPermissions = null;
 	        classroomPage(null);
 	        break;
 	    default:
 	    	console.printf(eGENERAL_ERROR);
 	        break;
-		}
-		
+		}		
 	}
 
 	/**
@@ -525,8 +524,7 @@ public class UserInterface {
 	    default:
 	    	console.printf(eGENERAL_ERROR);
 	        break;
-		}
-		
+		}		
 	}
 	
 	
