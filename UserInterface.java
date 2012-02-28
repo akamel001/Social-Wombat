@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 // TODO: make sure the current... are updated as we go
 // TODO: currentPendingMember
 // TODO: make sure for getClassroomForUser get ALL classrooms, even those for which a user is an instructor CHRIS???
+// TODO: stabilize anything with maps and needing an order.
 
 /**
  * This is the user interface for Social Wombat.
@@ -181,7 +182,7 @@ public class UserInterface {
 	private static void classroomListPage(String messages) {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		Map<String, Integer> classroomMap = client.getClassroomMapForUser(currentUserName);	
-		List<String> classroomList = mapKeysToList(classroomMap);
+		List<String> classroomList = mapStringKeysToList(classroomMap);
 		displayPage(sCLASSROOMLISTPAGE, messages, info, null, listToUIString(classroomList));
 
 		int selection = getValidSelectionFromUser(classroomMap.size());
@@ -290,39 +291,38 @@ public class UserInterface {
 	 * for a particular classroom.
 	 * @param messages
 	 */
-	private static void threadListPage(String messages) { // TODO: BOOKMARK
+	private static void threadListPage(String messages) {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
 		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions + "."));
-		Map<Integer, String> threadMap = client.getThreadListForClassroom(currentClassroomName, currentUserName); // TODO: should be renamed to threadMAP not list		
-		List<Integer> threadIDList = mapKeysToList2(threadMap);
+		
+		Map<Integer, String> threadMap = client.getThreadMapForClassroom(currentClassroomName, currentUserName);		
+		List<Integer> threadIDList = mapIntegerKeysToList(threadMap);
 		List<String> threadTopicsList = mapValuesToList(threadMap);
+		
 		displayPage(sTHREADLISTPAGE, messages, info, null, listToUIString(threadTopicsList));
 		
-		int selection = getValidSelectionFromUser(threadMap.size());
-		
-		
+		int selection = getValidSelectionFromUser(threadMap.size());				
 		Integer threadSelection = threadIDList.get(selection - 1);
 		
-		currentThreadName = threadMap.get(threadSelection);
 		currentThreadID = threadSelection;
+		currentThreadName = threadMap.get(threadSelection);
 	    threadPage(null);
 	}
 
-	// TODO: move these next two methods down
-	private static List<String> mapValuesToList(Map<Integer, String> threadMap) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private static List<Integer> mapKeysToList2(Map<Integer, String> threadMap) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	// TODO: come back to this.
 	/**
-	 * @param messages TODO
+	 * This is the page for a particular thread. It displays the following 4 options for
+	 * instructors and teaching assistants:
+	 * 1. Comment on this thread.
+	 * 2. Delete a comment.
+	 * 3. Delete this entire thread
+	 * 4. Go back to this classroom's main page.
 	 * 
+	 * It displays the following 2 options for students:
+	 * 1. Comment on this thread.
+	 * 2. Go back to this classroom's main page.
+	 * @param messages
 	 */
 	private static void threadPage(String messages) {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
@@ -364,28 +364,44 @@ public class UserInterface {
 	}
 	
 	/**
-	 * @param messages TODO
-	 * 
+	 * This is the member list page. It displays the list of members
+	 * for a particular classroom.
+	 * @param messages
 	 */
 	private static void memberListPage(String messages) {		
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		Map<String, Integer> memberMap = client.getMemberListForClassroom(currentClassroomName, currentUserName);	
-		displayPage(sMEMBERLISTPAGE, messages, info, null, mapToUIString(memberMap));
+		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions + "."));
+		
+		Map<String, Integer> memberMap = client.getMemberMapForClassroom(currentClassroomName, currentUserName);
+		List<String> memberList = mapStringKeysToList(memberMap); // TODO not stable
+		displayPage(sMEMBERLISTPAGE, messages, info, null, mapToUIString3(memberMap)); // TODO not stable
 
 		int selection = getValidSelectionFromUser(memberMap.size());
 		
-		//currentMemberName = memberMap.get(key); TODO
+		currentMemberName = memberList.get(selection);
 	    memberPage(null);
 	}
 	
 	/**
+	 * This is the page for a particular member. It displays the following 3 options for
+	 * instructors:
+	 * 1. Remove this member from this classroom.
+     * 2. Change this member's status.
+	 * 3. Go back to this classroom's main page.
+	 * 
+	 * It displays the following 2 options for teaching assistants:
+	 * 1. Remove this member from this classroom.
+	 * 2. Go back to this classroom's main page.
+	 * 
+	 * Students do not have the permissions to navigate to this page.
 	 * @param messages TODO
 	 * 
 	 */
 	private static void memberPage(String messages) {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
+		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions + "."));
 		info = info.concat(addFormattingAlignLeft("Currently viewing member: " + currentMemberName + "."));
 		displayPage(sMEMBERPAGE, messages, info, null, sMEMBERPAGEOPTIONS); //TODO: member content such as status
 		
@@ -426,7 +442,7 @@ public class UserInterface {
 		
 		int selection = getValidSelectionFromUser(requestList.size());
 		
-		currentMemberName = requestList.get(selection - 1);
+		currentPendingMemberName = requestList.get(selection - 1);
 	    requestPage(null);
 		
 	}
@@ -446,19 +462,19 @@ public class UserInterface {
 		switch (selection) {
 		// confirm as a member
 	    case 1:
-	    	client.confirmAsMemberOfClassroom(currentMemberName, currentClassroomName, currentUserName);
-	    	currentMemberName = null;
+	    	client.confirmAsMemberOfClassroom(currentPendingMemberName, currentClassroomName, currentUserName);
+	    	currentPendingMemberName = null;
 	        requestListPage(null);
 	        break;
 	    // deny membership
 	    case 2:
-	    	client.denyMembershipToClassroom(currentMemberName, currentClassroomName, currentUserName);
-	    	currentMemberName = null;
+	    	client.denyMembershipToClassroom(currentPendingMemberName, currentClassroomName, currentUserName);
+	    	currentPendingMemberName = null;
 	    	requestListPage(null);
 	        break;
 	    // go back to classroom
 	    case 3:
-	    	currentMemberName = null;
+	    	currentPendingMemberName = null;
 	        classroomPage(null);
 	        break;
 	    default:
@@ -527,10 +543,27 @@ public class UserInterface {
 		return permissions;
 	}
 	
-	public static List<String> mapKeysToList(Map<String, Integer> classroomMap){
+	// Various map to list functions.	
+	public static List<String> mapStringKeysToList(Map<String, Integer> map){
 		List<String> outputList = new ArrayList<String>();
-		for (String key : classroomMap.keySet()){
+		for (String key : map.keySet()){
 			outputList.add(key);
+		}
+		return outputList;
+	}
+	
+	private static List<Integer> mapIntegerKeysToList(Map<Integer, String> map) {
+		List<Integer> outputList = new ArrayList<Integer>();
+		for (Integer key : map.keySet()){
+			outputList.add(key);
+		}
+		return outputList;
+	}
+	
+	private static List<String> mapValuesToList(Map<Integer, String> map) {
+		List<String> outputList = new ArrayList<String>();
+		for (String value : map.values()){
+			outputList.add(value);
 		}
 		return outputList;
 	}
@@ -559,41 +592,59 @@ public class UserInterface {
 		return uiString;		
 	}
 	
-	/**
-	 * 
-	 * @param map
-	 * @return uiString
-	 */
-	private static String mapToUIString(Map<String, Integer> map) {
-		// TODO depends on sorting
-		int i = 1;
-		String uiString = "";
-		String uiStringTemp;
-		for (String key : map.keySet()){
-			uiStringTemp = "";
-			uiStringTemp = uiStringTemp.concat(Integer.toString(i) + ". ");
-			i++;
-			uiStringTemp = uiStringTemp.concat(key);
-			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
-		}
-		return uiString;
-	}
+//	/**
+//	 * 
+//	 * @param map
+//	 * @return uiString
+//	 */
+//	private static String mapToUIString(Map<String, Integer> map) {
+//		// TODO depends on sorting
+//		int i = 1;
+//		String uiString = "";
+//		String uiStringTemp;
+//		for (String key : map.keySet()){
+//			uiStringTemp = "";
+//			uiStringTemp = uiStringTemp.concat(Integer.toString(i) + ". ");
+//			i++;
+//			uiStringTemp = uiStringTemp.concat(key);
+//			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
+//		}
+//		return uiString;
+//	}
+//	
+//	/**
+//	 * 
+//	 * @param threadList
+//	 * @return
+//	 */
+//	private static String mapToUIString2(Map<Integer, String> map) {
+//		int i = 1;
+//		String uiString = "";
+//		String uiStringTemp;
+//		for (Entry<Integer, String> entry : map.entrySet()){
+//			uiStringTemp = "";
+//			uiStringTemp = uiStringTemp.concat(Integer.toString(i) + ". ");
+//			i++;
+//			uiStringTemp = uiStringTemp.concat(entry.getValue());
+//			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
+//		}
+//		return uiString;
+//	}
 	
 	/**
 	 * 
 	 * @param threadList
 	 * @return
 	 */
-	private static String mapToUIString2(Map<Integer, String> map) {
-		// TODO Auto-generated method stub
+	private static String mapToUIString3(Map<String, Integer> map) {
 		int i = 1;
 		String uiString = "";
 		String uiStringTemp;
-		for (Entry<Integer, String> entry : map.entrySet()){
+		for (Entry<String, Integer> entry : map.entrySet()){
 			uiStringTemp = "";
 			uiStringTemp = uiStringTemp.concat(Integer.toString(i) + ". ");
 			i++;
-			uiStringTemp = uiStringTemp.concat(entry.getValue());
+			uiStringTemp = uiStringTemp.concat(entry.getKey() + " (" + entry.getValue().toString() + ")");
 			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
 		}
 		return uiString;

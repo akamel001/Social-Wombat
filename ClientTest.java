@@ -74,10 +74,10 @@ public class ClientTest {
 	}
 
 	/**
-	 * Test method for {@link Client#getThreadListForClassroom(java.lang.String, java.lang.String)}.
+	 * Test method for {@link Client#getThreadMapForClassroom(java.lang.String, java.lang.String)}.
 	 */
 	@Test
-	public void testGetThreadListForClassroom() {
+	public void testGetThreadMapForClassroom() {
 		fail("Not yet implemented"); // TODO
 	}
 
@@ -90,10 +90,10 @@ public class ClientTest {
 	}
 
 	/**
-	 * Test method for {@link Client#getMemberListForClassroom(java.lang.String, java.lang.String)}.
+	 * Test method for {@link Client#getMemberMapForClassroom(java.lang.String, java.lang.String)}.
 	 */
 	@Test
-	public void testGetMemberListForClassroom() {
+	public void testGetMemberMapForClassroom() {
 		fail("Not yet implemented"); // TODO
 	}
 

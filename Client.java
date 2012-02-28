@@ -134,7 +134,7 @@ public class Client {
 	 * @param userName
 	 * @return Map of Thread ID -> Thread Name
 	 */
-	public Map<Integer, String> getThreadListForClassroom(String classroomName, String userName) {
+	public Map<Integer, String> getThreadMapForClassroom(String classroomName, String userName) {
 		// Message type is Client goto classroom, cookie uname, message classid is classroom name
 		// Debug logic 
 		
@@ -154,7 +154,7 @@ public class Client {
 	 * @param userName
 	 * @return Map of Names -> Permissions 
 	 */
-	public Map<String, Integer> getMemberListForClassroom(String classroomName, String userName) {
+	public Map<String, Integer> getMemberMapForClassroom(String classroomName, String userName) {
 		// TODO message type Client_GetClassEnrollment, cookie id username, classroomName in message class ID 
 		// Add debug logic
 		return null;
