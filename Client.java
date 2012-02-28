@@ -136,21 +136,21 @@ public class Client {
 	 * @return Map of Thread ID -> Thread Name
 	 */
 	public Map<Integer, String> getThreadListForClassroom(String classroomName, String userName) {
-		// TODO Auto-generated method stub
 		// Message type is Client goto classroom, cookie uname, message classid is classroom name
 		// Debug logic 
 		
 		return null;
 	}
 
-	public boolean createComment(String commentContent,
-			String threadName, String userName) {
-		// TODO Auto-generated method stub
+	public boolean createComment(String commentContent, int threadID, String classroomName, String userName) {
+		// TODO cast threadID to string
+		// TODO Message type CreatComment, cookie id username, ArrayList<string> with index 0 as threadID and 1 as commentContent, message class id is class name 
+		// TODO add debug logic
 		return true;
 	}
 
 	public List<String> getMemberListForClassroom(String classroomName, String userName) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
