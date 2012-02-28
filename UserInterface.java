@@ -25,13 +25,13 @@ public class UserInterface {
 	static Client client;
 	private static String currentUserName;
 	private static String currentClassroomName;
+	private static String currentPermissions;
 	private static String currentThreadName;
-	private static int currentThreadID;
+	private static Integer currentThreadID;
 	private static String currentMemberName;
 	private static String currentPendingMemberName;
-	//private static String currentPermissions; TODO:
 	
-	static int iWINDOWWIDTH = 58;
+	static int iWINDOWWIDTH = 81;
 	
 	// Below is a bunch of strings used in the text-based user interface.
 	private static final String sNEWLINE = 				System.getProperty("line.separator");
@@ -49,35 +49,39 @@ public class UserInterface {
 	private static final String sREQUESTPAGE = 			addFormattingAlignCenter("REQUEST");
 	
 	// TODO: errors and messages
-	//private static final String eUSERNAMEDOESNOTEXIST = addFormattingAlignLeft("The user name provided does not exist.");
-	//private static final String eCLASSROOMCREATIONERROR=addFormattingAlignLeft("An error occured when creating the classroom.");
-	//private static final String eCLASSROOMREQUSTERROR =	addFormattingAlignLeft("An error occured when requesting to join the classroom.");
+	private static final String eLOGINERROR = 			addFormattingAlignLeft("There was an error in logging in with the provided username.");
+	private static final String eCLASSROOMCREATIONERROR=addFormattingAlignLeft("An error occured when creating the classroom.");
+	private static final String eCLASSROOMREQUSTERROR =	addFormattingAlignLeft("An error occured when requesting to join the classroom.");
 	private static final String eNONVALIDSELECTION = 	addFormattingAlignLeft("That is not a valid selection.");
+	private static final String eCLASSROOMREQUESTERROR = addFormattingAlignLeft("An error has occurred"); // TODO
 	
-	private static final String sHOMEPAGEOPTIONS =		addFormattingAlignLeft("1. select classroom") +
-														addFormattingAlignLeft("2. create classroom") +
-														addFormattingAlignLeft("3. request to join classroom") +
-														addFormattingAlignLeft("4. log out");
+	private static final String mCLASSROOMCREATIONSUCCESS = addFormattingAlignLeft("You have successfully created a classroom!");
+	private static final String mCLASSROOMREQUESTSUCCESS = 	addFormattingAlignLeft("You have successfully requested to join classroom!"); //TODO
 	
-	private static final String sCLASSROOMPAGEOPTIONS = addFormattingAlignLeft("1. select thread") +
-														addFormattingAlignLeft("2. create thread") +
-														addFormattingAlignLeft("3. select member") +
-														addFormattingAlignLeft("4. view requests") +
-														addFormattingAlignLeft("5. delete classroom/remove self") +
-														addFormattingAlignLeft("6. go back to homepage");
+	private static final String sHOMEPAGEOPTIONS =		addFormattingAlignLeft("1. View your classrooms.") +
+														addFormattingAlignLeft("2. Create a classroom.") +
+														addFormattingAlignLeft("3. Request to join a classroom.") +
+														addFormattingAlignLeft("4. Log out.");
+	
+	private static final String sCLASSROOMPAGEOPTIONS = addFormattingAlignLeft("1. View discussion board.") +
+														addFormattingAlignLeft("2. Create a thread.") +
+														addFormattingAlignLeft("3. View members of this classroom.") +
+														addFormattingAlignLeft("4. View requests to join this classroom.") +
+														addFormattingAlignLeft("5. Delete this classroom./Disjoin this classroom.") +
+														addFormattingAlignLeft("6. Go back home.");
 
-	private static final String sTHREADPAGEOPTIONS = 	addFormattingAlignLeft("1. create new comment") +
-														addFormattingAlignLeft("2. delete comment") +
-														addFormattingAlignLeft("3. delete thread") +
-														addFormattingAlignLeft("4. go back to classroom ");
+	private static final String sTHREADPAGEOPTIONS = 	addFormattingAlignLeft("1. Comment on this thread.") +
+														addFormattingAlignLeft("2. Delete a comment.") +
+														addFormattingAlignLeft("3. Delete this entire thread") +
+														addFormattingAlignLeft("4. Go back to this classroom's main page.");
 	
-	private static final String sMEMBERPAGEOPTIONS = 	addFormattingAlignLeft("1. remove member") +
-														addFormattingAlignLeft("2. change status") +
-														addFormattingAlignLeft("3. go back to classroom");
+	private static final String sMEMBERPAGEOPTIONS = 	addFormattingAlignLeft("1. Remove this member from this classroom.") +
+														addFormattingAlignLeft("2. Change this member's status.") +
+														addFormattingAlignLeft("3. Go back to this classroom's main page.");
 	
-	private static final String sREQUESTPAGEOPTIONS = 	addFormattingAlignLeft("1. confirm as a member") +
-														addFormattingAlignLeft("2. deny membership") +
-														addFormattingAlignLeft("3. go back to classroom");
+	private static final String sREQUESTPAGEOPTIONS = 	addFormattingAlignLeft("1. Confirm as a member.") +
+														addFormattingAlignLeft("2. Deny membership.") +
+														addFormattingAlignLeft("3. Go back to this classroom's main page.");
 	
 	/**
 	 * This is the login page. The login page requests a user name. If the user name is valid, 
@@ -86,57 +90,55 @@ public class UserInterface {
 	 * @param messages TODO
 	 */
 	private static void loginPage(String messages) {
-		displayPage(sLOGIN, null, null, null, null);	
+		displayPage(sLOGIN, messages, null, null, null);	
 		String userNameTemp = console.readLine("User Name? ");
 		
 		if (client.handleLogin(userNameTemp)){
 			currentUserName = userNameTemp;
-			homePage(null);
+			homePage(addFormattingAlignLeft("Welcome, " + currentUserName + "!"));
 		} else {
-			// TODO: pass in a message saying that login failed.
-			currentUserName = null;
-			loginPage(messages);
+			loginPage(eLOGINERROR);
 		}
 	}
 	
 	/**
 	 * This is the home page. It displays four options:
-	 * 1. Select classroom.
-	 * 2. Create classroom.
-	 * 3. Request to join classroom.
+	 * 1. View your classrooms.
+	 * 2. Create a classroom.
+	 * 3. Request to join a classroom.
 	 * 4. Log out.
 	 * @param messages TODO
 	 */
 	private static void homePage(String messages) {	
-		String info = addFormattingAlignLeft("Welcome, " + currentUserName + "!");
-		displayPage(sHOMEPAGE, info, messages, null, sHOMEPAGEOPTIONS);
+		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
+		displayPage(sHOMEPAGE, messages, info, null, sHOMEPAGEOPTIONS);
 		int selection = getValidSelectionFromUser(4);
 		
 		switch (selection) {
-		// select classroom
+		// View your classrooms.
 	    case 1: 
 	    	classroomListPage(null);
 	        break;
-	    // create classroom
+	    // Create a classroom.
 	    case 2: 
 	    	String classroomNameTemp = console.readLine("Please specify a classroom name: ");
 	    	if (client.createClassroom(classroomNameTemp, currentUserName)){
 	    		currentClassroomName = classroomNameTemp;
-				classroomPage(null);
+				classroomPage(mCLASSROOMCREATIONSUCCESS);
 			} else {
-				homePage(messages);
+				homePage(eCLASSROOMCREATIONERROR);
 			}
 	        break;
-	    // request to join classroom
+	    // Request to join a classroom.
 	    case 3:
 	    	String classroomRequestName = console.readLine("Please specify the name of the classroom you'd like to join: ");
 	    	if (client.requestToJoinClassroom(classroomRequestName, currentUserName)){
-				homePage(messages);
+				homePage(mCLASSROOMREQUESTSUCCESS); // TODO: bookmark
 			} else {
-				homePage(messages);
+				homePage(eCLASSROOMREQUESTERROR);
 			}
 	        break;
-	    // log out
+	    // Log out.
 	    case 4:
 	    	currentUserName = null;
 	        loginPage(null);
@@ -154,7 +156,7 @@ public class UserInterface {
 	private static void classroomListPage(String messages) {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		Map<String, Integer> classroomMap = client.getClassroomMapForUser(currentUserName);		
-		displayPage(sCLASSROOMLISTPAGE, info, messages, null, mapToUIString(classroomMap));
+		displayPage(sCLASSROOMLISTPAGE, messages, info, null, mapToUIString(classroomMap));
 
 		int selection = getValidSelectionFromUser(classroomMap.size());
 		
@@ -169,7 +171,7 @@ public class UserInterface {
 	private static void classroomPage(String messages) {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		displayPage(sCLASSROOMPAGE, info, messages, null, sCLASSROOMPAGEOPTIONS);
+		displayPage(sCLASSROOMPAGE, messages, info, null, sCLASSROOMPAGEOPTIONS);
 		
 		int selection = getValidSelectionFromUser(6);
 		
@@ -223,7 +225,7 @@ public class UserInterface {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
 		Map<Integer, String> threadMap = client.getThreadListForClassroom(currentClassroomName, currentUserName);		
-		displayPage(sTHREADLISTPAGE, info, messages, null, mapToUIString2(threadMap));
+		displayPage(sTHREADLISTPAGE, messages, info, null, mapToUIString2(threadMap));
 		
 		int selection = getValidSelectionFromUser(threadMap.size());
 		
@@ -239,7 +241,7 @@ public class UserInterface {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
 		info = info.concat(addFormattingAlignLeft("Current thread: " + currentThreadName + "."));
-		displayPage(sTHREADPAGE, info, messages, null, sTHREADPAGEOPTIONS); // TODO: get thread content
+		displayPage(sTHREADPAGE, messages, info, null, sTHREADPAGEOPTIONS); // TODO: get thread content
 		
 		int selection = getValidSelectionFromUser(4);
 		
@@ -281,7 +283,7 @@ public class UserInterface {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
 		Map<String, Integer> memberMap = client.getMemberListForClassroom(currentClassroomName, currentUserName);	
-		displayPage(sMEMBERLISTPAGE, info, messages, null, mapToUIString(memberMap));
+		displayPage(sMEMBERLISTPAGE, messages, info, null, mapToUIString(memberMap));
 
 		int selection = getValidSelectionFromUser(memberMap.size());
 		
@@ -297,7 +299,7 @@ public class UserInterface {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
 		info = info.concat(addFormattingAlignLeft("Currently viewing member: " + currentMemberName + "."));
-		displayPage(sMEMBERPAGE, info, messages, null, sMEMBERPAGEOPTIONS); //TODO: member content such as status
+		displayPage(sMEMBERPAGE, messages, info, null, sMEMBERPAGEOPTIONS); //TODO: member content such as status
 		
 		int selection = getValidSelectionFromUser(3);
 		
@@ -332,7 +334,7 @@ public class UserInterface {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
 		List<String> requestList = client.getRequestListForClassroom(currentClassroomName, currentUserName);
-		displayPage(sREQUESTLISTPAGE, info, messages, null, listToUIString(requestList));
+		displayPage(sREQUESTLISTPAGE, messages, info, null, listToUIString(requestList));
 		
 		int selection = getValidSelectionFromUser(requestList.size());
 		
@@ -349,7 +351,7 @@ public class UserInterface {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
 		info = info.concat(addFormattingAlignLeft("Currently viewing request from member: " + currentMemberName + "."));
-		displayPage(sREQUESTPAGE, info, messages, null, sREQUESTPAGEOPTIONS);		
+		displayPage(sREQUESTPAGE, messages, info, null, sREQUESTPAGEOPTIONS);		
 
 		int selection = getValidSelectionFromUser(3);
 		
@@ -527,19 +529,19 @@ public class UserInterface {
 	 * Only necessary parameter is pageName.
 	 * If there is nothing to display for a page, use null as the parameter.
 	 * @param pageName
-	 * @param info
 	 * @param messages
+	 * @param info
 	 * @param content
 	 * @param options
 	 */
-	public static void displayPage(String pageName, String info, String messages, String content, String options){
+	public static void displayPage(String pageName, String messages, String info, String content, String options){
 		clearScreen();
 		console.printf(sBIGDIVIDER + pageName);
-		if (info != null) {
-			console.printf(sSMALLDIVIDER + info);
-		}
 		if (messages != null) {
 			console.printf(sSMALLDIVIDER + messages);
+		}
+		if (info != null) {
+			console.printf(sSMALLDIVIDER + info);
 		}
 		if (content != null) {
 			console.printf(sSMALLDIVIDER + content);
