@@ -51,12 +51,11 @@ public class UserInterface {
 	// TODO: errors and messages
 	private static final String eLOGINERROR = 			addFormattingAlignLeft("There was an error in logging in with the provided username.");
 	private static final String eCLASSROOMCREATIONERROR=addFormattingAlignLeft("An error occured when creating the classroom.");
-	private static final String eCLASSROOMREQUSTERROR =	addFormattingAlignLeft("An error occured when requesting to join the classroom.");
 	private static final String eNONVALIDSELECTION = 	addFormattingAlignLeft("That is not a valid selection.");
-	private static final String eCLASSROOMREQUESTERROR = addFormattingAlignLeft("An error has occurred"); // TODO
+	private static final String eCLASSROOMREQUESTERROR = addFormattingAlignLeft("An error occured when requesting to join a classroom.");
 	
 	private static final String mCLASSROOMCREATIONSUCCESS = addFormattingAlignLeft("You have successfully created a classroom!");
-	private static final String mCLASSROOMREQUESTSUCCESS = 	addFormattingAlignLeft("You have successfully requested to join classroom!"); //TODO
+	private static final String mCLASSROOMREQUESTSUCCESS = 	addFormattingAlignLeft("You have successfully requested to join a classroom!");
 	
 	private static final String sHOMEPAGEOPTIONS =		addFormattingAlignLeft("1. View your classrooms.") +
 														addFormattingAlignLeft("2. Create a classroom.") +
