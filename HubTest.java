@@ -1,7 +1,4 @@
-
-
 import static org.junit.Assert.*;
-
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -9,8 +6,15 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+/**
+ * 
+ */
 
-public class ClientSocketHandlerTest {
+/**
+ * @author yilok
+ *
+ */
+public class HubTest {
 
 	/**
 	 * @throws java.lang.Exception
@@ -41,27 +45,35 @@ public class ClientSocketHandlerTest {
 	}
 
 	/**
-	 * Test method for {@link ClientSocketHandler#constructMessage(java.lang.String, Message.MessageType, java.lang.Object)}.
+	 * Test method for {@link Hub#Hub()}.
 	 */
 	@Test
-	public void testConstructMessage() {
-		fail("Not yet implemented");
+	public void testHub() {
+		fail("Not yet implemented"); // TODO
 	}
 
 	/**
-	 * Test method for {@link ClientSocketHandler#sendReceive(java.lang.String, Message.MessageType)}.
+	 * Test method for {@link Hub#addUser(java.lang.String)}.
 	 */
 	@Test
-	public void testSendReceiveStringMessageType() {
-		fail("Not yet implemented");
+	public void testAddUser() {
+		fail("Not yet implemented"); // TODO
 	}
 
 	/**
-	 * Test method for {@link ClientSocketHandler#sendReceive(java.lang.String, Message.MessageType, java.lang.Object)}.
+	 * Test method for {@link Hub#addServer(java.net.InetAddress)}.
 	 */
 	@Test
-	public void testSendReceiveStringMessageTypeObject() {
-		fail("Not yet implemented");
+	public void testAddServer() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link Hub#main(java.lang.String[])}.
+	 */
+	@Test
+	public void testMain() {
+		fail("Not yet implemented"); // TODO
 	}
 
 }

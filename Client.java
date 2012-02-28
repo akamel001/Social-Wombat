@@ -21,9 +21,9 @@ public class Client {
 			return true; 
 		
 		ClientSocketHandler handler = new ClientSocketHandler();
-		Message responce = handler.sendReceive(uName, Message.MessageType.Client_LogIn);
+		Message response = handler.sendReceive(uName, Message.MessageType.Client_LogIn);
 		
-		return (responce.getCode() == 1)? true : false;	
+		return (response.getCode() == 1)? true : false;	
 	}
 	//TODO ******* WORK ON JUNIT TESTS ***** 
 	/**
