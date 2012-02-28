@@ -15,6 +15,8 @@ class Hub extends Thread {
 	static String userListName = "hub.userlist";
 	static String serverListName = "hub.serverlist";
 	
+	
+	
 	public Hub(){
 		// Constructor
 	}

@@ -1,12 +1,14 @@
 import java.io.Console;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 // TODO: action/error messages at top of each page
 // TODO: pull out commonalities for cleaner code
 // TODO: name of page, info (name, classroom), messages, options, question
 // TODO: different menus based on privileges
 // TODO: make sure the current... are updated as we go
+// TODO: currentPendingMember
 
 /**
  * This is the user interface for Social Wombat.
@@ -24,7 +26,9 @@ public class UserInterface {
 	private static String currentUserName;
 	private static String currentClassroomName;
 	private static String currentThreadName;
+	private static int currentThreadID;
 	private static String currentMemberName;
+	private static String currentPendingMemberName;
 	//private static String currentPermissions; TODO:
 	
 	static int iWINDOWWIDTH = 58;
@@ -218,15 +222,15 @@ public class UserInterface {
 	private static void threadListPage(String messages) {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		List<String> threadList = client.getThreadListForClassroom(currentUserName);		
-		displayPage(sTHREADLISTPAGE, info, messages, null, listToUIString(threadList));
+		Map<Integer, String> threadMap = client.getThreadListForClassroom(currentClassroomName, currentUserName);		
+		displayPage(sTHREADLISTPAGE, info, messages, null, mapToUIString2(threadMap));
 		
-		int selection = getValidSelectionFromUser(threadList.size());
+		int selection = getValidSelectionFromUser(threadMap.size());
 		
-		currentThreadName = threadList.get(selection - 1); // TODO: only works if thread names are unique.
+		currentThreadName = threadMap.get(selection - 1); // TODO: only works if thread names are unique.
 	    threadPage(null);		
 	}
-	
+
 	/**
 	 * @param messages TODO
 	 * 
@@ -243,7 +247,7 @@ public class UserInterface {
 		// create new comment
 	    case 1:
 	    	String commentContent = console.readLine("Please write your comment: ");
-	    	if (client.createComment(commentContent, currentThreadName, currentUserName)){
+	    	if (client.createComment(commentContent, currentThreadID, currentClassroomName, currentUserName)){
 				threadPage(messages);
 			} else {
 				classroomPage(null);
@@ -276,12 +280,12 @@ public class UserInterface {
 	private static void memberListPage(String messages) {		
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		List<String> memberList = client.getMemberListForClassroom(currentClassroomName);	
-		displayPage(sMEMBERLISTPAGE, info, messages, null, listToUIString(memberList));
+		Map<String, Integer> memberMap = client.getMemberListForClassroom(currentClassroomName, currentUserName);	
+		displayPage(sMEMBERLISTPAGE, info, messages, null, mapToUIString(memberMap));
 
-		int selection = getValidSelectionFromUser(memberList.size());
+		int selection = getValidSelectionFromUser(memberMap.size());
 		
-		currentThreadName = memberList.get(selection - 1);
+		//currentMemberName = memberMap.get(key); TODO
 	    memberPage(null);
 	}
 	
@@ -300,12 +304,12 @@ public class UserInterface {
 		switch (selection) {
 		// remove member
 	    case 1:
-	    	client.removeMember(currentMemberName, currentClassroomName);
+	    	client.removeMember(currentMemberName, currentClassroomName, currentUserName);
 	        memberPage(messages);
 	        break;
 	    // change status
 	    case 2:
-	    	client.changeStatus(currentMemberName);
+	    	client.changeStatus(currentMemberName, currentUserName, currentClassroomName);
 	    	memberPage(messages);
 	        break;
 	    // go back to classroom
@@ -327,7 +331,7 @@ public class UserInterface {
 	private static void requestListPage(String messages) {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		List<String> requestList = client.getRequestListForClassroom(currentClassroomName);
+		List<String> requestList = client.getRequestListForClassroom(currentClassroomName, currentUserName);
 		displayPage(sREQUESTLISTPAGE, info, messages, null, listToUIString(requestList));
 		
 		int selection = getValidSelectionFromUser(requestList.size());
@@ -352,13 +356,13 @@ public class UserInterface {
 		switch (selection) {
 		// confirm as a member
 	    case 1:
-	    	client.confirmAsMemberOfClassroom(currentMemberName, currentClassroomName);
+	    	client.confirmAsMemberOfClassroom(currentMemberName, currentClassroomName, currentUserName);
 	    	currentMemberName = null;
 	        requestListPage(null);
 	        break;
 	    // deny membership
 	    case 2:
-	    	client.denyMembershipToClassroom(currentMemberName, currentClassroomName);
+	    	client.denyMembershipToClassroom(currentMemberName, currentClassroomName, currentUserName);
 	    	currentMemberName = null;
 	    	requestListPage(null);
 	        break;
@@ -439,6 +443,26 @@ public class UserInterface {
 			uiStringTemp = uiStringTemp.concat(Integer.toString(i) + ". ");
 			i++;
 			uiStringTemp = uiStringTemp.concat(key);
+			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
+		}
+		return uiString;
+	}
+	
+	/**
+	 * 
+	 * @param threadList
+	 * @return
+	 */
+	private static String mapToUIString2(Map<Integer, String> map) {
+		// TODO Auto-generated method stub
+		int i = 1;
+		String uiString = "";
+		String uiStringTemp;
+		for (Entry<Integer, String> entry : map.entrySet()){
+			uiStringTemp = "";
+			uiStringTemp = uiStringTemp.concat(Integer.toString(i) + ". ");
+			i++;
+			uiStringTemp = uiStringTemp.concat(entry.getValue());
 			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
 		}
 		return uiString;

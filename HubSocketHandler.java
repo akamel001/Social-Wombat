@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class HubSocketHandler extends Thread{
@@ -151,7 +152,7 @@ public class HubSocketHandler extends Thread{
 					break;
 				// Returns in body all users in a classroom
 				case Client_GetClassEnrollment:
-					//String = User, Integer = 
+					//String = User, Integer = Permission
 					Map<String, Integer> classEnroll = classList.getClassEnrollment(msg.getClassroom_ID());
 					if (classEnroll == null){
 						//error
@@ -165,13 +166,25 @@ public class HubSocketHandler extends Thread{
 				// Return in body a list of the classes that a client is enrolled in
 				case Client_GetUserEnrollment:
 					String usr = msg.getCookie().getKey();
-					Map<String, Integer> userEnroll = classList.getUserEnrollment(usr);
+					Map<String, Integer> userEnroll = classList.getEnrolledUsers(usr);
 					if (userEnroll == null){
 						//error
 						msg.setCode(-1);
 					} else {
 						msg.setCode(1);
 						msg.setBody(userEnroll);
+					}
+					returnMessage(msg);
+					break;
+				case Client_ListClassroomRequests:
+					//gets list of users
+					List<String> requests = classList.getPendingUsers(msg.getClassroom_ID());
+					if (requests == null){
+						//error
+						msg.setCode(-1);
+					} else {
+						msg.setCode(1);
+						msg.setBody(requests);
 					}
 					returnMessage(msg);
 					break;

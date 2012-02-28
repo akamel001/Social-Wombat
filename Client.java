@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +53,7 @@ public class Client {
 	 * @return boolean corresponding to whether the classroom can be requested
 	 */
 	public boolean requestToJoinClassroom(String classroomRequestName, String requesterUserName) {
-		//TODO Set cookie with uName, Set message id with classroom name, message type
+		//TODO Set cookie with uName, Set message id with classroom name, message type Client_RequestEnrollment, message body 0
 		//check message code on return 
 		//add debug line
 		return true;		
@@ -107,6 +106,7 @@ public class Client {
 	 */
 	public boolean createThread(String threadName, String postContent, String currentUserName, String classroomName) {
 		// TODO Message type createThread, cookie id username, ArrayList<string> with index 0 as threadname and 1 as postContent, message class id is class name 
+		// TODO add debug logic
 		return true;
 	}
 
@@ -115,58 +115,109 @@ public class Client {
 	 */
 	public void deleteClassroom(String classroomName, String userName) {
 		// TODO Auto-generated method stub
-		
+		// TODO Set cookie uname and message type client_del classroom
+		// TODO add debug log
 	}
 
 	/**
 	 * 
 	 */
 	public void disjoinClassroom(String classroomName, String userName) {
-		// TODO Auto-generated method stub
-		
+		//TODO Set cookie with uName, Set message id with classroom name, message type Client_RequestEnrollment, message body -1
+		//check message code on return 
+		//add debug line
 	}
 
-	public List<String> getThreadListForClassroom(String classroomName) {
-		// TODO Auto-generated method stub
+	/**
+	 * 
+	 * @param classroomName
+	 * @param userName
+	 * @return Map of Thread ID -> Thread Name
+	 */
+	public Map<Integer, String> getThreadListForClassroom(String classroomName, String userName) {
+		// Message type is Client goto classroom, cookie uname, message classid is classroom name
+		// Debug logic 
+		
 		return null;
 	}
 
-	public boolean createComment(String commentContent,
-			String threadName, String userName) {
-		// TODO Auto-generated method stub
+	public boolean createComment(String commentContent, int threadID, String classroomName, String userName) {
+		// TODO cast threadID to string
+		// TODO Message type CreatComment, cookie id username, ArrayList<string> with index 0 as threadID and 1 as commentContent, message class id is class name 
+		// TODO add debug logic
 		return true;
 	}
-
-	public List<String> getMemberListForClassroom(String classroomName) {
-		// TODO Auto-generated method stub
+	
+	/**
+	 * 
+	 * @param classroomName
+	 * @param userName
+	 * @return Map of Names -> Permissions 
+	 */
+	public Map<String, Integer> getMemberListForClassroom(String classroomName, String userName) {
+		// TODO message type Client_GetClassEnrollment, cookie id username, classroomName in message class ID 
+		// Add debug logic
 		return null;
 	}
 
-	public void removeMember(String memberName,
-			String classroomName) {
-		// TODO Auto-generated method stub
-		
+	/**
+	 * 
+	 * @param memberName
+	 * @param classroomName
+	 * @param userName
+	 */
+	public void removeMember(String memberName, String classroomName, String userName) {
+		// TODO cookie containing user id, classroom id in message class id, Array<String> 0th index is membername, and first index is permission to remove (-1) and array is in message body
+		// todo message type cleitn set perm
+		// TODO add debug logic
 	}
 
-	public void changeStatus(String currentMemberName) {
-		// TODO Auto-generated method stub
-		
+	/**
+	 * 
+	 * @param currentMemberName
+	 * @param userName
+	 * @param classroomName
+	 */
+	public void changeStatus(String currentMemberName, String userName, String classroomName) {
+		// TODO cookie containing user id, classroom id in message class id, Array<String> 0th index is membername, and first index is permission to remove (1) and array is in message body
+		// message type client set perm
+		// TODO add debug logic
 	}
 
-	public List<String> getRequestListForClassroom(String currentClassroomName) {
-		// TODO Auto-generated method stub
+	/**
+	 * 
+	 * @param currentClassroomName
+	 * @param userName
+	 * @return List of all user names that have made requests to join a classroom
+	 */
+	public List<String> getRequestListForClassroom(String currentClassroomName, String userName) {
+		// TODO Message type Client_ListClassroomRequest, userName stored in cookie, message class id contains classroom name
+		// TODO Debug logic
 		return null;
 	}
-
-	public void confirmAsMemberOfClassroom(String memberName,
-			String classroomName) {
-		// TODO Auto-generated method stub
-		
+	
+	/**
+	 * 
+	 * @param pendingMember
+	 * @param classroomName
+	 * @param userName
+	 */
+	public void confirmAsMemberOfClassroom(String pendingMember, String classroomName, String userName) {
+		// TODO cookie containing user id, classroom id in message class id, Array<String> 0th index is membername, and first index is permission to remove (1) and array is in message body
+		// message type client set perm
+		// TODO add debug logic
 	}
-
-	public void denyMembershipToClassroom(String memberName,
-			String classroomName) {
-		// TODO Auto-generated method stub
+	
+	/**
+	 * 
+	 * @param pendingMember
+	 * @param classroomName
+	 * @param userName
+	 */
+	public void denyMembershipToClassroom(String pendingMember, String classroomName, String userName) {
+		// TODO cookie containing user id, classroom id in message class id, Array<String> 0th index is membername, and first index is permission to remove (-1) and array is in message body
+		// message type client set perm
+		// TODO add debug logic
 		
 	}
 
