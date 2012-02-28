@@ -218,15 +218,15 @@ public class UserInterface {
 	private static void threadListPage(String messages) {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		List<String> threadList = client.getThreadListForClassroom(currentClassroomName, currentUserName);		
-		displayPage(sTHREADLISTPAGE, info, messages, null, listToUIString(threadList));
+		Map<Integer, String> threadMap = client.getThreadListForClassroom(currentClassroomName, currentUserName);		
+		displayPage(sTHREADLISTPAGE, info, messages, null, mapToUIString2(threadMap));
 		
-		int selection = getValidSelectionFromUser(threadList.size());
+		int selection = getValidSelectionFromUser(threadMap.size());
 		
-		currentThreadName = threadList.get(selection - 1); // TODO: only works if thread names are unique.
+		currentThreadName = threadMap.get(selection - 1); // TODO: only works if thread names are unique.
 	    threadPage(null);		
 	}
-	
+
 	/**
 	 * @param messages TODO
 	 * 
@@ -300,7 +300,7 @@ public class UserInterface {
 		switch (selection) {
 		// remove member
 	    case 1:
-	    	client.removeMember(currentMemberName, currentClassroomName);
+	    	client.removeMember(currentMemberName, currentClassroomName, currentUserName);
 	        memberPage(messages);
 	        break;
 	    // change status
@@ -439,6 +439,26 @@ public class UserInterface {
 			uiStringTemp = uiStringTemp.concat(Integer.toString(i) + ". ");
 			i++;
 			uiStringTemp = uiStringTemp.concat(key);
+			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
+		}
+		return uiString;
+	}
+	
+	/**
+	 * 
+	 * @param threadList
+	 * @return
+	 */
+	private static String mapToUIString2(Map<Integer, String> map) {
+		// TODO Auto-generated method stub
+		int i = 1;
+		String uiString = "";
+		String uiStringTemp;
+		for (String entry : map.entrySet()){
+			uiStringTemp = "";
+			uiStringTemp = uiStringTemp.concat(Integer.toString(i) + ". ");
+			i++;
+			uiStringTemp = uiStringTemp.concat(entry);
 			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
 		}
 		return uiString;
