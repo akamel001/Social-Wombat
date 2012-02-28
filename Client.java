@@ -196,14 +196,29 @@ public class Client {
 		// TODO Debug logic
 		return null;
 	}
-
-	public void confirmAsMemberOfClassroom(String memberName, String classroomName, String userName) {
-		// TODO 
-		
+	
+	/**
+	 * 
+	 * @param pendingMember
+	 * @param classroomName
+	 * @param userName
+	 */
+	public void confirmAsMemberOfClassroom(String pendingMember, String classroomName, String userName) {
+		// TODO cookie containing user id, classroom id in message class id, Array<String> 0th index is membername, and first index is permission to remove (1) and array is in message body
+		// message type client set perm
+		// TODO add debug logic
 	}
-
-	public void denyMembershipToClassroom(String memberName, String classroomName, String userName) {
-		// TODO Auto-generated method stub
+	
+	/**
+	 * 
+	 * @param pendingMember
+	 * @param classroomName
+	 * @param userName
+	 */
+	public void denyMembershipToClassroom(String pendingMember, String classroomName, String userName) {
+		// TODO cookie containing user id, classroom id in message class id, Array<String> 0th index is membername, and first index is permission to remove (-1) and array is in message body
+		// message type client set perm
+		// TODO add debug logic
 		
 	}
 
