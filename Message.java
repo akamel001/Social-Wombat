@@ -20,6 +20,7 @@ public class Message implements Serializable{
 	    Client_SetPermissions,	//of users in a class
 	    Client_DeleteSelf,
 	    Client_RequestEnrollment,
+	    Client_ListClassroomRequest,
 
 	    // Client -> Hub -> Server
 	    Client_CreateClassroom,

@@ -161,26 +161,44 @@ public class Client {
 		return null;
 	}
 
-	
+	/**
+	 * 
+	 * @param memberName
+	 * @param classroomName
+	 * @param userName
+	 */
 	public void removeMember(String memberName, String classroomName, String userName) {
 		// TODO cookie containing user id, classroom id in message class id, Array<String> 0th index is membername, and first index is permission to remove (-1) and array is in message body
 		// todo message type cleitn set perm
 		// TODO add debug logic
 	}
 
+	/**
+	 * 
+	 * @param currentMemberName
+	 * @param userName
+	 * @param classroomName
+	 */
 	public void changeStatus(String currentMemberName, String userName, String classroomName) {
 		// TODO cookie containing user id, classroom id in message class id, Array<String> 0th index is membername, and first index is permission to remove (1) and array is in message body
 		// message type client set perm
 		// TODO add debug logic
 	}
 
+	/**
+	 * 
+	 * @param currentClassroomName
+	 * @param userName
+	 * @return List of all user names that have made requests to join a classroom
+	 */
 	public List<String> getRequestListForClassroom(String currentClassroomName, String userName) {
-		// TODO Auto-generated method stub
+		// TODO Message type Client_ListClassroomRequest, userName stored in cookie, message class id contains classroom name
+		// TODO Debug logic
 		return null;
 	}
 
 	public void confirmAsMemberOfClassroom(String memberName, String classroomName, String userName) {
-		// TODO Auto-generated method stub
+		// TODO 
 		
 	}
 
