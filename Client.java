@@ -148,12 +148,20 @@ public class Client {
 		// TODO add debug logic
 		return true;
 	}
-
-	public List<String> getMemberListForClassroom(String classroomName, String userName) {
-		
+	
+	/**
+	 * 
+	 * @param classroomName
+	 * @param userName
+	 * @return Map of Names -> Permissions 
+	 */
+	public Map<String, Integer> getMemberListForClassroom(String classroomName, String userName) {
+		// TODO message type Client_GetClassEnrollment, cookie id username, classroomName in message class ID 
+		// Add debug logic
 		return null;
 	}
 
+	
 	public void removeMember(String memberName,
 			String classroomName, String userName) {
 		// TODO Auto-generated method stub
