@@ -4,15 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-// TODO: action/error messages at top of each page
-// TODO: pull out commonalities for cleaner code
-// TODO: name of page, info (name, classroom), messages, content, options, question
-// TODO: different menus based on privileges
-// TODO: make sure the current... are updated as we go
-// TODO: stabilize anything with maps and needing an order.
-// TODO: Chris: make sure for getClassroomForUser get ALL classrooms, even those for which a user is an instructor 
-// TODO: Abdel: all void returns should be boolean?
-
 /**
  * This is the user interface for Social Wombat.
  * 
@@ -55,7 +46,6 @@ public class UserInterface {
 	private static final String sTEACHING_ASSISTANT = 	"Teaching Assistant";
 	private static final String sSTUDENT = 				"Student";
 	
-	// TODO: errors and messages
 	private static final String eGENERAL_ERROR = 			addFormattingAlignLeft("An error has occurred.");
 	private static final String eLOG_IN_ERROR = 			addFormattingAlignLeft("There was an error in logging in with the provided username.");		
 	private static final String eCLASSROOM_CREATION_ERROR=	addFormattingAlignLeft("An error occured when creating the classroom.");
