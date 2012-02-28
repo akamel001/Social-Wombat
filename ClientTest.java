@@ -1,0 +1,140 @@
+import static org.junit.Assert.*;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+public class ClientTest {
+
+
+	/**
+	 * Test method for {@link Client#handleLogin(java.lang.String)}.
+	 */
+	@Test
+	public void testHandleLogin() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link Client#createClassroom(java.lang.String, java.lang.String)}.
+	 */
+	@Test
+	public void testCreateClassroom() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link Client#requestToJoinClassroom(java.lang.String, java.lang.String)}.
+	 */
+	@Test
+	public void testRequestToJoinClassroom() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link Client#getClassroomMapForUser(java.lang.String)}.
+	 */
+	@Test
+	public void testGetClassroomMapForUser() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link Client#main(java.lang.String[])}.
+	 */
+	@Test
+	public void testMain() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link Client#createThread(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
+	 */
+	@Test
+	public void testCreateThread() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link Client#deleteClassroom(java.lang.String, java.lang.String)}.
+	 */
+	@Test
+	public void testDeleteClassroom() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link Client#disjoinClassroom(java.lang.String, java.lang.String)}.
+	 */
+	@Test
+	public void testDisjoinClassroom() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link Client#getThreadListForClassroom(java.lang.String, java.lang.String)}.
+	 */
+	@Test
+	public void testGetThreadListForClassroom() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link Client#createComment(java.lang.String, int, java.lang.String, java.lang.String)}.
+	 */
+	@Test
+	public void testCreateComment() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link Client#getMemberListForClassroom(java.lang.String, java.lang.String)}.
+	 */
+	@Test
+	public void testGetMemberListForClassroom() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link Client#removeMember(java.lang.String, java.lang.String, java.lang.String)}.
+	 */
+	@Test
+	public void testRemoveMember() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link Client#changeStatus(java.lang.String, java.lang.String, java.lang.String)}.
+	 */
+	@Test
+	public void testChangeStatus() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link Client#getRequestListForClassroom(java.lang.String, java.lang.String)}.
+	 */
+	@Test
+	public void testGetRequestListForClassroom() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link Client#confirmAsMemberOfClassroom(java.lang.String, java.lang.String, java.lang.String)}.
+	 */
+	@Test
+	public void testConfirmAsMemberOfClassroom() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link Client#denyMembershipToClassroom(java.lang.String, java.lang.String, java.lang.String)}.
+	 */
+	@Test
+	public void testDenyMembershipToClassroom() {
+		fail("Not yet implemented"); // TODO
+	}
+
+}
