@@ -162,15 +162,16 @@ public class Client {
 	}
 
 	
-	public void removeMember(String memberName,
-			String classroomName, String userName) {
-		// TODO Auto-generated method stub
-		
+	public void removeMember(String memberName, String classroomName, String userName) {
+		// TODO cookie containing user id, classroom id in message class id, Array<String> 0th index is membername, and first index is permission to remove (-1) and array is in message body
+		// todo message type cleitn set perm
+		// TODO add debug logic
 	}
 
-	public void changeStatus(String currentMemberName, String userName) {
-		// TODO Auto-generated method stub
-		
+	public void changeStatus(String currentMemberName, String userName, String classroomName) {
+		// TODO cookie containing user id, classroom id in message class id, Array<String> 0th index is membername, and first index is permission to remove (1) and array is in message body
+		// message type client set perm
+		// TODO add debug logic
 	}
 
 	public List<String> getRequestListForClassroom(String currentClassroomName, String userName) {
@@ -178,14 +179,12 @@ public class Client {
 		return null;
 	}
 
-	public void confirmAsMemberOfClassroom(String memberName,
-			String classroomName, String userName) {
+	public void confirmAsMemberOfClassroom(String memberName, String classroomName, String userName) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void denyMembershipToClassroom(String memberName,
-			String classroomName, String userName) {
+	public void denyMembershipToClassroom(String memberName, String classroomName, String userName) {
 		// TODO Auto-generated method stub
 		
 	}
