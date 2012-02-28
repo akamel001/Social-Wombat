@@ -85,20 +85,27 @@ public class Client {
 	 * @param userName
 	 * @return Map of classroomName -> permissions 
 	 */
+	@SuppressWarnings("unchecked")
 	public Map<String, Integer> getClassroomMapForUser(String userName) {
-		//message type Client_GetUserEnrollment
-		//add debug line
-		//cookie with uName, 
+		
+		if(DEBUG){
+			Map<String, Integer> classroomList = new HashMap<String, Integer>();
 
-		Map<String, Integer> classroomList = new HashMap<String, Integer>();
+			classroomList.put("CS 4820", 1);
+			classroomList.put("LING 4844", 2);
+			classroomList.put("HD 3260", 3);
+			return classroomList;		
+		}
 
-		// TODO: this is a temp list
-		classroomList.put("CS 4820", 1);
-		classroomList.put("LING 4844", 2);
-		classroomList.put("HD 3260", 3);
-		// end of temp list
+		ClientSocketHandler handler = new ClientSocketHandler();
 
-		return classroomList;		
+		cookie.setKey(userName);
+		handler.getMessageSending().setCookie(cookie);
+		handler.getMessageSending().setType(Message.MessageType.Client_GetUserEnrollment);
+
+		Message responce = handler.sendReceive();
+
+		return (Map<String, Integer>) ((responce.getCode() == 1)? responce.getBody() : null);	
 	}
 
 
@@ -212,9 +219,24 @@ public class Client {
 	 * @param userName
 	 * @return Map of ThreadTopic/Post/Comment IDs -> Content
 	 */
+	@SuppressWarnings("unchecked")
 	public Map<Integer, String> getThreadGivenID(Integer threadID, String classroomName, String userName) {
+		
+		if(DEBUG)
+			return null;
 
-		return null;
+		ClientSocketHandler handler = new ClientSocketHandler();
+		
+		cookie.setKey(userName);
+		handler.getMessageSending().setCookie(cookie);
+
+		handler.getMessageSending().setClassroom_ID(classroomName);
+		handler.getMessageSending().setBody(threadID);
+		handler.getMessageSending().setType(Message.MessageType.Client_GoToThread);
+
+		Message response = handler.sendReceive();
+
+		return (Map<Integer, String>) ((response.getCode() == 1)? response.getBody() : null);
 	}
 
 	public boolean createComment(String commentContent, int threadID, String classroomName, String userName) {

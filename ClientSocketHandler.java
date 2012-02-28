@@ -55,21 +55,9 @@ public class ClientSocketHandler {
 		return messageReceived;
 	}
 
-
-//	public static void setCookie(Cookie cookie) {
-//		messageSending.setCookie(cookie);
-//	}
-//
-//
 	public Message getMessageSending() {
 		return messageSending;
 	}
-//
-//
-//	public static void setMessageSending(Message messageSending) {
-//		ClientSocketHandler.messageSending = messageSending;
-//	}
-
 
 	public static int getServerPort() {
 		return SERVER_PORT;
