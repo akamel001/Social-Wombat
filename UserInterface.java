@@ -53,7 +53,9 @@ public class UserInterface {
 	private static final String eCLASSROOM_CREATION_ERROR=	addFormattingAlignLeft("An error occured when creating the classroom.");
 	private static final String eCLASSROOM_REQUEST_ERROR =	addFormattingAlignLeft("An error occured when requesting to join a classroom.");
 	private static final String eNON_VALID_SELECTION = 		addFormattingAlignLeft("That is not a valid selection.");
-	private static final String eTHREAD_CREATION_ERROR = 	addFormattingAlignLeft("An error occured when creating your thread.");
+	private static final String eTHREAD_CREATION_ERROR = 	addFormattingAlignLeft("An error occured when creating your thread.");	
+	private static final String eCOMMENT_DELETION_ERROR =	addFormattingAlignLeft("An error occured when deleting the comment.");	
+	private static final String eTHREAD_DELETION_ERROR = 	addFormattingAlignLeft("An error occured when deleting the thread.");	
 	
 	private static final String mCLASSROOM_CREATION_SUCCESS =	addFormattingAlignLeft("You have successfully created a classroom!");
 	private static final String mCLASSROOM_REQUEST_SUCCESS =	addFormattingAlignLeft("You have successfully requested to join a classroom!");
@@ -65,6 +67,9 @@ public class UserInterface {
 	private static final String mCHANGE_STATUS_SUCCESS =		addFormattingAlignLeft("You have successfully changed the status of a member.");
 	private static final String mCONFIRM_AS_MEMBER_SUCCESS = 	addFormattingAlignLeft("You have successfully added a member to this classroom.");
 	private static final String mDENY_MEMBERSHIP_SUCCESS =   	addFormattingAlignLeft("You have successfully denied a user member to this classroom.");
+	private static final String mCOMMENT_DELETION_SUCCESS = 	addFormattingAlignLeft("You have successfully deleted the comment.");		
+	private static final String mTHREAD_DELETION_SUCCESS = 		addFormattingAlignLeft("You have successfully deleted the thread.");	
+	
 	
 	private static final String sHOME_PAGE_OPTIONS =		addFormattingAlignLeft("1. View your classrooms.") +
 															addFormattingAlignLeft("2. Create a classroom.") +
@@ -364,18 +369,18 @@ public class UserInterface {
 	    case 2:
 	    	Integer commentID = Integer.parseInt(console.readLine("What's the number of the comment you'd like to delete? "));
 	    	if (client.deleteComment(commentID, currentThreadID, currentUserName, currentClassroomName)){
-	    		//threadPage(mCOMMENT_DELETION_SUCCESS); TODO
+	    		threadPage(mCOMMENT_DELETION_SUCCESS);
 		        break;
 	    	} else {
-	    		//threadPage(eCOMMENT_DELETION_ERROR); TODO
+	    		threadPage(eCOMMENT_DELETION_ERROR);
 	    	}
 	    // Delete this entire thread.
 	    case 3:
 	    	if (client.deleteThread(currentThreadID, currentUserName, currentClassroomName)){
-	    		//classroomPage(mTHREAD_DELETION_SUCCESS); TODO
+	    		classroomPage(mTHREAD_DELETION_SUCCESS); 
 		        break;
 	    	} else {
-	    		//threadPage(eTHREAD_DELETION_ERROR); TODO
+	    		threadPage(eTHREAD_DELETION_ERROR);
 	    	}
 	        break;
 	    // Go back to this classroom's main page.
