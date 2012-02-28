@@ -18,7 +18,7 @@ public class Client {
 	public boolean handleLogin(String uName){
 
 		if(DEBUG)
-			return false; 
+			return true; 
 		
 		ClientSocketHandler handler = new ClientSocketHandler();
 		Message responce = handler.sendReceive(uName, Message.MessageType.Client_LogIn);

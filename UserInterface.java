@@ -283,6 +283,7 @@ public class UserInterface {
 	    // Go back home.
 	    case 6:
 	    	currentClassroomName = null;
+	    	currentPermissions = null;
 	        homePage(null);
 	        break;
 	    // Delete this classroom.
