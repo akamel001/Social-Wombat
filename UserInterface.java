@@ -307,7 +307,7 @@ public class UserInterface {
 	        break;
 	    // change status
 	    case 2:
-	    	client.changeStatus(currentMemberName, currentUserName);
+	    	client.changeStatus(currentMemberName, currentUserName, currentClassroomName);
 	    	memberPage(messages);
 	        break;
 	    // go back to classroom
