@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 // TODO: currentPendingMember
 // TODO: make sure for getClassroomForUser get ALL classrooms, even those for which a user is an instructor CHRIS???
 // TODO: stabilize anything with maps and needing an order.
+// TODO: Abdel: all void returns should be boolean?
 
 /**
  * This is the user interface for Social Wombat.
@@ -69,6 +70,10 @@ public class UserInterface {
 	private static final String mTHREADCREATIONSUCCESS = 	addFormattingAlignLeft("You have successfully posted your new thread to the discussion board.");	
 	private static final String mDISJOINCLASSROOMSUCCESS = 	addFormattingAlignLeft("You have successfully disjoined the classroom.");
 	private static final String mDELETECLASSROOMSUCCESS =  	addFormattingAlignLeft("You have successfully deleted your classroom.");
+	private static final String mREMOVEMEMBERSUCCESS = 		addFormattingAlignLeft("You have successfully removed a member from this classroom.");
+	private static final String mCHANGESTATUSSUCCESS =		addFormattingAlignLeft("You have successfully changed the status of a member.");
+	private static final String mCONFIRMASMEMBERSUCCESS =   addFormattingAlignLeft("You have successfully added a member to this classroom.");
+	private static final String mDENYMEMBERSHIPSUCCESS =   	addFormattingAlignLeft("You have successfully denied a user member to this classroom.");
 	
 	private static final String sHOMEPAGEOPTIONS =		addFormattingAlignLeft("1. View your classrooms.") +
 														addFormattingAlignLeft("2. Create a classroom.") +
@@ -266,7 +271,7 @@ public class UserInterface {
 	        break;
 	    // Disjoin this classroom.
 	    case 5:
-	    	client.disjoinClassroom(currentClassroomName, currentUserName); // TODO: void should be boolean?
+	    	client.disjoinClassroom(currentClassroomName, currentUserName);
 	    	homePage(mDISJOINCLASSROOMSUCCESS);
 	        break;
 	    // Go back home.
@@ -276,7 +281,7 @@ public class UserInterface {
 	        break;
 	    // Delete this classroom.
 	    case 7:
-	    	client.deleteClassroom(currentClassroomName, currentUserName); // TODO: void should be boolean?
+	    	client.deleteClassroom(currentClassroomName, currentUserName);
 	    	homePage(mDELETECLASSROOMSUCCESS);
 	    	break;	        	
 	    default:
@@ -316,7 +321,7 @@ public class UserInterface {
 	 * instructors and teaching assistants:
 	 * 1. Comment on this thread.
 	 * 2. Delete a comment.
-	 * 3. Delete this entire thread
+	 * 3. Delete this entire thread.
 	 * 4. Go back to this classroom's main page.
 	 * 
 	 * It displays the following 2 options for students:
@@ -334,7 +339,7 @@ public class UserInterface {
 		int selection = getValidSelectionFromUser(4);
 		
 		switch (selection) {
-		// create new comment
+		// Comment on this thread.
 	    case 1:
 	    	String commentContent = console.readLine("Please write your comment: ");
 	    	if (client.createComment(commentContent, currentThreadID, currentClassroomName, currentUserName)){
@@ -343,15 +348,15 @@ public class UserInterface {
 				classroomPage(null);
 			}
 	        break;
-	    // delete comment
+	    // Delete a comment.
 	    case 2:
 	        threadPage(messages);
 	        break;
-	    // delete thread
+	    // Delete this entire thread.
 	    case 3:
 	        classroomPage(null);
 	        break;
-	    // go back to classroom
+	    // Go back to this classroom's main page.
 	    case 4:
 	    	currentThreadName = null;
 	    	classroomPage(null);
@@ -395,30 +400,43 @@ public class UserInterface {
 	 * 2. Go back to this classroom's main page.
 	 * 
 	 * Students do not have the permissions to navigate to this page.
-	 * @param messages TODO
+	 * @param messages
 	 * 
 	 */
 	private static void memberPage(String messages) {
+		int maxSelection = 0;
+		
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
 		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions + "."));
 		info = info.concat(addFormattingAlignLeft("Currently viewing member: " + currentMemberName + "."));
 		displayPage(sMEMBERPAGE, messages, info, null, sMEMBERPAGEOPTIONS); //TODO: member content such as status
 		
-		int selection = getValidSelectionFromUser(3);
+		if (currentPermissions == sTEACHINGASSISTANT) {
+			displayPage(sCLASSROOMPAGE, messages, info, null, sCLASSROOMPAGEOPTIONSTEACHINGASSISTANT);
+			maxSelection = 2;
+		}
+		else if (currentPermissions == sINSTRUCTOR) {
+			displayPage(sCLASSROOMPAGE, messages, info, null, sCLASSROOMPAGEOPTIONSINSTRUCTOR);
+			maxSelection = 3;
+		}
+		
+		int selection = getValidSelectionFromUser(maxSelection);
+		selection = selectionConverterMemberPage(selection, currentPermissions);
 		
 		switch (selection) {
-		// remove member
+		// Remove this member from this classroom.
 	    case 1:
 	    	client.removeMember(currentMemberName, currentClassroomName, currentUserName);
-	        memberPage(messages);
+	    	currentMemberName = null;
+	        memberListPage(mREMOVEMEMBERSUCCESS);
 	        break;
-	    // change status
+	    // Change this member's status.
 	    case 2:
 	    	client.changeStatus(currentMemberName, currentUserName, currentClassroomName);
-	    	memberPage(messages);
+	    	memberPage(mCHANGESTATUSSUCCESS);
 	        break;
-	    // go back to classroom
+	    // Go back to this classroom's main page.
 	    case 3:
 	    	currentMemberName = null;
 	        classroomPage(null);
@@ -429,50 +447,60 @@ public class UserInterface {
 		}
 		
 	}
-	
+
 	/**
-	 * 
+	 * This is the request list page. It displays the list of user's names who have 
+	 * requested to join this particular classroom.
 	 * @param messages
 	 */
 	private static void requestListPage(String messages) {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
+		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions + "."));
+		
 		List<String> requestList = client.getRequestListForClassroom(currentClassroomName, currentUserName);
 		displayPage(sREQUESTLISTPAGE, messages, info, null, listToUIString(requestList));
 		
 		int selection = getValidSelectionFromUser(requestList.size());
 		
 		currentPendingMemberName = requestList.get(selection - 1);
-	    requestPage(null);
-		
+	    requestPage(null);		
 	}
 	
 	/**
-	 * @param messages TODO
+	 * This is the page for a particular request. It displays the following 3 options for
+	 * instructors and teaching assistants:
+	 * 1. Confirm as a member.
+	 * 2. Deny membership.
+	 * 3. Go back to this classroom's main page.
 	 * 
+	 * Students do not have permissions to navigate to this page.
+	 * @param messages
 	 */
 	private static void requestPage(String messages) {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
+		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions + "."));
 		info = info.concat(addFormattingAlignLeft("Currently viewing request from member: " + currentMemberName + "."));
+		
 		displayPage(sREQUESTPAGE, messages, info, null, sREQUESTPAGEOPTIONS);		
 
 		int selection = getValidSelectionFromUser(3);
 		
 		switch (selection) {
-		// confirm as a member
+		// Confirm as a member.
 	    case 1:
 	    	client.confirmAsMemberOfClassroom(currentPendingMemberName, currentClassroomName, currentUserName);
 	    	currentPendingMemberName = null;
-	        requestListPage(null);
+	        requestListPage(mCONFIRMASMEMBERSUCCESS);
 	        break;
-	    // deny membership
+	    // Deny membership.
 	    case 2:
 	    	client.denyMembershipToClassroom(currentPendingMemberName, currentClassroomName, currentUserName);
 	    	currentPendingMemberName = null;
-	    	requestListPage(null);
+	    	requestListPage(mDENYMEMBERSHIPSUCCESS);
 	        break;
-	    // go back to classroom
+	    // Go back to this classroom's main page.
 	    case 3:
 	    	currentPendingMemberName = null;
 	        classroomPage(null);
@@ -520,6 +548,14 @@ public class UserInterface {
 		else if (currentPermissions == sINSTRUCTOR) {
 			if (selection == 5)
 				selection = 7;
+		}
+		return selection;
+	}
+	
+	private static int selectionConverterMemberPage(int selection, String permissions) {
+		 if (currentPermissions == sINSTRUCTOR) {
+			if (selection == 2)
+				selection = 3;
 		}
 		return selection;
 	}
