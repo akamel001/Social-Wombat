@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 /**
  * This is the user interface for Social Wombat.
@@ -61,7 +62,7 @@ public class UserInterface {
 	private static final String mDELETE_CLASSROOM_SUCCESS =  	addFormattingAlignLeft("You have successfully deleted your classroom.");
 	private static final String mREMOVE_MEMBER_SUCCESS = 		addFormattingAlignLeft("You have successfully removed a member from this classroom.");
 	private static final String mCHANGE_STATUS_SUCCESS =		addFormattingAlignLeft("You have successfully changed the status of a member.");
-	private static final String mCONFIRM_AS_MEMBER_SUCCESS = 	 addFormattingAlignLeft("You have successfully added a member to this classroom.");
+	private static final String mCONFIRM_AS_MEMBER_SUCCESS = 	addFormattingAlignLeft("You have successfully added a member to this classroom.");
 	private static final String mDENY_MEMBERSHIP_SUCCESS =   	addFormattingAlignLeft("You have successfully denied a user member to this classroom.");
 	
 	private static final String sHOME_PAGE_OPTIONS =		addFormattingAlignLeft("1. View your classrooms.") +
@@ -181,11 +182,13 @@ public class UserInterface {
 	 */
 	private static void classroomListPage(String messages) {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
+		
 		Map<String, Integer> classroomMap = client.getClassroomMapForUser(currentUserName);	
 		List<String> classroomList = mapStringKeysToList(classroomMap);
+		
 		displayPage(sCLASSROOM_LIST_PAGE, messages, info, null, listToUIString(classroomList));
 
-		int selection = getValidSelectionFromUser(classroomMap.size());
+		int selection = getValidSelectionFromUser(classroomList.size());
 		String classroomSelection = classroomList.get(selection - 1);
 		
 		currentClassroomName = classroomSelection;	
@@ -297,13 +300,14 @@ public class UserInterface {
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
 		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions + "."));
 		
-		Map<Integer, String> threadMap = client.getThreadMapForClassroom(currentClassroomName, currentUserName);		
-		List<Integer> threadIDList = mapIntegerKeysToList(threadMap);
-		List<String> threadTopicsList = mapValuesToList(threadMap);
+		Map<Integer, String> threadMap = client.getThreadMapForClassroom(currentClassroomName, currentUserName);
+		TreeMap<Integer, String> threadTreeMap = new TreeMap<Integer, String>(threadMap); // Converting to TreeMap to stabilize the order.
+		List<String> threadTopicsList = mapValuesToList(threadTreeMap);
+		List<Integer> threadIDList = mapIntegerKeysToList(threadTreeMap);
 		
 		displayPage(sTHREAD_LIST_PAGE, messages, info, null, listToUIString(threadTopicsList));
 		
-		int selection = getValidSelectionFromUser(threadMap.size());				
+		int selection = getValidSelectionFromUser(threadTopicsList.size());				
 		Integer threadSelection = threadIDList.get(selection - 1);
 		
 		currentThreadID = threadSelection;
@@ -390,12 +394,14 @@ public class UserInterface {
 		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions + "."));
 		
 		Map<String, Integer> memberMap = client.getMemberMapForClassroom(currentClassroomName, currentUserName);
-		List<String> memberList = mapStringKeysToList(memberMap); // TODO not stable
-		displayPage(sMEMBER_LIST_PAGE, messages, info, null, memberMapToUIString(memberMap)); // TODO not stable
-
-		int selection = getValidSelectionFromUser(memberMap.size());
+		TreeMap<String, Integer> memberTreeMap = new TreeMap<String, Integer>(memberMap); // Converting to TreeMap to stabilize the order.
+		List<String> memberList = mapStringKeysToList(memberMap);
 		
-		currentMemberName = memberList.get(selection);
+		displayPage(sMEMBER_LIST_PAGE, messages, info, null, memberMapToUIString(memberTreeMap)); // Displays members' names along with their permissions in the current classroom.
+
+		int selection = getValidSelectionFromUser(memberList.size());
+		
+		currentMemberName = memberList.get(selection -1);
 	    memberPage(null);
 	}
 	
