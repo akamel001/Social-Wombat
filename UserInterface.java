@@ -217,7 +217,6 @@ public class UserInterface {
 	 * 3. Disjoin this classroom.
 	 * 4. Go back home.
 	 * @param messages
-	 * 
 	 */
 	private static void classroomPage(String messages) {
 		int maxSelection = 0;
@@ -333,7 +332,8 @@ public class UserInterface {
 		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions + "."));
 		info = info.concat(addFormattingAlignLeft("Current thread: " + currentThreadName + "."));
 		
-		String threadContent = null; //TODO: get thread content
+		Map<Integer, String> threadContentMap = client.getThreadGivenID(currentThreadID, currentClassroomName, currentUserName);
+		String threadContent = threadMapToString(threadContentMap);
 		
 		if (currentPermissions == sTEACHING_ASSISTANT || currentPermissions == sINSTRUCTOR) {
 			displayPage(sTHREAD_PAGE, messages, info, threadContent, sTHREAD_PAGE_OPTIONS_INSTRUCTOR_AND_TEACHING_ASSISTANT);
@@ -391,7 +391,7 @@ public class UserInterface {
 		
 		Map<String, Integer> memberMap = client.getMemberMapForClassroom(currentClassroomName, currentUserName);
 		List<String> memberList = mapStringKeysToList(memberMap); // TODO not stable
-		displayPage(sMEMBER_LIST_PAGE, messages, info, null, mapToUIString3(memberMap)); // TODO not stable
+		displayPage(sMEMBER_LIST_PAGE, messages, info, null, memberMapToUIString(memberMap)); // TODO not stable
 
 		int selection = getValidSelectionFromUser(memberMap.size());
 		
@@ -523,10 +523,19 @@ public class UserInterface {
 		
 	}
 	
-	// Helper functions.
+	
+	
+	
+	////////////////////////////////////////////////
+	//              HELPER FUNCTIONS              //
+	////////////////////////////////////////////////
+	
+	////////////////////////////////////////////////
+	//            SELECTION FUNCTIONS             //
+	////////////////////////////////////////////////
 		
 	/**
-	 *  Get valid selection from the user.
+	 * Get valid selection from the user.
 	 * @param maxInt
 	 * @return integer corresponding to the selection.
 	 */
@@ -549,6 +558,12 @@ public class UserInterface {
 		return selection;
 	}
 	
+	/**
+	 * Converts a selection in the classroom page to the appropriate numbers based on permissions.
+	 * @param selection
+	 * @param permissions
+	 * @return
+	 */
 	private static int selectionConverterClassroomPage(int selection, String permissions) {
 		if (currentPermissions == sSTUDENT) {
 			if (selection == 3)
@@ -563,6 +578,12 @@ public class UserInterface {
 		return selection;
 	}
 	
+	/**
+	 * Converts a selection in the member page to the appropriate numbers based on permissions.
+	 * @param selection
+	 * @param permissions
+	 * @return
+	 */
 	private static int selectionConverterMemberPage(int selection, String permissions) {
 		if (currentPermissions == sINSTRUCTOR) {
 			if (selection == 2)
@@ -571,13 +592,23 @@ public class UserInterface {
 		return selection;
 	}
 	
-	private static int selectionConverterThreadPage(int selection, String currentPermissions2) {
-		if (currentPermissions == sSTUDENT) {
+	/**
+	 * Converts a selection in the thread page to the appropriate numbers based on permissions.
+	 * @param selection
+	 * @param permissions
+	 * @return
+	 */
+	private static int selectionConverterThreadPage(int selection, String permissions) {
+		if (permissions == sSTUDENT) {
 			if (selection == 2)
 				selection = 4;
 		}
 		return selection;
 	}
+	
+	////////////////////////////////////////////////
+	//          PERMISSIONS FUNCTIONS             //
+	////////////////////////////////////////////////
 	
 	/**
 	 * Converts permissions in number form to string form.
@@ -598,7 +629,16 @@ public class UserInterface {
 		return permissions;
 	}
 	
-	// Various map to list functions.	
+	
+	////////////////////////////////////////////////
+	//       VARIOUS MAP TO LIST FUNCTIONS        //
+	////////////////////////////////////////////////
+
+	/**
+	 * Extracts string keys in a map and puts them into a list.
+	 * @param map
+	 * @return List<String>
+	 */
 	public static List<String> mapStringKeysToList(Map<String, Integer> map){
 		List<String> outputList = new ArrayList<String>();
 		for (String key : map.keySet()){
@@ -607,6 +647,11 @@ public class UserInterface {
 		return outputList;
 	}
 	
+	/**
+	 * Extracts integer keys in a map and puts them into a list.
+	 * @param map
+	 * @return List<Integer>
+	 */
 	private static List<Integer> mapIntegerKeysToList(Map<Integer, String> map) {
 		List<Integer> outputList = new ArrayList<Integer>();
 		for (Integer key : map.keySet()){
@@ -615,6 +660,11 @@ public class UserInterface {
 		return outputList;
 	}
 	
+	/**
+	 * Extracts string values in a map and puts them into a list.
+	 * @param map
+	 * @return List<String>
+	 */
 	private static List<String> mapValuesToList(Map<Integer, String> map) {
 		List<String> outputList = new ArrayList<String>();
 		for (String value : map.values()){
@@ -622,18 +672,67 @@ public class UserInterface {
 		}
 		return outputList;
 	}
+
 	
-	// UI formatting.
+	
+	
+	////////////////////////////////////////////////
+	//               UI FORMATTING                //
+	////////////////////////////////////////////////
+	
+	////////////////////////////////////////////////
+	//  CONTENT-SPECIFIC MAP TO STRING FUNCTIONS  //
+	////////////////////////////////////////////////
 	
 	/**
-	 * Clears the the top of the screen depending on the size of your window.
+	 * This is a function specifically for displaying threads in the UI.
+	 * @param threadContentMap
+	 * @return String formatted thread content extracted from the map.
 	 */
-	public static void clearScreen() {
-		System.out.println(((char) 27)+"[2J");
+	private static String threadMapToString(Map<Integer, String> threadContentMap) {
+		List<String> threadContentList = mapValuesToList(threadContentMap);
+		String uiString = "";
+		String uiStringTemp;
+		for (int i = 0; i < threadContentList.size(); i++){
+			uiStringTemp = "";
+			if (i == 0){
+				uiStringTemp = uiStringTemp.concat("Thread Topic: ");
+			}
+			else if (i == 1){
+				uiStringTemp = uiStringTemp.concat("Initial Post: ");
+			}
+			else if (i >= 2){
+				uiStringTemp = uiStringTemp.concat("Comment " + Integer.toString(i - 1) + ". ");
+			}			
+			uiStringTemp = uiStringTemp.concat(threadContentList.get(i));
+			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
+		}
+		return uiString;
+	}		
+	
+	/**
+	 * This is a function specifically for displaying members in the UI.
+	 * @param threadList
+	 * @return String
+	 */
+	private static String memberMapToUIString(Map<String, Integer> map) {
+		int i = 1;
+		String uiString = "";
+		String uiStringTemp;
+		for (Entry<String, Integer> entry : map.entrySet()){
+			uiStringTemp = "";
+			uiStringTemp = uiStringTemp.concat(Integer.toString(i) + ". ");
+			i++;
+			uiStringTemp = uiStringTemp.concat(entry.getKey() + " (" + entry.getValue().toString() + ")");
+			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
+		}
+		return uiString;
 	}
 	
 	/**
 	 * Takes in a list and turns it into a TUI-renderable string
+	 * @param list
+	 * @return String
 	 */
 	public static String listToUIString(List<String> list) {
 		String uiString = "";
@@ -647,63 +746,9 @@ public class UserInterface {
 		return uiString;		
 	}
 	
-//	/**
-//	 * 
-//	 * @param map
-//	 * @return uiString
-//	 */
-//	private static String mapToUIString(Map<String, Integer> map) {
-//		// TODO depends on sorting
-//		int i = 1;
-//		String uiString = "";
-//		String uiStringTemp;
-//		for (String key : map.keySet()){
-//			uiStringTemp = "";
-//			uiStringTemp = uiStringTemp.concat(Integer.toString(i) + ". ");
-//			i++;
-//			uiStringTemp = uiStringTemp.concat(key);
-//			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
-//		}
-//		return uiString;
-//	}
-//	
-//	/**
-//	 * 
-//	 * @param threadList
-//	 * @return
-//	 */
-//	private static String mapToUIString2(Map<Integer, String> map) {
-//		int i = 1;
-//		String uiString = "";
-//		String uiStringTemp;
-//		for (Entry<Integer, String> entry : map.entrySet()){
-//			uiStringTemp = "";
-//			uiStringTemp = uiStringTemp.concat(Integer.toString(i) + ". ");
-//			i++;
-//			uiStringTemp = uiStringTemp.concat(entry.getValue());
-//			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
-//		}
-//		return uiString;
-//	}
-	
-	/**
-	 * 
-	 * @param threadList
-	 * @return
-	 */
-	private static String mapToUIString3(Map<String, Integer> map) {
-		int i = 1;
-		String uiString = "";
-		String uiStringTemp;
-		for (Entry<String, Integer> entry : map.entrySet()){
-			uiStringTemp = "";
-			uiStringTemp = uiStringTemp.concat(Integer.toString(i) + ". ");
-			i++;
-			uiStringTemp = uiStringTemp.concat(entry.getKey() + " (" + entry.getValue().toString() + ")");
-			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
-		}
-		return uiString;
-	}
+	////////////////////////////////////////////////
+	//           UI FORMATTING FUNCTIONS          //
+	////////////////////////////////////////////////
 	
 	/**
 	 * Adds borders and appropriate amount of white space depending on the length of the input string.
@@ -743,22 +788,6 @@ public class UserInterface {
 		return formattedString;		
 	}
 	
-	public static String generateBigDivider() {
-		String bigDivider = "+";
-		for (int i = 0; i < iWINDOWWIDTH; i++){
-			bigDivider = bigDivider.concat("=");
-		}
-		return bigDivider.concat("+" + sNEW_LINE);		
-	}
-	
-	public static String generateSmallDivider() {
-		String smallDivider = "+";
-		for (int i = 0; i < iWINDOWWIDTH; i++){
-			smallDivider = smallDivider.concat("-");
-		}
-		return smallDivider.concat("+" + sNEW_LINE);		
-	}	
-
 	/**
 	 * Clears the last page and displays the new one.
 	 * Only necessary parameter is pageName.
@@ -787,12 +816,48 @@ public class UserInterface {
 		console.printf(sBIG_DIVIDER);
 	}
 	
+	/**
+	 * Clears the the top of the screen depending on the size of your window.
+	 */
+	public static void clearScreen() {
+		System.out.println(((char) 27)+"[2J");
+	}
+		
+	////////////////////////////////////////////////
+	//         GENERATORS FOR UI BORDERS          //
+	////////////////////////////////////////////////
+	
+	/**
+	 * Generates a big divider string.
+	 * @return big divider
+	 */
+	public static String generateBigDivider() {
+		String bigDivider = "+";
+		for (int i = 0; i < iWINDOWWIDTH; i++){
+			bigDivider = bigDivider.concat("=");
+		}
+		return bigDivider.concat("+" + sNEW_LINE);		
+	}
+	
+	/**
+	 * Generates a small divider string.
+	 * @return small divider
+	 */
+	public static String generateSmallDivider() {
+		String smallDivider = "+";
+		for (int i = 0; i < iWINDOWWIDTH; i++){
+			smallDivider = smallDivider.concat("-");
+		}
+		return smallDivider.concat("+" + sNEW_LINE);		
+	}	
 	
 	
 	
 	
-	// Main.
-
+	////////////////////////////////////////////////
+	//                    MAIN                    //
+	////////////////////////////////////////////////
+	
 	/**
 	 * Main function. Goes to the login page.
 	 */
