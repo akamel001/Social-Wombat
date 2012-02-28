@@ -153,7 +153,7 @@ public class HubSocketHandler extends Thread{
 				// Returns in body all users in a classroom
 				case Client_GetClassEnrollment:
 					//String = User, Integer = Permission
-					Map<String, Integer> classEnroll = classList.getClassEnrollment(msg.getClassroom_ID());
+					Map<String, Integer> classEnroll = classList.getClassAll(msg.getClassroom_ID());
 					if (classEnroll == null){
 						//error
 						msg.setCode(-1);

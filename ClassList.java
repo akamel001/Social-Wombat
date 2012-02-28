@@ -96,29 +96,51 @@ public class ClassList implements Serializable{
 	 * The key is the user's name, the value is their permissions.
 	 * @param c
 	 * @return
-	 */
-	/*
-	protected Map<String, Integer> getClassEnrollment(String c){
-		ClassData temp = classList.get(c);
-		if (temp !=null)	
-			return temp.getEnrolled();
+	 */	
+	protected Map<String, Integer> getClassAll(String className){
+		if (className == null)
+			return null;
+		ClassData c = classList.get(className);
+		if (c !=null)	
+			return c.getAllUsers();
 		else
 			return null;
 	}
-	*/
-
-	protected List<String> getEnrolled(String className){
+	
+	/**
+	 * Returns a Map containing all enrolled users in a classroom.
+	 * The key is the user's name, the value is their permissions.
+	 * @param className
+	 * @return
+	 */
+	protected Map<String, Integer> getClassEnrolled(String className){
+		if (className == null)
+			return null;
 		ClassData c = classList.get(className);
-		return c.getEnrolled();
-	}
-
-	protected List<String> getPending(String className){
-		ClassData c = classList.get(className);
-		return c.getPending();
+		if (c!=null)
+			return c.getEnrolledUsers();
+		else 
+			return null;
 	}
 
 	/**
-	 * Returns A Map of all of the classes a user is enrolled in (pending included)
+	 * Returns a Map containing all pending users in a classroom.
+	 * The key is the user's name, the value is their permissions.
+	 * @param className
+	 * @return
+	 */ 
+	protected List<String> getClassPending(String className){
+		if (className == null)
+			return null;
+		ClassData c = classList.get(className);
+		if (c!=null)
+			return c.getPendingUsers();
+		else 
+			return null;
+	}
+
+	/**
+	 * DEPRECATED: USE getClassEnrolled(String)
 	 * @param user
 	 * @return Returns a Map containing all of the classes a user is enrolled in, null if none exist.
 	 */
@@ -149,7 +171,7 @@ public class ClassList implements Serializable{
 	 * @param c the name of the ClassRoom
 	 * @return
 	 */
-	protected int getClassServer(String c){
+	public int getClassServer(String c){
 		ClassData temp = classList.get(c);
 		if (temp==null)
 			return -1;
@@ -162,7 +184,7 @@ public class ClassList implements Serializable{
 	 * @param c The name of the classroom
 	 * @return Returns port for the class, -1 if class is not present in class list
 	 */
-	protected int getClassPort(String c){
+	public int getClassPort(String c){
 		ClassData temp = classList.get(c);
 		if (temp==null)
 			return -1;

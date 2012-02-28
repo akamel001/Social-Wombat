@@ -37,7 +37,6 @@ public class ClassData{
 		server = -1;
 		port = -1;
 	}
-	
 
 	/**
 	 * Sets the name of the class.
@@ -186,34 +185,12 @@ public class ClassData{
 		}
 	}
 
+
 	/**
-	 * Returns a newline-separated list of users whose permission is 0.
-	 * First line is the name of the Classroom.
+	 * Returns the names of all users with enrollment pending.
+	 * @return Returns a list of strings representing the usernames of every user in the class with permissions==0.
 	 */
-	public String pendingToString(){
-		boolean found = false;
-		String out = System.getProperty("line.separator") + name + ": Pending users:";
-		Set<String> s = userList.keySet();
-		synchronized(userList) {  
-			Iterator<String> i = s.iterator(); // Must be in synchronized block
-			while (i.hasNext()){
-				if (userList.get(i.next()) == 0){
-					found = true;
-					out += System.getProperty("line.separator") + " - " + i.next();
-				}
-			}
-		}
-		if (!found)
-			return out += System.getProperty("line.separator") + " - [no users awaiting enrollment]";
-		else
-			return out;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public List<String> getPending(){
+	public List<String> getPendingUsers(){
 		boolean found = false;
 		Set<String> s = userList.keySet();
 		List<String> out = Collections.synchronizedList(new ArrayList<String>());
@@ -232,42 +209,41 @@ public class ClassData{
 			return null;
 	}
 	
-	public List<String> getEnrolled(){
-		//TODO: IMPLEMENT
-		List<String> out = Collections.synchronizedList(new ArrayList<String>());
-		return out;
-	}
-
 	/**
-	 * Returns a newline-separated String of all users associated with a class as well 
-	 * as their permissions.
-	 * @return
+	 * Returns a map containing all users enrolled in a class.
+	 * @return Returns a Map of Strings to Integers. The Strings are the names of the users. 
+	 * The Integers represent their permissions with respect to the classroom. A value of 1 indicates a 
+	 * student, 2 indicates a TA.
 	 */
-	public String allUsersToString(){
-		String out = System.getProperty("line.separator") + name + ": All users:";
-		out += System.getProperty("line.separator") + instructor + " (Instructor)";
-		
+	public Map<String, Integer> getEnrolledUsers(){
+		boolean found = false;
+		Map<String, Integer> out = Collections.synchronizedMap(new TreeMap<String, Integer>());
 		Set<String> s = userList.keySet();
-
 		synchronized(userList) {  
 			Iterator<String> i = s.iterator(); 
 			while (i.hasNext()){
-				String user = i.next(); //username
-				out += System.getProperty("line.separator") + " - " + user;
-				int per = userList.get(user);
-				switch (per) {
-				case 0: 
-					out += " (Pending)";
-					break;
-				case 1: 
-					out += " (Enrolled)";
-					break;
-				case 2: 
-					out += " (TA)";
-					break;
+				String c = i.next();
+				int val = userList.get(c); 
+				if (val > 0){
+					found = true;
+					out.put(c,val);
 				}
 			}
 		}
-		return out;
+		if (found)
+			return out;
+		else
+			return null;
 	}
+	
+	/**
+	 * Returns a Map containing all of the users in the class, including pending users, with permissions.
+	 * @return Returns a Map of Strings to Integers. The Strings are the names of the users. 
+	 * The Integers represent their permissions with respect to the classroom. A value of ) indicates
+	 *  pending enrollment, 1 indicates a student, and 2 indicates a TA. 
+	 */
+	public Map<String, Integer> getAllUsers(){
+		return userList;
+	}
+
 }
