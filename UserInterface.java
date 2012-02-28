@@ -362,13 +362,21 @@ public class UserInterface {
 	        break;
 	    // Delete a comment.
 	    case 2:
-	    	// TODO: needs to be implemented
-	        threadPage(null);
-	        break;
+	    	Integer commentID = Integer.parseInt(console.readLine("What's the number of the comment you'd like to delete? "));
+	    	if (client.deleteComment(commentID, currentThreadID, currentUserName, currentClassroomName)){
+	    		//threadPage(mCOMMENT_DELETION_SUCCESS); TODO
+		        break;
+	    	} else {
+	    		//threadPage(eCOMMENT_DELETION_ERROR); TODO
+	    	}
 	    // Delete this entire thread.
 	    case 3:
-	    	// TODO: needs to be implemented
-	        classroomPage(null);
+	    	if (client.deleteThread(currentThreadID, currentUserName, currentClassroomName)){
+	    		//classroomPage(mTHREAD_DELETION_SUCCESS); TODO
+		        break;
+	    	} else {
+	    		//threadPage(eTHREAD_DELETION_ERROR); TODO
+	    	}
 	        break;
 	    // Go back to this classroom's main page.
 	    case 4:

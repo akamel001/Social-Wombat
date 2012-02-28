@@ -424,5 +424,30 @@ public class Client {
 
 		return (response.getCode() == 1)? true : false;
 	}
+	
+	/**
+	 * Deletes a comment.
+	 * @param commentID
+	 * @param currentThreadID
+	 * @param currentUserName
+	 * @param currentClassroomName
+	 * @return
+	 */
+	public boolean deleteComment(Integer commentID, Integer threadID, String userName, String classroomName) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	/**
+	 * Deletes a thread.
+	 * @param currentThreadID
+	 * @param currentUserName
+	 * @param currentClassroomName
+	 * @return
+	 */
+	public boolean deleteThread(Integer threadID, String userName, String classroomName) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }
