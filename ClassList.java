@@ -80,7 +80,7 @@ public class ClassList implements Serializable{
 	 * @return Returns 1 on success, -1 otherwise.
 	 */
 	protected int setUserPermissions(String user, String c, int per){
-		if (per<0 || per>2)
+		if (per<-1 || per>2)
 			return -1;
 		else{
 			ClassData tempClass = classList.get(c);

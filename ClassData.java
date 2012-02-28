@@ -179,6 +179,7 @@ public class ClassData{
 			addUser(id);
 			return 1;
 		}
+		// Otherwise, just add em to the class 
 		else{
 			userList.put(id, p);
 			return 1;

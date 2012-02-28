@@ -75,6 +75,8 @@ public class ClassDB implements Serializable{
 	 * @return Returns 1 if the post was removed, -1 if was not contained in the classroom.
 	 */
 	public int removePost(String className, int postId){
+		if (className==null)
+			return -1;
 		ClassRoom c = classRoomList.get(className);
 		if (c==null)
 			return -1;
@@ -106,7 +108,11 @@ public class ClassDB implements Serializable{
 	 * @return Returns 1 if the comment is removed, -1 if the id did not exist in the post.
 	 */
 	public int removeComment(String className, int postId, int commentId){
+		if (className==null)
+			return -1;
 		ClassRoom c = classRoomList.get(className);
+		if (c==null)
+			return -1;
 		int out = c.removeComment(postId, commentId);
 		return out;
 	}
@@ -118,7 +124,11 @@ public class ClassDB implements Serializable{
 	 * where the Integer is the post id and the String is the post title.
 	 */
 	public Map<Integer, String> getThreadList(String className){
+		if (className==null)
+			return null; 
 		ClassRoom c = classRoomList.get(className);
+		if (c==null)
+			return null;
 		Map<Integer, String> out = c.getThreadList();
 		return out;
 	}
@@ -130,7 +140,11 @@ public class ClassDB implements Serializable{
 	 * @return Returns a map containing Integer keys mapped to Strings. 
 	 */
 	public Map<Integer, String> getThread(String className, int threadId){
+		if (className==null)
+			return null;
 		ClassRoom c = classRoomList.get(className);
+		if (c==null)
+			return null;
 		return c.getThread(threadId);		
 	}
 	

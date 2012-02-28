@@ -72,12 +72,16 @@ public class ClassRoom implements Serializable{
 	 * Adds a comment to a post.
 	 * @param postId The id number of the post to which the comment will be added.
 	 * @param comment The comment to be added.
-	 * @return
+	 * @return Returns 1 on success, -1 otherwise.
 	 */
 	protected int addComment(int postId, String comment){
+		if (comment==null || comment.length()==0)
+			return -1;
 		int out;
 		synchronized(postList){
 			Post p = postList.get(postId);
+			if (p==null)
+				return -1;
 			out = p.addComment(comment);
 		}
 		return out;
@@ -93,6 +97,8 @@ public class ClassRoom implements Serializable{
 		int out;
 		synchronized(postList){
 			Post p = postList.get(postId);
+			if (p==null)
+				return -1;
 			out = p.removeComment(commentId);
 		}
 		return out;
