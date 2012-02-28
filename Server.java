@@ -16,14 +16,20 @@ public class Server {
 	public Server(String name) {
 		// Constructor
 		classDBName = name + ".classDB";
-		
+		//get ip
+		InetAddress thisIp = null;
+		try {
+			thisIp = InetAddress.getLocalHost();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		System.out.println("New Server created with IP: "+thisIp.getHostAddress());		
 	}
 	
 	/* 
 	 * Reads a ClassDB from the filesystem
 	 */
 	private static ClassDB readFromDisk(String name){
-		// TODO: Test
 		ClassDB c = null;
 		try {
 		    FileInputStream fin = new FileInputStream(name);
@@ -42,7 +48,6 @@ public class Server {
 	 * Writes a given object to the filesystem
 	 */
 	private static void writeToDisk(Object o, String name){
-		// TODO: Test
 		FileOutputStream fos;
 		try {
 			fos = new FileOutputStream(name);
