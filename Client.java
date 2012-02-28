@@ -21,9 +21,9 @@ public class Client {
 			return true; 
 		
 		ClientSocketHandler handler = new ClientSocketHandler();
-		Message response = handler.sendReceive(uName, Message.MessageType.Client_LogIn);
+		Message responce = handler.sendReceive(uName, Message.MessageType.Client_LogIn);
 		
-		return (response.getCode() == 1)? true : false;	
+		return (responce.getCode() == 1)? true : false;	
 	}
 	//TODO ******* WORK ON JUNIT TESTS ***** 
 	/**
@@ -142,16 +142,16 @@ public class Client {
 	}
 	
 	/**
-	 * This function returns the contents of a single thread given its ID.
-	 * @param threadID
-	 * @param classroomName
-	 * @param userName
-	 * @return Map of ThreadTopic/Post/Comment IDs -> Content
-	 */
-	public Map<Integer, String> getThreadGivenID(Integer threadID, String classroomName, String userName) {
-		
-		return null;
-	}
+		 * This function returns the contents of a single thread given its ID.
+		 * @param threadID
+		 * @param classroomName
+		 * @param userName
+		 * @return Map of ThreadTopic/Post/Comment IDs -> Content
+		 */
+		public Map<Integer, String> getThreadGivenID(Integer threadID, String classroomName, String userName) {
+			
+			return null;
+		}
 
 	public boolean createComment(String commentContent, int threadID, String classroomName, String userName) {
 		// TODO cast threadID to string
