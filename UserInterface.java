@@ -278,12 +278,12 @@ public class UserInterface {
 	private static void memberListPage(String messages) {		
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		List<String> memberList = client.getMemberListForClassroom(currentClassroomName, currentUserName);	
-		displayPage(sMEMBERLISTPAGE, info, messages, null, listToUIString(memberList));
+		Map<String, Integer> memberMap = client.getMemberListForClassroom(currentClassroomName, currentUserName);	
+		displayPage(sMEMBERLISTPAGE, info, messages, null, mapToUIString(memberMap));
 
-		int selection = getValidSelectionFromUser(memberList.size());
+		int selection = getValidSelectionFromUser(memberMap.size());
 		
-		currentThreadName = memberList.get(selection - 1);
+		//currentMemberName = memberMap.get(key); TODO
 	    memberPage(null);
 	}
 	
