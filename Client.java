@@ -129,8 +129,17 @@ public class Client {
 		//add debug line
 	}
 
-	public List<String> getThreadListForClassroom(String classroomName, String userName) {
+	/**
+	 * 
+	 * @param classroomName
+	 * @param userName
+	 * @return Map of Thread ID -> Thread Name
+	 */
+	public Map<Integer, String> getThreadListForClassroom(String classroomName, String userName) {
 		// TODO Auto-generated method stub
+		// Message type is Client goto classroom, cookie uname, message classid is classroom name
+		// Debug logic 
+		
 		return null;
 	}
 
