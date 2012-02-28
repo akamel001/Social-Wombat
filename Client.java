@@ -52,8 +52,6 @@ public class Client {
 
 		Message response = handler.sendReceive();
 
-		//TODO Set cookie with uName, Set message id with classroom name, message type
-		//check message code on return
 		return (response.getCode() == 1)? true : false;	
 	}
 
@@ -78,8 +76,6 @@ public class Client {
 
 		Message response = handler.sendReceive();
 
-		//TODO Set cookie with uName, Set message id with classroom name, message type
-		//check message code on return
 		return (response.getCode() == 1)? true : false;			
 	}
 
@@ -119,8 +115,6 @@ public class Client {
 		 */
 	}
 
-
-	// New Stuff
 	/**
 	 * This method creates a new thread with threadName and postContent.
 	 * @param threadName
@@ -150,9 +144,9 @@ public class Client {
 	}
 
 	/**
-	 * **** Consider bool return type to confirm class has been deleted?
+	 *
 	 */
-	public void deleteClassroom(String classroomName, String userName) {
+	public boolean deleteClassroom(String classroomName, String userName) {
 
 		ClientSocketHandler handler = new ClientSocketHandler();
 		cookie.setKey(userName);
@@ -162,16 +156,14 @@ public class Client {
 
 		Message response = handler.sendReceive();
 
-		//return (responce.getCode() == 1)? true : false;	
-		// TODO Set cookie uname and message type client_del classroom
-		// TODO add debug log
+		return (response.getCode() == 1)? true : false;	
 	}
 
 	/**
 	 * Create message type to handle this request appropriately 
 	 * **** Consider bool return type to confirm class has been deleted? ***
 	 */
-	public void disjoinClassroom(String classroomName, String userName) {
+	public boolean disjoinClassroom(String classroomName, String userName) {
 
 		ClientSocketHandler handler = new ClientSocketHandler();
 		ArrayList<String> list = new ArrayList<String>();
@@ -186,7 +178,7 @@ public class Client {
 
 		Message response = handler.sendReceive();
 
-		//return (responce.getCode() == 1)? true : false;		
+		return (response.getCode() == 1)? true : false;		
 	}
 
 	/**
@@ -195,6 +187,7 @@ public class Client {
 	 * @param userName
 	 * @return Map of Thread ID -> Thread Name
 	 */
+	@SuppressWarnings("unchecked")
 	public Map<Integer, String> getThreadMapForClassroom(String classroomName, String userName) {
 
 		if(DEBUG)
@@ -272,17 +265,17 @@ public class Client {
 	}
 
 	/**
-	 * *** Consider boolean return type 
+	 *  
 	 * 
 	 * @param memberName
 	 * @param classroomName
 	 * @param userName
 	 */
-	public void removeMember(String memberName, String classroomName, String userName) {
+	public boolean removeMember(String memberName, String classroomName, String userName) {
 
-		//		if(DEBUG)
-		//			return true;
-		//		
+				if(DEBUG)
+					return true;
+				
 		ClientSocketHandler handler = new ClientSocketHandler();
 
 		ArrayList<String> list = new ArrayList<String>();
@@ -298,19 +291,19 @@ public class Client {
 
 		Message response = handler.sendReceive();
 
-		//return (response.getCode() == 1)? true : false;	
+		return (response.getCode() == 1)? true : false;	
 	}
 
 	/**
-	 *  *** Consider boolean return type
+	 *  
 	 * @param currentMemberName
 	 * @param userName
 	 * @param classroomName
 	 */													
-	public void changeStatus(String currentMemberName, String userName, String classroomName) {
+	public boolean changeStatus(String currentMemberName, String userName, String classroomName) {
 
-		//		if(DEBUG)
-		//			return true;
+		if(DEBUG)
+			return true;
 
 		ClientSocketHandler handler = new ClientSocketHandler();
 
@@ -327,7 +320,7 @@ public class Client {
 
 		Message response = handler.sendReceive();
 
-		//return (response.getCode() == 1)? true : false;
+		return (response.getCode() == 1)? true : false;
 	}
 
 	/**
@@ -355,14 +348,14 @@ public class Client {
 	}
 
 	/**
-	 * Consider boolean return type
+	 * 
 	 * @param pendingMember
 	 * @param classroomName
 	 * @param userName
 	 */
-	public void confirmAsMemberOfClassroom(String pendingMember, String classroomName, String userName) {
-		//if(DEBUG)
-		//	return true;
+	public boolean confirmAsMemberOfClassroom(String pendingMember, String classroomName, String userName) {
+		if(DEBUG)
+			return true;
 
 		ClientSocketHandler handler = new ClientSocketHandler();
 
@@ -379,18 +372,18 @@ public class Client {
 
 		Message response = handler.sendReceive();
 
-		//return (response.getCode() == 1)? true : false;
+		return (response.getCode() == 1)? true : false;
 	}
 
 	/**
-	 * Consider boolean return type
+	 * 
 	 * @param pendingMember
 	 * @param classroomName
 	 * @param userName
 	 */
-	public void denyMembershipToClassroom(String pendingMember, String classroomName, String userName) {
-		//if(DEBUG)
-		//	return true;
+	public boolean denyMembershipToClassroom(String pendingMember, String classroomName, String userName) {
+		if(DEBUG)
+			return true;
 
 		ClientSocketHandler handler = new ClientSocketHandler();
 
@@ -407,7 +400,7 @@ public class Client {
 
 		Message response = handler.sendReceive();
 
-		//return (response.getCode() == 1)? true : false;
+		return (response.getCode() == 1)? true : false;
 	}
 
 }
