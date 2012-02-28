@@ -13,7 +13,7 @@ public class ClientSocketHandler {
 	private static ObjectOutputStream oos = null;
 	private static ObjectInputStream ois = null;
 
-	public Message sendReceive(String uName, Message.MessageType type){
+	public Message sendReceive(){
 
 		if(messageSending == null){
 			System.out.println("Message not set correctly (null). Exiting...");
@@ -56,19 +56,19 @@ public class ClientSocketHandler {
 	}
 
 
-	public static void setCookie(Cookie cookie) {
-		messageSending.setCookie(cookie);
-	}
-
-
-	public static Message getMessageSending() {
+//	public static void setCookie(Cookie cookie) {
+//		messageSending.setCookie(cookie);
+//	}
+//
+//
+	public Message getMessageSending() {
 		return messageSending;
 	}
-
-
-	public static void setMessageSending(Message messageSending) {
-		ClientSocketHandler.messageSending = messageSending;
-	}
+//
+//
+//	public static void setMessageSending(Message messageSending) {
+//		ClientSocketHandler.messageSending = messageSending;
+//	}
 
 
 	public static int getServerPort() {

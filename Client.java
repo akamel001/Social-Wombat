@@ -1,13 +1,14 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
 public class Client {
-	
+
 	private static final boolean DEBUG = false;
 	private static Cookie cookie = new Cookie(null);
-	
+
 	/**
 	 *  
 	 * This method is used in the login page to verify a user name.
@@ -20,13 +21,15 @@ public class Client {
 
 		if(DEBUG)
 			return true; 
-		
+
 		ClientSocketHandler handler = new ClientSocketHandler();
 		cookie.setKey(uName);
-		handler.setCookie(cookie);
-		Message responce = handler.sendReceive(uName, Message.MessageType.Client_LogIn);
-		
-		return (responce.getCode() == 1)? true : false;	
+		handler.getMessageSending().setCookie(cookie);
+		handler.getMessageSending().setType(Message.MessageType.Client_LogIn);
+
+		Message response = handler.sendReceive();
+
+		return (response.getCode() == 1)? true : false;	
 	}
 	/**
 	 * This method is used to create a classroom.
@@ -40,16 +43,20 @@ public class Client {
 
 		if(DEBUG)
 			return true;
-		
+
 		ClientSocketHandler handler = new ClientSocketHandler();
-		
-		Message responce = handler.sendReceive(uName, Message.MessageType.Client_CreateClassroom);
-		
+		cookie.setKey(uName);
+		handler.getMessageSending().setCookie(cookie);
+		handler.getMessageSending().setClassroom_ID(classroomName);
+		handler.getMessageSending().setType(Message.MessageType.Client_CreateClassroom);
+
+		Message response = handler.sendReceive();
+
 		//TODO Set cookie with uName, Set message id with classroom name, message type
 		//check message code on return
-		return true;		
+		return (response.getCode() == 1)? true : false;	
 	}
-	
+
 	/**
 	 * This method is used in requesting to join a classroom.
 	 * It takes in a classroom request name and returns true if the classroom can be requested,
@@ -59,12 +66,23 @@ public class Client {
 	 * @return boolean corresponding to whether the classroom can be requested
 	 */
 	public boolean requestToJoinClassroom(String classroomRequestName, String requesterUserName) {
-		//TODO Set cookie with uName, Set message id with classroom name, message type Client_RequestEnrollment, message body 0
-		//check message code on return 
-		//add debug line
-		return true;		
+
+		if(DEBUG)
+			return true;
+
+		ClientSocketHandler handler = new ClientSocketHandler();
+		cookie.setKey(requesterUserName);
+		handler.getMessageSending().setCookie(cookie);
+		handler.getMessageSending().setClassroom_ID(classroomRequestName);
+		handler.getMessageSending().setType(Message.MessageType.Client_RequestEnrollment);
+
+		Message response = handler.sendReceive();
+
+		//TODO Set cookie with uName, Set message id with classroom name, message type
+		//check message code on return
+		return (response.getCode() == 1)? true : false;			
 	}
-	
+
 	/**
 	 * This method is used to get a list of classrooms for a particular member.
 	 * It takes in a user name and returns the list of classrooms of which the user is a member.
@@ -75,21 +93,21 @@ public class Client {
 		//message type Client_GetUserEnrollment
 		//add debug line
 		//cookie with uName, 
-	
+
 		Map<String, Integer> classroomList = new HashMap<String, Integer>();
-		
+
 		// TODO: this is a temp list
 		classroomList.put("CS 4820", 1);
 		classroomList.put("LING 4844", 2);
 		classroomList.put("HD 3260", 3);
 		// end of temp list
-		
+
 		return classroomList;		
 	}
-	
-	
 
-	
+
+
+
 	public static void main(String [] args) {
 		/* Uncomment to preform a register / login test
 		if (handleLogin("bob") == false)
@@ -98,10 +116,10 @@ public class Client {
 			System.out.println("registering bob successful!");
 		if (handleLogin("bob") == true)
 			System.out.println("bob was logged in!!");
-		*/
+		 */
 	}
 
-	
+
 	// New Stuff
 	/**
 	 * This method creates a new thread with threadName and postContent.
@@ -111,27 +129,64 @@ public class Client {
 	 * @return
 	 */
 	public boolean createThread(String threadName, String postContent, String currentUserName, String classroomName) {
-		// TODO Message type createThread, cookie id username, ArrayList<string> with index 0 as threadname and 1 as postContent, message class id is class name 
-		// TODO add debug logic
-		return true;
+
+		if(DEBUG)
+			return true;
+
+		ClientSocketHandler handler = new ClientSocketHandler();
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(0, threadName);
+		list.add(1, postContent);
+
+		cookie.setKey(currentUserName);
+		handler.getMessageSending().setCookie(cookie);
+		handler.getMessageSending().setClassroom_ID(classroomName);
+		handler.getMessageSending().setType(Message.MessageType.Client_CreateThread);
+		handler.getMessageSending().setBody(list);
+
+		Message responce = handler.sendReceive();
+
+		return (responce.getCode() == 1)? true : false;	
 	}
 
 	/**
-	 * 
+	 * **** Consider bool return type to confirm class has been deleted?
 	 */
 	public void deleteClassroom(String classroomName, String userName) {
-		// TODO Auto-generated method stub
+
+		ClientSocketHandler handler = new ClientSocketHandler();
+		cookie.setKey(userName);
+		handler.getMessageSending().setCookie(cookie);
+		handler.getMessageSending().setClassroom_ID(classroomName);
+		handler.getMessageSending().setType(Message.MessageType.Client_DeleteClassroom);
+
+		Message response = handler.sendReceive();
+
+		//return (responce.getCode() == 1)? true : false;	
 		// TODO Set cookie uname and message type client_del classroom
 		// TODO add debug log
 	}
 
 	/**
-	 * 
+	 * Create message type to handle this request appropriately 
+	 * **** Consider bool return type to confirm class has been deleted? ***
 	 */
 	public void disjoinClassroom(String classroomName, String userName) {
-		//TODO Set cookie with uName, Set message id with classroom name, message type Client_RequestEnrollment, message body -1
-		//check message code on return 
-		//add debug line
+
+		ClientSocketHandler handler = new ClientSocketHandler();
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(0, userName);
+		list.add(1, "-1");
+
+		cookie.setKey(userName);
+		handler.getMessageSending().setCookie(cookie);
+		handler.getMessageSending().setClassroom_ID(classroomName);
+		handler.getMessageSending().setBody(list);
+		handler.getMessageSending().setType(Message.MessageType.Client_SetPermissions);
+
+		Message response = handler.sendReceive();
+
+		//return (responce.getCode() == 1)? true : false;		
 	}
 
 	/**
@@ -141,65 +196,138 @@ public class Client {
 	 * @return Map of Thread ID -> Thread Name
 	 */
 	public Map<Integer, String> getThreadMapForClassroom(String classroomName, String userName) {
-		// Message type is Client goto classroom, cookie uname, message classid is classroom name
-		// Debug logic 
-		
+
+		if(DEBUG)
+			return null;
+
+		ClientSocketHandler handler = new ClientSocketHandler();
+
+		cookie.setKey(userName);
+		handler.getMessageSending().setCookie(cookie);
+		handler.getMessageSending().setClassroom_ID(classroomName);
+		handler.getMessageSending().setType(Message.MessageType.Client_GoToClassroom);
+
+		Message responce = handler.sendReceive();
+
+		return (Map<Integer, String>) ((responce.getCode() == 1)? responce.getBody() : null);	
+	}
+
+	/**
+	 * This function returns the contents of a single thread given its ID.
+	 * @param threadID
+	 * @param classroomName
+	 * @param userName
+	 * @return Map of ThreadTopic/Post/Comment IDs -> Content
+	 */
+	public Map<Integer, String> getThreadGivenID(Integer threadID, String classroomName, String userName) {
+
 		return null;
 	}
-	
-	/**
-		 * This function returns the contents of a single thread given its ID.
-		 * @param threadID
-		 * @param classroomName
-		 * @param userName
-		 * @return Map of ThreadTopic/Post/Comment IDs -> Content
-		 */
-		public Map<Integer, String> getThreadGivenID(Integer threadID, String classroomName, String userName) {
-			
-			return null;
-		}
 
 	public boolean createComment(String commentContent, int threadID, String classroomName, String userName) {
-		// TODO cast threadID to string
-		// TODO Message type CreatComment, cookie id username, ArrayList<string> with index 0 as threadID and 1 as commentContent, message class id is class name 
-		// TODO add debug logic
-		return true;
+
+		if(DEBUG)
+			return true;
+
+		ClientSocketHandler handler = new ClientSocketHandler();
+
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(0, Integer.toString(threadID));
+		list.add(1, commentContent);
+
+		cookie.setKey(userName);
+		handler.getMessageSending().setCookie(cookie);
+
+		handler.getMessageSending().setClassroom_ID(classroomName);
+		handler.getMessageSending().setBody(list);
+		handler.getMessageSending().setType(Message.MessageType.Client_CreateComment);
+
+		Message response = handler.sendReceive();
+
+		return (response.getCode() == 1)? true : false;		
 	}
-	
+
 	/**
 	 * 
 	 * @param classroomName
 	 * @param userName
 	 * @return Map of Names -> Permissions 
 	 */
+	@SuppressWarnings("unchecked")
 	public Map<String, Integer> getMemberMapForClassroom(String classroomName, String userName) {
-		// TODO message type Client_GetClassEnrollment, cookie id username, classroomName in message class ID 
-		// Add debug logic
-		return null;
+
+		if(DEBUG)
+			return null;
+
+		ClientSocketHandler handler = new ClientSocketHandler();
+
+		cookie.setKey(userName);
+		handler.getMessageSending().setCookie(cookie);
+		handler.getMessageSending().setClassroom_ID(classroomName);
+		handler.getMessageSending().setType(Message.MessageType.Client_GetClassEnrollment);
+
+		Message response = handler.sendReceive();
+
+		return (Map<String, Integer>) ((response.getCode() == 1)? response.getBody() : null);
 	}
 
 	/**
+	 * *** Consider boolean return type 
 	 * 
 	 * @param memberName
 	 * @param classroomName
 	 * @param userName
 	 */
 	public void removeMember(String memberName, String classroomName, String userName) {
-		// TODO cookie containing user id, classroom id in message class id, Array<String> 0th index is membername, and first index is permission to remove (-1) and array is in message body
-		// todo message type cleitn set perm
-		// TODO add debug logic
+
+		//		if(DEBUG)
+		//			return true;
+		//		
+		ClientSocketHandler handler = new ClientSocketHandler();
+
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(0, memberName);
+		list.add(1, "-1");
+
+		cookie.setKey(userName);
+		handler.getMessageSending().setCookie(cookie);
+
+		handler.getMessageSending().setClassroom_ID(classroomName);
+		handler.getMessageSending().setType(Message.MessageType.Client_SetPermissions);
+		handler.getMessageSending().setBody(list);
+
+		Message response = handler.sendReceive();
+
+		//return (response.getCode() == 1)? true : false;	
 	}
 
 	/**
-	 * 
+	 *  *** Consider boolean return type
 	 * @param currentMemberName
 	 * @param userName
 	 * @param classroomName
-	 */
+	 */													
 	public void changeStatus(String currentMemberName, String userName, String classroomName) {
-		// TODO cookie containing user id, classroom id in message class id, Array<String> 0th index is membername, and first index is permission to remove (1) and array is in message body
-		// message type client set perm
-		// TODO add debug logic
+
+		//		if(DEBUG)
+		//			return true;
+
+		ClientSocketHandler handler = new ClientSocketHandler();
+
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(0, currentMemberName);
+		list.add(1, "1");
+
+		cookie.setKey(userName);
+		handler.getMessageSending().setCookie(cookie);
+
+		handler.getMessageSending().setClassroom_ID(classroomName);
+		handler.getMessageSending().setType(Message.MessageType.Client_SetPermissions);
+		handler.getMessageSending().setBody(list);
+
+		Message response = handler.sendReceive();
+
+		//return (response.getCode() == 1)? true : false;
 	}
 
 	/**
@@ -208,35 +336,78 @@ public class Client {
 	 * @param userName
 	 * @return List of all user names that have made requests to join a classroom
 	 */
+	@SuppressWarnings("unchecked")
 	public List<String> getRequestListForClassroom(String currentClassroomName, String userName) {
-		// TODO Message type Client_ListClassroomRequest, userName stored in cookie, message class id contains classroom name
-		// TODO Debug logic
-		return null;
+
+		if(DEBUG)
+			return null;
+
+		ClientSocketHandler handler = new ClientSocketHandler();
+
+		cookie.setKey(userName);
+		handler.getMessageSending().setCookie(cookie);
+		handler.getMessageSending().setClassroom_ID(currentClassroomName);
+		handler.getMessageSending().setType(Message.MessageType.Client_ListClassroomRequests);
+
+		Message responce = handler.sendReceive();
+
+		return (List<String>) ((responce.getCode() == 1)? responce.getBody() : null);
 	}
-	
+
 	/**
-	 * 
+	 * Consider boolean return type
 	 * @param pendingMember
 	 * @param classroomName
 	 * @param userName
 	 */
 	public void confirmAsMemberOfClassroom(String pendingMember, String classroomName, String userName) {
-		// TODO cookie containing user id, classroom id in message class id, Array<String> 0th index is membername, and first index is permission to remove (1) and array is in message body
-		// message type client set perm
-		// TODO add debug logic
+		//if(DEBUG)
+		//	return true;
+
+		ClientSocketHandler handler = new ClientSocketHandler();
+
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(0, pendingMember);
+		list.add(1, "1");
+
+		cookie.setKey(userName);
+		handler.getMessageSending().setCookie(cookie);
+
+		handler.getMessageSending().setClassroom_ID(classroomName);
+		handler.getMessageSending().setType(Message.MessageType.Client_SetPermissions);
+		handler.getMessageSending().setBody(list);
+
+		Message response = handler.sendReceive();
+
+		//return (response.getCode() == 1)? true : false;
 	}
-	
+
 	/**
-	 * 
+	 * Consider boolean return type
 	 * @param pendingMember
 	 * @param classroomName
 	 * @param userName
 	 */
 	public void denyMembershipToClassroom(String pendingMember, String classroomName, String userName) {
-		// TODO cookie containing user id, classroom id in message class id, Array<String> 0th index is membername, and first index is permission to remove (-1) and array is in message body
-		// message type client set perm
-		// TODO add debug logic
-		
+		//if(DEBUG)
+		//	return true;
+
+		ClientSocketHandler handler = new ClientSocketHandler();
+
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(0, pendingMember);
+		list.add(1, "-1");
+
+		cookie.setKey(userName);
+		handler.getMessageSending().setCookie(cookie);
+
+		handler.getMessageSending().setClassroom_ID(classroomName);
+		handler.getMessageSending().setType(Message.MessageType.Client_SetPermissions);
+		handler.getMessageSending().setBody(list);
+
+		Message response = handler.sendReceive();
+
+		//return (response.getCode() == 1)? true : false;
 	}
 
 }
