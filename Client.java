@@ -25,7 +25,7 @@ public class Client {
 		
 		return (responce.getCode() == 1)? true : false;	
 	}
-	
+	//TODO ******* WORK ON JUNIT TESTS ***** 
 	/**
 	 * This method is used to create a classroom.
 	 * It takes in a classroom name and returns true if the classroom can be created,
