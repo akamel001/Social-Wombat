@@ -1,5 +1,11 @@
 import static org.junit.Assert.*;
 
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -16,11 +22,18 @@ import org.junit.Test;
  */
 public class HubTest {
 
+	private static int CLIENT_SOCKET = 4444;
+	private static int SERVER_SOCKET = 5050;
+	
+	Hub testHub;
+	
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		//Set up a fake client to send stuff
+		
 	}
 
 	/**
@@ -35,6 +48,7 @@ public class HubTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
+		testHub = new Hub();
 	}
 
 	/**
@@ -49,7 +63,16 @@ public class HubTest {
 	 */
 	@Test
 	public void testHub() {
-		fail("Not yet implemented"); // TODO
+		// Test to see if ip address is right
+		String expectedAddr = "";
+		try {
+			expectedAddr = InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			fail("Could not get ip address");
+		}
+		assertEquals(expectedAddr,testHub.hubIP);
+		
 	}
 
 	/**
@@ -57,7 +80,18 @@ public class HubTest {
 	 */
 	@Test
 	public void testAddUser() {
-		fail("Not yet implemented"); // TODO
+		String username = "user1";
+		//userList should not have a user1 at first
+		assertTrue("user1 could not be added",testHub.addUser(username));
+		
+		//user1 should exist now
+		assertTrue("user1 should have been in userList",testHub.userExists("user1"));
+		
+		//adding the same name again should fail
+		assertFalse("adding user1 again should have failed",testHub.addUser(username));
+	
+		//testing null add
+		assertFalse("adding a null user should have failed",testHub.addUser(null));
 	}
 
 	/**
@@ -65,7 +99,19 @@ public class HubTest {
 	 */
 	@Test
 	public void testAddServer() {
-		fail("Not yet implemented"); // TODO
+		//use localhost since we can construct our own
+		InetAddress newServer = null;
+		try {
+			newServer = InetAddress.getLocalHost();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// test first add
+		assertEquals("First added server should be 1",1,testHub.addServer(newServer));
+		
+		// there should be an add failure whne adding again
+		
 	}
 
 	/**

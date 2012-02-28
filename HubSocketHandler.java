@@ -153,6 +153,7 @@ public class HubSocketHandler extends Thread{
 					break;
 				// Returns in body all users in a classroom
 				case Client_GetClassEnrollment:
+					//TODO: check permissions (instructor & tas)
 					//String = User, Integer = Permission
 					Map<String, Integer> classEnroll = classList.getClassEnrolled(msg.getClassroom_ID());
 					if (classEnroll == null){
@@ -178,6 +179,7 @@ public class HubSocketHandler extends Thread{
 					returnMessage(msg);
 					break;
 				case Client_ListClassroomRequests:
+					//TODO: check permissions (instructors and tas)
 					//gets list of users
 					List<String> requests = classList.getClassPending(msg.getClassroom_ID());
 					if (requests == null){
@@ -193,7 +195,7 @@ public class HubSocketHandler extends Thread{
 				// Store user to be changed and the permissions as an arraylist
 				// [0] = username, [1] = permissions
 				case Client_SetPermissions:
-					@SuppressWarnings("unchecked")
+					//TODO: check permissions (instructor and ta) special case student self
 					ArrayList<String> a= (ArrayList<String>) msg.getBody();
 					// Person
 					String personToChange = a.get(0);
@@ -240,30 +242,37 @@ public class HubSocketHandler extends Thread{
 				 * Array[1] = Post_body 	
 				 */
 				case Client_CreateThread:
+					//TODO: check permissions (belonging to classroom)
 					reply = forwardToServer(msg);
 					returnMessage(reply);
 					break;
 				case Client_CreateComment:
+					//TODO: check permissions (belonging to classroom)
 					reply = forwardToServer(msg);
 					returnMessage(reply);
 					break;
 				case Client_GoToClassroom:
+					//TODO: check permissions (belonging to classroom)
 					reply = forwardToServer(msg);
 					returnMessage(reply);
 					break;
 				case Client_GoToThread:
+					//TODO: check permissions (belonging to classroom)
 					reply = forwardToServer(msg);
 					returnMessage(reply);
 					break;
 				case Client_DeleteClassroom:
+					//TODO: check permissions (instructor of classroom)
 					reply = forwardToServer(msg);
 					returnMessage(reply);
 					break;
 				case Client_DeleteThread:
+					//TODO: check permissions (instructor or ta of classroom)
 					reply = forwardToServer(msg);
 					returnMessage(reply);
 					break;
 				case Client_DeleteComment:
+					//TODO: check permissions (instructor or ta of classroom)
 					reply = forwardToServer(msg);
 					returnMessage(reply);
 					break;	

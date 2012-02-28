@@ -16,44 +16,83 @@ class Hub extends Thread {
 	static String userListName = "hub.userlist";
 	static String serverListName = "hub.serverlist";
 	
-	
+	String hubIP = null;
 	
 	public Hub(){
 		// Constructor
-		InetAddress thisIp = null;
 		try {
-			thisIp = InetAddress.getLocalHost();
+			InetAddress addr = InetAddress.getLocalHost();
+			System.out.println("New Hub created: " + addr);
+			hubIP = addr.getHostAddress();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
+			System.out.println("Hub could not be created");
 		}
-		System.out.println("New Hub created with IP: "+thisIp.getHostAddress());
-
 	}
 
 	/*
 	 * Add a user to the userList.
 	 */
-	public void addUser(String username){
+	public boolean addUser(String username){
+		//check nulls
+		if (username == null){
+			return false;
+		}
 		//Add
 		if(userList.addUser(username)){
 			System.out.println("User " + username + " added successfully!");
+			return true;
 		} else {
 			System.out.println("User " + username + " could not be added");
+			return false;
 		}
+	}
+	
+	/*
+	 * Remove a user from the userList
+	 */
+	public boolean removeUser(String username){
+		//check user exists
+		if(userList.validateUser(username)){
+			System.out.println(username + "removed.");
+			return userList.removeUser(username);
+		} else{
+			System.out.println(username + " was not in the user list");
+			return false;
+		}
+	}
+	
+	/*
+	 * Check a user exists in the userList
+	 */
+	public boolean userExists(String username){
+		return userList.validateUser(username);
 	}
 	
 	/*
 	 * Add a server to the serverList
 	 */
-	public void addServer(InetAddress server){
+	public int addServer(InetAddress server){
 		int r = serverList.addServer(server, SERVER_SOCKET);
 		if (r == -1){
 			System.out.println("Adding server " + server + "failed."); 
+			return r;
 		} else {
 			System.out.println("Server" + server + " added under server id: " + r);
+			return r;
 		}
 	}
 	
+	/*
+	 * Remove a server from the serverList
+	 */
+	public boolean removeServer(int serverID){
+		if(serverList.removeServer(serverID) == 1){
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
 	/* 
 	 * Reads a given object from the filesystem
