@@ -5,8 +5,9 @@ import java.util.Map;
 
 public class Client {
 	
-	private static final boolean DEBUG = true;
-
+	private static final boolean DEBUG = false;
+	private static Cookie cookie = new Cookie(null);
+	
 	/**
 	 *  
 	 * This method is used in the login page to verify a user name.
@@ -21,11 +22,12 @@ public class Client {
 			return true; 
 		
 		ClientSocketHandler handler = new ClientSocketHandler();
+		cookie.setKey(uName);
+		handler.setCookie(cookie);
 		Message responce = handler.sendReceive(uName, Message.MessageType.Client_LogIn);
 		
 		return (responce.getCode() == 1)? true : false;	
 	}
-	//TODO ******* WORK ON JUNIT TESTS ***** 
 	/**
 	 * This method is used to create a classroom.
 	 * It takes in a classroom name and returns true if the classroom can be created,
@@ -38,6 +40,10 @@ public class Client {
 
 		if(DEBUG)
 			return true;
+		
+		ClientSocketHandler handler = new ClientSocketHandler();
+		
+		Message responce = handler.sendReceive(uName, Message.MessageType.Client_CreateClassroom);
 		
 		//TODO Set cookie with uName, Set message id with classroom name, message type
 		//check message code on return
