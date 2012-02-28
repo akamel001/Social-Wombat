@@ -1,6 +1,7 @@
 import java.io.Console;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 // TODO: action/error messages at top of each page
 // TODO: pull out commonalities for cleaner code
@@ -24,6 +25,7 @@ public class UserInterface {
 	private static String currentUserName;
 	private static String currentClassroomName;
 	private static String currentThreadName;
+	private static int currentThreadID;
 	private static String currentMemberName;
 	//private static String currentPermissions; TODO:
 	
@@ -243,7 +245,7 @@ public class UserInterface {
 		// create new comment
 	    case 1:
 	    	String commentContent = console.readLine("Please write your comment: ");
-	    	if (client.createComment(commentContent, currentThreadName, currentUserName)){
+	    	if (client.createComment(commentContent, currentThreadID, currentClassroomName, currentUserName)){
 				threadPage(messages);
 			} else {
 				classroomPage(null);
@@ -454,11 +456,11 @@ public class UserInterface {
 		int i = 1;
 		String uiString = "";
 		String uiStringTemp;
-		for (String entry : map.entrySet()){
+		for (Entry<Integer, String> entry : map.entrySet()){
 			uiStringTemp = "";
 			uiStringTemp = uiStringTemp.concat(Integer.toString(i) + ". ");
 			i++;
-			uiStringTemp = uiStringTemp.concat(entry);
+			uiStringTemp = uiStringTemp.concat(entry.getValue());
 			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
 		}
 		return uiString;
