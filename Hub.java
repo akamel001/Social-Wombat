@@ -19,6 +19,14 @@ class Hub extends Thread {
 	
 	public Hub(){
 		// Constructor
+		InetAddress thisIp = null;
+		try {
+			thisIp = InetAddress.getLocalHost();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		System.out.println("New Hub created with IP: "+thisIp.getHostAddress());
+
 	}
 
 	/*
@@ -50,7 +58,6 @@ class Hub extends Thread {
 	 * Reads a given object from the filesystem
 	 */
 	private static Object readFromDisk(String name){
-		// TODO: Test
 		Object o = null;
 		try {
 		    FileInputStream fin = new FileInputStream(name);
@@ -69,7 +76,6 @@ class Hub extends Thread {
 	 * Writes a given object to the filesystem
 	 */
 	private static void writeToDisk(Object o, String name){
-		// TODO: Test
 		FileOutputStream fos;
 		try {
 			fos = new FileOutputStream(name);

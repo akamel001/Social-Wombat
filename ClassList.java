@@ -111,7 +111,7 @@ public class ClassList implements Serializable{
 	 * Returns a map containing all users enrolled in a class.
 	 * @return Returns a Map of Strings to Integers. The Strings are the names of the users. 
 	 * The Integers represent their permissions with respect to the classroom. A value of 1 indicates a 
-	 * student, 2 indicates a TA.
+	 * student, 2 indicates a TA, 3 indicates an instructor.
 	 */
 	protected Map<String, Integer> getClassEnrolled(String className){
 		if (className == null)
