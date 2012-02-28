@@ -92,11 +92,11 @@ public class ClassList implements Serializable{
 	}
 
 	/**
-	 * Returns a Map containing all users in a classroom.
-	 * The key is the user's name, the value is their permissions.
-	 * @param c
-	 * @return
-	 */	
+	 * Returns a Map containing all of the users in the class, including pending users, with permissions.
+	 * @return Returns a Map of Strings to Integers. The Strings are the names of the users. 
+	 * The Integers represent their permissions with respect to the classroom. A value of ) indicates
+	 *  pending enrollment, 1 indicates a student, and 2 indicates a TA. 
+	 */
 	protected Map<String, Integer> getClassAll(String className){
 		if (className == null)
 			return null;
@@ -108,10 +108,10 @@ public class ClassList implements Serializable{
 	}
 	
 	/**
-	 * Returns a Map containing all enrolled users in a classroom.
-	 * The key is the user's name, the value is their permissions.
-	 * @param className
-	 * @return
+	 * Returns a map containing all users enrolled in a class.
+	 * @return Returns a Map of Strings to Integers. The Strings are the names of the users. 
+	 * The Integers represent their permissions with respect to the classroom. A value of 1 indicates a 
+	 * student, 2 indicates a TA.
 	 */
 	protected Map<String, Integer> getClassEnrolled(String className){
 		if (className == null)
@@ -124,10 +124,9 @@ public class ClassList implements Serializable{
 	}
 
 	/**
-	 * Returns a Map containing all pending users in a classroom.
-	 * The key is the user's name, the value is their permissions.
-	 * @param className
-	 * @return
+	 * Returns the names of all users with enrollment pending.
+	 * @return Returns a list of strings representing the usernames of every user 
+	 * in the class with permissions==0.
 	 */ 
 	protected List<String> getClassPending(String className){
 		if (className == null)

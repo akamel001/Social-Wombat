@@ -166,7 +166,7 @@ public class HubSocketHandler extends Thread{
 				// Return in body a list of the classes that a client is enrolled in
 				case Client_GetUserEnrollment:
 					String usr = msg.getCookie().getKey();
-					Map<String, Integer> userEnroll = classList.getEnrolledUsers(usr);
+					Map<String, Integer> userEnroll = classList.getClassEnrolled(usr);
 					if (userEnroll == null){
 						//error
 						msg.setCode(-1);
@@ -178,7 +178,7 @@ public class HubSocketHandler extends Thread{
 					break;
 				case Client_ListClassroomRequests:
 					//gets list of users
-					List<String> requests = classList.getPendingUsers(msg.getClassroom_ID());
+					List<String> requests = classList.getClassPending(msg.getClassroom_ID());
 					if (requests == null){
 						//error
 						msg.setCode(-1);
