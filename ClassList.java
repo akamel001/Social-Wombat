@@ -92,6 +92,19 @@ public class ClassList implements Serializable{
 	}
 
 	/**
+	 * Returns the instructor for a classroom.
+	 * @param className The name of the classroom
+	 * @return Returns the value of the instructor field from the ClassData object with the given name.
+	 */
+	public String getInstructor(String className){
+		ClassData c = classList.get(className);
+		if (c==null)
+			return null;
+		else 
+			return c.getInstructor();			
+	}
+	
+	/**
 	 * Returns a Map containing all of the users in the class, including pending users, with permissions.
 	 * @return Returns a Map of Strings to Integers. The Strings are the names of the users. 
 	 * The Integers represent their permissions with respect to the classroom. A value of ) indicates

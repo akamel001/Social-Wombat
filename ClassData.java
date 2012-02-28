@@ -188,10 +188,17 @@ public class ClassData{
 
 
 	/**
+	 * Returns the instructor for the class.
+	 * @return the value of the instructor <i>field</i>
+	 */
+	protected String getInstructor(){
+		return instructor;
+	}
+	/**
 	 * Returns the names of all users with enrollment pending.
 	 * @return Returns a list of strings representing the usernames of every user in the class with permissions==0.
 	 */
-	public List<String> getPendingUsers(){
+	protected List<String> getPendingUsers(){
 		boolean found = false;
 		Set<String> s = userList.keySet();
 		List<String> out = Collections.synchronizedList(new ArrayList<String>());
@@ -216,9 +223,11 @@ public class ClassData{
 	 * The Integers represent their permissions with respect to the classroom. A value of 1 indicates a 
 	 * student, 2 indicates a TA.
 	 */
-	public Map<String, Integer> getEnrolledUsers(){
+	protected Map<String, Integer> getEnrolledUsers(){
 		boolean found = false;
 		Map<String, Integer> out = Collections.synchronizedMap(new TreeMap<String, Integer>());
+		// add instuctor
+		out.put(instructor, 3);
 		Set<String> s = userList.keySet();
 		synchronized(userList) {  
 			Iterator<String> i = s.iterator(); 
@@ -243,8 +252,11 @@ public class ClassData{
 	 * The Integers represent their permissions with respect to the classroom. A value of ) indicates
 	 *  pending enrollment, 1 indicates a student, and 2 indicates a TA. 
 	 */
-	public Map<String, Integer> getAllUsers(){
-		return userList;
+	protected Map<String, Integer> getAllUsers(){
+		Map<String, Integer> out = Collections.synchronizedMap(new TreeMap<String, Integer>(userList));
+		// add instructor
+		out.put(instructor, 3);
+		return out;
 	}
 
 }
