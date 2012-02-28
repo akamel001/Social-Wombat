@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 // TODO: name of page, info (name, classroom), messages, options, question
 // TODO: different menus based on privileges
 // TODO: make sure the current... are updated as we go
+// TODO: currentPendingMember
 
 /**
  * This is the user interface for Social Wombat.
@@ -27,6 +28,7 @@ public class UserInterface {
 	private static String currentThreadName;
 	private static int currentThreadID;
 	private static String currentMemberName;
+	private static String currentPendingMemberName;
 	//private static String currentPermissions; TODO:
 	
 	static int iWINDOWWIDTH = 58;
