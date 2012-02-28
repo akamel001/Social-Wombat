@@ -1,6 +1,6 @@
 import java.io.Serializable;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.Collections;
 
 
@@ -48,7 +48,7 @@ public class Post implements Serializable{
 	 * @param b Post body; max length is maxCommentLength
 	 */
 	public Post(String t, String b, int i){
-		commentList = Collections.synchronizedMap(new HashMap<Integer, String>());
+		commentList = Collections.synchronizedMap(new TreeMap<Integer, String>());
 		// truncate title if it's too long
 		if (t.length()<=60)
 			t= t.substring(0, maxTitleLength-1);

@@ -1,9 +1,10 @@
 import java.io.Serializable;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
 
 /**
  * ClassList is a list of ClassData objects.
@@ -15,16 +16,16 @@ import java.util.Set;
  */
 public class ClassList implements Serializable{
 
-private static final long serialVersionUID = 8630970578639764636L;
+	private static final long serialVersionUID = 8630970578639764636L;
 	private Map<String, ClassData> classList;
-	
+
 	/**
 	 * Constructor for the ClassList.
 	 */
 	protected ClassList(){
-		classList = Collections.synchronizedMap(new HashMap<String, ClassData>());
+		classList = Collections.synchronizedMap(new TreeMap<String, ClassData>());
 	}
-	
+
 	/**
 	 * Adds a ClassRoom to the list. NOTE: if the classroom name is not unique, the class
 	 * will not be added and -1 will be returned.
@@ -32,14 +33,18 @@ private static final long serialVersionUID = 8630970578639764636L;
 	 * @return
 	 */
 	protected int addClass(ClassData c){
-		if (classList.containsKey(c.getClassName()))
-			return -1;
-		else{
-			classList.put(c.getClassName(), c);
-			return 1;
+		int out;
+		synchronized(classList){
+			if (classList.containsKey(c.getClassName()))
+				out = -1;
+			else{
+				classList.put(c.getClassName(), c);
+				out = 1;
+			}
 		}
+		return out;
 	}
-	
+
 	/**
 	 * Removes a ClassRoom from the list. Returns -1 if classroom does not exist.
 	 * @param c
@@ -51,7 +56,7 @@ private static final long serialVersionUID = 8630970578639764636L;
 		else
 			return -1;
 	}
-	
+
 	/**
 	 * Returns the permissions for a user with regards to a particular classroom.
 	 * @param user The user's name
@@ -61,7 +66,7 @@ private static final long serialVersionUID = 8630970578639764636L;
 	protected int getUserPermissions(String user, String c){
 		return classList.get(c).getPermissions(user);
 	}
-	
+
 	/**
 	 * Sets the permissions for a specific user in a class. <br>
 	 * <br>
@@ -85,13 +90,14 @@ private static final long serialVersionUID = 8630970578639764636L;
 				return tempClass.setPermission(user, per);
 		}
 	}
-	
+
 	/**
 	 * Returns a Map containing all users in a classroom.
 	 * The key is the user's name, the value is their permissions.
 	 * @param c
 	 * @return
 	 */
+	/*
 	protected Map<String, Integer> getClassEnrollment(String c){
 		ClassData temp = classList.get(c);
 		if (temp !=null)	
@@ -99,14 +105,25 @@ private static final long serialVersionUID = 8630970578639764636L;
 		else
 			return null;
 	}
-	
+	*/
+
+	protected List<String> getEnrolled(String className){
+		ClassData c = classList.get(className);
+		return c.getEnrolled();
+	}
+
+	protected List<String> getPending(String className){
+		ClassData c = classList.get(className);
+		return c.getPending();
+	}
+
 	/**
 	 * Returns A Map of all of the classes a user is enrolled in (pending included)
 	 * @param user
 	 * @return Returns a Map containing all of the classes a user is enrolled in, null if none exist.
 	 */
 	protected Map<String, Integer> getUserEnrollment(String user){
-		Map<String, Integer> out = Collections.synchronizedMap(new HashMap<String, Integer>());
+		Map<String, Integer> out = Collections.synchronizedMap(new TreeMap<String, Integer>());
 		boolean found = false;
 		Set<String> s = classList.keySet();
 		synchronized(classList) {  
@@ -126,7 +143,7 @@ private static final long serialVersionUID = 8630970578639764636L;
 		else
 			return null;
 	}
-	
+
 	/**
 	 * Returns the number of the server on which the passed class is stored
 	 * @param c the name of the ClassRoom
@@ -139,7 +156,7 @@ private static final long serialVersionUID = 8630970578639764636L;
 		else
 			return temp.getClassServer();
 	}
-	
+
 	/**Returns the port associated with a classroom
 	 * 
 	 * @param c The name of the classroom

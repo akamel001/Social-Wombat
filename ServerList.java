@@ -1,7 +1,7 @@
 import java.io.Serializable;
 import java.net.*;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Iterator;
@@ -19,7 +19,7 @@ public class ServerList implements Serializable{
 	private int nextId; 
 	
 	public ServerList(){
-		serverList = Collections.synchronizedMap(new HashMap<Integer, Server>());
+		serverList = Collections.synchronizedMap(new TreeMap<Integer, Server>());
 		nextId = 0;
 	}
 
@@ -47,14 +47,13 @@ public class ServerList implements Serializable{
 					return -1;
 				}
 			}
+			nextId ++;
+			Server s = new Server();
+			s.setId(nextId);
+			s.setAddress(ip);
+			s.setPort(port);
+			serverList.put(nextId, s);
 		}
-
-		nextId ++;
-		Server s = new Server();
-		s.setId(nextId);
-		s.setAddress(ip);
-		s.setPort(port);
-		serverList.put(nextId, s);
 		return nextId;
 	}
 

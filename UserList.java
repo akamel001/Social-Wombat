@@ -1,5 +1,11 @@
 import java.io.Serializable;
-import java.util.*;
+import java.util.TreeMap;
+import java.util.Map;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.Collections;
+
+
 
 public class UserList implements Serializable{
 	
@@ -10,7 +16,7 @@ public class UserList implements Serializable{
 	 * Creates a new UserList with an empty Map of Users.
 	 */
 	public UserList(){
-		userList = Collections.synchronizedMap(new HashMap<String, User>());
+		userList = Collections.synchronizedMap(new TreeMap<String, User>());
 	}
 
 	
@@ -39,16 +45,22 @@ public class UserList implements Serializable{
 	}
 
 	public boolean addUser(String newId){
-		if (!contains(newId)){
-			userList.put(newId, new User(newId));
-			return true;
+		boolean found = false;
+		synchronized(userList){
+			if (!contains(newId)){
+				userList.put(newId, new User(newId));
+				found = true;
+			}
 		}
-		return false;
+		return found;
 	}
 	
 	public boolean removeUser(String id){
-		//TODO: implement
-		return false;
+		boolean found = false;
+		if (userList.remove(id)==null){
+			found = true;
+		}
+		return found;
 	}
 	
 	public class User{

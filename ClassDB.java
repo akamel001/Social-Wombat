@@ -1,6 +1,6 @@
 import java.io.Serializable;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.Map;
 
 /*
@@ -16,7 +16,7 @@ public class ClassDB implements Serializable{
 	 * ClassDB holds a list of ClassRoom objects.
 	 */
 	public ClassDB(){
-		classRoomList = Collections.synchronizedMap(new HashMap<String, ClassRoom>());
+		classRoomList = Collections.synchronizedMap(new TreeMap<String, ClassRoom>());
 	}
 	
 	/**

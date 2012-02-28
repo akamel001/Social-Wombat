@@ -1,8 +1,10 @@
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * ClassData objects store a class' associated server info and user permissions.
@@ -28,7 +30,7 @@ public class ClassData{
 	 * Creates a class with the passed user as instructor
 	 */
 	public ClassData(String inst){
-		userList = Collections.synchronizedMap(new HashMap<String, Integer>());
+		userList = Collections.synchronizedMap(new TreeMap<String, Integer>());
 		instructor = inst;
 		id = -1;
 		name = null;
@@ -36,13 +38,6 @@ public class ClassData{
 		port = -1;
 	}
 	
-	/**
-	 * Returns a Map containg all of the users enrolled in the class.
-	 * @return
-	 */
-	public Map<String, Integer> getEnrolled(){
-		return userList;
-	}
 
 	/**
 	 * Sets the name of the class.
@@ -212,6 +207,35 @@ public class ClassData{
 			return out += System.getProperty("line.separator") + " - [no users awaiting enrollment]";
 		else
 			return out;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public List<String> getPending(){
+		boolean found = false;
+		Set<String> s = userList.keySet();
+		List<String> out = Collections.synchronizedList(new ArrayList<String>());
+		synchronized(userList) {  
+			Iterator<String> i = s.iterator(); 
+			while (i.hasNext()){
+				if (userList.get(i.next()) == 0){
+					found = true;
+					out.add(i.next());
+				}
+			}
+		}
+		if (found)
+			return out;
+		else
+			return null;
+	}
+	
+	public List<String> getEnrolled(){
+		//TODO: IMPLEMENT
+		List<String> out = Collections.synchronizedList(new ArrayList<String>());
+		return out;
 	}
 
 	/**

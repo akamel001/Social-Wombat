@@ -1,6 +1,6 @@
 import java.io.Serializable;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Iterator;
@@ -32,7 +32,7 @@ public class ClassRoom implements Serializable{
 		if (n.length()==0)
 			n = "[no class title]"; // Should be caught at ClassDB
 		idNum = i;
-		postList = Collections.synchronizedMap(new HashMap<Integer, Post>());
+		postList = Collections.synchronizedMap(new TreeMap<Integer, Post>());
 	}
 	
 	/**
@@ -49,9 +49,8 @@ public class ClassRoom implements Serializable{
 		if (postBody.length() > Post.maxCommentLength || postBody.length() <1)
 			return -1;
 		Post p = new Post(postTitle, postBody, nextPost);
-		synchronized (this) {
-			postList.put(nextPost, p);
-			nextPost++;
+		synchronized (postList) {
+			postList.put(nextPost++, p);
 		}
 		return 1;
 	}
@@ -76,8 +75,11 @@ public class ClassRoom implements Serializable{
 	 * @return
 	 */
 	protected int addComment(int postId, String comment){
-		Post p = postList.get(postId);
-		int out = p.addComment(comment);
+		int out;
+		synchronized(postList){
+			Post p = postList.get(postId);
+			out = p.addComment(comment);
+		}
 		return out;
 	}
 	
@@ -88,8 +90,11 @@ public class ClassRoom implements Serializable{
 	 * @return Returns 1 if the comment is removed, -1 if the comment was not in the post.
 	 */
 	protected int removeComment(int postId, int commentId){
-		Post p = postList.get(postId);
-		int out = p.removeComment(commentId);
+		int out;
+		synchronized(postList){
+			Post p = postList.get(postId);
+			out = p.removeComment(commentId);
+		}
 		return out;
 	}
 	
@@ -112,7 +117,10 @@ public class ClassRoom implements Serializable{
 	 */
 	protected Map<Integer, String> getThread(int threadId){
 		Post p = postList.get(threadId);
-		return p.getThread();
+		if (p==null)
+			return null;
+		else
+			return p.getThread();
 	}
 	/**
 	 * Returns a list of the titles of all the threads in a class.
@@ -120,7 +128,7 @@ public class ClassRoom implements Serializable{
 	 * here the Integer is the post id and the String is the thread title.
 	 */
 	protected Map<Integer, String> getThreadList(){
-		Map<Integer, String> titleList = Collections.synchronizedMap(new HashMap<Integer, String>());
+		Map<Integer, String> titleList = Collections.synchronizedMap(new TreeMap<Integer, String>());
 		
 		Set<Integer> s = postList.keySet();
 		synchronized(postList) {  
@@ -133,9 +141,7 @@ public class ClassRoom implements Serializable{
 			}
 		}
 		return titleList;
-	}
-
-		
+	}	
 	
 	/**
 	 * Returns the id number of the class.
