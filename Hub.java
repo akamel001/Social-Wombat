@@ -190,6 +190,8 @@ class Hub extends Thread {
 		}
 	}
 	
+	
+	
 	/*
 	 * Initializes our data structures
 	 */

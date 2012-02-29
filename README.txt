@@ -40,7 +40,7 @@ Instructions:
 	
 	* Installation: 
 		- To install the system download code from CMS
-	
+		- Create a file in the same directory of the downloaded code called 'hub.newuserlist' that contains a list separated by line returns of all users that are allowed to access the system. Users that are not in this file will not be able to log in.
 	* Compiling:
 		- Navigate to the directory of the downloaded repository and type 'make' 
 		  
