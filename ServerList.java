@@ -100,7 +100,9 @@ public class ServerList implements Serializable{
 	 * @author chris
 	 *
 	 */
-	public class Server {
+	public class Server implements Serializable{
+		
+		private static final long serialVersionUID = -2846614313431062929L;
 		private int id;
 		private InetAddress ip;
 		private int port;
