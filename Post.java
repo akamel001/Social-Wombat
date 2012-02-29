@@ -46,17 +46,25 @@ public class Post implements Serializable{
 	 * Create a new post with the given title and body for the first post.
 	 * @param t Post title; max length is maxTitleLength
 	 * @param b Post body; max length is maxCommentLength
+	 * @param i The id for the post (unique for it's class)
 	 */
 	public Post(String t, String b, int i){
 		commentList = Collections.synchronizedMap(new TreeMap<Integer, String>());
+		// SET BODY
+		if (t==null)	
+			t = ""; 	
 		// truncate title if it's too long
-		if (t.length()<=60)
+		else if (t.length()>=60)
 			t= t.substring(0, maxTitleLength-1);
 		// if the title is empty
 		else if (t.length()==0)
 			t = "[no title]"; 			// this issue should be caught at ClassRoom 
-		if (b.length()>maxCommentLength)
+		if (b==null)	
+			b = "";
+		else if (b.length()>maxCommentLength)
 			b = b.substring(0,maxCommentLength-1);
+		else if (b.length()==0)			// this should be caught at ClassRoom
+			t = "[no body]"; 
 		commentList.put(nextComment, t);		// add title
 		nextComment++;
 		commentList.put(nextComment, b);		// add body
@@ -120,4 +128,34 @@ public class Post implements Serializable{
 	public int getId(){
 		return id;
 	}
+	
+	@Override public String toString(){
+		return commentList.toString();
+	}
+	
+	/*
+	public static void main(String [ ] args){
+		String a = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
+		String b = null;
+		Post test = new Post(a,b,1);
+		String t = "Lorem Ipsum"; 
+		
+		
+		for (int i=0;i<10;i++){
+			test.addComment(t+" " + i);
+		}
+
+		System.out.println("1: " + test.removeComment(-1));
+		System.out.println("0: " + test.removeComment(0));
+		System.out.println("1: " + test.removeComment(1));
+		System.out.println("2: " + test.removeComment(2));
+		System.out.println("3: " + test.removeComment(3));
+		System.out.println("5: " + test.removeComment(5));
+		System.out.println("7: " + test.removeComment(7));
+		System.out.println("10: " + test.removeComment(10));
+		System.out.println("1000: " + test.removeComment(1000));
+		
+		System.out.println(test.toString());
+	}
+	*/
 }

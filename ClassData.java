@@ -42,7 +42,6 @@ public class ClassData{
 	 * Sets the name of the class.
 	 */
 	public int setClassName(String n){
-		//TODO: test for alphanumeric!
 		name = n;
 		return 1;
 	}
@@ -107,27 +106,6 @@ public class ClassData{
 		}		
 	}
 
-	/** DEPRECATED! Use setPermissons()!
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public int addUser(String id){
-		/*
-		 if (id.equals("") || id == null)
-		 
-			return -1;
-		if(userList.containsKey(id))
-			return -1;
-		else{
-			userList.put(id, 0);
-			return 0;
-		}
-		*/
-		return -1;
-	}
-
-
 	/**
 	 * Removes a user from the class list. 
 	 * @param id
@@ -167,6 +145,7 @@ public class ClassData{
 	 * @return
 	 */
 	public int setPermission(String id, int p){
+		// if input is out of range, return -1
 		if (p<-1 || p>2)
 			return -1;
 		// if per is -1, remove user from list
@@ -176,7 +155,7 @@ public class ClassData{
 		}
 		// if per is 0 and user is not in list, add the user
 		else if (p==0 && !userList.containsKey(id)){
-			addUser(id);
+			userList.put(id, p);
 			return 1;
 		}
 		// Otherwise, just add em to the class 
