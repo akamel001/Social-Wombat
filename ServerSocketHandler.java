@@ -166,6 +166,7 @@ public class ServerSocketHandler extends Thread{
 				 */
 				case Client_DeleteComment:
 					System.out.println(msg.getCookie().getKey()+ "wants to delete a comment.");
+					@SuppressWarnings("unchecked")
 					ArrayList<Integer> commentParams = (ArrayList<Integer>)msg.getBody();
 					int postID = commentParams.get(0);
 					int commentID = commentParams.get(1);

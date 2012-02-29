@@ -232,6 +232,7 @@ public class HubSocketHandler extends Thread{
 				// Store user to be changed and the permissions as an arraylist
 				// [0] = username, [1] = permissions
 				case Client_SetPermissions:
+					@SuppressWarnings("unchecked")
 					ArrayList<String> a= (ArrayList<String>) msg.getBody();
 					// Person
 					String personToChange = a.get(0);
