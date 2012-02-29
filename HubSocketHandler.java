@@ -179,14 +179,13 @@ public class HubSocketHandler extends Thread{
 				// TODO: Possibly move this above switch statement to authenticate all requests
 				case Client_LogIn: 
 					String sessionKey = msg.getCookie().getKey();
-					System.out.println("Current code: " + msg.getCode());
-					System.out.println("Authenticating " + sessionKey);
 					if((sessionKey != null) && userList.validateUser(sessionKey)){
 						//Reply with confirmation
 						msg.setCode(1);
 						System.out.println("User " + msg.getCookie().getKey() + " logged in");
-					} 
-					System.out.println("Message code returned is: " + msg.getCode());
+					} else {
+						System.out.println("Attempted intrusion by: " + sessionKey);
+					}
 					returnMessage(msg);
 					break;
 				// Returns in body all users in a classroom
@@ -273,10 +272,13 @@ public class HubSocketHandler extends Thread{
 				case Client_RequestEnrollment:
 					//check, cannot be already in class
 					String requestName = msg.getCookie().getKey();
+					System.out.println(requestName + " requested to be added to classroom: " + msg.getClassroom_ID());
 					if(!isInClassroom(requestName,msg.getClassroom_ID())){
 						// 0 for pending enrollment, -1 for dijoining
 						int p = (Integer)msg.getBody();
+						System.out.println("adding into classroom...");
 						returnCode = classList.setUserPermissions(requestName, msg.getClassroom_ID(), p);
+						System.out.println("return code is: " + returnCode);
 						msg.setCode(returnCode);
 					}
 					returnMessage(msg);
