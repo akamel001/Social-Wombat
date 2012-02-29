@@ -60,6 +60,6 @@ public class ClientSocketHandler {
 	}
 
 	public static int getServerPort() {
-		return SERVER_PORT;
+		return HUB_PORT;
 	}
 }
