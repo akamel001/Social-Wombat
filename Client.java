@@ -26,7 +26,7 @@ public class Client {
 		cookie.setKey(uName);
 		handler.getMessageSending().setCookie(cookie);
 		handler.getMessageSending().setType(Message.MessageType.Client_LogIn);
-
+		System.out.println(handler.getMessageSending().getCookie().getKey());
 		Message response = handler.sendReceive();
 
 		return (response.getCode() == 1)? true : false;	
