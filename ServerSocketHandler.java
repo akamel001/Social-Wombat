@@ -128,14 +128,16 @@ public class ServerSocketHandler extends Thread{
 					returnMessage(msg);
 					break;
 				case Client_GoToThread:
-					//Thread id embedded in body
-					int threadID = (Integer)msg.getBody();
-					System.out.println(msg.getCookie().getKey() + " wants to view thread #: " + threadID);
-					if (threadID == Integer.valueOf(null)) {
+					//null cehck
+					if (msg.getBody() == null) {
 						msg.setCode(-1);
 						returnMessage(msg);
 						break;
 					}
+					//Thread id embedded in body
+					int threadID = (Integer)msg.getBody();
+					System.out.println(msg.getCookie().getKey() + " wants to view thread #: " + threadID);
+					
 					Map<Integer, String> thread = classDB.getThread(msg.getClassroom_ID(), threadID);
 					if (thread == null){
 						//return failure
