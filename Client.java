@@ -223,7 +223,7 @@ public class Client {
 			Map<Integer, String> defaultMap = new HashMap<Integer, String>();
 			defaultMap.put(new Integer(4), "Initial Post");
 			defaultMap.put(new Integer(2), "Topic");
-			defaultMap.put(new Integer(7), "Comment 1");
+			defaultMap.put(new Integer(7), "I like to comment on stuff!");
 			return defaultMap;	
 		}
 
