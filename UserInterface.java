@@ -280,7 +280,7 @@ public class UserInterface {
 	    	String postContent = console.readLine("Please write your post's content: ");
 	    	if (client.createThread(threadNameTemp, postContent, currentUserName, currentClassroomName)){
 	    		currentThreadName = threadNameTemp;
-				threadPage(mTHREAD_CREATION_SUCCESS);
+				classroomPage(mTHREAD_CREATION_SUCCESS);
 			} else {
 				classroomPage(eTHREAD_CREATION_ERROR);
 			}
