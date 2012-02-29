@@ -1,21 +1,34 @@
 Testcases:
 
+ClassData.java --  
 
+ClassDB.java -- 
 
+ClassList.java -- 
 
+ClassRoom.java -- 
 
+Client.java -- 
 
+ClientSocketHandler.java -- 
 
+Cookie.java --  
 
-=================
+Hub.java --  
 
-Julia:
-Since there is no good framework for testing text-based console user interfaces, 
-I decided to create my own manual test suite, which is documented here.
+HubSocketHandler.java -- 
 
-Things to test:
-* All necessary parts of a page get displayed (page name, messages, info, content, options, question)
-* The proper content is displayed in each part of the page. Specifically:
-	* A user sees the correct pages depending on his permission status (instructor, teaching assistant, or student)
-	* Current info is updated and not stale
+Message.java -- 
 
+Post.java -- 
+
+Server.java -- 
+
+ServerList.java -- 
+
+ServerSocketHandler.java -- 
+
+UserInterface.java -- The bulk of the testing for the user interface is outlined extensively in 
+UserInterfaceTest.txt. UserInterfaceTest.java contains JUnit tests methods for the helper functions.
+
+UserList.java --
