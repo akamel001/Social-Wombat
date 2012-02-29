@@ -50,7 +50,7 @@ public class UserInterface {
 	
 	private static final String eGENERAL_ERROR = 			addFormattingAlignLeft("An error has occurred.");
 	private static final String eLOG_IN_ERROR = 			addFormattingAlignLeft("There was an error in logging in with the provided username.");		
-	private static final String eCLASSROOM_CREATION_ERROR=	addFormattingAlignLeft("An error occured when creating the classroom.");
+	private static final String eCLASSROOM_CREATION_ERROR =	addFormattingAlignLeft("An error occured when creating the classroom.");
 	private static final String eCLASSROOM_REQUEST_ERROR =	addFormattingAlignLeft("An error occured when requesting to join a classroom.");
 	private static final String eNON_VALID_SELECTION = 		addFormattingAlignLeft("That is not a valid selection.");
 	private static final String eTHREAD_CREATION_ERROR = 	addFormattingAlignLeft("An error occured when creating your thread.");	
@@ -155,6 +155,7 @@ public class UserInterface {
 	    	String classroomNameTemp = console.readLine("Please specify a classroom name: ");
 	    	if (client.createClassroom(classroomNameTemp, currentUserName)){
 	    		currentClassroomName = classroomNameTemp;
+	    		currentPermissions = sINSTRUCTOR;
 				classroomPage(mCLASSROOM_CREATION_SUCCESS);
 			} else {
 				homePage(eCLASSROOM_CREATION_ERROR);
@@ -227,11 +228,12 @@ public class UserInterface {
 	 * @param messages
 	 */
 	private static void classroomPage(String messages) {
+		System.out.printf("Got to classroom"); // TODO takeout
 		int maxSelection = 0;
 		
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
-		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions + "."));
+		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName));
+		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
 		if (currentPermissions == sSTUDENT) {
 			displayPage(sCLASSROOM_PAGE, messages, info, null, sCLASSROOM_PAGE_OPTIONS_STUDENT);
 			maxSelection = 4;
@@ -301,8 +303,8 @@ public class UserInterface {
 	 */
 	private static void threadListPage(String messages) {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
-		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions + "."));
+		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName));
+		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
 		
 		Map<Integer, String> threadMap = client.getThreadMapForClassroom(currentClassroomName, currentUserName);
 		TreeMap<Integer, String> threadTreeMap = new TreeMap<Integer, String>(threadMap); // Converting to TreeMap to stabilize the order.
@@ -336,9 +338,9 @@ public class UserInterface {
 		int maxSelection = 0;
 		
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
-		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions + "."));
-		info = info.concat(addFormattingAlignLeft("Current thread: " + currentThreadName + "."));
+		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName));
+		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
+		info = info.concat(addFormattingAlignLeft("Current thread: " + currentThreadName));
 		
 		Map<Integer, String> threadContentMap = client.getThreadGivenID(currentThreadID, currentClassroomName, currentUserName);
 		String threadContent = threadMapToString(threadContentMap);
@@ -401,8 +403,8 @@ public class UserInterface {
 	 */
 	private static void memberListPage(String messages) {		
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
-		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions + "."));
+		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName));
+		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
 		
 		Map<String, Integer> memberMap = client.getMemberMapForClassroom(currentClassroomName, currentUserName);
 		TreeMap<String, Integer> memberTreeMap = new TreeMap<String, Integer>(memberMap); // Converting to TreeMap to stabilize the order.
@@ -435,8 +437,8 @@ public class UserInterface {
 		int maxSelection = 0;
 		
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
-		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions + "."));
+		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName));
+		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
 		
 		String memberContent = addFormattingAlignLeft("Currently viewing member: " + currentMemberName + " (" + currentMemberPermissions + ").");
 		
@@ -484,8 +486,8 @@ public class UserInterface {
 	 */
 	private static void requestListPage(String messages) {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
-		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions + "."));
+		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName));
+		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
 		
 		List<String> requestList = client.getRequestListForClassroom(currentClassroomName, currentUserName);
 		displayPage(sREQUEST_LIST_PAGE, messages, info, null, listToUIString(requestList));
@@ -508,9 +510,9 @@ public class UserInterface {
 	 */
 	private static void requestPage(String messages) {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
-		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions + "."));
-		info = info.concat(addFormattingAlignLeft("Currently viewing request from member: " + currentMemberName + "."));
+		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName));
+		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
+		info = info.concat(addFormattingAlignLeft("Currently viewing request from member: " + currentMemberName));
 		
 		displayPage(sREQUEST_PAGE, messages, info, null, sREQUEST_PAGE_OPTIONS);		
 
