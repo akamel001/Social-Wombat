@@ -11,4 +11,4 @@ Abdelrahman Kamel -- System design, Implemented client-side messaging. (40 hrs)
 
 Julia Tazin -- System design, Implemented user interface. (40 hrs)
 
-Yilok Wong -- System, design, Implemented hub and server-side messaging. (40 hrs)
+Yilok Wong -- System design, Implemented hub and server-side messaging. (40 hrs)

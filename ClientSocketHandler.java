@@ -30,13 +30,13 @@ public class ClientSocketHandler {
 			ois = new ObjectInputStream(socket.getInputStream());
 
 			// sending an object to the server
-			System.out.println("Sending message to server...");
+			//System.out.println("Sending message to server...");
 			oos.writeObject(messageSending);
 			oos.flush();
 			oos.reset();
 
 			// read an object from the server
-			System.out.println("Receiving message from server...");
+			//System.out.println("Receiving message from server...");
 			messageReceived = (Message) ois.readObject();
 
 			oos.close();
