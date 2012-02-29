@@ -128,7 +128,7 @@ public class ServerSocketHandler extends Thread{
 					returnMessage(msg);
 					break;
 				case Client_GoToThread:
-					//null cehck
+					//null check
 					if (msg.getBody() == null) {
 						msg.setCode(-1);
 						returnMessage(msg);
