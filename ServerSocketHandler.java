@@ -73,6 +73,10 @@ public class ServerSocketHandler extends Thread{
 				
 				// Client -> Hub -> Server
 				case Client_CreateClassroom:
+					//start printout
+					System.out.println("Class to be added: " + msg.getClassroom_ID());
+					System.out.println("Request sent by: " + msg.getCookie().getKey());
+					//end printout
 					returnCode = classDB.addClassRoom(msg.getClassroom_ID());
 					msg.setCode(returnCode);
 					returnMessage(msg);
