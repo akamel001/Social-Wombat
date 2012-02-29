@@ -1,4 +1,10 @@
-Testcases:
+We used a variety of testing methods. Most code was tested as it was written. Upon finishing a 
+class, unit testing was done through writing a JUnit test file for that class. Manual testing was
+heavily employed as well, especially in the text-based user interface, for which all possible 
+scenarios were played out as best as possible.
+
+Once each component was verified to be fairly stable on a stand-alone basis, integration testing 
+was used to ensure that the system could work as a whole.
 
 ClassData.java --  
 
