@@ -18,17 +18,17 @@ ClientSocketHandler.java --
 
 Cookie.java --  
 
-Hub.java --  
+Hub.java --  tests for creating a Hub correctly. Most tests were integration testing with a client and server.
 
-HubSocketHandler.java -- 
+HubSocketHandler.java -- Most tests were integration tests with a client, hub, and server.
 
-Message.java -- 
+Message.java -- tests for creating Cookies and setting fields of the message.
 
-Server.java -- 
+Server.java -- tests for creating a Server correctly. Most tests were integration testing with a client and hub.
 
 ServerListTest.java -- Tests added and deleting servers from ServerList objects. 
 
-ServerSocketHandler.java -- 
+ServerSocketHandler.java -- Most tests were integration tests with a client, hub, and server.
 
 UserInterface.java -- The bulk of the testing for the user interface is outlined extensively in 
 UserInterfaceTest.txt. UserInterfaceTest.java contains JUnit tests methods for the helper functions.
