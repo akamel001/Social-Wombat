@@ -15,11 +15,11 @@ import java.util.Iterator;
 public class ServerList implements Serializable{
 
 	private static final long serialVersionUID = -5018052157599076338L;
-	private Map<Integer, Server> serverList;
+	private Map<Integer, ServerData> serverList;
 	private int nextId; 
 	
 	public ServerList(){
-		serverList = Collections.synchronizedMap(new TreeMap<Integer, Server>());
+		serverList = Collections.synchronizedMap(new TreeMap<Integer, ServerData>());
 		nextId = 0;
 	}
 
@@ -42,13 +42,13 @@ public class ServerList implements Serializable{
 			Iterator<Integer> i = set.iterator();
 			while (i.hasNext()){
 				int k = i.next();
-				Server temp = serverList.get(k);
+				ServerData temp = serverList.get(k);
 				if (temp.getAddress().equals(ip) && temp.getPort()==port){
 					return -1;
 				}
 			}
 			nextId ++;
-			Server s = new Server();
+			ServerData s = new ServerData();
 			s.setId(nextId);
 			s.setAddress(ip);
 			s.setPort(port);
@@ -75,7 +75,7 @@ public class ServerList implements Serializable{
 	 * @return Returns and InetAddress of the server. Returns null if the server is not in the server list.
 	 */
 	public InetAddress getAddress(int s){
-		Server temp = serverList.get(s);
+		ServerData temp = serverList.get(s);
 		if (temp==null)
 			return null;
 		else 
@@ -88,7 +88,7 @@ public class ServerList implements Serializable{
 	 * @return Returns the port number of the server. Returns -1 if the server is not in the server list.
 	 */
 	public int getPort(int s){
-		Server temp = serverList.get(s);
+		ServerData temp = serverList.get(s);
 		if (temp==null)
 			return -1;
 		else
@@ -100,7 +100,7 @@ public class ServerList implements Serializable{
 	 * @author chris
 	 *
 	 */
-	public class Server implements Serializable{
+	public class ServerData implements Serializable{
 		
 		private static final long serialVersionUID = -2846614313431062929L;
 		private int id;
@@ -115,7 +115,7 @@ public class ServerList implements Serializable{
 		 * 		ip = null<br>
 		 * 		port = -1<br>
 		 */
-		public Server(){
+		public ServerData(){
 			id = -1;
 			ip = null;
 			port = -1;
