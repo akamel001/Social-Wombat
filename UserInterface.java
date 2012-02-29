@@ -55,7 +55,13 @@ public class UserInterface {
 	private static final String eNON_VALID_SELECTION = 		addFormattingAlignLeft("That is not a valid selection.");
 	private static final String eTHREAD_CREATION_ERROR = 	addFormattingAlignLeft("An error occured when creating your thread.");	
 	private static final String eCOMMENT_DELETION_ERROR =	addFormattingAlignLeft("An error occured when deleting the comment.");	
-	private static final String eTHREAD_DELETION_ERROR = 	addFormattingAlignLeft("An error occured when deleting the thread.");	
+	private static final String eTHREAD_DELETION_ERROR = 	addFormattingAlignLeft("An error occured when deleting the thread.");
+	private static final String eDENY_MEMBERSHIP_ERROR = 	addFormattingAlignLeft("An error occured when denying this membership request.");
+	private static final String eCONFIRM_AS_MEMBER_ERROR = 	addFormattingAlignLeft("An error occured when confirming this membership request.");
+	private static final String eCHANGE_STATUS_ERROR = 		addFormattingAlignLeft("An error occured when changing this member's status.");
+	private static final String eREMOVE_MEMBER_ERROR = 		addFormattingAlignLeft("An error occured when removing this member from the classroom.");
+	private static final String eDELETE_CLASSROOM_ERROR = 	addFormattingAlignLeft("An error occured when deleting your classroom.");
+	private static final String eDISJOIN_CLASSROOM_ERROR = 	addFormattingAlignLeft("An error occured when disjoining this classroom.");
 	
 	private static final String mCLASSROOM_CREATION_SUCCESS =	addFormattingAlignLeft("You have successfully created a classroom!");
 	private static final String mCLASSROOM_REQUEST_SUCCESS =	addFormattingAlignLeft("You have successfully requested to join a classroom!");
@@ -275,8 +281,11 @@ public class UserInterface {
 	        break;
 	    // Disjoin this classroom.
 	    case 5:
-	    	client.disjoinClassroom(currentClassroomName, currentUserName);
-	    	homePage(mDISJOIN_CLASSROOM_SUCCESS);
+	    	if (client.disjoinClassroom(currentClassroomName, currentUserName)){
+	    		homePage(mDISJOIN_CLASSROOM_SUCCESS);
+	    	} else {
+	    		classroomPage(eDISJOIN_CLASSROOM_ERROR);
+	    	}
 	        break;
 	    // Go back home.
 	    case 6:
@@ -286,8 +295,11 @@ public class UserInterface {
 	        break;
 	    // Delete this classroom.
 	    case 7:
-	    	client.deleteClassroom(currentClassroomName, currentUserName);
-	    	homePage(mDELETE_CLASSROOM_SUCCESS);
+	    	if (client.deleteClassroom(currentClassroomName, currentUserName)){
+	    		homePage(mDELETE_CLASSROOM_SUCCESS);
+	    	} else {
+	    		classroomPage(eDELETE_CLASSROOM_ERROR);
+	    	}	    	
 	    	break;	        	
 	    default:
 	    	console.printf(eGENERAL_ERROR);
@@ -407,7 +419,7 @@ public class UserInterface {
 		
 		Map<String, Integer> memberMap = client.getMemberMapForClassroom(currentClassroomName, currentUserName);
 		TreeMap<String, Integer> memberTreeMap = new TreeMap<String, Integer>(memberMap); // Converting to TreeMap to stabilize the order.
-		List<String> memberList = mapStringKeysToList(memberMap);
+		List<String> memberList = mapStringKeysToList(memberTreeMap);
 		
 		displayPage(sMEMBER_LIST_PAGE, messages, info, null, memberMapToUIString(memberTreeMap)); // Displays members' names along with their permissions in the current classroom.
 
@@ -456,15 +468,23 @@ public class UserInterface {
 		switch (selection) {
 		// Remove this member from this classroom.
 	    case 1:
-	    	client.removeMember(currentMemberName, currentClassroomName, currentUserName);
-	    	currentMemberName = null;
-	    	currentMemberPermissions = null;
-	        memberListPage(mREMOVE_MEMBER_SUCCESS);
+	    	if (client.removeMember(currentMemberName, currentClassroomName, currentUserName)){
+	    		currentMemberName = null;
+	    		currentMemberPermissions = null;
+	    		memberListPage(mREMOVE_MEMBER_SUCCESS);
+	    	} else {
+	    		memberPage(eREMOVE_MEMBER_ERROR);
+	    	}
 	        break;
 	    // Change this member's status.
 	    case 2:
-	    	client.changeStatus(currentMemberName, currentUserName, currentClassroomName);
-	    	memberPage(mCHANGE_STATUS_SUCCESS);
+	    	if (client.changeStatus(currentMemberName, currentUserName, currentClassroomName)){
+	    		currentMemberPermissions = switchCurrentMemberPermissions(currentMemberPermissions);
+	    		memberPage(mCHANGE_STATUS_SUCCESS);
+	    	} else {
+	    		memberPage(eCHANGE_STATUS_ERROR);
+	    	}
+	    	
 	        break;
 	    // Go back to this classroom's main page.
 	    case 3:
@@ -520,15 +540,21 @@ public class UserInterface {
 		switch (selection) {
 		// Confirm as a member.
 	    case 1:
-	    	client.confirmAsMemberOfClassroom(currentPendingMemberName, currentClassroomName, currentUserName);
-	    	currentPendingMemberName = null;
-	        requestListPage(mCONFIRM_AS_MEMBER_SUCCESS);
+	    	if (client.confirmAsMemberOfClassroom(currentPendingMemberName, currentClassroomName, currentUserName)) {
+	    		currentPendingMemberName = null;
+	    		requestListPage(mCONFIRM_AS_MEMBER_SUCCESS);
+	    	} else {
+	    		requestPage(eCONFIRM_AS_MEMBER_ERROR);
+	    	}
 	        break;
 	    // Deny membership.
 	    case 2:
-	    	client.denyMembershipToClassroom(currentPendingMemberName, currentClassroomName, currentUserName);
-	    	currentPendingMemberName = null;
-	    	requestListPage(mDENY_MEMBERSHIP_SUCCESS);
+	    	if (client.denyMembershipToClassroom(currentPendingMemberName, currentClassroomName, currentUserName)) {
+	    		currentPendingMemberName = null;
+		    	requestListPage(mDENY_MEMBERSHIP_SUCCESS);
+	    	} else {
+	    		requestPage(eDENY_MEMBERSHIP_ERROR);
+	    	}    	
 	        break;
 	    // Go back to this classroom's main page.
 	    case 3:
@@ -647,6 +673,18 @@ public class UserInterface {
 		return permissions;
 	}
 	
+	/**
+	 * Switches teaching assistant permissions for student permissions and vice versa.
+	 * @param memberPermissions
+	 * @return
+	 */
+	private static String switchCurrentMemberPermissions(String memberPermissions) {
+		if (memberPermissions == sSTUDENT)
+			return sTEACHING_ASSISTANT;
+		if (memberPermissions == sTEACHING_ASSISTANT)
+			return sSTUDENT;
+		return memberPermissions;			
+	}
 	
 	////////////////////////////////////////////////
 	//       VARIOUS MAP TO LIST FUNCTIONS        //
@@ -745,7 +783,7 @@ public class UserInterface {
 			uiStringTemp = "";
 			uiStringTemp = uiStringTemp.concat(Integer.toString(i) + ". ");
 			i++;
-			uiStringTemp = uiStringTemp.concat(entry.getKey() + " (" + entry.getValue().toString() + ")");
+			uiStringTemp = uiStringTemp.concat(entry.getKey() + " (" + convertIntToStringPermissions(entry.getValue()) + ")");
 			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
 		}
 		return uiString;

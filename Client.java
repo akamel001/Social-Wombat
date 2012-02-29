@@ -24,14 +24,16 @@ public class Client {
 	 */
 	public boolean handleLogin(String uName){
 
-		if(DEBUG)
-			return true; 
-		
+//		if(DEBUG)
+//			return true; 
+		System.out.println("*********************hi5");
 		ClientSocketHandler handler = new ClientSocketHandler();
 		cookie.setKey(uName);
 		handler.getMessageSending().setCookie(cookie);
+		System.out.println(cookie.getKey() + "HEHEHEHE COOKKIIESS KEY 1");
 		handler.getMessageSending().setType(Message.MessageType.Client_LogIn);
-		handler.getMessageSending().setBody("Dumb wombat!");
+		System.out.println(cookie.getKey() + "HEHEHEHE COOKKIIESS KEY 1");
+		//handler.getMessageSending().setBody("Dumb wombat!");
 
 		Message response = handler.sendReceive();
 		
@@ -230,7 +232,7 @@ public class Client {
 			Map<Integer, String> defaultMap = new HashMap<Integer, String>();
 			defaultMap.put(new Integer(4), "Initial Post");
 			defaultMap.put(new Integer(2), "Topic");
-			defaultMap.put(new Integer(7), "Comment 1");
+			defaultMap.put(new Integer(7), "I like to comment on stuff!");
 			return defaultMap;	
 		}
 

@@ -101,6 +101,7 @@ public class Message implements Serializable{
 	}
 
 	public void setCookie(Cookie cookie) {
+		System.out.println(cookie.getKey() + "HEHEHEHE COOKKIIESS 3");
 		System.out.println(cookie.getKey() + " From cookie setter **** ");
 		System.out.println(this.cookie.getKey() + " From cookie setter **** ");
 
