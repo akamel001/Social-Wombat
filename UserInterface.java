@@ -27,7 +27,7 @@ public class UserInterface {
 	private static String currentMemberPermissions;
 	private static String currentPendingMemberName;
 	
-	static int iWINDOWWIDTH = 81;
+	static int iWINDOWWIDTH = 78;
 	
 	// Below is a bunch of strings used in the text-based user interface.
 	private static final String sNEW_LINE = 			System.getProperty("line.separator");

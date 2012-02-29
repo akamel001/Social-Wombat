@@ -69,10 +69,10 @@ public class UserInterfaceTest {
 		
 		// Create the expected output test strings.	
 		String emptyString = "";
-		String string1 = "| 1. Blue                                                                         |" + sNEW_LINE;
-		String string2 = "| 1. Blue                                                                         |" + sNEW_LINE +
-						 "| 2. red                                                                          |" + sNEW_LINE +
-						 "| 3. PINK FLAMINGO                                                                |" + sNEW_LINE;
+		String string1 = "| 1. Blue                                                                      |" + sNEW_LINE;
+		String string2 = "| 1. Blue                                                                      |" + sNEW_LINE +
+						 "| 2. red                                                                       |" + sNEW_LINE +
+						 "| 3. PINK FLAMINGO                                                             |" + sNEW_LINE;
 		
 		assertEquals(emptyString, UserInterface.listToUIString(emptyList));
 		assertEquals(string1, UserInterface.listToUIString(list1));
