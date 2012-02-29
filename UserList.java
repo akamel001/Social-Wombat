@@ -46,7 +46,8 @@ public class UserList implements Serializable{
 		synchronized(userList) {
 			Iterator <String> i = s.iterator();
 		    while (i.hasNext()){
-		    	if(i.next() == userId);
+		    	String st = i.next();
+		    	if(st == userId);
 		        	return true;
 		    }
 		  }

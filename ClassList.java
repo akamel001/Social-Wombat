@@ -65,6 +65,8 @@ public class ClassList implements Serializable{
 	 * @return User permissions or -1 if user has no permissions for that classroom
 	 */
 	protected int getUserPermissions(String user, String c){
+		if (user==null || c==null)
+			return -1;
 		return classList.get(c).getPermissions(user);
 	}
 

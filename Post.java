@@ -65,9 +65,9 @@ public class Post implements Serializable{
 			b = b.substring(0,maxCommentLength-1);
 		else if (b.length()==0)			// this should be caught at ClassRoom
 			t = "[no body]"; 
-		commentList.put(nextComment, t);		// add title
+		commentList.put(nextComment++, t);		// add title
 		nextComment++;
-		commentList.put(nextComment, b);		// add body
+		commentList.put(nextComment++, b);		// add body
 		nextComment++;
 		id = i;
 	}
