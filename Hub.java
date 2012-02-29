@@ -161,7 +161,7 @@ class Hub extends Thread {
 			serverList = new ServerList();
 		}
 	}
-
+	
 	/*
 	 * Main running loop for a Hub
 	 */
@@ -203,6 +203,7 @@ class Hub extends Thread {
 		while(listening){	
 			// Spin until a new message is received and then spawn a 
 			// HubSocketHandler thread
+			
 			try {
 				System.out.println("Listening");
 				Socket client = hubSocket.accept();
@@ -225,6 +226,8 @@ class Hub extends Thread {
 			e.printStackTrace();
 			System.out.println("Couldn't close");
 		}
+		
+
 		// Write out to disk
 		writeToDisk(classList, classListName);
 		writeToDisk(userList, userListName);
