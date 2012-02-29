@@ -4,6 +4,7 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class HubSocketHandler extends Thread{
 	//private static int CLIENT_SOCKET = 4444;
@@ -290,8 +291,11 @@ public class HubSocketHandler extends Thread{
 					c.setClassName(msg.getClassroom_ID());
 					
 					//Generate some server number
+					Random r = new Random();
 					int maxServer = serverList.getLastServer();
-					c.setClassServer(maxServer, SERVER_SOCKET);
+					int serverNum = r.nextInt(maxServer-1) + 1;
+					
+					c.setClassServer(serverNum, SERVER_SOCKET);
 					classList.addClass(c);
 					
 					reply = forwardToServer(msg);
