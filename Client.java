@@ -239,12 +239,8 @@ public class Client {
 
 		handler.getMessageSending().setClassroom_ID(classroomName);
 		
-		if(threadID == Integer.valueOf(null)){
-			System.out.println("ThreadID is null!");
-			System.exit(-1);
-		}	
-		
 		handler.getMessageSending().setBody(threadID);
+		
 		handler.getMessageSending().setType(Message.MessageType.Client_GoToThread);
 
 		Message response = handler.sendReceive();
