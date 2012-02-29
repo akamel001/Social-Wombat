@@ -5,8 +5,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Collections;
 
-
-
 public class UserList implements Serializable{
 	
 	private static final long serialVersionUID = 3273339989709185986L;

@@ -122,7 +122,14 @@ class Hub extends Thread {
 		try {
 			fos = new FileOutputStream(name);
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			oos.writeObject(o);
+			if (o instanceof UserList){
+				oos.writeObject((UserList)o);
+			} else if (o instanceof ClassList){
+				oos.writeObject((ClassList)o);
+			} else if (o instanceof ServerList){
+				oos.writeObject((ServerList)o);
+			}
+			
 			oos.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -160,6 +167,7 @@ class Hub extends Thread {
 				  //add user to userList, if already exists, ignore
 				  if(!userList.validateUser(user)){
 					  userList.addUser(user);
+					  System.out.println("User: " + user + "added to userlist");
 				  }
 			  }
 			  //Close the input stream

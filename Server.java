@@ -52,7 +52,7 @@ public class Server {
 		try {
 			fos = new FileOutputStream(name);
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			oos.writeObject(o);
+			oos.writeObject((ClassDB)o);
 			oos.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -115,6 +115,7 @@ public class Server {
 		// Spin until a new message is received and then spawn a 
 		// ServerSocketHandler thread
 		while(listening){
+			System.out.println("Listening...");
 			try {
 				Socket hub = serverSocket.accept();
 				//Spawn new ServerSocketHandler thread, we assume that the
