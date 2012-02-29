@@ -228,7 +228,6 @@ public class UserInterface {
 	 * @param messages
 	 */
 	private static void classroomPage(String messages) {
-		System.out.printf("Got to classroom"); // TODO takeout
 		int maxSelection = 0;
 		
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");

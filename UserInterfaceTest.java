@@ -17,14 +17,8 @@ import org.junit.Test;
  *
  */
 public class UserInterfaceTest {
-
-	/**
-	 * Test method for {@link UserInterface#getValidSelectionFromUser(int)}.
-	 */
-	@Test
-	public void testGetValidSelectionFromUser() {
-		fail("Not yet implemented"); // TODO
-	}
+	
+	private static final String sNEW_LINE = System.getProperty("line.separator");
 
 	/**
 	 * Test method for {@link UserInterface#convertIntToStringPermissions(int)}.
@@ -63,77 +57,25 @@ public class UserInterfaceTest {
 
 	/**
 	 * Test method for {@link UserInterface#listToUIString(java.util.List)}.
+	 * Depends on the iWindowWidth parameter in UserInterface.
 	 */
 	@Test
 	public void testListToUIString() {
-//		// Create the input test lists.
-//		List<String> emptyList = new ArrayList<String>();
-//		List<String> list1 = new ArrayList<String>();
-//		list1.add(null);
-//		List<String> list2 = Arrays.asList("Blue");
-//		
-//		// Create the expected output test strings.	
-//		emptyString = ''
-//		
-//		assertEquals(emptyList, UserInterface.listToUIString(emptylist));
-//		assertEquals(list1, UserInterface.listToUIString(list1));
-//		assertEquals(list2, UserInterface.listToUIString(list2));
-	}
-
-	/**
-	 * Test method for {@link UserInterface#addFormattingAlignLeft(java.lang.String)}.
-	 */
-	@Test
-	public void testAddFormattingAlignLeft() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
-	 * Test method for {@link UserInterface#addFormattingAlignCenter(java.lang.String)}.
-	 */
-	@Test
-	public void testAddFormattingAlignCenter() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
-	 * Test method for {@link UserInterface#displayPage(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
-	 */
-	@Test
-	public void testDisplayPage() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
-	 * Test method for {@link UserInterface#clearScreen()}.
-	 */
-	@Test
-	public void testClearScreen() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
-	 * Test method for {@link UserInterface#generateBigDivider()}.
-	 */
-	@Test
-	public void testGenerateBigDivider() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
-	 * Test method for {@link UserInterface#generateSmallDivider()}.
-	 */
-	@Test
-	public void testGenerateSmallDivider() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
-	 * Test method for {@link UserInterface#main(java.lang.String[])}.
-	 */
-	@Test
-	public void testMain() {
-		fail("Not yet implemented"); // TODO
+		// Create the input test lists.
+		List<String> emptyList = new ArrayList<String>();
+		List<String> list1 = Arrays.asList("Blue");
+		List<String> list2 = Arrays.asList("Blue", "red", "PINK FLAMINGO");
+		
+		// Create the expected output test strings.	
+		String emptyString = "";
+		String string1 = "| 1. Blue                                                                         |" + sNEW_LINE;
+		String string2 = "| 1. Blue                                                                         |" + sNEW_LINE +
+						 "| 2. red                                                                          |" + sNEW_LINE +
+						 "| 3. PINK FLAMINGO                                                                |" + sNEW_LINE;
+		
+		assertEquals(emptyString, UserInterface.listToUIString(emptyList));
+		assertEquals(string1, UserInterface.listToUIString(list1));
+		assertEquals(string2, UserInterface.listToUIString(list2));
 	}
 
 }
