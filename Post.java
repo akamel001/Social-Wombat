@@ -5,7 +5,7 @@ import java.util.Collections;
 
 
 /**
- * Used to hold a thread.<br>
+ * Used to hold a thread and all it's associated comments.<br>
  * <br>
  * The thread consists of a map that maps Integers to Strings. The first two entries are the post 
  * title (mapped to 1), and the post body (mapped to 2). Comments are mapped starting from 3 on. 

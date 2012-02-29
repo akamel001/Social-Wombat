@@ -5,6 +5,11 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Collections;
 
+/**
+ * Holds user ids.
+ * @author chris d
+ *
+ */
 public class UserList implements Serializable{
 	
 	private static final long serialVersionUID = 3273339989709185986L;
@@ -62,7 +67,7 @@ public class UserList implements Serializable{
 		}
 		boolean found = false;
 		synchronized(userList){
-			if (!contains(newId)){
+			if (!userList.containsKey(newId)){
 				userList.put(newId, new User(newId));
 				found = true;
 			}
@@ -80,12 +85,15 @@ public class UserList implements Serializable{
 		if (userId==null)
 			return false;
 		boolean found = false;
-		if (userList.remove(userId)==null){
+		if (userList.remove(userId)!=null){
 			found = true;
 		}
 		return found;
 	}
 	
+	public String toString(){
+		return userList.toString();
+	}
 	/**
 	 * A container class for user info
 	 * @author chris d

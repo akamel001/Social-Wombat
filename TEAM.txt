@@ -4,3 +4,11 @@ Julia Tazin (jmt272)
 Yilok Wong (ylw3)
 
 Tasks performed and hours:
+
+Chris Ducharme -- Implemented database backend. 
+
+Abdelrahman Kamel -- Implemented client-side messaging.
+
+Julia Tazin -- Implemented user interface.
+
+Yilok Wong -- Implemented server-side messaging.
