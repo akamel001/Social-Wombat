@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,20 +108,6 @@ public class Client {
 		return (Map<String, Integer>) ((responce.getCode() == 1)? responce.getBody() : null);	
 	}
 
-
-
-
-	public static void main(String [] args) {
-		/* Uncomment to preform a register / login test
-		if (handleLogin("bob") == false)
-			System.out.println("login with bob failed");
-		if (handleRegister("bob") == true)
-			System.out.println("registering bob successful!");
-		if (handleLogin("bob") == true)
-			System.out.println("bob was logged in!!");
-		 */
-	}
-
 	/**
 	 * This method creates a new thread with threadName and postContent.
 	 * @param threadName
@@ -153,6 +140,9 @@ public class Client {
 	 *
 	 */
 	public boolean deleteClassroom(String classroomName, String userName) {
+		
+		if(DEBUG)
+			return true;
 
 		ClientSocketHandler handler = new ClientSocketHandler();
 		cookie.setKey(userName);
@@ -170,6 +160,9 @@ public class Client {
 	 * **** Consider bool return type to confirm class has been deleted? ***
 	 */
 	public boolean disjoinClassroom(String classroomName, String userName) {
+		
+		if(DEBUG)
+			return true;
 
 		ClientSocketHandler handler = new ClientSocketHandler();
 		ArrayList<String> list = new ArrayList<String>();
@@ -196,8 +189,13 @@ public class Client {
 	@SuppressWarnings("unchecked")
 	public Map<Integer, String> getThreadMapForClassroom(String classroomName, String userName) {
 
-		if(DEBUG)
-			return null;
+		if(DEBUG){
+			Map<Integer, String> defaultMap = new HashMap<Integer, String>();
+			defaultMap.put(new Integer(4), "World");
+			defaultMap.put(new Integer(2), "Hello");
+			defaultMap.put(new Integer(7), "What's up?");
+			return defaultMap;	
+		}
 
 		ClientSocketHandler handler = new ClientSocketHandler();
 
@@ -221,8 +219,13 @@ public class Client {
 	@SuppressWarnings("unchecked")
 	public Map<Integer, String> getThreadGivenID(Integer threadID, String classroomName, String userName) {
 		
-		if(DEBUG)
-			return null;
+		if(DEBUG){
+			Map<Integer, String> defaultMap = new HashMap<Integer, String>();
+			defaultMap.put(new Integer(4), "Initial Post");
+			defaultMap.put(new Integer(2), "Topic");
+			defaultMap.put(new Integer(7), "Comment 1");
+			return defaultMap;	
+		}
 
 		ClientSocketHandler handler = new ClientSocketHandler();
 		
@@ -270,8 +273,14 @@ public class Client {
 	@SuppressWarnings("unchecked")
 	public Map<String, Integer> getMemberMapForClassroom(String classroomName, String userName) {
 
-		if(DEBUG)
-			return null;
+		if(DEBUG){
+			Map<String, Integer> defaultMap = new HashMap<String, Integer>();
+			defaultMap.put("Abdel", new Integer(1));
+			defaultMap.put("Yilok", new Integer(2));
+			defaultMap.put("Chris", new Integer(3));
+			defaultMap.put("Nikolai", new Integer(2));
+			return defaultMap;	
+		}
 
 		ClientSocketHandler handler = new ClientSocketHandler();
 
@@ -294,9 +303,9 @@ public class Client {
 	 */
 	public boolean removeMember(String memberName, String classroomName, String userName) {
 
-				if(DEBUG)
-					return true;
-				
+		if(DEBUG)
+			return true;
+		
 		ClientSocketHandler handler = new ClientSocketHandler();
 
 		ArrayList<String> list = new ArrayList<String>();
@@ -353,8 +362,10 @@ public class Client {
 	@SuppressWarnings("unchecked")
 	public List<String> getRequestListForClassroom(String currentClassroomName, String userName) {
 
-		if(DEBUG)
-			return null;
+		if(DEBUG){
+			List<String> defaultList = Arrays.asList("Bob", "Julia", "Cornelia");
+			return defaultList;	
+		}
 
 		ClientSocketHandler handler = new ClientSocketHandler();
 
@@ -375,6 +386,7 @@ public class Client {
 	 * @param userName
 	 */
 	public boolean confirmAsMemberOfClassroom(String pendingMember, String classroomName, String userName) {
+		
 		if(DEBUG)
 			return true;
 
@@ -403,6 +415,7 @@ public class Client {
 	 * @param userName
 	 */
 	public boolean denyMembershipToClassroom(String pendingMember, String classroomName, String userName) {
+		
 		if(DEBUG)
 			return true;
 
