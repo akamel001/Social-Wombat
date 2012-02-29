@@ -6,15 +6,17 @@ import java.net.UnknownHostException;
 public class ClientSocketHandler {
 
 	private static final int HUB_PORT = 4444;
-
 	private Message messageSending = new Message();
 	private Message messageReceived = new Message(); 
+	
 	private static Socket socket = null;
 	private static ObjectOutputStream oos = null;
 	private static ObjectInputStream ois = null;
 
 	public Message sendReceive(){
+		
 
+		
 		if(messageSending == null){
 			System.out.println("Message not set correctly (null). Exiting...");
 			System.exit(-1);
@@ -55,7 +57,7 @@ public class ClientSocketHandler {
 
 		return messageReceived;
 	}
-
+	
 	public Message getMessageSending() {
 		return messageSending;
 	}

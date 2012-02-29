@@ -24,20 +24,16 @@ public class Client {
 	 */
 	public boolean handleLogin(String uName){
 
-//		if(DEBUG)
-//			return true; 
-		System.out.println("*********************hi5");
+		if(DEBUG)
+			return true; 
+		
 		ClientSocketHandler handler = new ClientSocketHandler();
 		cookie.setKey(uName);
 		handler.getMessageSending().setCookie(cookie);
-		System.out.println(cookie.getKey() + "HEHEHEHE COOKKIIESS KEY 1");
 		handler.getMessageSending().setType(Message.MessageType.Client_LogIn);
-		System.out.println(cookie.getKey() + "HEHEHEHE COOKKIIESS KEY 1");
-		//handler.getMessageSending().setBody("Dumb wombat!");
 
 		Message response = handler.sendReceive();
 		
-		System.out.println(response.getCookie().getKey());
 		return (response.getCode() == 1)? true : false;	
 	}
 	/**
