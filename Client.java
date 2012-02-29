@@ -337,7 +337,7 @@ public class Client {
 	 * @param userName
 	 * @param classroomName
 	 */													
-	public boolean changeStatus(String currentMemberName, String currentMemberPerm, String userName, String classroomName) {
+	public boolean changeStatus(String currentMemberName, int currentMemberPerm, String userName, String classroomName) {
 
 		if(DEBUG)
 			return true;
@@ -346,7 +346,7 @@ public class Client {
 
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(0, currentMemberName);
-		list.add(1, currentMemberPerm);
+		list.add(1, Integer.toString(currentMemberPerm));
 
 		cookie.setKey(userName);
 		handler.getMessageSending().setCookie(cookie);
