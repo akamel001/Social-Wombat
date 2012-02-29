@@ -26,15 +26,7 @@ public class UserList implements Serializable{
 		if (userId==null){
 			return false;
 		}
-		Set<String> s = userList.keySet();
-		synchronized(userList) {
-		      Iterator <String> i = s.iterator();
-		      while (i.hasNext()){
-		          if(i.next() == userId);
-		          return true;
-		      }
-		  }
-		return false;
+		return userList.containsKey(userId);
 	}
 	
 	/**
