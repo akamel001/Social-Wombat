@@ -186,8 +186,10 @@ public class ClassData implements Serializable{
 	 */
 	protected List<String> getPendingUsers(){
 		boolean found = false;
-		Set<String> s = userList.keySet();
 		List<String> out = Collections.synchronizedList(new ArrayList<String>());
+		Set<String> s = userList.keySet();
+		if(userList.isEmpty())
+			return null;
 		synchronized(userList) {  
 			Iterator<String> i = s.iterator(); 
 			while (i.hasNext()){
@@ -215,6 +217,8 @@ public class ClassData implements Serializable{
 		// add instuctor
 		out.put(instructor, 3);
 		Set<String> s = userList.keySet();
+		if (userList.isEmpty())
+			return null;
 		synchronized(userList) {  
 			Iterator<String> i = s.iterator(); 
 			while (i.hasNext()){
