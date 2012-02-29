@@ -90,10 +90,7 @@ public class UserList implements Serializable{
 		}
 		return found;
 	}
-	
-	public String toString(){
-		return userList.toString();
-	}
+
 	/**
 	 * A container class for user info
 	 * @author chris d
