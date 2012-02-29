@@ -346,7 +346,7 @@ public class Client {
 
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(0, currentMemberName);
-		list.add(1, "1");
+		list.add(1, "2");
 
 		cookie.setKey(userName);
 		handler.getMessageSending().setCookie(cookie);
