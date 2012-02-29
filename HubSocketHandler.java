@@ -117,7 +117,7 @@ public class HubSocketHandler extends Thread{
 		Message reply = null;
 		try {
 			// Open a socket connection with appropriate server
-			System.out.println("Supposed server address (should be InetAddress: " + getServer(msg));
+			System.out.println("Message forwarded to: " + getServer(msg));
 			forwardSocket = new Socket(getServer(msg),SERVER_SOCKET);
 			
 			// Create inputstream and outputstream
