@@ -10,3 +10,7 @@
 *.serverlist
 bin
 javadoc
+hub.classlist
+hub.newuserlist
+hub.serverlist
+hub.userlist
