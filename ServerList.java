@@ -200,6 +200,6 @@ public class ServerList implements Serializable{
 	 * @return
 	 */
 	public int getLastServer(){
-		return nextId-1;
+		return nextId;
 	}
 }
