@@ -16,6 +16,7 @@ class Hub extends Thread {
 	static String userListName = "hub.userlist";
 	static String serverListName = "hub.serverlist";
 	
+	static ServerSocket hubSocket = null;
 	String hubIP = null;
 	
 	public Hub(){
@@ -169,12 +170,28 @@ class Hub extends Thread {
 		// Initialize Data Structures
 		initializeData();
 		
+		//add shutdown hook
+		Runtime.getRuntime().addShutdownHook(new Thread(){
+			public void run() {
+				//Close socket after done listening
+				try {
+					hubSocket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+					System.out.println("Couldn't close");
+				}
+				// Write out to disk
+				writeToDisk(classList, classListName);
+				writeToDisk(userList, userListName);
+				writeToDisk(serverList, serverListName);
+				System.out.println("Data safely written out.");
+			}
+		});
+		
 		/* 
 		 * FROM THIS POINT ON IS CODE THAT WAITS FOR AND RESPONDS TO 
 		 * Client REQUESTS
 		 * */
-		
-		ServerSocket hubSocket = null;
 		
 		//Create and listen in on a port
 		try {
@@ -213,5 +230,4 @@ class Hub extends Thread {
 		writeToDisk(userList, userListName);
 		writeToDisk(serverList, serverListName);
 	}
-
 }
