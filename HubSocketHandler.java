@@ -163,6 +163,9 @@ public class HubSocketHandler extends Thread{
 		if (msg == null){
 			System.out.println("Message was null");
 			valid = false; // Don't waste time on bad transmissions
+		} else if (msg.getCookie().getKey() == null){
+			System.out.println("Session key was null");
+			valid = false;
 		}
 		if (valid){
 			// Preset to failure
@@ -208,7 +211,6 @@ public class HubSocketHandler extends Thread{
 					System.out.println(usr + " wants to see all their class enrollments");
 					Map<String, Integer> userEnroll = classList.getUserEnrollment(usr);
 					if (userEnroll != null){
-						System.out.println("userEnroll was not null");
 						msg.setCode(1);
 						msg.setBody(userEnroll);
 					} 
