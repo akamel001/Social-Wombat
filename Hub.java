@@ -160,6 +160,14 @@ class Hub extends Thread {
 			//create new ServerList
 			serverList = new ServerList();
 		}
+		
+		//TODO: Remove for multiple computers
+		try {
+			serverList.addServer(InetAddress.getLocalHost(), SERVER_SOCKET);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			System.out.println("Could not add a local host server");
+		}
 	}
 	
 	/*
