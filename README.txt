@@ -28,7 +28,9 @@ ServerList.java -- ServerList holds info and access methods for server info.
 
 ServerSocketHandler.java --
 
-UserInterface.java --
+UserInterface.java -- This class is for anything dealing with what the user sees and the work flow 
+of the social network. However, it does not deal with the behind-the-scenes logic for any of the 
+actions, which is done in the client class.
 
 UserList.java -- Holds user ids.
 
