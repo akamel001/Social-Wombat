@@ -639,10 +639,10 @@ public class UserInterface {
 		if (num == 1){
 			permissions = sSTUDENT;
 		}
-		else if (num == 1){
+		else if (num == 2){
 			permissions = sTEACHING_ASSISTANT;
 		}
-		else if (num == 1){
+		else if (num == 3){
 			permissions = sINSTRUCTOR;
 		}
 		return permissions;
@@ -660,6 +660,10 @@ public class UserInterface {
 	 */
 	public static List<String> mapStringKeysToList(Map<String, Integer> map){
 		List<String> outputList = new ArrayList<String>();
+		if (map == null) {
+			//outputList.add("EMPTY");
+			return outputList;
+		}
 		for (String key : map.keySet()){
 			outputList.add(key);
 		}
