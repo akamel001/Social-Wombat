@@ -66,7 +66,7 @@ public class HubSocketHandler extends Thread{
 	 * Deserialize transmission in socket and convert to a message
 	 */
 	private Message getMessage(){
-		Message msg = null;
+		Message msg = new Message();
 		try {
 			msg = (Message) ois.readObject();
 			System.out.println("Just got a msg from: " + msg.getCookie().getKey());
