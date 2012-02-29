@@ -9,7 +9,8 @@ import java.util.Map;
 import org.junit.Test;
 
 /**
- * 
+ * This is partial testing for some of the UserInterface helper functions.
+ * Most of the testing is done elsewhere (see TESTPLAN.txt for details).
  */
 
 /**

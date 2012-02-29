@@ -5,10 +5,10 @@ import java.net.UnknownHostException;
 
 public class ClientSocketHandler {
 
-	private static final int SERVER_PORT = 4444;
+	private static final int HUB_PORT = 4444;
 
-	private static Message messageSending = null;
-	private static Message messageReceived = null; 
+	private static Message messageSending = new Message();
+	private static Message messageReceived = new Message(); 
 	private static Socket socket = null;
 	private static ObjectOutputStream oos = null;
 	private static ObjectInputStream ois = null;
@@ -21,7 +21,7 @@ public class ClientSocketHandler {
 		}
 		
 		try{
-			socket = new Socket(InetAddress.getLocalHost(), SERVER_PORT);
+			socket = new Socket(InetAddress.getLocalHost(), HUB_PORT);
 
 			// open I/O streams for objects
 			oos = new ObjectOutputStream(socket.getOutputStream());
@@ -60,6 +60,6 @@ public class ClientSocketHandler {
 	}
 
 	public static int getServerPort() {
-		return SERVER_PORT;
+		return HUB_PORT;
 	}
 }

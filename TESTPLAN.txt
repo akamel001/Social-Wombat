@@ -10,5 +10,12 @@ Testcases:
 =================
 
 Julia:
-Since UIs 
+Since there is no good framework for testing text-based console user interfaces, 
+I decided to create my own manual test suite, which is documented here.
+
+Things to test:
+* All necessary parts of a page get displayed (page name, messages, info, content, options, question)
+* The proper content is displayed in each part of the page. Specifically:
+	* A user sees the correct pages depending on his permission status (instructor, teaching assistant, or student)
+	* Current info is updated and not stale
 

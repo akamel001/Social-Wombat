@@ -15,6 +15,7 @@ class Hub extends Thread {
 	static String classListName = "hub.classlist";
 	static String userListName = "hub.userlist";
 	static String serverListName = "hub.serverlist";
+	static String addNewUserList = "hub.newuserlist";
 	
 	static ServerSocket hubSocket = null;
 	String hubIP = null;
@@ -103,7 +104,16 @@ class Hub extends Thread {
 		try {
 		    FileInputStream fin = new FileInputStream(name);
 		    ObjectInputStream ois = new ObjectInputStream(fin);
-		    o = (Object) ois.readObject();
+		    if (name.equals(classListName)){
+		    	System.out.println("We are reading in ClassList");
+		    	o = (ClassList) ois.readObject();
+		    } else if (name.equals(userListName)){
+		    	System.out.println("We are reading in UserList");
+		    	o = (UserList) ois.readObject();
+		    } else if (name.equals(serverListName)){
+		    	System.out.println("We are reading in ServerList");
+		    	o = (ServerList) ois.readObject();
+		    }
 		    ois.close();
 		} catch (IOException e) { 
 			e.printStackTrace(); 
@@ -121,7 +131,17 @@ class Hub extends Thread {
 		try {
 			fos = new FileOutputStream(name);
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			oos.writeObject(o);
+			if (o instanceof UserList){
+				System.out.println("We have have an instance of UserList");
+				oos.writeObject((UserList)o);
+			} else if (o instanceof ClassList){
+				System.out.println("We have have an instance of UserList");
+				oos.writeObject((ClassList)o);
+			} else if (o instanceof ServerList){
+				System.out.println("We have have an instance of UserList");
+				oos.writeObject((ServerList)o);
+			}
+			
 			oos.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -135,6 +155,39 @@ class Hub extends Thread {
 	 */
 	private static boolean fileExists(String file){
 		return new File(file).exists();
+	}
+	
+	/*
+	 * Read in New Students
+	 */
+	private static void importUsers(){
+		String user;
+		if (fileExists(addNewUserList)){
+			//addNewUserList is a textfile of new people to be added
+			try{
+			  // Open the file that is the first 
+			  // command line parameter
+			  FileInputStream fstream = new FileInputStream(addNewUserList);
+			  // Get the object of DataInputStream
+			  DataInputStream in = new DataInputStream(fstream);
+			  BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			  String strLine;
+			  //Read File Line By Line
+			  while ((strLine = br.readLine()) != null)   {
+				  //strip out white space and newlines
+				  user = strLine.replace(System.getProperty("line.separator"), "").trim();
+				  //add user to userList, if already exists, ignore
+				  if(!userList.validateUser(user)){
+					  userList.addUser(user);
+					  System.out.println("User: " + user + "added to userlist");
+				  }
+			  }
+			  //Close the input stream
+			  in.close();
+			}	catch (Exception e){//Catch exception if any
+			  System.err.println("Error: " + e.getMessage());
+			}
+		}
 	}
 	
 	/*
@@ -160,6 +213,17 @@ class Hub extends Thread {
 			//create new ServerList
 			serverList = new ServerList();
 		}
+		
+		//TODO: Remove for multiple computers
+		try {
+			serverList.addServer(InetAddress.getLocalHost(), SERVER_SOCKET);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			System.out.println("Could not add a local host server");
+		}
+		
+		//Import new users
+		importUsers();
 	}
 	
 	/*
@@ -171,15 +235,8 @@ class Hub extends Thread {
 		initializeData();
 		
 		//add shutdown hook
-		Runtime.getRuntime().addShutdownHook(new Thread(){
+		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
-				//Close socket after done listening
-				try {
-					hubSocket.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-					System.out.println("Couldn't close");
-				}
 				// Write out to disk
 				writeToDisk(classList, classListName);
 				writeToDisk(userList, userListName);

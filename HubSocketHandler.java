@@ -176,6 +176,7 @@ public class HubSocketHandler extends Thread{
 					if(userList.validateUser(sessionKey)){
 						//Reply with confirmation
 						msg.setCode(1);
+						System.out.println("User " + msg.getCookie().getClass() + " logged in");
 					} 
 					returnMessage(msg);
 					break;
