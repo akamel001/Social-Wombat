@@ -110,8 +110,12 @@ public class UserInterface {
 
 	private static final String sTHREAD_PAGE_OPTIONS_INSTRUCTOR_AND_TEACHING_ASSISTANT = addFormattingAlignLeft("1. Comment on this thread.") +
 															addFormattingAlignLeft("2. Delete a comment.") +
-															addFormattingAlignLeft("3. Delete this entire thread") +
+															addFormattingAlignLeft("3. Delete this entire thread.") +
 															addFormattingAlignLeft("4. Go back to this classroom's main page.");
+	
+	private static final String sTHREAD_PAGE_OPTIONS_INSTRUCTOR_AND_TEACHING_ASSISTANT_NO_COMMENTS = addFormattingAlignLeft("1. Comment on this thread.") +
+															addFormattingAlignLeft("2. Delete this entire thread.") +
+															addFormattingAlignLeft("3. Go back to this classroom's main page.");
 	
 	private static final String sTHREAD_PAGE_OPTIONS_STUDENT = addFormattingAlignLeft("1. Comment on this thread.") +
 															addFormattingAlignLeft("2. Go back to this classroom's main page.");
@@ -369,6 +373,7 @@ public class UserInterface {
 	 */
 	private static void threadPage(String messages) {
 		int maxSelection = 0;
+		int commentsExist = 0; // '0' for no comments, '1' for one or more comments.
 		
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName));
@@ -380,10 +385,19 @@ public class UserInterface {
 		//List<String> threadContentList = mapValuesToList(threadContentTreeMap);
 		List<Integer> postIDList = mapIntegerKeysToList(threadContentTreeMap);
 		String threadContent = threadMapToString(threadContentTreeMap);
+		if (postIDList.size() > 2) {
+			commentsExist = 1;
+		}		
 		
 		if (currentPermissions == sTEACHING_ASSISTANT || currentPermissions == sINSTRUCTOR) {
-			displayPage(sTHREAD_PAGE, messages, info, threadContent, sTHREAD_PAGE_OPTIONS_INSTRUCTOR_AND_TEACHING_ASSISTANT);
-			maxSelection = 4;
+			if (commentsExist == 1) {
+				displayPage(sTHREAD_PAGE, messages, info, threadContent, sTHREAD_PAGE_OPTIONS_INSTRUCTOR_AND_TEACHING_ASSISTANT);
+				maxSelection = 4;
+				
+			} else {
+				displayPage(sTHREAD_PAGE, messages, info, threadContent, sTHREAD_PAGE_OPTIONS_INSTRUCTOR_AND_TEACHING_ASSISTANT_NO_COMMENTS);
+				maxSelection = 3;
+			}
 		}
 		else if (currentPermissions == sSTUDENT) {
 			displayPage(sTHREAD_PAGE, messages, info, threadContent, sTHREAD_PAGE_OPTIONS_STUDENT);
@@ -391,7 +405,7 @@ public class UserInterface {
 		}
 		
 		int selection = getValidSelectionFromUser(maxSelection);
-		selection = selectionConverterThreadPage(selection, currentPermissions);
+		selection = selectionConverterThreadPage(selection, currentPermissions, commentsExist);
 		
 		switch (selection) {
 		// Comment on this thread.
@@ -680,14 +694,16 @@ public class UserInterface {
 	 */
 	private static int selectionConverterClassroomPage(int selection, String permissions) {
 		if (currentPermissions == sSTUDENT) {
-			if (selection == 3)
+			if (selection == 3) {
 				selection = 5;
-			if (selection == 4)
+			} else if (selection == 4) {
 				selection = 6;
+			}
 		}
 		else if (currentPermissions == sINSTRUCTOR) {
-			if (selection == 5)
+			if (selection == 5) {
 				selection = 7;
+			}
 		}
 		return selection;
 	}
@@ -700,8 +716,9 @@ public class UserInterface {
 	 */
 	private static int selectionConverterMemberPage(int selection, String permissions) {
 		if (currentPermissions == sTEACHING_ASSISTANT) {
-			if (selection == 2)
+			if (selection == 2) {
 				selection = 3;
+			}
 		}
 		return selection;
 	}
@@ -710,12 +727,23 @@ public class UserInterface {
 	 * Converts a selection in the thread page to the appropriate numbers based on permissions.
 	 * @param selection
 	 * @param permissions
+	 * @param commentsExist 
 	 * @return
 	 */
-	private static int selectionConverterThreadPage(int selection, String permissions) {
+	private static int selectionConverterThreadPage(int selection, String permissions, int commentsExist) {
 		if (permissions == sSTUDENT) {
-			if (selection == 2)
+			if (selection == 2) {
 				selection = 4;
+			}
+		}
+		if (permissions == sINSTRUCTOR || permissions == sTEACHING_ASSISTANT) {
+			if (commentsExist == 0) {
+				if (selection == 2) {
+					selection = 3;
+				} else if (selection == 3) {
+					selection = 4;
+				}
+			}
 		}
 		return selection;
 	}
