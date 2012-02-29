@@ -149,7 +149,6 @@ public class ServerSocketHandler extends Thread{
 				 * msg.body() as an ArrayList<Integer>
 				 */
 				case Client_DeleteComment:
-					@SuppressWarnings("unchecked")
 					ArrayList<Integer> commentParams = (ArrayList<Integer>)msg.getBody();
 					int postID = commentParams.get(0);
 					int commentID = commentParams.get(1);

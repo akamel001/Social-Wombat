@@ -29,7 +29,7 @@ class Hub extends Thread {
 			System.out.println("Hub could not be created");
 		}
 	}
-
+	
 	/*
 	 * Add a user to the userList.
 	 */

@@ -35,6 +35,34 @@ public class HubSocketHandler extends Thread{
 	}
 	
 	/*
+	 * Checks that a user is part of a classroom
+	 */
+	private boolean isInClassroom(String user, String classroomID){
+		return (classList.getUserPermissions(user, classroomID) > 0);
+	}
+	
+	/*
+	 * Check that a user is the instructor of a classroom
+	 */
+	private boolean isClassInstructor(String user, String classroomID){
+		return (classList.getUserPermissions(user, classroomID) == 3);
+	}
+	
+	/*
+	 * Check that a user is the TA or instructor of a classroom
+	 */
+	private boolean isClassTAorInstructor(String user, String classroomID){
+		return (classList.getUserPermissions(user, classroomID) > 1);
+	}
+	
+	/*
+	 * Check that a user is the student of a classroom
+	 */
+	private boolean isClassStudent(String user, String classroomID){
+		return (classList.getUserPermissions(user, classroomID) == 1);
+	}
+	
+	/*
 	 * Deserialize transmission in socket and convert to a message
 	 */
 	private Message getMessage(){
@@ -131,11 +159,14 @@ public class HubSocketHandler extends Thread{
 		}
 		if (valid){
 			// Preset to failure
+			msg.setCode(-1);
 			int returnCode = -1;
 			Message reply = null;
 			//Handle the different types of client messages
-			switch(msg.getType()) {
-				
+			
+			//NOTE: ALL MESSAGES ARE PRESET TO RETURN CODE -1
+			switch(msg.getType()) {	
+			
 				// Client -> Hub
 				
 				//Client user id is stored as the sessionKey in the Cookie of the message
@@ -145,72 +176,82 @@ public class HubSocketHandler extends Thread{
 					if(userList.validateUser(sessionKey)){
 						//Reply with confirmation
 						msg.setCode(1);
-					} else {
-						//Reply with denial
-						msg.setCode(-1);
-					}
+					} 
 					returnMessage(msg);
 					break;
 				// Returns in body all users in a classroom
 				case Client_GetClassEnrollment:
-					//TODO: check permissions (instructor & tas)
-					//String = User, Integer = Permission
-					Map<String, Integer> classEnroll = classList.getClassEnrolled(msg.getClassroom_ID());
-					if (classEnroll == null){
-						//error
-						msg.setCode(-1);
-					} else {
-						msg.setCode(1);
-						msg.setBody(classEnroll);
-					}
+					//check permissions
+					if(isClassTAorInstructor(msg.getCookie().getKey(),msg.getClassroom_ID())){
+						//String = User, Integer = Permission
+						Map<String, Integer> classEnroll = classList.getClassEnrolled(msg.getClassroom_ID());
+						if (classEnroll != null){				
+							msg.setCode(1);
+							msg.setBody(classEnroll);
+						} 
+					} 
 					returnMessage(msg);
 					break;
 				// Return in body a list of the classes that a client is enrolled in
 				case Client_GetUserEnrollment:
 					String usr = msg.getCookie().getKey();
 					Map<String, Integer> userEnroll = classList.getUserEnrollment(usr);
-					if (userEnroll == null){
-						//error
-						msg.setCode(-1);
-					} else {
+					if (userEnroll != null){
 						msg.setCode(1);
 						msg.setBody(userEnroll);
-					}
+					} 
 					returnMessage(msg);
 					break;
 				case Client_ListClassroomRequests:
-					//TODO: check permissions (instructors and tas)
-					//gets list of users
-					List<String> requests = classList.getClassPending(msg.getClassroom_ID());
-					if (requests == null){
-						//error
-						msg.setCode(-1);
-					} else {
-						msg.setCode(1);
-						msg.setBody(requests);
+					//check permissions
+					if(isClassTAorInstructor(msg.getCookie().getKey(),msg.getClassroom_ID())){
+						//gets list of users
+						List<String> requests = classList.getClassPending(msg.getClassroom_ID());
+						if (requests != null){
+							msg.setCode(1);
+							msg.setBody(requests);
+						}
 					}
 					returnMessage(msg);
 					break;
-				// Change the permissions for another user
+				// Change the permissions for another user, special case for student
 				// Store user to be changed and the permissions as an arraylist
 				// [0] = username, [1] = permissions
 				case Client_SetPermissions:
-					//TODO: check permissions (instructor and ta) special case student self
 					ArrayList<String> a= (ArrayList<String>) msg.getBody();
 					// Person
 					String personToChange = a.get(0);
 					// Permission to set for Person
 					int per = Integer.parseInt(a.get(1));
-					// Server's return code
-					returnCode = classList.setUserPermissions(personToChange, msg.getClassroom_ID(), per);
-					// Reply
-					msg.setCode(returnCode);
+					
+					//Special case, instructor cannot be deleted
+					if((isClassInstructor(personToChange,msg.getClassroom_ID())) && (per == -1)){
+						//return failure
+						returnMessage(msg);
+						break;
+					} else if(isClassTAorInstructor(msg.getCookie().getKey(),msg.getClassroom_ID())){
+						//Now changing someone else's
+						// Server's return code
+						returnCode = classList.setUserPermissions(personToChange, msg.getClassroom_ID(), per);
+						// Reply
+						msg.setCode(returnCode);
+					} else if (isClassStudent(msg.getCookie().getKey(),msg.getClassroom_ID())){
+						//Students can only delete themselves
+						//Check student requestor matches up with requestee
+						if (msg.getCookie().getKey().equals(personToChange)){
+							// Server's return code
+							returnCode = classList.setUserPermissions(personToChange, msg.getClassroom_ID(), per);
+							// Reply
+							msg.setCode(returnCode);
+						}
+					}
 					returnMessage(msg);
 					break;
 				case Client_DeleteSelf:
 					String u = msg.getCookie().getKey();
 					if(userList.removeUser(u)){
 						//success
+						//TODO: remove the users from classList and if prof, remove serverlist
 						msg.setCode(1);
 					} else{
 						//fail
@@ -220,10 +261,15 @@ public class HubSocketHandler extends Thread{
 					break;
 				// Request to be added to a class
 				case Client_RequestEnrollment:
+					//check, cannot be already in class
 					String requestName = msg.getCookie().getKey();
-					// 0 for pending enrollment, -1 for dijoining
-					int p = (Integer)msg.getBody();
-					returnCode = classList.setUserPermissions(requestName, msg.getClassroom_ID(), p);
+					if(!isInClassroom(requestName,msg.getClassroom_ID())){
+						// 0 for pending enrollment, -1 for dijoining
+						int p = (Integer)msg.getBody();
+						returnCode = classList.setUserPermissions(requestName, msg.getClassroom_ID(), p);
+						msg.setCode(returnCode);
+					}
+					returnMessage(msg);
 					break;
 					
 				// Client -> Hub -> Server
@@ -242,39 +288,60 @@ public class HubSocketHandler extends Thread{
 				 * Array[1] = Post_body 	
 				 */
 				case Client_CreateThread:
-					//TODO: check permissions (belonging to classroom)
-					reply = forwardToServer(msg);
-					returnMessage(reply);
+					if (isInClassroom(msg.getCookie().getKey(),msg.getClassroom_ID())){
+						reply = forwardToServer(msg);
+						returnMessage(reply);
+					} else {
+						returnMessage(msg);
+					}
 					break;
 				case Client_CreateComment:
-					//TODO: check permissions (belonging to classroom)
-					reply = forwardToServer(msg);
-					returnMessage(reply);
+					if (isInClassroom(msg.getCookie().getKey(),msg.getClassroom_ID())){
+						reply = forwardToServer(msg);
+						returnMessage(reply);
+					} else {
+						returnMessage(msg);
+					}
 					break;
 				case Client_GoToClassroom:
-					//TODO: check permissions (belonging to classroom)
-					reply = forwardToServer(msg);
-					returnMessage(reply);
+					if (isInClassroom(msg.getCookie().getKey(),msg.getClassroom_ID())){
+						reply = forwardToServer(msg);
+						returnMessage(reply);
+					} else {
+						returnMessage(msg);
+					}
 					break;
 				case Client_GoToThread:
-					//TODO: check permissions (belonging to classroom)
-					reply = forwardToServer(msg);
-					returnMessage(reply);
+					if (isInClassroom(msg.getCookie().getKey(),msg.getClassroom_ID())){
+						reply = forwardToServer(msg);
+						returnMessage(reply);
+					} else {
+						returnMessage(msg);
+					}
 					break;
 				case Client_DeleteClassroom:
-					//TODO: check permissions (instructor of classroom)
-					reply = forwardToServer(msg);
-					returnMessage(reply);
+					if (isClassTAorInstructor(msg.getCookie().getKey(),msg.getClassroom_ID())){
+						reply = forwardToServer(msg);
+						returnMessage(reply);
+					} else {
+						returnMessage(msg);
+					}
 					break;
 				case Client_DeleteThread:
-					//TODO: check permissions (instructor or ta of classroom)
-					reply = forwardToServer(msg);
-					returnMessage(reply);
+					if (isClassTAorInstructor(msg.getCookie().getKey(),msg.getClassroom_ID())){
+						reply = forwardToServer(msg);
+						returnMessage(reply);
+					} else {
+						returnMessage(msg);
+					}
 					break;
 				case Client_DeleteComment:
-					//TODO: check permissions (instructor or ta of classroom)
-					reply = forwardToServer(msg);
-					returnMessage(reply);
+					if (isClassTAorInstructor(msg.getCookie().getKey(),msg.getClassroom_ID())){
+						reply = forwardToServer(msg);
+						returnMessage(reply);
+					} else {
+						returnMessage(msg);
+					}
 					break;	
 					
 				default:
