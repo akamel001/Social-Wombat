@@ -156,7 +156,6 @@ public class Client {
 		handler.getMessageSending().setType(Message.MessageType.Client_DeleteClassroom);
 
 		Message response = handler.sendReceive();
-
 		return (response.getCode() == 1)? true : false;	
 	}
 
