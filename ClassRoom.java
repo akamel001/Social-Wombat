@@ -5,6 +5,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Iterator;
 
+/**
+ * ClassRoom stores threads and their associated comments.
+ * @author chris d
+ *
+ */
 public class ClassRoom implements Serializable{
 
 	static final long serialVersionUID = 2158685748414139162L;
