@@ -293,7 +293,7 @@ public class HubSocketHandler extends Thread{
 					//Generate some server number
 					Random r = new Random();
 					int maxServer = serverList.getLastServer();
-					int serverNum = r.nextInt(maxServer-1) + 1;
+					int serverNum = r.nextInt(maxServer) + 1;
 					
 					c.setClassServer(serverNum, SERVER_SOCKET);
 					classList.addClass(c);
