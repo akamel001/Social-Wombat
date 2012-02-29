@@ -11,4 +11,4 @@ Abdelrahman Kamel -- System design. Designed and implemented client-side socket 
 
 Julia Tazin -- System design. Designed and implemented User Interface. Designed and implemented User Interface to client-side socket communication. Tested User Interface, Client, and ClientSocketHandler code. (40 hrs)
 
-Yilok Wong -- System design, Implemented Hub, Server, and their respective threads: HubSocketHandler and ServerSocketHandler. Designed and implemented server-side messaging. Designed and implemented persistent storage system. Tested Client to Hub to Server to FileSystem code. (40 hrs)
+Yilok Wong -- System design. Designed and implemented Hub, Server, HubSocketHandler and ServerSocketHandler. Designed communication between Client, Hub, and Server. Designed and implemented persistent storage system. Tested Client to Hub to Server to FileSystem code. (40 hrs)
