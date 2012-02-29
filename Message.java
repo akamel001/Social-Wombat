@@ -49,7 +49,7 @@ public class Message implements Serializable{
 	}
 
 	public Message(){
-		//
+		this.cookie = new Cookie("tmp");
 	}
 
 	/* This is neccessary for message forwarding because the client doesn't
@@ -101,7 +101,13 @@ public class Message implements Serializable{
 	}
 
 	public void setCookie(Cookie cookie) {
+		System.out.println(cookie.getKey() + " From cookie setter **** ");
+		System.out.println(this.cookie.getKey() + " From cookie setter **** ");
+
 		this.cookie = cookie;
+		
+		System.out.println(cookie.getKey() + " From cookie setter **** ");
+		System.out.println(this.cookie.getKey() + " From cookie setter **** ");
 	}
 
 	public int getCode() {

@@ -12,7 +12,7 @@ import java.util.Map;
 public class Client {
 
 	private static final boolean DEBUG = false;
-	private static Cookie cookie = new Cookie("");
+	private Cookie cookie = new Cookie("");
 
 	/**
 	 *  
@@ -26,7 +26,7 @@ public class Client {
 
 		if(DEBUG)
 			return true; 
-
+		
 		ClientSocketHandler handler = new ClientSocketHandler();
 		cookie.setKey(uName);
 		handler.getMessageSending().setCookie(cookie);
@@ -34,6 +34,8 @@ public class Client {
 		handler.getMessageSending().setBody("Dumb wombat!");
 
 		Message response = handler.sendReceive();
+		
+		System.out.println(response.getCookie().getKey());
 		return (response.getCode() == 1)? true : false;	
 	}
 	/**

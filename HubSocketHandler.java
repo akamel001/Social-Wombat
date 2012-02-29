@@ -14,8 +14,8 @@ public class HubSocketHandler extends Thread{
 	UserList userList;
 	ServerList serverList;
 	Socket socket;
-	ObjectOutput oos;
-	ObjectInput ois;
+	ObjectOutputStream oos;
+	ObjectInputStream ois;
 
 	/*
 	 * A handler thread that is spawned for each message sent to a socket.
@@ -85,6 +85,8 @@ public class HubSocketHandler extends Thread{
 		try {
 			oos.writeObject(msg);
 			oos.flush();
+			oos.reset();
+			((ObjectOutputStream) oos).reset();
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Return Message Failed");
@@ -116,12 +118,13 @@ public class HubSocketHandler extends Thread{
 			forwardSocket = new Socket(getServer(msg),SERVER_SOCKET);
 			
 			// Create inputstream and outputstream
-			ObjectOutput forwardOut = new ObjectOutputStream(forwardSocket.getOutputStream());
-			ObjectInput forwardIn = new ObjectInputStream(forwardSocket.getInputStream());
+			ObjectOutputStream forwardOut = new ObjectOutputStream(forwardSocket.getOutputStream());
+			ObjectInputStream forwardIn = new ObjectInputStream(forwardSocket.getInputStream());
 			
 			// Write out message
 			forwardOut.writeObject(msg);
 			forwardOut.flush();
+			forwardOut.reset();
 			
 			// Get response
 			reply = (Message) forwardIn.readObject();
@@ -183,6 +186,9 @@ public class HubSocketHandler extends Thread{
 					} 
 					System.out.println("Message code returned is: " + msg.getCode());
 					msg.setBody("HiMrPeopleCatLols");
+					Cookie cookie = new Cookie("");
+					cookie.setKey("GODZILLA");
+					msg.setCookie(cookie);
 					returnMessage(msg);
 					break;
 				// Returns in body all users in a classroom
