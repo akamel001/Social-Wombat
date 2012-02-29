@@ -78,7 +78,7 @@ public class Client {
 		handler.getMessageSending().setCookie(cookie);
 		handler.getMessageSending().setClassroom_ID(classroomRequestName);
 		handler.getMessageSending().setType(Message.MessageType.Client_RequestEnrollment);
-
+		handler.getMessageSending().setBody(0);
 		Message response = handler.sendReceive();
 
 		return (response.getCode() == 1)? true : false;			
@@ -179,7 +179,8 @@ public class Client {
 		handler.getMessageSending().setClassroom_ID(classroomName);
 		handler.getMessageSending().setBody(list);
 		handler.getMessageSending().setType(Message.MessageType.Client_SetPermissions);
-
+		handler.getMessageSending().setBody(-1);
+		
 		Message response = handler.sendReceive();
 
 		return (response.getCode() == 1)? true : false;		

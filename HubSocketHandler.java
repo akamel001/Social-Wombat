@@ -40,6 +40,7 @@ public class HubSocketHandler extends Thread{
 	 * Checks that a user is part of a classroom
 	 */
 	private boolean isInClassroom(String user, String classroomID){
+		System.out.println("checking if user is in classroom");
 		return (classList.getUserPermissions(user, classroomID) > 0);
 	}
 	
@@ -70,8 +71,8 @@ public class HubSocketHandler extends Thread{
 	private void getMessage(){
 		try {
 			msg = (Message) ois.readObject();
-			System.out.println("Just got a msg from: " + msg.getCookie().getKey());
-			System.out.println("Contents of body: " + msg.getBody());
+			//System.out.println("Just got a msg from: " + msg.getCookie().getKey());
+			//System.out.println("Contents of body: " + msg.getBody());
 		} catch (Exception e){
 			System.out.println(e.getMessage());
 			System.out.println("Deserializing message failed.");
@@ -125,8 +126,8 @@ public class HubSocketHandler extends Thread{
 			
 			// Write out message
 			forwardOut.writeObject(msg);
-			//forwardOut.flush();
-			//forwardOut.reset();
+			forwardOut.flush();
+			forwardOut.reset();
 			
 			// Get response
 			reply = (Message) forwardIn.readObject();

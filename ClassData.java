@@ -135,10 +135,10 @@ public class ClassData implements Serializable{
 			return -1;
 		if (user.equals(instructor))
 			return 3;
-		Integer p = userList.get(id);
-		if (p==null)
+		Integer p = userList.get(user);
+		if (p==null){
 			return -1;
-		else
+		} else
 			return (int)p;
 	}
 
