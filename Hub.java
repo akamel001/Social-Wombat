@@ -135,10 +135,10 @@ class Hub extends Thread {
 				System.out.println("We have have an instance of UserList");
 				oos.writeObject((UserList)o);
 			} else if (o instanceof ClassList){
-				System.out.println("We have have an instance of UserList");
+				System.out.println("We have have an instance of ClassList");
 				oos.writeObject((ClassList)o);
 			} else if (o instanceof ServerList){
-				System.out.println("We have have an instance of UserList");
+				System.out.println("We have have an instance of ClassList");
 				oos.writeObject((ServerList)o);
 			}
 			
