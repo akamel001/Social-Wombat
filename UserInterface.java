@@ -509,7 +509,8 @@ public class UserInterface {
 	    // Change this member's status.
 	    case 2:
 	    	currentMemberPermissions = switchCurrentMemberPermissions(currentMemberPermissions);
-	    	if (client.changeStatus(currentMemberName, currentMemberPermissions, currentUserName, currentClassroomName)){
+	    	Integer currentMemberPermissionsAsInt = convertStringToIntPermissions(currentMemberPermissions);
+	    	if (client.changeStatus(currentMemberName, currentMemberPermissionsAsInt, currentUserName, currentClassroomName)){
 	    		memberPage(mCHANGE_STATUS_SUCCESS);
 	    	} else {
 	    		currentMemberPermissions = switchCurrentMemberPermissions(currentMemberPermissions);
@@ -735,6 +736,25 @@ public class UserInterface {
 		}
 		else if (num == 3){
 			permissions = sINSTRUCTOR;
+		}
+		return permissions;
+	}
+	
+	/**
+	 * Converts permissions in string form to int form.
+	 * @param num representing the permissions
+	 * @return a string name for the permissions
+	 */
+	public static int convertStringToIntPermissions(String num) {
+		int permissions = -2;
+		if (num == sSTUDENT){
+			permissions = 1;
+		}
+		else if (num == sTEACHING_ASSISTANT){
+			permissions = 2;
+		}
+		else if (num == sINSTRUCTOR){
+			permissions = 3;
 		}
 		return permissions;
 	}
