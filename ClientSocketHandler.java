@@ -7,8 +7,8 @@ public class ClientSocketHandler {
 
 	private static final int HUB_PORT = 4444;
 
-	private static Message messageSending = new Message();
-	private static Message messageReceived = new Message(); 
+	private Message messageSending = new Message();
+	private Message messageReceived = new Message(); 
 	private static Socket socket = null;
 	private static ObjectOutputStream oos = null;
 	private static ObjectInputStream ois = null;
@@ -31,6 +31,7 @@ public class ClientSocketHandler {
 			System.out.println("Sending message to server...");
 			oos.writeObject(messageSending);
 			oos.flush();
+			oos.reset();
 
 			// read an object from the server
 			System.out.println("Receiving message from server...");

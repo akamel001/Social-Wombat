@@ -9,12 +9,13 @@ public class HubSocketHandler extends Thread{
 	//private static int CLIENT_SOCKET = 4444;
 	private static int SERVER_SOCKET = 5050;
 	
+	static Message msg = new Message();
 	ClassList classList;
 	UserList userList;
 	ServerList serverList;
 	Socket socket;
-	ObjectOutput oos;
-	ObjectInput ois;
+	ObjectOutputStream oos;
+	ObjectInputStream ois;
 
 	/*
 	 * A handler thread that is spawned for each message sent to a socket.
@@ -65,15 +66,15 @@ public class HubSocketHandler extends Thread{
 	/*
 	 * Deserialize transmission in socket and convert to a message
 	 */
-	private Message getMessage(){
-		Message msg = null;
+	private void getMessage(){
 		try {
 			msg = (Message) ois.readObject();
+			System.out.println("Just got a msg from: " + msg.getCookie().getKey());
+			System.out.println("Contents of body: " + msg.getBody());
 		} catch (Exception e){
 			System.out.println(e.getMessage());
 			System.out.println("Deserializing message failed.");
 		}
-		return msg;
 	}
 	
 	/*
@@ -84,6 +85,8 @@ public class HubSocketHandler extends Thread{
 		try {
 			oos.writeObject(msg);
 			oos.flush();
+			oos.reset();
+			((ObjectOutputStream) oos).reset();
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Return Message Failed");
@@ -115,12 +118,13 @@ public class HubSocketHandler extends Thread{
 			forwardSocket = new Socket(getServer(msg),SERVER_SOCKET);
 			
 			// Create inputstream and outputstream
-			ObjectOutput forwardOut = new ObjectOutputStream(forwardSocket.getOutputStream());
-			ObjectInput forwardIn = new ObjectInputStream(forwardSocket.getInputStream());
+			ObjectOutputStream forwardOut = new ObjectOutputStream(forwardSocket.getOutputStream());
+			ObjectInputStream forwardIn = new ObjectInputStream(forwardSocket.getInputStream());
 			
 			// Write out message
 			forwardOut.writeObject(msg);
 			forwardOut.flush();
+			forwardOut.reset();
 			
 			// Get response
 			reply = (Message) forwardIn.readObject();
@@ -151,7 +155,7 @@ public class HubSocketHandler extends Thread{
 	public void run(){
 		boolean valid = true;
 		//Read and deserialize Message from Socket
-		Message msg = getMessage();
+		getMessage();
 		
 		if (msg == null){
 			System.out.println("Message was null");
@@ -173,12 +177,18 @@ public class HubSocketHandler extends Thread{
 				// TODO: Possibly move this above switch statement to authenticate all requests
 				case Client_LogIn: 
 					String sessionKey = msg.getCookie().getKey();
-					if(userList.validateUser(sessionKey)){
+					System.out.println("Current code: " + msg.getCode());
+					System.out.println("Authenticating " + sessionKey);
+					if((sessionKey != null) && userList.validateUser(sessionKey)){
 						//Reply with confirmation
 						msg.setCode(1);
 						System.out.println("User " + msg.getCookie().getKey() + " logged in");
 					} 
 					System.out.println("Message code returned is: " + msg.getCode());
+					msg.setBody("HiMrPeopleCatLols");
+					Cookie cookie = new Cookie("");
+					cookie.setKey("GODZILLA");
+					msg.setCookie(cookie);
 					returnMessage(msg);
 					break;
 				// Returns in body all users in a classroom

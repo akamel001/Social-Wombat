@@ -7,6 +7,7 @@ import java.util.Map;
 public class ServerSocketHandler extends Thread{
 	//private static int SERVER_SOCKET = 5050;
 	
+	static Message msg = new Message();
 	ClassDB classDB;
 	Socket socket;
 	ObjectOutput oos;
@@ -31,15 +32,13 @@ public class ServerSocketHandler extends Thread{
 	/*
 	 * Deserialize transmission in socket and convert to a message
 	 */
-	private Message getMessage(){
-		Message msg = null;
+	private void getMessage(){
 		try {
 			msg = (Message) ois.readObject();
 		} catch (Exception e){
 			System.out.println(e.getMessage());
 			System.out.println("Deserializing message failed.");
 		}
-		return msg;
 	}
 	
 	/*
@@ -59,7 +58,7 @@ public class ServerSocketHandler extends Thread{
 	public void run(){
 		boolean valid = true;
 		//Read and deserialize Message from Socket
-		Message msg = getMessage();
+		getMessage();
 		
 		if (msg == null){
 			System.out.println("Message was null");

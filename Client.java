@@ -4,10 +4,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 
+ * @author 
+ *
+ */
 public class Client {
 
 	private static final boolean DEBUG = false;
-	private static Cookie cookie = new Cookie("");
+	private Cookie cookie = new Cookie("");
 
 	/**
 	 *  
@@ -21,14 +26,16 @@ public class Client {
 
 		if(DEBUG)
 			return true; 
-
+		
 		ClientSocketHandler handler = new ClientSocketHandler();
 		cookie.setKey(uName);
 		handler.getMessageSending().setCookie(cookie);
 		handler.getMessageSending().setType(Message.MessageType.Client_LogIn);
+		handler.getMessageSending().setBody("Dumb wombat!");
 
 		Message response = handler.sendReceive();
-
+		
+		System.out.println(response.getCookie().getKey());
 		return (response.getCode() == 1)? true : false;	
 	}
 	/**

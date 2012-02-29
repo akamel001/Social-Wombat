@@ -34,6 +34,8 @@ public class ServerList implements Serializable{
 	 * @return Returns the server id or -1 if the ip/port combination already exists in the list.
 	 */
 	public int addServer(InetAddress ip, int port){
+		if(ip==null)
+			return -1;
 		
 		// check to see if ip/port combo exists
 		// if it does, disallow

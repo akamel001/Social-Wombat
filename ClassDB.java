@@ -175,6 +175,4 @@ public class ClassDB implements Serializable{
 		}
 		return 1;
 	}
-
-
 }

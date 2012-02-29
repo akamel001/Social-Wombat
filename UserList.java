@@ -23,15 +23,10 @@ public class UserList implements Serializable{
 	 * @return Returns true if the username is present in the user list, false otherwise.
 	 */
 	public boolean validateUser(String userId){
-		Set<String> s = userList.keySet();
-		synchronized(userList) {
-		      Iterator <String> i = s.iterator();
-		      while (i.hasNext()){
-		          if(i.next() == userId);
-		          return true;
-		      }
-		  }
-		return false;
+		if (userId==null){
+			return false;
+		}
+		return userList.containsKey(userId);
 	}
 	
 	/**
@@ -40,6 +35,8 @@ public class UserList implements Serializable{
 	 * @return Returns true if the username is present in the user list, false otherwise.
 	 */
 	private boolean contains(String userId){
+		if (userId==null)
+			return false;
 		Set<String> s = userList.keySet();
 		synchronized(userList) {
 			Iterator <String> i = s.iterator();
@@ -60,6 +57,9 @@ public class UserList implements Serializable{
 	 * @return Returns true if the user was added. Returns false if the user already exists.
 	 */
 	public boolean addUser(String newId){
+		if (newId==null){
+			return false;
+		}
 		boolean found = false;
 		synchronized(userList){
 			if (!contains(newId)){
@@ -76,9 +76,11 @@ public class UserList implements Serializable{
 	 * @return Returns true if the user was successfully removed. Returns false if the user was not 
 	 * present in the user list. 
 	 */
-	public boolean removeUser(String id){
+	public boolean removeUser(String userId){
+		if (userId==null)
+			return false;
 		boolean found = false;
-		if (userList.remove(id)==null){
+		if (userList.remove(userId)==null){
 			found = true;
 		}
 		return found;

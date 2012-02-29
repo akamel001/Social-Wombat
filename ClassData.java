@@ -80,19 +80,21 @@ public class ClassData implements Serializable{
 	/**
 	 * Returns true if the passed string is the instructor's name
 	 */
-	public boolean isInstructor(String i){
-		return i.equals(instructor);
+	public boolean isInstructor(String userList){
+		if (userList==null)
+			return false;
+		return userList.equals(instructor);
 	}
 
 	/**
 	 * Sets the server for the class.
 	 */
-	public int setClassServer(int s, int p){
-		if (s<1 || p<1)	
+	public int setClassServer(int serverIp, int portNum){
+		if (serverIp<1 || portNum<1)	
 			return -1;
 		else{
-			server = s;
-			port = p;
+			server = serverIp;
+			port = portNum;
 			return 1;
 		}
 	}
@@ -115,6 +117,8 @@ public class ClassData implements Serializable{
 	 * @return
 	 */
 	public int removeUser(String id){
+		if (id==null)
+			return -1;
 		if (userList.remove(id) == null)
 			return -1;
 		else
