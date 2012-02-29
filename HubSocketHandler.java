@@ -185,10 +185,6 @@ public class HubSocketHandler extends Thread{
 						System.out.println("User " + msg.getCookie().getKey() + " logged in");
 					} 
 					System.out.println("Message code returned is: " + msg.getCode());
-//					msg.setBody("HiMrPeopleCatLols");
-//					Cookie cookie = new Cookie("");
-//					cookie.setKey("GODZILLA");
-//					msg.setCookie(cookie);
 					returnMessage(msg);
 					break;
 				// Returns in body all users in a classroom
