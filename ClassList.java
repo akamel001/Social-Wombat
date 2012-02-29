@@ -67,7 +67,11 @@ public class ClassList implements Serializable{
 	protected int getUserPermissions(String user, String c){
 		if (user==null || c==null)
 			return -1;
-		return classList.get(c).getPermissions(user);
+		Integer out = classList.get(c).getPermissions(user);
+		if (out==null)
+			return -1;
+		else
+			return out;
 	}
 
 	/**
