@@ -1,7 +1,8 @@
 We used a variety of testing methods. Most code was tested as it was written. Upon finishing a 
 class, unit testing was done through writing a JUnit test file for that class. Manual testing was
-heavily employed as well, especially in the text-based user interface, for which all possible 
-scenarios were played out as best as possible.
+heavily employed as well, especially in the text-based user interface, and the end system for which
+all possible scenarios were played out as best as possible (see UserInterfaceTest.txt for more 
+details).
 
 Once each component was verified to be fairly stable on a stand-alone basis, integration testing 
 was used to ensure that the system could work as a whole.
@@ -34,3 +35,157 @@ UserInterface.java -- The bulk of the testing for the user interface is outlined
 UserInterfaceTest.txt. UserInterfaceTest.java contains JUnit tests methods for the helper functions.
 
 UserListTest.java -- Tests added deleting and validating users from UserList objects.
+
+
+
+
+Here is a partial bug log:
+Bug 0
+Status:
+RESOLVED by Julia
+
+Scenario: 
+Create a thread.
+
+Error Message: 
+Exception in thread "Thread-6" java.lang.NullPointerException
+	at ServerSocketHandler.run(ServerSocketHandler.java:129)
+	
+	in userinterface currentThreadID never gets set // TODO
+
+*************************************************************
+Bug 1
+Status:
+RESOLVED by Yilok
+
+Scenario: 
+User attempts to delete classroom. Classroom is still in there in his list when he checks.
+
+Error Message: 
+None.
+	
+*************************************************************
+Bug 2
+Status:
+RESOLVED by Yilok and Chris
+
+Scenario: 
+User attempt to request a classroom that does not exist
+
+Error Message in Hub: 
+1337 requested to be added to classroom: alskdjsldfkj
+checking if user is in classroom
+Exception in thread "Thread-4" java.lang.NullPointerException
+	at ClassList.getUserPermissions(ClassList.java:68)
+	at HubSocketHandler.isInClassroom(HubSocketHandler.java:44)
+	at HubSocketHandler.run(HubSocketHandler.java:281)
+
+*************************************************************	
+Bug 3
+Status:
+RESOLVED
+
+Scenario: 
+User attempts to delete comment. comment is still in there when he checks the discussion board.
+
+Error Message: 
+None.
+
+*************************************************************	
+Bug 4 
+Status:
+RESOLVED by Chris
+
+Scenario: 
+Get pending users does not work --RESOLVED BY CHRIS
+Exception in thread "Thread-10" java.util.NoSuchElementException
+	at java.util.TreeMap$PrivateEntryIterator.nextEntry(TreeMap.java:1098)
+	at java.util.TreeMap$KeyIterator.next(TreeMap.java:1154)
+	at ClassData.getPendingUsers(ClassData.java:196)
+	at ClassList.getClassPending(ClassList.java:150)
+	at HubSocketHandler.run(HubSocketHandler.java:221)
+
+*************************************************************	
+Bug 5
+Status:
+RESOLVED by Yilok
+
+Scenario: 
+Log into a classroom as an instructor.
+View the discussion board of a thread that has been created already but has no comments.
+Cannot go back to home.
+
+Error Message: 
+None, only cannot go back to home.
+
+*************************************************************	
+Bug 6
+Status:
+RESOLVED by Abdel
+
+Scenario: 
+
+1. View discussion board.
+Error Message: 
+
+Exception in thread "main" java.lang.NumberFormatException: null
+	at java.lang.Integer.parseInt(Integer.java:417)
+	at java.lang.Integer.valueOf(Integer.java:554)
+	at Client.getThreadGivenID(Client.java:243)
+	at UserInterface.threadPage(UserInterface.java:378)
+	at UserInterface.threadListPage(UserInterface.java:353)
+	at UserInterface.classroomPage(UserInterface.java:275)
+	at UserInterface.classroomPage(UserInterface.java:283)
+	at UserInterface.classroomListPage(UserInterface.java:221)
+	at UserInterface.homePage(UserInterface.java:164)
+	at UserInterface.loginPage(UserInterface.java:142)
+	at UserInterface.main(UserInterface.java:1000)
+
+*************************************************************	
+Bug 7
+Status:
+RESOLVED by Abdel
+
+Filed by:
+Julia
+
+Scenario: 
+There are threads on the discussion board. A user tries to select one to view and cannot.
+
+This is strange because I believe it worked at one point...
+
+Error Message: 
+Return thread #: 2
+Exception in thread "Thread-9" java.lang.NumberFormatException: null
+	at java.lang.Integer.parseInt(Integer.java:417)
+	at java.lang.Integer.valueOf(Integer.java:554)
+	at ServerSocketHandler.run(ServerSocketHandler.java:131)
+
+*************************************************************	
+Bug 8
+Status:
+RESOLVED by Julia
+
+Filed by:
+Julia
+
+
+Scenario: 
+Cannot change user permission status (student -> ta and vice versa?). Make sure to go look at the member list and not just the message on that same page.
+
+Error Message: 
+None as far as I know
+
+*************************************************************	
+Bug 9
+Status:
+RESOLVED by Julia
+
+Filed by:
+Julia
+
+Scenario: 
+Delete comments options comes up even when there are no comments.
+
+Error Message: 
+None. Just bad user interface design.
