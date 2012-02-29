@@ -3,15 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-// TODO: action/error messages at top of each page
-// TODO: pull out commonalities for cleaner code
-// TODO: name of page, info (name, classroom), messages, content, options, question
-// TODO: different menus based on privileges
-// TODO: make sure the current... are updated as we go
-// TODO: stabilize anything with maps and needing an order.
-// TODO: Chris: make sure for getClassroomForUser get ALL classrooms, even those for which a user is an instructor 
-// TODO: Abdel: all void returns should be boolean?
+import java.util.TreeMap;
 
 /**
  * This is the user interface for Social Wombat.
@@ -32,6 +24,7 @@ public class UserInterface {
 	private static String currentThreadName;
 	private static Integer currentThreadID;
 	private static String currentMemberName;
+	private static String currentMemberPermissions;
 	private static String currentPendingMemberName;
 	
 	static int iWINDOWWIDTH = 81;
@@ -55,13 +48,14 @@ public class UserInterface {
 	private static final String sTEACHING_ASSISTANT = 	"Teaching Assistant";
 	private static final String sSTUDENT = 				"Student";
 	
-	// TODO: errors and messages
 	private static final String eGENERAL_ERROR = 			addFormattingAlignLeft("An error has occurred.");
 	private static final String eLOG_IN_ERROR = 			addFormattingAlignLeft("There was an error in logging in with the provided username.");		
-	private static final String eCLASSROOM_CREATION_ERROR=	addFormattingAlignLeft("An error occured when creating the classroom.");
+	private static final String eCLASSROOM_CREATION_ERROR =	addFormattingAlignLeft("An error occured when creating the classroom.");
 	private static final String eCLASSROOM_REQUEST_ERROR =	addFormattingAlignLeft("An error occured when requesting to join a classroom.");
 	private static final String eNON_VALID_SELECTION = 		addFormattingAlignLeft("That is not a valid selection.");
-	private static final String eTHREAD_CREATION_ERROR = 	addFormattingAlignLeft("An error occured when creating your thread.");
+	private static final String eTHREAD_CREATION_ERROR = 	addFormattingAlignLeft("An error occured when creating your thread.");	
+	private static final String eCOMMENT_DELETION_ERROR =	addFormattingAlignLeft("An error occured when deleting the comment.");	
+	private static final String eTHREAD_DELETION_ERROR = 	addFormattingAlignLeft("An error occured when deleting the thread.");	
 	
 	private static final String mCLASSROOM_CREATION_SUCCESS =	addFormattingAlignLeft("You have successfully created a classroom!");
 	private static final String mCLASSROOM_REQUEST_SUCCESS =	addFormattingAlignLeft("You have successfully requested to join a classroom!");
@@ -71,8 +65,11 @@ public class UserInterface {
 	private static final String mDELETE_CLASSROOM_SUCCESS =  	addFormattingAlignLeft("You have successfully deleted your classroom.");
 	private static final String mREMOVE_MEMBER_SUCCESS = 		addFormattingAlignLeft("You have successfully removed a member from this classroom.");
 	private static final String mCHANGE_STATUS_SUCCESS =		addFormattingAlignLeft("You have successfully changed the status of a member.");
-	private static final String mCONFIRM_AS_MEMBER_SUCCESS = 	 addFormattingAlignLeft("You have successfully added a member to this classroom.");
+	private static final String mCONFIRM_AS_MEMBER_SUCCESS = 	addFormattingAlignLeft("You have successfully added a member to this classroom.");
 	private static final String mDENY_MEMBERSHIP_SUCCESS =   	addFormattingAlignLeft("You have successfully denied a user member to this classroom.");
+	private static final String mCOMMENT_DELETION_SUCCESS = 	addFormattingAlignLeft("You have successfully deleted the comment.");		
+	private static final String mTHREAD_DELETION_SUCCESS = 		addFormattingAlignLeft("You have successfully deleted the thread.");	
+	
 	
 	private static final String sHOME_PAGE_OPTIONS =		addFormattingAlignLeft("1. View your classrooms.") +
 															addFormattingAlignLeft("2. Create a classroom.") +
@@ -158,6 +155,7 @@ public class UserInterface {
 	    	String classroomNameTemp = console.readLine("Please specify a classroom name: ");
 	    	if (client.createClassroom(classroomNameTemp, currentUserName)){
 	    		currentClassroomName = classroomNameTemp;
+	    		currentPermissions = sINSTRUCTOR;
 				classroomPage(mCLASSROOM_CREATION_SUCCESS);
 			} else {
 				homePage(eCLASSROOM_CREATION_ERROR);
@@ -180,8 +178,7 @@ public class UserInterface {
 	    default:
 	    	console.printf(eGENERAL_ERROR);
 	        break;
-		}
-		
+		}		
 	}
 	
 	/**
@@ -191,11 +188,13 @@ public class UserInterface {
 	 */
 	private static void classroomListPage(String messages) {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
+		
 		Map<String, Integer> classroomMap = client.getClassroomMapForUser(currentUserName);	
 		List<String> classroomList = mapStringKeysToList(classroomMap);
+		
 		displayPage(sCLASSROOM_LIST_PAGE, messages, info, null, listToUIString(classroomList));
 
-		int selection = getValidSelectionFromUser(classroomMap.size());
+		int selection = getValidSelectionFromUser(classroomList.size());
 		String classroomSelection = classroomList.get(selection - 1);
 		
 		currentClassroomName = classroomSelection;	
@@ -227,14 +226,13 @@ public class UserInterface {
 	 * 3. Disjoin this classroom.
 	 * 4. Go back home.
 	 * @param messages
-	 * 
 	 */
 	private static void classroomPage(String messages) {
 		int maxSelection = 0;
 		
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
-		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions + "."));
+		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName));
+		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
 		if (currentPermissions == sSTUDENT) {
 			displayPage(sCLASSROOM_PAGE, messages, info, null, sCLASSROOM_PAGE_OPTIONS_STUDENT);
 			maxSelection = 4;
@@ -294,8 +292,7 @@ public class UserInterface {
 	    default:
 	    	console.printf(eGENERAL_ERROR);
 	    	break;
-		}
-		
+		}		
 	}
 
 	/**
@@ -305,16 +302,17 @@ public class UserInterface {
 	 */
 	private static void threadListPage(String messages) {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
-		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions + "."));
+		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName));
+		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
 		
-		Map<Integer, String> threadMap = client.getThreadMapForClassroom(currentClassroomName, currentUserName);		
-		List<Integer> threadIDList = mapIntegerKeysToList(threadMap);
-		List<String> threadTopicsList = mapValuesToList(threadMap);
+		Map<Integer, String> threadMap = client.getThreadMapForClassroom(currentClassroomName, currentUserName);
+		TreeMap<Integer, String> threadTreeMap = new TreeMap<Integer, String>(threadMap); // Converting to TreeMap to stabilize the order.
+		List<String> threadTopicsList = mapValuesToList(threadTreeMap);
+		List<Integer> threadIDList = mapIntegerKeysToList(threadTreeMap);
 		
 		displayPage(sTHREAD_LIST_PAGE, messages, info, null, listToUIString(threadTopicsList));
 		
-		int selection = getValidSelectionFromUser(threadMap.size());				
+		int selection = getValidSelectionFromUser(threadTopicsList.size());				
 		Integer threadSelection = threadIDList.get(selection - 1);
 		
 		currentThreadID = threadSelection;
@@ -339,11 +337,12 @@ public class UserInterface {
 		int maxSelection = 0;
 		
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
-		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions + "."));
-		info = info.concat(addFormattingAlignLeft("Current thread: " + currentThreadName + "."));
+		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName));
+		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
+		info = info.concat(addFormattingAlignLeft("Current thread: " + currentThreadName));
 		
-		String threadContent = null; //TODO: get thread content
+		Map<Integer, String> threadContentMap = client.getThreadGivenID(currentThreadID, currentClassroomName, currentUserName);
+		String threadContent = threadMapToString(threadContentMap);
 		
 		if (currentPermissions == sTEACHING_ASSISTANT || currentPermissions == sINSTRUCTOR) {
 			displayPage(sTHREAD_PAGE, messages, info, threadContent, sTHREAD_PAGE_OPTIONS_INSTRUCTOR_AND_TEACHING_ASSISTANT);
@@ -369,13 +368,21 @@ public class UserInterface {
 	        break;
 	    // Delete a comment.
 	    case 2:
-	    	// TODO: needs to be implemented
-	        threadPage(null);
-	        break;
+	    	Integer commentID = Integer.parseInt(console.readLine("What's the number of the comment you'd like to delete? "));
+	    	if (client.deleteComment(commentID, currentThreadID, currentUserName, currentClassroomName)){
+	    		threadPage(mCOMMENT_DELETION_SUCCESS);
+		        break;
+	    	} else {
+	    		threadPage(eCOMMENT_DELETION_ERROR);
+	    	}
 	    // Delete this entire thread.
 	    case 3:
-	    	// TODO: needs to be implemented
-	        classroomPage(null);
+	    	if (client.deleteThread(currentThreadID, currentUserName, currentClassroomName)){
+	    		classroomPage(mTHREAD_DELETION_SUCCESS); 
+		        break;
+	    	} else {
+	    		threadPage(eTHREAD_DELETION_ERROR);
+	    	}
 	        break;
 	    // Go back to this classroom's main page.
 	    case 4:
@@ -385,8 +392,7 @@ public class UserInterface {
 	    default:
 	    	console.printf(eGENERAL_ERROR);
 	        break;
-		}
-		
+		}		
 	}
 
 	/**
@@ -396,16 +402,19 @@ public class UserInterface {
 	 */
 	private static void memberListPage(String messages) {		
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
-		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions + "."));
+		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName));
+		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
 		
 		Map<String, Integer> memberMap = client.getMemberMapForClassroom(currentClassroomName, currentUserName);
-		List<String> memberList = mapStringKeysToList(memberMap); // TODO not stable
-		displayPage(sMEMBER_LIST_PAGE, messages, info, null, mapToUIString3(memberMap)); // TODO not stable
-
-		int selection = getValidSelectionFromUser(memberMap.size());
+		TreeMap<String, Integer> memberTreeMap = new TreeMap<String, Integer>(memberMap); // Converting to TreeMap to stabilize the order.
+		List<String> memberList = mapStringKeysToList(memberMap);
 		
-		currentMemberName = memberList.get(selection);
+		displayPage(sMEMBER_LIST_PAGE, messages, info, null, memberMapToUIString(memberTreeMap)); // Displays members' names along with their permissions in the current classroom.
+
+		int selection = getValidSelectionFromUser(memberList.size());
+		
+		currentMemberName = memberList.get(selection -1);
+		currentMemberPermissions = convertIntToStringPermissions(memberTreeMap.get(currentMemberName));
 	    memberPage(null);
 	}
 	
@@ -427,11 +436,10 @@ public class UserInterface {
 		int maxSelection = 0;
 		
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
-		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions + "."));
-		info = info.concat(addFormattingAlignLeft("Currently viewing member: " + currentMemberName + "."));
+		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName));
+		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
 		
-		String memberContent = null; //TODO: member content such as status?
+		String memberContent = addFormattingAlignLeft("Currently viewing member: " + currentMemberName + " (" + currentMemberPermissions + ").");
 		
 		if (currentPermissions == sTEACHING_ASSISTANT) {
 			displayPage(sMEMBER_PAGE, messages, info, memberContent, sMEMBER_PAGE_OPTIONS_TEACHING_ASSISTANT); 
@@ -450,6 +458,7 @@ public class UserInterface {
 	    case 1:
 	    	client.removeMember(currentMemberName, currentClassroomName, currentUserName);
 	    	currentMemberName = null;
+	    	currentMemberPermissions = null;
 	        memberListPage(mREMOVE_MEMBER_SUCCESS);
 	        break;
 	    // Change this member's status.
@@ -460,13 +469,13 @@ public class UserInterface {
 	    // Go back to this classroom's main page.
 	    case 3:
 	    	currentMemberName = null;
+	    	currentMemberPermissions = null;
 	        classroomPage(null);
 	        break;
 	    default:
 	    	console.printf(eGENERAL_ERROR);
 	        break;
-		}
-		
+		}		
 	}
 
 	/**
@@ -476,8 +485,8 @@ public class UserInterface {
 	 */
 	private static void requestListPage(String messages) {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
-		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions + "."));
+		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName));
+		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
 		
 		List<String> requestList = client.getRequestListForClassroom(currentClassroomName, currentUserName);
 		displayPage(sREQUEST_LIST_PAGE, messages, info, null, listToUIString(requestList));
@@ -500,9 +509,9 @@ public class UserInterface {
 	 */
 	private static void requestPage(String messages) {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
-		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName + "."));
-		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions + "."));
-		info = info.concat(addFormattingAlignLeft("Currently viewing request from member: " + currentMemberName + "."));
+		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName));
+		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
+		info = info.concat(addFormattingAlignLeft("Currently viewing request from member: " + currentMemberName));
 		
 		displayPage(sREQUEST_PAGE, messages, info, null, sREQUEST_PAGE_OPTIONS);		
 
@@ -529,14 +538,22 @@ public class UserInterface {
 	    default:
 	    	console.printf(eGENERAL_ERROR);
 	        break;
-		}
-		
+		}		
 	}
 	
-	// Helper functions.
+	
+	
+	
+	////////////////////////////////////////////////
+	//              HELPER FUNCTIONS              //
+	////////////////////////////////////////////////
+	
+	////////////////////////////////////////////////
+	//            SELECTION FUNCTIONS             //
+	////////////////////////////////////////////////
 		
 	/**
-	 *  Get valid selection from the user.
+	 * Get valid selection from the user.
 	 * @param maxInt
 	 * @return integer corresponding to the selection.
 	 */
@@ -559,6 +576,12 @@ public class UserInterface {
 		return selection;
 	}
 	
+	/**
+	 * Converts a selection in the classroom page to the appropriate numbers based on permissions.
+	 * @param selection
+	 * @param permissions
+	 * @return
+	 */
 	private static int selectionConverterClassroomPage(int selection, String permissions) {
 		if (currentPermissions == sSTUDENT) {
 			if (selection == 3)
@@ -573,6 +596,12 @@ public class UserInterface {
 		return selection;
 	}
 	
+	/**
+	 * Converts a selection in the member page to the appropriate numbers based on permissions.
+	 * @param selection
+	 * @param permissions
+	 * @return
+	 */
 	private static int selectionConverterMemberPage(int selection, String permissions) {
 		if (currentPermissions == sINSTRUCTOR) {
 			if (selection == 2)
@@ -581,13 +610,23 @@ public class UserInterface {
 		return selection;
 	}
 	
-	private static int selectionConverterThreadPage(int selection, String currentPermissions2) {
-		if (currentPermissions == sSTUDENT) {
+	/**
+	 * Converts a selection in the thread page to the appropriate numbers based on permissions.
+	 * @param selection
+	 * @param permissions
+	 * @return
+	 */
+	private static int selectionConverterThreadPage(int selection, String permissions) {
+		if (permissions == sSTUDENT) {
 			if (selection == 2)
 				selection = 4;
 		}
 		return selection;
 	}
+	
+	////////////////////////////////////////////////
+	//          PERMISSIONS FUNCTIONS             //
+	////////////////////////////////////////////////
 	
 	/**
 	 * Converts permissions in number form to string form.
@@ -599,24 +638,42 @@ public class UserInterface {
 		if (num == 1){
 			permissions = sSTUDENT;
 		}
-		else if (num == 1){
+		else if (num == 2){
 			permissions = sTEACHING_ASSISTANT;
 		}
-		else if (num == 1){
+		else if (num == 3){
 			permissions = sINSTRUCTOR;
 		}
 		return permissions;
 	}
 	
-	// Various map to list functions.	
+	
+	////////////////////////////////////////////////
+	//       VARIOUS MAP TO LIST FUNCTIONS        //
+	////////////////////////////////////////////////
+
+	/**
+	 * Extracts string keys in a map and puts them into a list.
+	 * @param map
+	 * @return List<String>
+	 */
 	public static List<String> mapStringKeysToList(Map<String, Integer> map){
 		List<String> outputList = new ArrayList<String>();
+		if (map == null) {
+			//outputList.add("EMPTY");
+			return outputList;
+		}
 		for (String key : map.keySet()){
 			outputList.add(key);
 		}
 		return outputList;
 	}
 	
+	/**
+	 * Extracts integer keys in a map and puts them into a list.
+	 * @param map
+	 * @return List<Integer>
+	 */
 	private static List<Integer> mapIntegerKeysToList(Map<Integer, String> map) {
 		List<Integer> outputList = new ArrayList<Integer>();
 		for (Integer key : map.keySet()){
@@ -625,6 +682,11 @@ public class UserInterface {
 		return outputList;
 	}
 	
+	/**
+	 * Extracts string values in a map and puts them into a list.
+	 * @param map
+	 * @return List<String>
+	 */
 	private static List<String> mapValuesToList(Map<Integer, String> map) {
 		List<String> outputList = new ArrayList<String>();
 		for (String value : map.values()){
@@ -632,18 +694,67 @@ public class UserInterface {
 		}
 		return outputList;
 	}
+
 	
-	// UI formatting.
+	
+	
+	////////////////////////////////////////////////
+	//               UI FORMATTING                //
+	////////////////////////////////////////////////
+	
+	////////////////////////////////////////////////
+	//  CONTENT-SPECIFIC MAP TO STRING FUNCTIONS  //
+	////////////////////////////////////////////////
 	
 	/**
-	 * Clears the the top of the screen depending on the size of your window.
+	 * This is a function specifically for displaying threads in the UI.
+	 * @param threadContentMap
+	 * @return String formatted thread content extracted from the map.
 	 */
-	public static void clearScreen() {
-		System.out.println(((char) 27)+"[2J");
+	private static String threadMapToString(Map<Integer, String> threadContentMap) {
+		List<String> threadContentList = mapValuesToList(threadContentMap);
+		String uiString = "";
+		String uiStringTemp;
+		for (int i = 0; i < threadContentList.size(); i++){
+			uiStringTemp = "";
+			if (i == 0){
+				uiStringTemp = uiStringTemp.concat("Thread Topic: ");
+			}
+			else if (i == 1){
+				uiStringTemp = uiStringTemp.concat("Initial Post: ");
+			}
+			else if (i >= 2){
+				uiStringTemp = uiStringTemp.concat("Comment " + Integer.toString(i - 1) + ". ");
+			}			
+			uiStringTemp = uiStringTemp.concat(threadContentList.get(i));
+			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
+		}
+		return uiString;
+	}		
+	
+	/**
+	 * This is a function specifically for displaying members in the UI.
+	 * @param threadList
+	 * @return String
+	 */
+	private static String memberMapToUIString(Map<String, Integer> map) {
+		int i = 1;
+		String uiString = "";
+		String uiStringTemp;
+		for (Entry<String, Integer> entry : map.entrySet()){
+			uiStringTemp = "";
+			uiStringTemp = uiStringTemp.concat(Integer.toString(i) + ". ");
+			i++;
+			uiStringTemp = uiStringTemp.concat(entry.getKey() + " (" + entry.getValue().toString() + ")");
+			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
+		}
+		return uiString;
 	}
 	
 	/**
 	 * Takes in a list and turns it into a TUI-renderable string
+	 * @param list
+	 * @return String
 	 */
 	public static String listToUIString(List<String> list) {
 		String uiString = "";
@@ -657,63 +768,9 @@ public class UserInterface {
 		return uiString;		
 	}
 	
-//	/**
-//	 * 
-//	 * @param map
-//	 * @return uiString
-//	 */
-//	private static String mapToUIString(Map<String, Integer> map) {
-//		// TODO depends on sorting
-//		int i = 1;
-//		String uiString = "";
-//		String uiStringTemp;
-//		for (String key : map.keySet()){
-//			uiStringTemp = "";
-//			uiStringTemp = uiStringTemp.concat(Integer.toString(i) + ". ");
-//			i++;
-//			uiStringTemp = uiStringTemp.concat(key);
-//			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
-//		}
-//		return uiString;
-//	}
-//	
-//	/**
-//	 * 
-//	 * @param threadList
-//	 * @return
-//	 */
-//	private static String mapToUIString2(Map<Integer, String> map) {
-//		int i = 1;
-//		String uiString = "";
-//		String uiStringTemp;
-//		for (Entry<Integer, String> entry : map.entrySet()){
-//			uiStringTemp = "";
-//			uiStringTemp = uiStringTemp.concat(Integer.toString(i) + ". ");
-//			i++;
-//			uiStringTemp = uiStringTemp.concat(entry.getValue());
-//			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
-//		}
-//		return uiString;
-//	}
-	
-	/**
-	 * 
-	 * @param threadList
-	 * @return
-	 */
-	private static String mapToUIString3(Map<String, Integer> map) {
-		int i = 1;
-		String uiString = "";
-		String uiStringTemp;
-		for (Entry<String, Integer> entry : map.entrySet()){
-			uiStringTemp = "";
-			uiStringTemp = uiStringTemp.concat(Integer.toString(i) + ". ");
-			i++;
-			uiStringTemp = uiStringTemp.concat(entry.getKey() + " (" + entry.getValue().toString() + ")");
-			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
-		}
-		return uiString;
-	}
+	////////////////////////////////////////////////
+	//           UI FORMATTING FUNCTIONS          //
+	////////////////////////////////////////////////
 	
 	/**
 	 * Adds borders and appropriate amount of white space depending on the length of the input string.
@@ -753,22 +810,6 @@ public class UserInterface {
 		return formattedString;		
 	}
 	
-	public static String generateBigDivider() {
-		String bigDivider = "+";
-		for (int i = 0; i < iWINDOWWIDTH; i++){
-			bigDivider = bigDivider.concat("=");
-		}
-		return bigDivider.concat("+" + sNEW_LINE);		
-	}
-	
-	public static String generateSmallDivider() {
-		String smallDivider = "+";
-		for (int i = 0; i < iWINDOWWIDTH; i++){
-			smallDivider = smallDivider.concat("-");
-		}
-		return smallDivider.concat("+" + sNEW_LINE);		
-	}	
-
 	/**
 	 * Clears the last page and displays the new one.
 	 * Only necessary parameter is pageName.
@@ -797,12 +838,48 @@ public class UserInterface {
 		console.printf(sBIG_DIVIDER);
 	}
 	
+	/**
+	 * Clears the the top of the screen depending on the size of your window.
+	 */
+	public static void clearScreen() {
+		System.out.println(((char) 27)+"[2J");
+	}
+		
+	////////////////////////////////////////////////
+	//         GENERATORS FOR UI BORDERS          //
+	////////////////////////////////////////////////
+	
+	/**
+	 * Generates a big divider string.
+	 * @return big divider
+	 */
+	public static String generateBigDivider() {
+		String bigDivider = "+";
+		for (int i = 0; i < iWINDOWWIDTH; i++){
+			bigDivider = bigDivider.concat("=");
+		}
+		return bigDivider.concat("+" + sNEW_LINE);		
+	}
+	
+	/**
+	 * Generates a small divider string.
+	 * @return small divider
+	 */
+	public static String generateSmallDivider() {
+		String smallDivider = "+";
+		for (int i = 0; i < iWINDOWWIDTH; i++){
+			smallDivider = smallDivider.concat("-");
+		}
+		return smallDivider.concat("+" + sNEW_LINE);		
+	}	
 	
 	
 	
 	
-	// Main.
-
+	////////////////////////////////////////////////
+	//                    MAIN                    //
+	////////////////////////////////////////////////
+	
 	/**
 	 * Main function. Goes to the login page.
 	 */

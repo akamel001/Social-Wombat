@@ -7,39 +7,19 @@ public class ClientSocketHandler {
 
 	private static final int SERVER_PORT = 4444;
 
+	private static Message messageSending = null;
+	private static Message messageReceived = null; 
+	private static Socket socket = null;
+	private static ObjectOutputStream oos = null;
+	private static ObjectInputStream ois = null;
 
+	public Message sendReceive(){
 
-	public static Message constructMessage(String uName, Message.MessageType type, Object body){
-
-
-		Message message = new Message();
-		Cookie cookie = new Cookie(uName);
-		
-		message.setCookie(cookie);
-		message.setType(type);
-		message.setBody(body);
-
-		try {
-			//TODO change to static variables uses localhost for now
-			message.setRecipient(InetAddress.getLocalHost());
-			message.setSender(InetAddress.getLocalHost());
-		} catch (UnknownHostException e) {
-			System.out.println(e);
+		if(messageSending == null){
+			System.out.println("Message not set correctly (null). Exiting...");
+			System.exit(-1);
 		}
-
-		return message;
-	}
-	
-	public Message sendReceive(String uName, Message.MessageType type){
-
-		Message messageSending = constructMessage(uName, type, null);
-
-		//TODO construct the received message from the hub
-		Message messageReceived = null; 
-		Socket socket = null;
-		ObjectOutputStream oos = null;
-		ObjectInputStream ois = null;
-
+		
 		try{
 			socket = new Socket(InetAddress.getLocalHost(), SERVER_PORT);
 
@@ -55,7 +35,7 @@ public class ClientSocketHandler {
 			// read an object from the server
 			System.out.println("Receiving message from server...");
 			messageReceived = (Message) ois.readObject();
-			
+
 			oos.close();
 			ois.close();
 			socket.close();
@@ -74,51 +54,12 @@ public class ClientSocketHandler {
 
 		return messageReceived;
 	}
-	
 
-	public Message sendReceive(String uName, Message.MessageType type, Object body){
+	public Message getMessageSending() {
+		return messageSending;
+	}
 
-		Message messageSending = constructMessage(uName, type, body);
-
-		//TODO construct the received message from the hub
-		Message messageReceived = null; 
-		Socket socket = null;
-		ObjectOutputStream oos = null;
-		ObjectInputStream ois = null;
-
-		try{
-			socket = new Socket(InetAddress.getLocalHost(), SERVER_PORT);
-
-			// open I/O streams for objects
-			oos = new ObjectOutputStream(socket.getOutputStream());
-			ois = new ObjectInputStream(socket.getInputStream());
-
-			// sending an object to the server
-			System.out.println("Sending message to server...");
-			oos.writeObject(messageSending);
-			oos.flush();
-
-			// read an object from the server
-			System.out.println("Receiving message from server...");
-			messageReceived = (Message) ois.readObject();
-			System.out.print(messageReceived.getBody());
-			
-			oos.close();
-			ois.close();
-			socket.close();
-
-		} catch (UnknownHostException e) {
-			System.out.println("Unknown host: " + messageSending.getRecipient());
-			System.exit(1);
-		} catch  (IOException e) {
-			System.out.println("No I/O");
-			e.printStackTrace();
-			System.exit(1);
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-
-		return messageReceived;
+	public static int getServerPort() {
+		return SERVER_PORT;
 	}
 }

@@ -1,3 +1,4 @@
+
 import java.io.*;
 import java.net.*;
 
@@ -15,44 +16,84 @@ class Hub extends Thread {
 	static String userListName = "hub.userlist";
 	static String serverListName = "hub.serverlist";
 	
-	
+	static ServerSocket hubSocket = null;
+	String hubIP = null;
 	
 	public Hub(){
 		// Constructor
-		InetAddress thisIp = null;
 		try {
-			thisIp = InetAddress.getLocalHost();
+			InetAddress addr = InetAddress.getLocalHost();
+			System.out.println("New Hub created: " + addr);
+			hubIP = addr.getHostAddress();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
+			System.out.println("Hub could not be created");
 		}
-		System.out.println("New Hub created with IP: "+thisIp.getHostAddress());
-
 	}
-
+	
 	/*
 	 * Add a user to the userList.
 	 */
-	public void addUser(String username){
+	public boolean addUser(String username){
+		//check nulls
+		if (username == null){
+			return false;
+		}
 		//Add
 		if(userList.addUser(username)){
 			System.out.println("User " + username + " added successfully!");
+			return true;
 		} else {
 			System.out.println("User " + username + " could not be added");
+			return false;
 		}
+	}
+	
+	/*
+	 * Remove a user from the userList
+	 */
+	public boolean removeUser(String username){
+		//check user exists
+		if(userList.validateUser(username)){
+			System.out.println(username + "removed.");
+			return userList.removeUser(username);
+		} else{
+			System.out.println(username + " was not in the user list");
+			return false;
+		}
+	}
+	
+	/*
+	 * Check a user exists in the userList
+	 */
+	public boolean userExists(String username){
+		return userList.validateUser(username);
 	}
 	
 	/*
 	 * Add a server to the serverList
 	 */
-	public void addServer(InetAddress server){
+	public int addServer(InetAddress server){
 		int r = serverList.addServer(server, SERVER_SOCKET);
 		if (r == -1){
 			System.out.println("Adding server " + server + "failed."); 
+			return r;
 		} else {
 			System.out.println("Server" + server + " added under server id: " + r);
+			return r;
 		}
 	}
 	
+	/*
+	 * Remove a server from the serverList
+	 */
+	public boolean removeServer(int serverID){
+		if(serverList.removeServer(serverID) == 1){
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
 	/* 
 	 * Reads a given object from the filesystem
@@ -120,7 +161,7 @@ class Hub extends Thread {
 			serverList = new ServerList();
 		}
 	}
-
+	
 	/*
 	 * Main running loop for a Hub
 	 */
@@ -129,12 +170,28 @@ class Hub extends Thread {
 		// Initialize Data Structures
 		initializeData();
 		
+		//add shutdown hook
+		Runtime.getRuntime().addShutdownHook(new Thread(){
+			public void run() {
+				//Close socket after done listening
+				try {
+					hubSocket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+					System.out.println("Couldn't close");
+				}
+				// Write out to disk
+				writeToDisk(classList, classListName);
+				writeToDisk(userList, userListName);
+				writeToDisk(serverList, serverListName);
+				System.out.println("Data safely written out.");
+			}
+		});
+		
 		/* 
 		 * FROM THIS POINT ON IS CODE THAT WAITS FOR AND RESPONDS TO 
 		 * Client REQUESTS
 		 * */
-		
-		ServerSocket hubSocket = null;
 		
 		//Create and listen in on a port
 		try {
@@ -146,6 +203,7 @@ class Hub extends Thread {
 		while(listening){	
 			// Spin until a new message is received and then spawn a 
 			// HubSocketHandler thread
+			
 			try {
 				System.out.println("Listening");
 				Socket client = hubSocket.accept();
@@ -168,10 +226,11 @@ class Hub extends Thread {
 			e.printStackTrace();
 			System.out.println("Couldn't close");
 		}
+		
+
 		// Write out to disk
 		writeToDisk(classList, classListName);
 		writeToDisk(userList, userListName);
 		writeToDisk(serverList, serverListName);
 	}
-
 }
