@@ -14,7 +14,12 @@ public class ClientTest {
 	 */
 	@Test
 	public void testHandleLogin() {
-		fail("Not yet implemented"); // TODO
+		Client client = new Client();
+		
+		if(client.handleLogin("Mike"))
+			System.out.println("Pass");
+		else 
+			System.out.println("Fail");
 	}
 
 	/**
@@ -22,7 +27,9 @@ public class ClientTest {
 	 */
 	@Test
 	public void testCreateClassroom() {
-		fail("Not yet implemented"); // TODO
+		Client client = new Client();
+		
+		client.createClassroom("Dogs", "Mike");
 	}
 
 	/**
