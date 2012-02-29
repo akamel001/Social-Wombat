@@ -638,7 +638,12 @@ public class UserInterface {
 		return selection;
 	}
 	
-	
+	/**
+	 * This provides a default go home choice for when the user would 
+	 * otherwise be in a dead end situation (for example: when he opts 
+	 * to choose a classroom, but he is not actually enrolled in any 
+	 * classrooms).
+	 */
 	public static void goHomeDefaultMenu() {
 		int selection = getValidSelectionFromUser(1);
 		
