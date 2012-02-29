@@ -178,7 +178,7 @@ public class Client {
 		handler.getMessageSending().setClassroom_ID(classroomName);
 		handler.getMessageSending().setBody(list);
 		handler.getMessageSending().setType(Message.MessageType.Client_SetPermissions);
-		handler.getMessageSending().setBody(-1);
+		handler.getMessageSending().setBody(list);
 		
 		Message response = handler.sendReceive();
 
