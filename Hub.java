@@ -104,7 +104,13 @@ class Hub extends Thread {
 		try {
 		    FileInputStream fin = new FileInputStream(name);
 		    ObjectInputStream ois = new ObjectInputStream(fin);
-		    o = (Object) ois.readObject();
+		    if (name.equals(classListName)){
+		    	 o = (ClassList) ois.readObject();
+		    } else if (name.equals(userListName)){
+		    	 o = (UserList) ois.readObject();
+		    } else if (name.equals(serverListName)){
+		    	 o = (ServerList) ois.readObject();
+		    }
 		    ois.close();
 		} catch (IOException e) { 
 			e.printStackTrace(); 
