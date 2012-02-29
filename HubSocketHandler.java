@@ -178,6 +178,7 @@ public class HubSocketHandler extends Thread{
 						msg.setCode(1);
 						System.out.println("User " + msg.getCookie().getKey() + " logged in");
 					} 
+					System.out.println("Message code returned is: " + msg.getCode());
 					returnMessage(msg);
 					break;
 				// Returns in body all users in a classroom
