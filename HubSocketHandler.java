@@ -242,6 +242,7 @@ public class HubSocketHandler extends Thread{
 					//Special case, instructor cannot be deleted
 					if((isClassInstructor(personToChange,msg.getClassroom_ID())) && (per == -1)){
 						//return failure
+						System.out.println("Denied. Instructor cannot delete self from classroom.");
 						returnMessage(msg);
 						break;
 					} else if(isClassTAorInstructor(msg.getCookie().getKey(),msg.getClassroom_ID())){
