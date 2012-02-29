@@ -238,7 +238,6 @@ public class HubSocketHandler extends Thread{
 					// Person
 					String personToChange = a.get(0);
 					// Permission to set for Person
-					System.out.println("New permission number: " + a.get(1));
 					int per = Integer.parseInt(a.get(1));
 
 					//Special case, instructor cannot be deleted
