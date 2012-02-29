@@ -48,11 +48,12 @@ public class UserInterface {
 	private static final String sTEACHING_ASSISTANT = 	"Teaching Assistant";
 	private static final String sSTUDENT = 				"Student";
 	
+	private static final String eNON_VALID_SELECTION = 		"That is not a valid selection." + sNEW_LINE;
+	
 	private static final String eGENERAL_ERROR = 			addFormattingAlignLeft("An error has occurred.");
 	private static final String eLOG_IN_ERROR = 			addFormattingAlignLeft("There was an error in logging in with the provided username.");		
 	private static final String eCLASSROOM_CREATION_ERROR =	addFormattingAlignLeft("An error occured when creating the classroom.");
-	private static final String eCLASSROOM_REQUEST_ERROR =	addFormattingAlignLeft("An error occured when requesting to join a classroom.");
-	private static final String eNON_VALID_SELECTION = 		addFormattingAlignLeft("That is not a valid selection.");
+	private static final String eCLASSROOM_REQUEST_ERROR =	addFormattingAlignLeft("An error occured when requesting to join a classroom.");	
 	private static final String eTHREAD_CREATION_ERROR = 	addFormattingAlignLeft("An error occured when creating your thread.");	
 	private static final String eCOMMENT_DELETION_ERROR =	addFormattingAlignLeft("An error occured when deleting the comment.");	
 	private static final String eTHREAD_DELETION_ERROR = 	addFormattingAlignLeft("An error occured when deleting the thread.");
@@ -531,7 +532,7 @@ public class UserInterface {
 		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName));
 		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
-		info = info.concat(addFormattingAlignLeft("Currently viewing request from member: " + currentMemberName));
+		info = info.concat(addFormattingAlignLeft("Currently viewing request from member: " + currentPendingMemberName));
 		
 		displayPage(sREQUEST_PAGE, messages, info, null, sREQUEST_PAGE_OPTIONS);		
 
@@ -629,7 +630,7 @@ public class UserInterface {
 	 * @return
 	 */
 	private static int selectionConverterMemberPage(int selection, String permissions) {
-		if (currentPermissions == sINSTRUCTOR) {
+		if (currentPermissions == sTEACHING_ASSISTANT) {
 			if (selection == 2)
 				selection = 3;
 		}
