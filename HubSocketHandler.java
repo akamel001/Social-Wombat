@@ -9,6 +9,7 @@ public class HubSocketHandler extends Thread{
 	//private static int CLIENT_SOCKET = 4444;
 	private static int SERVER_SOCKET = 5050;
 	
+	static Message msg = new Message();
 	ClassList classList;
 	UserList userList;
 	ServerList serverList;
@@ -65,8 +66,7 @@ public class HubSocketHandler extends Thread{
 	/*
 	 * Deserialize transmission in socket and convert to a message
 	 */
-	private Message getMessage(){
-		Message msg = new Message();
+	private void getMessage(){
 		try {
 			msg = (Message) ois.readObject();
 			System.out.println("Just got a msg from: " + msg.getCookie().getKey());
@@ -74,7 +74,6 @@ public class HubSocketHandler extends Thread{
 			System.out.println(e.getMessage());
 			System.out.println("Deserializing message failed.");
 		}
-		return msg;
 	}
 	
 	/*
@@ -152,7 +151,7 @@ public class HubSocketHandler extends Thread{
 	public void run(){
 		boolean valid = true;
 		//Read and deserialize Message from Socket
-		Message msg = getMessage();
+		getMessage();
 		
 		if (msg == null){
 			System.out.println("Message was null");
