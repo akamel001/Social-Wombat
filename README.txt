@@ -39,7 +39,7 @@ X-------------------------------------------------------------------------------
 Instructions:
 	
 	* Installation: 
-		- To install the system download the repository from github (https://github.com/plumppapaya/Social-Wombat/zipball/
+		- To install the system download code from CMS
 	
 	* Compiling:
 		- Navigate to the directory of the downloaded repository and type 'make' 
