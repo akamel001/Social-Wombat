@@ -69,6 +69,7 @@ public class HubSocketHandler extends Thread{
 		Message msg = null;
 		try {
 			msg = (Message) ois.readObject();
+			System.out.println("Just got a msg from: " + msg.getCookie().getKey());
 		} catch (Exception e){
 			System.out.println(e.getMessage());
 			System.out.println("Deserializing message failed.");
