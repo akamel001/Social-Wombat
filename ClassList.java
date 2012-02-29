@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * ClassList is a list of ClassData objects.
@@ -210,5 +211,34 @@ public class ClassList implements Serializable{
 			return -1;
 		else
 			return temp.getClassPort();
+	}
+	
+	/**
+	 * Removes all of the user's entries from the classlist.
+	 * @param userName The name of the user to be deleted.
+	 * @return Returns a List<String> containing all of the classes in which the user is in an instructor.
+	 */
+	public List<String> deleteUser(String userName){
+		List<String> classesToBeDeleted = Collections.synchronizedList(new ArrayList<String>());
+		Set<String> s = classList.keySet();
+		synchronized(classList) {  
+			Iterator<String> i = s.iterator(); 
+			while (i.hasNext()){
+				String className = i.next();
+				ClassData currentClass = classList.get(className);
+				
+				// if the user is the instructor, delete the classroom and
+				// add the classroom to the list of classes to be deleted
+				if (currentClass.getInstructor().equals(userName)){
+					classList.remove(className);
+					classesToBeDeleted.add(className);
+				}
+				// if the user is not the instructor, call removeUser on the class
+				else{
+					currentClass.removeUser(userName);
+				}
+			}
+		}
+		return classesToBeDeleted;
 	}
 }
