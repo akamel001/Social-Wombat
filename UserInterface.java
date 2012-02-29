@@ -77,6 +77,12 @@ public class UserInterface {
 	private static final String mCOMMENT_DELETION_SUCCESS = 	addFormattingAlignLeft("You have successfully deleted the comment.");		
 	private static final String mTHREAD_DELETION_SUCCESS = 		addFormattingAlignLeft("You have successfully deleted the thread.");	
 	
+	private static final String cNO_REQUESTS = 					addFormattingAlignLeft("This classroom has no requests to enroll.");
+	private static final String cNO_MEMBERS = 					addFormattingAlignLeft("This classroom has no enrolled members.");
+	private static final String cNO_THREADS = 					addFormattingAlignLeft("This discussions board has no threads.");
+	private static final String cNO_CLASSROOMS = 				addFormattingAlignLeft("You are not enrolled in any classrooms.");
+	
+	private static final String sDEFAULT_OPTIONS = 			addFormattingAlignLeft("1. Go back home.");
 	
 	private static final String sHOME_PAGE_OPTIONS =		addFormattingAlignLeft("1. View your classrooms.") +
 															addFormattingAlignLeft("2. Create a classroom.") +
@@ -199,14 +205,21 @@ public class UserInterface {
 		Map<String, Integer> classroomMap = client.getClassroomMapForUser(currentUserName);	
 		List<String> classroomList = mapStringKeysToList(classroomMap);
 		
-		displayPage(sCLASSROOM_LIST_PAGE, messages, info, null, listToUIString(classroomList));
-
-		int selection = getValidSelectionFromUser(classroomList.size());
-		String classroomSelection = classroomList.get(selection - 1);
-		
-		currentClassroomName = classroomSelection;	
-		currentPermissions = convertIntToStringPermissions(classroomMap.get(classroomSelection));
-	    classroomPage(null);		
+		if (classroomList == null || classroomList.isEmpty()){
+			String content = cNO_CLASSROOMS;
+			displayPage(sCLASSROOM_LIST_PAGE, messages, info, content, sDEFAULT_OPTIONS);
+			goHomeDefaultMenu();
+		} else {		
+			
+			displayPage(sCLASSROOM_LIST_PAGE, messages, info, null, listToUIString(classroomList));
+	
+			int selection = getValidSelectionFromUser(classroomList.size());
+			String classroomSelection = classroomList.get(selection - 1);
+			
+			currentClassroomName = classroomSelection;	
+			currentPermissions = convertIntToStringPermissions(classroomMap.get(classroomSelection));
+		    classroomPage(null);
+		}
 	}
 
 	/**
@@ -323,14 +336,21 @@ public class UserInterface {
 		List<String> threadTopicsList = mapValuesToList(threadTreeMap);
 		List<Integer> threadIDList = mapIntegerKeysToList(threadTreeMap);
 		
-		displayPage(sTHREAD_LIST_PAGE, messages, info, null, listToUIString(threadTopicsList));
-		
-		int selection = getValidSelectionFromUser(threadTopicsList.size());				
-		Integer threadSelection = threadIDList.get(selection - 1);
-		
-		currentThreadID = threadSelection;
-		currentThreadName = threadMap.get(threadSelection);
-	    threadPage(null);
+		if (threadTopicsList == null || threadTopicsList.isEmpty()){
+			String content = cNO_THREADS;
+			displayPage(sCLASSROOM_LIST_PAGE, messages, info, content, sDEFAULT_OPTIONS);
+			goHomeDefaultMenu();
+		} else {	
+			
+			displayPage(sTHREAD_LIST_PAGE, messages, info, null, listToUIString(threadTopicsList));
+			
+			int selection = getValidSelectionFromUser(threadTopicsList.size());				
+			Integer threadSelection = threadIDList.get(selection - 1);
+			
+			currentThreadID = threadSelection;
+			currentThreadName = threadMap.get(threadSelection);
+		    threadPage(null);
+		}
 	}
 
 	/**
@@ -422,6 +442,12 @@ public class UserInterface {
 		TreeMap<String, Integer> memberTreeMap = new TreeMap<String, Integer>(memberMap); // Converting to TreeMap to stabilize the order.
 		List<String> memberList = mapStringKeysToList(memberTreeMap);
 		
+		if (memberTreeMap == null || memberTreeMap.isEmpty()){
+			String content = cNO_MEMBERS;
+			displayPage(sCLASSROOM_LIST_PAGE, messages, info, content, sDEFAULT_OPTIONS);
+			goHomeDefaultMenu();
+		} else {
+
 		displayPage(sMEMBER_LIST_PAGE, messages, info, null, memberMapToUIString(memberTreeMap)); // Displays members' names along with their permissions in the current classroom.
 
 		int selection = getValidSelectionFromUser(memberList.size());
@@ -429,6 +455,7 @@ public class UserInterface {
 		currentMemberName = memberList.get(selection -1);
 		currentMemberPermissions = convertIntToStringPermissions(memberTreeMap.get(currentMemberName));
 	    memberPage(null);
+		}
 	}
 	
 	/**
@@ -510,12 +537,20 @@ public class UserInterface {
 		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
 		
 		List<String> requestList = client.getRequestListForClassroom(currentClassroomName, currentUserName);
-		displayPage(sREQUEST_LIST_PAGE, messages, info, null, listToUIString(requestList));
 		
-		int selection = getValidSelectionFromUser(requestList.size());
+		if (requestList == null || requestList.isEmpty()){
+			String content = cNO_REQUESTS;
+			displayPage(sCLASSROOM_LIST_PAGE, messages, info, content, sDEFAULT_OPTIONS);
+			goHomeDefaultMenu();
+		} else {
 		
-		currentPendingMemberName = requestList.get(selection - 1);
-	    requestPage(null);		
+			displayPage(sREQUEST_LIST_PAGE, messages, info, null, listToUIString(requestList));
+			
+			int selection = getValidSelectionFromUser(requestList.size());
+			
+			currentPendingMemberName = requestList.get(selection - 1);
+		    requestPage(null);	
+		}
 	}
 	
 	/**
@@ -601,6 +636,33 @@ public class UserInterface {
 			}
 		}
 		return selection;
+	}
+	
+	/**
+	 * This provides a default go home choice for when the user would 
+	 * otherwise be in a dead end situation (for example: when he opts 
+	 * to choose a classroom, but he is not actually enrolled in any 
+	 * classrooms).
+	 */
+	public static void goHomeDefaultMenu() {
+		int selection = getValidSelectionFromUser(1);
+		
+		switch (selection) {
+		 // Go back home.
+	    case 1:
+	    	currentClassroomName = null;
+	    	currentPermissions = null;
+	    	currentThreadName = null;
+	    	currentThreadID = null;
+	    	currentMemberName = null;
+	    	currentMemberPermissions = null;
+	    	currentPendingMemberName = null;
+	        homePage(null);
+	        break;
+	    default:
+	    	console.printf(eGENERAL_ERROR);
+	        break;
+		}	        
 	}
 	
 	/**

@@ -136,9 +136,9 @@ public class ClassData implements Serializable{
 		if (user.equals(instructor))
 			return 3;
 		Integer p = userList.get(user);
-		if (p==null)
+		if (p==null){
 			return -1;
-		else
+		} else
 			return (int)p;
 	}
 
