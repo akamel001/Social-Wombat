@@ -171,15 +171,8 @@ class Hub extends Thread {
 		initializeData();
 		
 		//add shutdown hook
-		Runtime.getRuntime().addShutdownHook(new Thread(){
+		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
-				//Close socket after done listening
-				try {
-					hubSocket.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-					System.out.println("Couldn't close");
-				}
 				// Write out to disk
 				writeToDisk(classList, classListName);
 				writeToDisk(userList, userListName);
