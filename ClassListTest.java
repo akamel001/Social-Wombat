@@ -13,65 +13,29 @@ public class ClassListTest {
 	@Test
 	public final void testAddClass() {
 		String iName = "DR. G";
+		int t;
 		ClassData cd = new ClassData(iName);
 		cd.setClassName("CLASS_A");
 		cd.setClassServer(1, 1000);
-		
+		ClassList cl = new ClassList();
+		t = cl.addClass(cd);
+		assertEquals(1, t);
 	}
 
 	@Test
 	public final void testRemoveClass() {
-		fail("Not yet implemented"); // TODO
+		String iName = "DR. G";
+		int t;
+		ClassData cd = new ClassData(iName);
+		cd.setClassName("CLASS_A");
+		cd.setClassServer(1, 1000);
+		ClassList cl = new ClassList();
+		t = cl.addClass(cd);
+		assertEquals(1, t);
+		t = cl.removeClass("CLASS_A");
+		assertEquals(1, t);
 	}
 
-	@Test
-	public final void testGetUserPermissions() {
-		fail("Not yet implemented"); // TODO
-	}
 
-	@Test
-	public final void testSetUserPermissions() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testGetInstructor() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testGetClassAll() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testGetClassEnrolled() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testGetClassPending() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testGetUserEnrollment() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testGetClassServer() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testGetClassPort() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testDeleteUser() {
-		fail("Not yet implemented"); // TODO
-	}
 
 }

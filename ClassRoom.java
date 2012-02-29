@@ -100,6 +100,8 @@ public class ClassRoom implements Serializable{
 	 * @return Returns 1 if the comment is removed, -1 if the comment was not in the post.
 	 */
 	protected int removeComment(int postId, int commentId){
+		if(postId<0 || commentId < 3)
+			return -1;
 		int out;
 		synchronized(postList){
 			Post p = postList.get(postId);

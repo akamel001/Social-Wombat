@@ -6,12 +6,11 @@ scenarios were played out as best as possible.
 Once each component was verified to be fairly stable on a stand-alone basis, integration testing 
 was used to ensure that the system could work as a whole.
 
-ClassData.java --  
 
-ClassDB.java -- ClassDBTest.java tests adding and deleting classrooms, threads, and comments. Classes used
+ClassDBTest.java -- tests adding and deleting classrooms, threads, and comments from ClassDB objects. Classes used
 were ClassDB.java, ClassRoom.java, and Post.java.
 
-ClassList.java -- 
+ClassListTest.java -- tests adding and removing ClassData objects from ClassList objects.
 
 Client.java -- 
 
@@ -27,11 +26,11 @@ Message.java --
 
 Server.java -- 
 
-ServerList.java -- 
+ServerListTest.java -- Tests added and deleting servers from ServerList objects. 
 
 ServerSocketHandler.java -- 
 
 UserInterface.java -- The bulk of the testing for the user interface is outlined extensively in 
 UserInterfaceTest.txt. UserInterfaceTest.java contains JUnit tests methods for the helper functions.
 
-UserList.java --
+UserListTest.java -- Tests added deleting and validating users from UserList objects.
