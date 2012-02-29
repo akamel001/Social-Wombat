@@ -508,10 +508,11 @@ public class UserInterface {
 	        break;
 	    // Change this member's status.
 	    case 2:
-	    	if (client.changeStatus(currentMemberName, currentUserName, currentClassroomName)){
-	    		currentMemberPermissions = switchCurrentMemberPermissions(currentMemberPermissions);
+	    	currentMemberPermissions = switchCurrentMemberPermissions(currentMemberPermissions);
+	    	if (client.changeStatus(currentMemberName, currentMemberPermissions, currentUserName, currentClassroomName)){
 	    		memberPage(mCHANGE_STATUS_SUCCESS);
 	    	} else {
+	    		currentMemberPermissions = switchCurrentMemberPermissions(currentMemberPermissions);
 	    		memberPage(eCHANGE_STATUS_ERROR);
 	    	}
 	    	
