@@ -31,6 +31,7 @@ public class ClientSocketHandler {
 			System.out.println("Sending message to server...");
 			oos.writeObject(messageSending);
 			oos.flush();
+			oos.reset();
 
 			// read an object from the server
 			System.out.println("Receiving message from server...");
