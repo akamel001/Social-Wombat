@@ -129,10 +129,13 @@ class Hub extends Thread {
 			fos = new FileOutputStream(name);
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			if (o instanceof UserList){
+				System.out.println("We have have an instance of UserList");
 				oos.writeObject((UserList)o);
 			} else if (o instanceof ClassList){
+				System.out.println("We have have an instance of UserList");
 				oos.writeObject((ClassList)o);
 			} else if (o instanceof ServerList){
+				System.out.println("We have have an instance of UserList");
 				oos.writeObject((ServerList)o);
 			}
 			
