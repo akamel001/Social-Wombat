@@ -123,8 +123,8 @@ public class HubSocketHandler extends Thread{
 			
 			// Write out message
 			forwardOut.writeObject(msg);
-			forwardOut.flush();
-			forwardOut.reset();
+			//forwardOut.flush();
+			//forwardOut.reset();
 			
 			// Get response
 			reply = (Message) forwardIn.readObject();

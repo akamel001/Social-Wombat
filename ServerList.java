@@ -186,12 +186,20 @@ public class ServerList implements Serializable{
 		 * @return
 		 */
 		public int setPort(int p){
-			if (port<0 || p<0 || p>49151)
+			if (p<0 || p>49151)
 				return -1;
 			else{
 				port = p;
 				return 1;
 			}
 		}
+	}
+	
+	/**
+	 * Gives the index of the last server created
+	 * @return
+	 */
+	public int getLastServer(){
+		return nextId-1;
 	}
 }
