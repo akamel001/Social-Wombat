@@ -39,12 +39,17 @@ X-------------------------------------------------------------------------------
 Instructions:
 	
 	* Installation: 
-
-		-To install the system download the repository from github (https://github.com/plumppapaya/Social-Wombat/zipball/Push) 
-		 
+		- To install the system download the repository from github (https://github.com/plumppapaya/Social-Wombat/zipball/
 	
 	* Compiling:
-	
+		- Navigate to the directory of the downloaded repository and type 'make' 
+		  
 	* Running:
-	
+		- To run the system start three separate terminals
+		  Terminal 1: type 'java Hub'
+		  Terminal 2: type 'java Server'
+		  Terminal 3: type 'java UserInterface'
+
 Tutorial:
+
+	After a user starts the UserInterface class, they will see a console that they can use to navigate the system. Options are given in the top portion of the console while input is accepted at the bottom portion.  

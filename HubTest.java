@@ -111,6 +111,7 @@ public class HubTest {
 		assertEquals("First added server should be 1",1,testHub.addServer(newServer));
 		
 		// there should be an add failure whne adding again
+		assertEquals("Should fail when readding an already added server",-1,testHub.addServer(newServer));
 		
 	}
 
