@@ -13,11 +13,11 @@ were ClassDB.java, ClassRoom.java, and Post.java.
 
 ClassListTest.java -- tests adding and removing ClassData objects from ClassList objects.
 
-Client.java -- 
+Client.java -- an interface between the hub and the user interface. This class is primarily used to send requests to the hub.
 
-ClientSocketHandler.java -- 
+ClientSocketHandler.java -- This class is used for communicating on a socket with the hub. 
 
-Cookie.java --  
+Cookie.java --  Cookie class is an imbedded custom data structure that is used in a message class. 
 
 Hub.java --  tests for creating a Hub correctly. Most tests were integration testing with a client and server.
 
