@@ -80,18 +80,10 @@ public class HubTest {
 	 */
 	@Test
 	public void testAddUser() {
-		String username = "user1";
-		//userList should not have a user1 at first
-		//assertTrue("user1 could not be added",testHub.addUser(username));
+		//Users are added in main
 		
-		//user1 should exist now
-		//assertTrue("user1 should have been in userList",testHub.userExists("user1"));
-		
-		//adding the same name again should fail
-		//assertFalse("adding user1 again should have failed",testHub.addUser(username));
-	
-		//testing null add
-		//assertFalse("adding a null user should have failed",testHub.addUser(null));
+		//userList will be null until main() is run
+		assertNull(testHub.userList);
 	}
 
 	/**
@@ -99,20 +91,10 @@ public class HubTest {
 	 */
 	@Test
 	public void testAddServer() {
-		//use localhost since we can construct our own
-		InetAddress newServer = null;
-		try {
-			newServer = InetAddress.getLocalHost();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		// test first add
-		//assertEquals("First added server should be 1",1,testHub.addServer(newServer));
+		//Servers are added in main
+		//serverList will be null until main()
 		
-		// there should be an add failure whne adding again
-		//assertEquals("Should fail when readding an already added server",-1,testHub.addServer(newServer));
-		
+		assertNull(testHub.serverList);
 	}
 
 	/**
@@ -120,7 +102,14 @@ public class HubTest {
 	 */
 	@Test
 	public void testMain() {
-		//fail("Not yet implemented"); // TODO
+		//should create a serverList and userList
+		//testHub.main(null);
+		
+		//HOWEVER, MAIN JUST WILL SPIN WITHOUT ANOTHER THREAD TO CHECK
+		
+		//assertNotNull(testHub.userList);
+		
+		//assertNotNull(testHub.serverList);
 	}
 
 }
