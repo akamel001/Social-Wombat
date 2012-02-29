@@ -98,6 +98,7 @@ public class Message implements Serializable{
 
 	public Cookie getCookie() {
 		return cookie;
+		
 	}
 
 	public void setCookie(Cookie cookie) {
