@@ -91,6 +91,7 @@ public class ServerSocketHandler extends Thread{
 				 * Array[1] = Post_body 	
 				 */
 				case Client_CreateThread:
+					System.out.println(msg.getCookie().getKey()+ "wants to create a thread");
 					@SuppressWarnings("unchecked")
 					ArrayList<String> post = (ArrayList<String>) msg.getBody();
 					String postName = (String)post.get(0);
@@ -104,6 +105,7 @@ public class ServerSocketHandler extends Thread{
 				 * [0] and [1] respectively in the msg.body as an ArrayList.
 				 */
 				case Client_CreateComment:
+					System.out.println(msg.getCookie().getKey()+ "posting a comment");
 					@SuppressWarnings("unchecked")
 					ArrayList<String> com = (ArrayList<String>)msg.getBody();
 					int postId = Integer.parseInt(com.get(0));
@@ -113,6 +115,7 @@ public class ServerSocketHandler extends Thread{
 					returnMessage(msg);
 					break;
 				case Client_GoToClassroom:
+					System.out.println(msg.getCookie().getKey()+ "wants to enter: " + msg.getClassroom_ID());
 					Map<Integer, String> threadList = classDB.getThreadList(msg.getClassroom_ID());
 					if (threadList == null){
 						//return failure
@@ -127,7 +130,7 @@ public class ServerSocketHandler extends Thread{
 				case Client_GoToThread:
 					//Thread id embedded in body
 					int threadID = (Integer)msg.getBody();
-					System.out.println("Return thread #: " + threadID);
+					System.out.println(msg.getCookie().getKey() + " wants to view thread #: " + threadID);
 					if (threadID == Integer.valueOf(null)) {
 						msg.setCode(-1);
 						returnMessage(msg);
@@ -145,11 +148,13 @@ public class ServerSocketHandler extends Thread{
 					returnMessage(msg);
 					break;
 				case Client_DeleteClassroom:
+					System.out.println(msg.getCookie().getKey()+ "wants to delete: " + msg.getClassroom_ID());
 					returnCode = classDB.removeClassRoom(msg.getClassroom_ID());
 					msg.setCode(returnCode);
 					returnMessage(msg);
 					break;
 				case Client_DeleteThread:
+					System.out.println(msg.getCookie().getKey()+ "wants to delete a thread.");
 					int p = (Integer)msg.getBody();
 					returnCode = classDB.removePost(msg.getClassroom_ID(), p);
 					msg.setCode(returnCode);
@@ -160,6 +165,7 @@ public class ServerSocketHandler extends Thread{
 				 * msg.body() as an ArrayList<Integer>
 				 */
 				case Client_DeleteComment:
+					System.out.println(msg.getCookie().getKey()+ "wants to delete a comment.");
 					ArrayList<Integer> commentParams = (ArrayList<Integer>)msg.getBody();
 					int postID = commentParams.get(0);
 					int commentID = commentParams.get(1);
