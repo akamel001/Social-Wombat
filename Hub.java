@@ -138,7 +138,7 @@ class Hub extends Thread {
 				System.out.println("We have have an instance of ClassList");
 				oos.writeObject((ClassList)o);
 			} else if (o instanceof ServerList){
-				System.out.println("We have have an instance of ClassList");
+				System.out.println("We have have an instance of ServerList");
 				oos.writeObject((ServerList)o);
 			}
 			
@@ -179,7 +179,7 @@ class Hub extends Thread {
 				  //add user to userList, if already exists, ignore
 				  if(!userList.validateUser(user)){
 					  userList.addUser(user);
-					  System.out.println("User: " + user + "added to userlist");
+					  System.out.println("User: " + user + " added to userlist");
 				  }
 			  }
 			  //Close the input stream
