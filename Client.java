@@ -434,8 +434,26 @@ public class Client {
 	 * @return
 	 */
 	public boolean deleteComment(Integer commentID, Integer threadID, String userName, String classroomName) {
-		// TODO Auto-generated method stub
-		return false;
+
+		if(DEBUG)
+			return true;
+
+		ClientSocketHandler handler = new ClientSocketHandler();
+
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		list.add(0, threadID);
+		list.add(1, commentID);
+
+		cookie.setKey(userName);
+		handler.getMessageSending().setCookie(cookie);
+
+		handler.getMessageSending().setClassroom_ID(classroomName);
+		handler.getMessageSending().setType(Message.MessageType.Client_DeleteComment);
+		handler.getMessageSending().setBody(list);
+
+		Message response = handler.sendReceive();
+
+		return (response.getCode() == 1)? true : false;
 	}
 	
 	/**
@@ -446,8 +464,22 @@ public class Client {
 	 * @return
 	 */
 	public boolean deleteThread(Integer threadID, String userName, String classroomName) {
-		// TODO Auto-generated method stub
-		return false;
+	
+		if(DEBUG)
+			return true;
+
+		ClientSocketHandler handler = new ClientSocketHandler();
+
+		cookie.setKey(userName);
+		handler.getMessageSending().setCookie(cookie);
+
+		handler.getMessageSending().setClassroom_ID(classroomName);
+		handler.getMessageSending().setType(Message.MessageType.Client_DeleteThread);
+		handler.getMessageSending().setBody(threadID);
+
+		Message response = handler.sendReceive();
+
+		return (response.getCode() == 1)? true : false;
 	}
 
 }
