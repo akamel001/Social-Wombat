@@ -40,7 +40,7 @@ Instructions:
 	
 	* Installation: 
 
-		To install the system download the repository from github (https://github.com/plumppapaya/Social-Wombat/zipball/Push) 
+		To install the system download the repository from github (https://github.com/plumppapaya/Social-Wombat/zipball/Push)  
 	
 	* Compiling:
 	
