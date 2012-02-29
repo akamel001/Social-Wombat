@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Client {
 
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 	private static Cookie cookie = new Cookie(null);
 
 	/**

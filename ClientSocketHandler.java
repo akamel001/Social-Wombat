@@ -5,7 +5,7 @@ import java.net.UnknownHostException;
 
 public class ClientSocketHandler {
 
-	private static final int SERVER_PORT = 4444;
+	private static final int HUB_PORT = 4444;
 
 	private static Message messageSending = null;
 	private static Message messageReceived = null; 
@@ -21,7 +21,7 @@ public class ClientSocketHandler {
 		}
 		
 		try{
-			socket = new Socket(InetAddress.getLocalHost(), SERVER_PORT);
+			socket = new Socket(InetAddress.getLocalHost(), HUB_PORT);
 
 			// open I/O streams for objects
 			oos = new ObjectOutputStream(socket.getOutputStream());
