@@ -80,10 +80,10 @@ public class ClassData implements Serializable{
 	/**
 	 * Returns true if the passed string is the instructor's name
 	 */
-	public boolean isInstructor(String userList){
-		if (userList==null)
+	public boolean isInstructor(String userName){
+		if (userName==null)
 			return false;
-		return userList.equals(instructor);
+		return userName.equals(instructor);
 	}
 
 	/**
@@ -193,9 +193,10 @@ public class ClassData implements Serializable{
 		synchronized(userList) {  
 			Iterator<String> i = s.iterator(); 
 			while (i.hasNext()){
-				if (userList.get(i.next()) == 0){
+				String u = i.next();
+				if (userList.get(u) == 0){
 					found = true;
-					out.add(i.next());
+					out.add(u);
 				}
 			}
 		}
