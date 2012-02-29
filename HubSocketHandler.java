@@ -173,7 +173,9 @@ public class HubSocketHandler extends Thread{
 				// TODO: Possibly move this above switch statement to authenticate all requests
 				case Client_LogIn: 
 					String sessionKey = msg.getCookie().getKey();
-					if(userList.validateUser(sessionKey)){
+					System.out.println("Current code: " + msg.getCode());
+					System.out.println("Authenticating " + sessionKey);
+					if((sessionKey != null) && userList.validateUser(sessionKey)){
 						//Reply with confirmation
 						msg.setCode(1);
 						System.out.println("User " + msg.getCookie().getKey() + " logged in");
