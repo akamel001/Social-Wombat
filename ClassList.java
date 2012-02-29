@@ -170,6 +170,7 @@ public class ClassList implements Serializable{
 				String className = i.next();
 				ClassData cd =	classList.get(className);
 				if (cd.getInstructor().equals(userName)){
+					found = true;
 					out.put(cd.getClassName(), 3);
 				}
 				else{

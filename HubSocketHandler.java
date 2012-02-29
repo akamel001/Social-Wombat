@@ -205,8 +205,10 @@ public class HubSocketHandler extends Thread{
 				// Return in body a list of the classes that a client is enrolled in
 				case Client_GetUserEnrollment:
 					String usr = msg.getCookie().getKey();
+					System.out.println(usr + " wants to see all their class enrollments");
 					Map<String, Integer> userEnroll = classList.getUserEnrollment(usr);
 					if (userEnroll != null){
+						System.out.println("userEnroll was not null");
 						msg.setCode(1);
 						msg.setBody(userEnroll);
 					} 
