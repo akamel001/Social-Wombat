@@ -130,6 +130,8 @@ public class ServerSocketHandler extends Thread{
 					System.out.println("Return thread #: " + threadID);
 					if (threadID == Integer.valueOf(null)) {
 						msg.setCode(-1);
+						returnMessage(msg);
+						break;
 					}
 					Map<Integer, String> thread = classDB.getThread(msg.getClassroom_ID(), threadID);
 					if (thread == null){
