@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.TreeMap;
@@ -12,7 +13,9 @@ import java.util.List;
  * @author chris
  *
  */
-public class ClassData{
+public class ClassData implements Serializable{
+
+	private static final long serialVersionUID = 8032346506582721809L;
 	private int id;
 	private String name;
 	private String instructor;

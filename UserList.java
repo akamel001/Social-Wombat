@@ -91,7 +91,9 @@ public class UserList implements Serializable{
 	 * @author chris d
 	 *
 	 */
-	public class User{
+	public class User implements Serializable{
+		
+		private static final long serialVersionUID = 2971288288578571927L;
 		private final String id;
 		//private String password;
 	

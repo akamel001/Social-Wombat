@@ -3,12 +3,13 @@ import java.util.Collections;
 import java.util.TreeMap;
 import java.util.Map;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Iterator;
 
 
-/*
- * 
+/**
+ * Class to store and access ClassRoom objects.
+ * @author chris d
+ *
  */
 public class ClassDB implements Serializable{
 
@@ -29,15 +30,19 @@ public class ClassDB implements Serializable{
 	 * @return Returns 1 if the class was added, -1 if it already exists.
 	 */
 	public int addClassRoom(String n){
-		if (n==null)
-			return -1;
-		if (classRoomList.containsKey(n))
-			return -1;
-		else{
-			ClassRoom c = new ClassRoom(n, nextClass);
-			classRoomList.put(n, c);
-			return 1;
+		int i;
+		synchronized(classRoomList){
+			if (n==null)
+				i = -1;
+			if (classRoomList.containsKey(n))
+				i = -1;
+			else{
+				ClassRoom c = new ClassRoom(n, nextClass++);
+				classRoomList.put(n, c);
+				i = 1;
+			}
 		}
+		return i;
 	}
 
 	/**

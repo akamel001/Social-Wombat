@@ -23,7 +23,8 @@ public class ClassRoom implements Serializable{
 	
 	/**
 	 * Creates a new classroom with the given name.
-	 * @param n 
+	 * @param n The name of the new class
+	 * @param i The identifier for the class.
 	 */
 	protected ClassRoom(String n, int i){
 		if (n.length()>maxNameLength)
@@ -98,8 +99,9 @@ public class ClassRoom implements Serializable{
 		synchronized(postList){
 			Post p = postList.get(postId);
 			if (p==null)
-				return -1;
-			out = p.removeComment(commentId);
+				out = -1;
+			else
+				out = p.removeComment(commentId);
 		}
 		return out;
 	}

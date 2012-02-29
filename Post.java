@@ -82,10 +82,7 @@ public class Post implements Serializable{
 			return -1;
 		if (c.length()>maxCommentLength)
 			c = c.substring(0,maxCommentLength-1); 
-		synchronized (this) {
-			commentList.put(nextComment, c);
-			nextComment++;
-		}
+		commentList.put(nextComment++, c);
 		return 1;
 	}
 	
@@ -96,6 +93,8 @@ public class Post implements Serializable{
 	 * @return Returns 1 if the comment was removed, -1 if it did not exist in the post.
 	 */
 	public int removeComment(int i){
+		if (i<3)
+			return -1;
 		String s = commentList.remove(i);
 		if (s==null)
 			return -1;
