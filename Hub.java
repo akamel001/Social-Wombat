@@ -105,13 +105,13 @@ class Hub extends Thread {
 		    FileInputStream fin = new FileInputStream(name);
 		    ObjectInputStream ois = new ObjectInputStream(fin);
 		    if (name.equals(classListName)){
-		    	System.out.println("We are reading in ClassList");
+		    	//System.out.println("We are reading in ClassList");
 		    	o = (ClassList) ois.readObject();
 		    } else if (name.equals(userListName)){
-		    	System.out.println("We are reading in UserList");
+		    	//System.out.println("We are reading in UserList");
 		    	o = (UserList) ois.readObject();
 		    } else if (name.equals(serverListName)){
-		    	System.out.println("We are reading in ServerList");
+		    	//System.out.println("We are reading in ServerList");
 		    	o = (ServerList) ois.readObject();
 		    }
 		    ois.close();
@@ -132,13 +132,13 @@ class Hub extends Thread {
 			fos = new FileOutputStream(name);
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			if (o instanceof UserList){
-				System.out.println("We have have an instance of UserList");
+				//System.out.println("We have have an instance of UserList");
 				oos.writeObject((UserList)o);
 			} else if (o instanceof ClassList){
-				System.out.println("We have have an instance of ClassList");
+				//System.out.println("We have have an instance of ClassList");
 				oos.writeObject((ClassList)o);
 			} else if (o instanceof ServerList){
-				System.out.println("We have have an instance of ServerList");
+				//System.out.println("We have have an instance of ServerList");
 				oos.writeObject((ServerList)o);
 			}
 			
