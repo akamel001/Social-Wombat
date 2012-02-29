@@ -10,7 +10,7 @@ public class Cookie implements Serializable{
 	
 	private static final long serialVersionUID = 1585622412283602252L;
 	private final Calendar expTime;
-	private static String sessionKey;
+	private String sessionKey;
 		
 	/**
 	 * Creates a cookie with a passed session key.
