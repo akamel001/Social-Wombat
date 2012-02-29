@@ -5,10 +5,10 @@ Yilok Wong (ylw3)
 
 Tasks performed and hours:
 
-Chris Ducharme -- System design. Designed and implemented database backend. Unit tested data structures. Debugging. (40 hrs)
+Chris Ducharme -- System design. Designed and implemented database backend. Designed communication between Client, Hub, and Server. Unit tested data structures. Tested communication and storage between Server, Hub, and data structures. (40 hrs)
 
-Abdelrahman Kamel -- System design. Implemented client-side socket communication between the client and the hub. Designed and implemented persistent storage system. (40 hrs)
+Abdelrahman Kamel -- System design. Designed and implemented client-side socket communication between the Client, ClientSocketHandler and the Hub. Designed and implemented persistent storage system. Tested User Interface, Client, and ClientSocketHandler. (40 hrs)
 
-Julia Tazin -- System design. Implemented user interface. (40 hrs)
+Julia Tazin -- System design. Designed and implemented User Interface. Designed and implemented User Interface to client-side socket communication. Tested User Interface, Client, and ClientSocketHandler code. (40 hrs)
 
-Yilok Wong -- System design, Implemented hub and server-side messaging. (40 hrs)
+Yilok Wong -- System design, Implemented Hub, Server, and their respective threads: HubSocketHandler and ServerSocketHandler. Designed and implemented server-side messaging. Designed and implemented persistent storage system. Tested Client to Hub to Server to FileSystem code. (40 hrs)
