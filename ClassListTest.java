@@ -9,25 +9,14 @@ import org.junit.Test;
 
 public class ClassListTest {
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
-
+	
 	@Test
 	public final void testAddClass() {
-		fail("Not yet implemented"); // TODO
+		String iName = "DR. G";
+		ClassData cd = new ClassData(iName);
+		cd.setClassName("CLASS_A");
+		cd.setClassServer(1, 1000);
+		
 	}
 
 	@Test

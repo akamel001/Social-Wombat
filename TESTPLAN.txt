@@ -8,11 +8,10 @@ was used to ensure that the system could work as a whole.
 
 ClassData.java --  
 
-ClassDB.java -- 
+ClassDB.java -- ClassDBTest.java tests adding and deleting classrooms, threads, and comments. Classes used
+were ClassDB.java, ClassRoom.java, and Post.java.
 
 ClassList.java -- 
-
-ClassRoom.java -- 
 
 Client.java -- 
 
@@ -25,8 +24,6 @@ Hub.java --
 HubSocketHandler.java -- 
 
 Message.java -- 
-
-Post.java -- 
 
 Server.java -- 
 
