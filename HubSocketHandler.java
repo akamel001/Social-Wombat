@@ -70,6 +70,7 @@ public class HubSocketHandler extends Thread{
 		try {
 			msg = (Message) ois.readObject();
 			System.out.println("Just got a msg from: " + msg.getCookie().getKey());
+			System.out.println("Contents of body: " + msg.getBody());
 		} catch (Exception e){
 			System.out.println(e.getMessage());
 			System.out.println("Deserializing message failed.");
