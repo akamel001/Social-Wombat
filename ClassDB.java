@@ -160,7 +160,7 @@ public class ClassDB implements Serializable{
 	 * @param toBeDeleted A List<String> of classes to be deleted. 
 	 * @return Returns 1 if any classes have been deleted.
 	 */
-	public int removeUser(List<String> toBeDeleted){
+	public int deleteClasses(List<String> toBeDeleted){
 		if (toBeDeleted.isEmpty())
 			return -1;
 		else{
