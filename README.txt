@@ -8,25 +8,25 @@ ClassList.java -- ClassList is a list of ClassData objects.
 
 ClassRoom.java -- ClassRoom stores threads and their associated comments.
 
-Client.java -- 
+Client.java -- Class containing functions used for the UserInterface to communicate with hub
 
-ClientSocketHandler.java -- 
+ClientSocketHandler.java -- Socket Handler to communicate with hub 
 
-Cookie.java -- 
+Cookie.java -- Custom serialized data structure stored inside of a message. Used for storing sessions 
 
-Hub.java --
+Hub.java -- Center for communicating between clients and servers. 
 
-HubSocketHandler.java -- 
+HubSocketHandler.java -- Socket handler class used for the hub
 
-Message.java -- 
+Message.java -- Custom serialized data structure used to transfer packets over sockets
 
 Post.java -- Used to hold a thread and all it's associated comments.
 
-Server.java --
+Server.java -- Class that listens for connections from the hub and stores user data based on request
 
 ServerList.java -- ServerList holds info and access methods for server info.
 
-ServerSocketHandler.java --
+ServerSocketHandler.java -- Socket handler to communicate with hub
 
 UserInterface.java -- This class is for anything dealing with what the user sees and the work flow 
 of the social network. However, it does not deal with the behind-the-scenes logic for any of the 
@@ -38,10 +38,12 @@ X-------------------------------------------------------------------------------
 
 Instructions:
 	
-	Installation:
+	* Installation: 
+
+		To install the system download the repository from github (https://github.com/plumppapaya/Social-Wombat/zipball/Push) 
 	
-	Compiling:
+	* Compiling:
 	
-	Running:
+	* Running:
 	
 Tutorial:
