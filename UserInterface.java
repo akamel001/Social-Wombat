@@ -332,15 +332,16 @@ public class UserInterface {
 		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
 		
 		Map<Integer, String> threadMap = client.getThreadMapForClassroom(currentClassroomName, currentUserName);
-		TreeMap<Integer, String> threadTreeMap = new TreeMap<Integer, String>(threadMap); // Converting to TreeMap to stabilize the order.
-		List<String> threadTopicsList = mapValuesToList(threadTreeMap);
-		List<Integer> threadIDList = mapIntegerKeysToList(threadTreeMap);
 		
-		if (threadTopicsList == null || threadTopicsList.isEmpty()){
+		if (threadMap == null || threadMap.isEmpty()){
 			String content = cNO_THREADS;
 			displayPage(sCLASSROOM_LIST_PAGE, messages, info, content, sDEFAULT_OPTIONS);
 			goHomeDefaultMenu();
-		} else {	
+		} else {
+		
+			TreeMap<Integer, String> threadTreeMap = new TreeMap<Integer, String>(threadMap); // Converting to TreeMap to stabilize the order.
+			List<String> threadTopicsList = mapValuesToList(threadTreeMap);
+			List<Integer> threadIDList = mapIntegerKeysToList(threadTreeMap);
 			
 			displayPage(sTHREAD_LIST_PAGE, messages, info, null, listToUIString(threadTopicsList));
 			
@@ -439,22 +440,23 @@ public class UserInterface {
 		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
 		
 		Map<String, Integer> memberMap = client.getMemberMapForClassroom(currentClassroomName, currentUserName);
-		TreeMap<String, Integer> memberTreeMap = new TreeMap<String, Integer>(memberMap); // Converting to TreeMap to stabilize the order.
-		List<String> memberList = mapStringKeysToList(memberTreeMap);
 		
-		if (memberTreeMap == null || memberTreeMap.isEmpty()){
+		if (memberMap == null || memberMap.isEmpty()){
 			String content = cNO_MEMBERS;
 			displayPage(sCLASSROOM_LIST_PAGE, messages, info, content, sDEFAULT_OPTIONS);
 			goHomeDefaultMenu();
 		} else {
-
-		displayPage(sMEMBER_LIST_PAGE, messages, info, null, memberMapToUIString(memberTreeMap)); // Displays members' names along with their permissions in the current classroom.
-
-		int selection = getValidSelectionFromUser(memberList.size());
 		
-		currentMemberName = memberList.get(selection -1);
-		currentMemberPermissions = convertIntToStringPermissions(memberTreeMap.get(currentMemberName));
-	    memberPage(null);
+			TreeMap<String, Integer> memberTreeMap = new TreeMap<String, Integer>(memberMap); // Converting to TreeMap to stabilize the order.
+			List<String> memberList = mapStringKeysToList(memberTreeMap);
+	
+			displayPage(sMEMBER_LIST_PAGE, messages, info, null, memberMapToUIString(memberTreeMap)); // Displays members' names along with their permissions in the current classroom.
+	
+			int selection = getValidSelectionFromUser(memberList.size());
+			
+			currentMemberName = memberList.get(selection -1);
+			currentMemberPermissions = convertIntToStringPermissions(memberTreeMap.get(currentMemberName));
+		    memberPage(null);
 		}
 	}
 	
