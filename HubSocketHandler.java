@@ -285,7 +285,15 @@ public class HubSocketHandler extends Thread{
 				// NOTE: ANYTHING SENT IN THIS PATHWAY REQUIRES THE 
 				// CLASSROOM_ID TO BE SET IN THE MESSAGE ALREADY!!!!!
 				case Client_CreateClassroom:
-					//Choose any server to create the classroom in
+					//Add that classroom id to a server
+					ClassData c = new ClassData(msg.getCookie().getKey());
+					c.setClassName(msg.getClassroom_ID());
+					
+					//Generate some server number
+					int maxServer = serverList.getLastServer();
+					c.setClassServer(maxServer, SERVER_SOCKET);
+					classList.addClass(c);
+					
 					reply = forwardToServer(msg);
 					returnMessage(reply);
 					break;

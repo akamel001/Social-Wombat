@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public class Client {
 
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 	private Cookie cookie = new Cookie("");
 
 	/**
