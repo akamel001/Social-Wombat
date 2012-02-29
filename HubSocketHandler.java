@@ -232,20 +232,24 @@ public class HubSocketHandler extends Thread{
 				// Store user to be changed and the permissions as an arraylist
 				// [0] = username, [1] = permissions
 				case Client_SetPermissions:
+					System.out.println(msg.getCookie().getKey() + " setting permissions");
+					@SuppressWarnings("unchecked")
 					ArrayList<String> a= (ArrayList<String>) msg.getBody();
 					// Person
 					String personToChange = a.get(0);
 					// Permission to set for Person
 					int per = Integer.parseInt(a.get(1));
-					
+
 					//Special case, instructor cannot be deleted
 					if((isClassInstructor(personToChange,msg.getClassroom_ID())) && (per == -1)){
 						//return failure
+						System.out.println("Denied. Instructor cannot delete self from classroom.");
 						returnMessage(msg);
 						break;
 					} else if(isClassTAorInstructor(msg.getCookie().getKey(),msg.getClassroom_ID())){
 						//Now changing someone else's
 						// Server's return code
+						System.out.println("Setting " + personToChange + "'s permissions to: " + per);
 						returnCode = classList.setUserPermissions(personToChange, msg.getClassroom_ID(), per);
 						// Reply
 						msg.setCode(returnCode);
@@ -350,6 +354,10 @@ public class HubSocketHandler extends Thread{
 				case Client_DeleteClassroom:
 					if (isClassTAorInstructor(msg.getCookie().getKey(),msg.getClassroom_ID())){
 						reply = forwardToServer(msg);
+						//Check that the reply code is affirmative
+						if(reply.getCode() == 1){
+							classList.removeClass(reply.getClassroom_ID());
+						}
 						returnMessage(reply);
 					} else {
 						returnMessage(msg);

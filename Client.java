@@ -156,7 +156,6 @@ public class Client {
 		handler.getMessageSending().setType(Message.MessageType.Client_DeleteClassroom);
 
 		Message response = handler.sendReceive();
-
 		return (response.getCode() == 1)? true : false;	
 	}
 
@@ -179,7 +178,7 @@ public class Client {
 		handler.getMessageSending().setClassroom_ID(classroomName);
 		handler.getMessageSending().setBody(list);
 		handler.getMessageSending().setType(Message.MessageType.Client_SetPermissions);
-		handler.getMessageSending().setBody(-1);
+		handler.getMessageSending().setBody(list);
 		
 		Message response = handler.sendReceive();
 
@@ -239,7 +238,9 @@ public class Client {
 		handler.getMessageSending().setCookie(cookie);
 
 		handler.getMessageSending().setClassroom_ID(classroomName);
+		
 		handler.getMessageSending().setBody(threadID);
+		
 		handler.getMessageSending().setType(Message.MessageType.Client_GoToThread);
 
 		Message response = handler.sendReceive();
@@ -336,7 +337,7 @@ public class Client {
 	 * @param userName
 	 * @param classroomName
 	 */													
-	public boolean changeStatus(String currentMemberName, String userName, String classroomName) {
+	public boolean changeStatus(String currentMemberName, int currentMemberPerm, String userName, String classroomName) {
 
 		if(DEBUG)
 			return true;
@@ -345,7 +346,7 @@ public class Client {
 
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(0, currentMemberName);
-		list.add(1, "1");
+		list.add(1, Integer.toString(currentMemberPerm));
 
 		cookie.setKey(userName);
 		handler.getMessageSending().setCookie(cookie);

@@ -5,10 +5,10 @@ Yilok Wong (ylw3)
 
 Tasks performed and hours:
 
-Chris Ducharme -- Implemented database backend. 
+Chris Ducharme -- System design, Implemented database backend. (40 hrs)
 
-Abdelrahman Kamel -- Implemented client-side messaging.
+Abdelrahman Kamel -- System design, Implemented client-side messaging. (40 hrs)
 
-Julia Tazin -- Implemented user interface.
+Julia Tazin -- System design, Implemented user interface. (40 hrs)
 
-Yilok Wong -- Implemented server-side messaging.
+Yilok Wong -- System, design, Implemented hub and server-side messaging. (40 hrs)

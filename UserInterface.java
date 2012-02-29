@@ -280,7 +280,7 @@ public class UserInterface {
 	    	String postContent = console.readLine("Please write your post's content: ");
 	    	if (client.createThread(threadNameTemp, postContent, currentUserName, currentClassroomName)){
 	    		currentThreadName = threadNameTemp;
-				threadPage(mTHREAD_CREATION_SUCCESS);
+				classroomPage(mTHREAD_CREATION_SUCCESS);
 			} else {
 				classroomPage(eTHREAD_CREATION_ERROR);
 			}
@@ -376,7 +376,10 @@ public class UserInterface {
 		info = info.concat(addFormattingAlignLeft("Current thread: " + currentThreadName));
 		
 		Map<Integer, String> threadContentMap = client.getThreadGivenID(currentThreadID, currentClassroomName, currentUserName);
-		String threadContent = threadMapToString(threadContentMap);
+    	TreeMap<Integer, String> threadContentTreeMap = new TreeMap<Integer, String>(threadContentMap); // Converting to TreeMap to stabilize the order.
+		//List<String> threadContentList = mapValuesToList(threadContentTreeMap);
+		List<Integer> postIDList = mapIntegerKeysToList(threadContentTreeMap);
+		String threadContent = threadMapToString(threadContentTreeMap);
 		
 		if (currentPermissions == sTEACHING_ASSISTANT || currentPermissions == sINSTRUCTOR) {
 			displayPage(sTHREAD_PAGE, messages, info, threadContent, sTHREAD_PAGE_OPTIONS_INSTRUCTOR_AND_TEACHING_ASSISTANT);
@@ -402,7 +405,7 @@ public class UserInterface {
 	        break;
 	    // Delete a comment.
 	    case 2:
-	    	Integer commentID = Integer.parseInt(console.readLine("What's the number of the comment you'd like to delete? "));
+	    	Integer commentID = postIDList.get(Integer.parseInt(console.readLine("What's the number of the comment you'd like to delete? ")) + 1);
 	    	if (client.deleteComment(commentID, currentThreadID, currentUserName, currentClassroomName)){
 	    		threadPage(mCOMMENT_DELETION_SUCCESS);
 		        break;
@@ -508,10 +511,12 @@ public class UserInterface {
 	        break;
 	    // Change this member's status.
 	    case 2:
-	    	if (client.changeStatus(currentMemberName, currentUserName, currentClassroomName)){
-	    		currentMemberPermissions = switchCurrentMemberPermissions(currentMemberPermissions);
+	    	currentMemberPermissions = switchCurrentMemberPermissions(currentMemberPermissions);
+	    	Integer currentMemberPermissionsAsInt = convertStringToIntPermissions(currentMemberPermissions);
+	    	if (client.changeStatus(currentMemberName, currentMemberPermissionsAsInt, currentUserName, currentClassroomName)){
 	    		memberPage(mCHANGE_STATUS_SUCCESS);
 	    	} else {
+	    		currentMemberPermissions = switchCurrentMemberPermissions(currentMemberPermissions);
 	    		memberPage(eCHANGE_STATUS_ERROR);
 	    	}
 	    	
@@ -734,6 +739,25 @@ public class UserInterface {
 		}
 		else if (num == 3){
 			permissions = sINSTRUCTOR;
+		}
+		return permissions;
+	}
+	
+	/**
+	 * Converts permissions in string form to int form.
+	 * @param num representing the permissions
+	 * @return a string name for the permissions
+	 */
+	public static int convertStringToIntPermissions(String num) {
+		int permissions = -2;
+		if (num == sSTUDENT){
+			permissions = 1;
+		}
+		else if (num == sTEACHING_ASSISTANT){
+			permissions = 2;
+		}
+		else if (num == sINSTRUCTOR){
+			permissions = 3;
 		}
 		return permissions;
 	}
