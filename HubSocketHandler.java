@@ -352,6 +352,10 @@ public class HubSocketHandler extends Thread{
 				case Client_DeleteClassroom:
 					if (isClassTAorInstructor(msg.getCookie().getKey(),msg.getClassroom_ID())){
 						reply = forwardToServer(msg);
+						//Check that the reply code is affirmative
+						if(reply.getCode() == 1){
+							classList.removeClass(reply.getClassroom_ID());
+						}
 						returnMessage(reply);
 					} else {
 						returnMessage(msg);

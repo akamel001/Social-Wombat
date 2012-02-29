@@ -150,6 +150,7 @@ public class ServerSocketHandler extends Thread{
 				case Client_DeleteClassroom:
 					System.out.println(msg.getCookie().getKey()+ "wants to delete: " + msg.getClassroom_ID());
 					returnCode = classDB.removeClassRoom(msg.getClassroom_ID());
+					System.out.println("Return code: " + returnCode);
 					msg.setCode(returnCode);
 					returnMessage(msg);
 					break;
