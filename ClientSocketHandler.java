@@ -38,6 +38,7 @@ public class ClientSocketHandler {
 			// read an object from the server
 			//System.out.println("Receiving message from server...");
 			messageReceived = (Message) ois.readObject();
+			// TODO: TA: don't want to shut down if not found, might want to retry after a time out.
 
 			oos.close();
 			ois.close();

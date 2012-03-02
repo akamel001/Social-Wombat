@@ -4,6 +4,8 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Map;
 
+//TODO: check permissions on the server.
+
 public class ServerSocketHandler extends Thread{
 	//private static int SERVER_SOCKET = 5050;
 	
