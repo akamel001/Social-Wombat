@@ -35,7 +35,7 @@ class Hub extends Thread {
 	/*
 	 * Add a user to the userList.
 	 */
-	public boolean addUser(String username){
+	public static boolean addUser(String username){
 		//check nulls
 		if (username == null){
 			return false;
@@ -53,7 +53,7 @@ class Hub extends Thread {
 	/*
 	 * Remove a user from the userList
 	 */
-	public boolean removeUser(String username){
+	public static boolean removeUser(String username){
 		//check user exists
 		if(userList.validateUser(username)){
 			System.out.println(username + "removed.");
@@ -67,17 +67,17 @@ class Hub extends Thread {
 	/*
 	 * Check a user exists in the userList
 	 */
-	public boolean userExists(String username){
+	public static boolean userExists(String username){
 		return userList.validateUser(username);
 	}
 	
 	/*
 	 * Add a server to the serverList
 	 */
-	public int addServer(InetAddress server){
+	public static int addServer(InetAddress server){
 		int r = serverList.addServer(server, SERVER_SOCKET);
 		if (r == -1){
-			System.out.println("Adding server " + server + "failed."); 
+			System.out.println("Adding server " + server + "failed. It might already exist in serverList."); 
 			return r;
 		} else {
 			System.out.println("Server" + server + " added under server id: " + r);
@@ -88,7 +88,7 @@ class Hub extends Thread {
 	/*
 	 * Remove a server from the serverList
 	 */
-	public boolean removeServer(int serverID){
+	public static boolean removeServer(int serverID){
 		if(serverList.removeServer(serverID) == 1){
 			return true;
 		} else {
@@ -218,7 +218,7 @@ class Hub extends Thread {
 		
 		//TODO: Remove for multiple computers
 		try {
-			serverList.addServer(InetAddress.getLocalHost(), SERVER_SOCKET);
+			addServer(InetAddress.getLocalHost());
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 			System.out.println("Could not add a local host server");
