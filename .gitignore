@@ -1,0 +1,17 @@
+.classpath
+.DS_Store
+.project
+*.class
+*.html
+*.css
+*.gif
+*.css
+.class
+*.serverlist
+bin
+javadoc
+hub.classlist
+hub.newuserlist
+hub.serverlist
+hub.userlist
+*.classDB

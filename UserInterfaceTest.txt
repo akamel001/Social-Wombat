@@ -1,0 +1,200 @@
+Since I could not find a good framework for testing text-based console user interfaces, I decided
+to manually test the user interface by going through every possibility and observing that the 
+output fit the following check points:
+
+	* All necessary parts of the current page get displayed; this includes some subset of the 
+	  following: page name, messages, info, content, options, user prompt.
+	* The proper content is displayed in each part of the page. Specifically:
+		* Current info and messages are updated and not stale (that is, old info and messages do 
+		  not keep showing up);
+		* A user sees the correct options depending on his permission status (instructor, teaching 
+		  assistant, or student).
+		  
+A full enumeration of the cases is documented here:
+
+LOG IN: tried logging in with multiple user names, UI displays currently logged in user name 
+correctly; tried logging in when false, which correctly looped back to the LOG IN page. TESTED	
++HOME: Tried all 4 out of 4 options. TESTED
++CLASSROOM (Instructor): Tried all 6 out of 6 options. TESTED
++CLASSROOM (Teaching Assistant): Tried all 6 out of 6 options. TESTED
++CLASSROOM (Student): Tried all 4 out of 4 options. TESTED
++CLASSROOM LIST: TESTED
++THREAD (Teaching Assistant & Instructor): Tried all 4 out of 4 options. TESTED
++THREAD (Student): Tried all 2 out of 2 options. TESTED
++THREAD LIST: TESTED
++MEMBER (Instructor): Tested all 3 out of 3 options. TESTED
++MEMBER (Teaching Assistant): Tested all 2 out of 2 options. TESTED
++MEMBER LIST: TESTED
++REQUEST (Teaching Assistant & Instructor): Tried all 3 out of 3 options. TESTED
++REQUEST LIST: TESTED
+
+A random selection of work flows is documented below. Note: the words in quotes represent my input.
+
+Page Name		My Input		Action Taken					Notes
+LOG IN			"jay"			Log in.
+HOME			"4" 			Log out.
+LOG IN			"jtee"			Log in.
+HOME			"1"				View your classrooms.
+CLASSROOM LIST	"3"				HD 3260.						Instructor in this room, proper display including 6 appropriate options.
+CLASSROOM		"6"				Go back home.
+HOME			"2" "CS 101" 	Create a classroom
+CLASSROOM		"6"				Go back home.					Message: You have successfully created a classroom!     
+HOME			"3" "HD 3250"   Request to join a classroom. 	Message: success
+
+A random work flow of screen shots. Note: once again, the words in quotes represent my input.
+
++=================================================================================+
+|                                     LOG IN                                      |
++=================================================================================+
+User Name? "jay"
+
+
++=================================================================================+
+|                                      HOME                                       |
++---------------------------------------------------------------------------------+
+| Welcome, jay!                                                                   |
++---------------------------------------------------------------------------------+
+| Logged in as jay.                                                               |
++---------------------------------------------------------------------------------+
+| 1. View your classrooms.                                                        |
+| 2. Create a classroom.                                                          |
+| 3. Request to join a classroom.                                                 |
+| 4. Log out.                                                                     |
++=================================================================================+
+Please select an option. "4"
+
+
++=================================================================================+
+|                                     LOG IN                                      |
++---------------------------------------------------------------------------------+
+| You have successfully logged out.                                               |
++=================================================================================+
+User Name? "jtee"
+
+
++=================================================================================+
+|                                      HOME                                       |
++---------------------------------------------------------------------------------+
+| Welcome, jtee!                                                                  |
++---------------------------------------------------------------------------------+
+| Logged in as jtee.                                                              |
++---------------------------------------------------------------------------------+
+| 1. View your classrooms.                                                        |
+| 2. Create a classroom.                                                          |
+| 3. Request to join a classroom.                                                 |
+| 4. Log out.                                                                     |
++=================================================================================+
+Please select an option. "1"
+
+
++=================================================================================+
+|                                 CLASSROOM LIST                                  |
++---------------------------------------------------------------------------------+
+| Logged in as jtee.                                                              |
++---------------------------------------------------------------------------------+
+| 1. LING 4844                                                                    |
+| 2. CS 4820                                                                      |
+| 3. HD 3260                                                                      |
++=================================================================================+
+Please select an option. "1"
+
+
++=================================================================================+
+|                                    CLASSROOM                                    |
++---------------------------------------------------------------------------------+
+| Logged in as jtee.                                                              |
+| Current classroom: LING 4844                                                    |
+| Status for this classroom: Teaching Assistant                                   |
++---------------------------------------------------------------------------------+
+| 1. View discussion board.                                                       |
+| 2. Create a thread.                                                             |
+| 3. View members of this classroom.                                              |
+| 4. View requests to join this classroom.                                        |
+| 5. Disjoin this classroom.                                                      |
+| 6. Go back home.                                                                |
++=================================================================================+
+Please select an option. "6"
+
+
++=================================================================================+
+|                                      HOME                                       |
++---------------------------------------------------------------------------------+
+| Logged in as jtee.                                                              |
++---------------------------------------------------------------------------------+
+| 1. View your classrooms.                                                        |
+| 2. Create a classroom.                                                          |
+| 3. Request to join a classroom.                                                 |
+| 4. Log out.                                                                     |
++=================================================================================+
+Please select an option. "1"
+
+
++=================================================================================+
+|                                 CLASSROOM LIST                                  |
++---------------------------------------------------------------------------------+
+| Logged in as jtee.                                                              |
++---------------------------------------------------------------------------------+
+| 1. LING 4844                                                                    |
+| 2. CS 4820                                                                      |
+| 3. HD 3260                                                                      |
++=================================================================================+
+Please select an option. "2"
+
+
++=================================================================================+
+|                                    CLASSROOM                                    |
++---------------------------------------------------------------------------------+
+| Logged in as jtee.                                                              |
+| Current classroom: CS 4820                                                      |
+| Status for this classroom: Student                                              |
++---------------------------------------------------------------------------------+
+| 1. View discussion board.                                                       |
+| 2. Create a thread.                                                             |
+| 3. Disjoin this classroom.                                                      |
+| 4. Go back home.                                                                |
++=================================================================================+
+Please select an option. "4"
+
+
++=================================================================================+
+|                                      HOME                                       |
++---------------------------------------------------------------------------------+
+| Logged in as jtee.                                                              |
++---------------------------------------------------------------------------------+
+| 1. View your classrooms.                                                        |
+| 2. Create a classroom.                                                          |
+| 3. Request to join a classroom.                                                 |
+| 4. Log out.                                                                     |
++=================================================================================+
+Please select an option. "1"
+
+
++=================================================================================+
+|                                 CLASSROOM LIST                                  |
++---------------------------------------------------------------------------------+
+| Logged in as jtee.                                                              |
++---------------------------------------------------------------------------------+
+| 1. LING 4844                                                                    |
+| 2. CS 4820                                                                      |
+| 3. HD 3260                                                                      |
++=================================================================================+
+Please select an option. "3"
+
+
++=================================================================================+
+|                                    CLASSROOM                                    |
++---------------------------------------------------------------------------------+
+| Logged in as jtee.                                                              |
+| Current classroom: HD 3260                                                      |
+| Status for this classroom: Instructor                                           |
++---------------------------------------------------------------------------------+
+| 1. View discussion board.                                                       |
+| 2. Create a thread.                                                             |
+| 3. View members of this classroom.                                              |
+| 4. View requests to join this classroom.                                        |
+| 5. Delete this classroom.                                                       |
+| 6. Go back home.                                                                |
++=================================================================================+
+Please select an option. 
+
+
