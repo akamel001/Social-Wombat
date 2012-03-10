@@ -154,7 +154,8 @@ public class UserInterface {
 	 * 1. View your classrooms.
 	 * 2. Create a classroom.
 	 * 3. Request to join a classroom.
-	 * 4. Log out.
+	 * 4. Change your password.
+	 * 5. Log out.
 	 * @param messages
 	 */
 	private static void homePage(String messages) {	
