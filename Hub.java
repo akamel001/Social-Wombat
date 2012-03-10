@@ -1,6 +1,7 @@
 
 import java.io.*;
 import java.net.*;
+import java.util.HashMap;
 
 //Hub class. Handles communication between data servers and clients
 // Hub does authentication and forwards messages to the servers. 
@@ -16,6 +17,8 @@ class Hub extends Thread {
 	static String classListName = "hub.classlist";
 	static String userListName = "hub.userlist";
 	static String serverListName = "hub.serverlist";
+	
+	static HashMap<Integer,SocketPackage> serverPackages = new HashMap<Integer,SocketPackage>();
 	
 	static ServerSocket hubSocket = null;
 	String hubIP = null;
@@ -83,6 +86,9 @@ class Hub extends Thread {
 			return r;
 		} else {
 			if(DEBUG) System.out.println("Server" + server + " added under server id: " + r);
+			//create new socket to add
+			SocketPackage newSocketPackage = new SocketPackage(server,SERVER_SOCKET);
+			serverPackages.put(r, newSocketPackage);
 			return r;
 		}
 	}
@@ -92,6 +98,8 @@ class Hub extends Thread {
 	 */
 	public static boolean removeServer(int serverID){
 		if(serverList.removeServer(serverID) == 1){
+			// also remove from serverSockets
+			serverPackages.remove(serverID);
 			return true;
 		} else {
 			return false;
@@ -195,13 +203,29 @@ class Hub extends Thread {
 	}
 	
 	/*
+	 * Populates serverSockets with the socket associated with the appropriate
+	 * server number which is also the index + 1. So serverNum - 1 = index.
+	 * 
+	 */
+	private static void connectServers(){
+		int numServers = serverList.getLastServer();
+		// start up a connection wit hall of the servers
+		for (int i = 1;i<=numServers;i++){
+			//Open a connection
+			SocketPackage newSocketPackage = new SocketPackage(serverList.getAddress(i),SERVER_SOCKET);
+			serverPackages.put(i, newSocketPackage);
+		}
+	}
+	
+	/*
 	 * Main running loop for a Hub
 	 */
 	public void run() {
 		// Start Up the Hub
 		// Initialize Data Structures
 		initializeData();
-		
+		// Connect to Servers
+		connectServers();
 		//add shutdown hook
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
@@ -210,6 +234,10 @@ class Hub extends Thread {
 				writeToDisk(userList, userListName);
 				writeToDisk(serverList, serverListName);
 				if(DEBUG) System.out.println("Data safely written out.");
+				// Disconnect from Servers
+				for (SocketPackage socketPackage : serverPackages.values()){
+					socketPackage.close();
+				}
 			}
 		});
 		
@@ -234,7 +262,7 @@ class Hub extends Thread {
 				Socket client = hubSocket.accept();
 				//Spawn new ServerSocketHandler thread, we assume that the
 				//hub has directed this message to the correct Server
-				HubSocketHandler newRequest = new HubSocketHandler(client,classList,userList,serverList);
+				HubSocketHandler newRequest = new HubSocketHandler(client,classList,userList,serverList,serverPackages);
 				if(DEBUG) System.out.println("Accepted a connection from: "+ client.getInetAddress());
 				//Starts running the new thread
 				newRequest.start(); 
