@@ -3,23 +3,24 @@ import java.io.Console;
 
 
 /**
- * This is the sysadmin interface for Social Wombat.
+ * This is the system administrator interface for Social Wombat.
  * 
  */
 public class SysAdminInterface {
 	
 	static Console console;
+	static Hub hub;
 	private static final String sREGISTRATION = UserInterfaceHelper.addFormattingAlignCenter("REGISTRATION");
 	private static final String eREGISTRATION_ERROR = UserInterfaceHelper.addFormattingAlignLeft("An error occured when adding the user to the system.");
 	private static final String eREGISTRATION_SUCCESS = UserInterfaceHelper.addFormattingAlignLeft("The user has been successfully added to the sytem.");
-	private static final String eREGISTRATION_INSTRUCTIONS = UserInterfaceHelper.addFormattingAlignLeft("Speicfy a username and password when prompted to add a user to the system.");
+	private static final String eREGISTRATION_INSTRUCTIONS = UserInterfaceHelper.addFormattingAlignLeft("Specify a username and password when prompted to add a user to the system.");
 	
 	private static void registrationPage(String messages) {
 		displayPage(sREGISTRATION, messages, null, null, eREGISTRATION_INSTRUCTIONS);	
 		String userNameTemp = console.readLine("User Name? ");
-		String password = console.readLine("Password? ");
+		char[] password = console.readPassword("Password? ");
 		
-		if (addUser(userNameTemp, password)){ // TODO: add condition checking that user/pw combo has been added successfully. Ask Chris
+		if (hub.addUser(userNameTemp, password)){
 			registrationPage(eREGISTRATION_SUCCESS);
 		} else {
 			registrationPage(eREGISTRATION_ERROR);
@@ -57,18 +58,6 @@ public class SysAdminInterface {
 		console.printf(UserInterfaceHelper.sBIG_DIVIDER);
 	}
 	
-	/**
-	 * Adds a user/password combo to the system.
-	 * @param userNameTemp
-	 * @param password
-	 * @return
-	 */
-	private static boolean addUser(String userNameTemp, String password) {
-		// TODO Auto-generated method stub
-		return true;
-	}
-	
-	
 	////////////////////////////////////////////////
 	//                    MAIN                    //
 	////////////////////////////////////////////////
@@ -83,6 +72,11 @@ public class SysAdminInterface {
             System.err.println("No console.");
             System.exit(1);
         }
+        
+        System.out.println("Starting up the hub for Studious Wombat...");
+        hub = new Hub();
+        hub.start();
+        System.out.println("The hub has been started up.");
 		
 		System.out.println("This is the sysadmin interface for Studious Wombat.");
 		registrationPage(null);
