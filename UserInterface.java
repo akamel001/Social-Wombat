@@ -58,6 +58,7 @@ public class UserInterface {
 	private static final String eREMOVE_MEMBER_ERROR = 		UserInterfaceHelper.addFormattingAlignLeft("An error occured when removing this member from the classroom.");
 	private static final String eDELETE_CLASSROOM_ERROR = 	UserInterfaceHelper.addFormattingAlignLeft("An error occured when deleting your classroom.");
 	private static final String eDISJOIN_CLASSROOM_ERROR = 	UserInterfaceHelper.addFormattingAlignLeft("An error occured when disjoining this classroom.");
+	private static final String ePASSWORD_CHANGE_ERROR =	UserInterfaceHelper.addFormattingAlignLeft("An error occured when changing your password.");
 	
 	private static final String mCLASSROOM_CREATION_SUCCESS =	UserInterfaceHelper.addFormattingAlignLeft("You have successfully created a classroom!");
 	private static final String mCLASSROOM_REQUEST_SUCCESS =	UserInterfaceHelper.addFormattingAlignLeft("You have successfully requested to join a classroom!");
@@ -70,7 +71,8 @@ public class UserInterface {
 	private static final String mCONFIRM_AS_MEMBER_SUCCESS = 	UserInterfaceHelper.addFormattingAlignLeft("You have successfully added a member to this classroom.");
 	private static final String mDENY_MEMBERSHIP_SUCCESS =   	UserInterfaceHelper.addFormattingAlignLeft("You have successfully denied a user member to this classroom.");
 	private static final String mCOMMENT_DELETION_SUCCESS = 	UserInterfaceHelper.addFormattingAlignLeft("You have successfully deleted the comment.");		
-	private static final String mTHREAD_DELETION_SUCCESS = 		UserInterfaceHelper.addFormattingAlignLeft("You have successfully deleted the thread.");	
+	private static final String mTHREAD_DELETION_SUCCESS = 		UserInterfaceHelper.addFormattingAlignLeft("You have successfully deleted the thread.");
+	private static final String mPASSWORD_CHANGE_SUCCESS = 		UserInterfaceHelper.addFormattingAlignLeft("You have successfully changed your password.");
 	
 	private static final String cNO_REQUESTS = 					UserInterfaceHelper.addFormattingAlignLeft("This classroom has no requests to enroll.");
 	private static final String cNO_MEMBERS = 					UserInterfaceHelper.addFormattingAlignLeft("This classroom has no enrolled members.");
@@ -82,7 +84,8 @@ public class UserInterface {
 	private static final String sHOME_PAGE_OPTIONS =		UserInterfaceHelper.addFormattingAlignLeft("1. View your classrooms.") +
 															UserInterfaceHelper.addFormattingAlignLeft("2. Create a classroom.") +
 															UserInterfaceHelper.addFormattingAlignLeft("3. Request to join a classroom.") +
-															UserInterfaceHelper.addFormattingAlignLeft("4. Log out.");
+															UserInterfaceHelper.addFormattingAlignLeft("4. Change your password.") +
+															UserInterfaceHelper.addFormattingAlignLeft("5. Log out.");
 	
 	private static final String sCLASSROOM_PAGE_OPTIONS_INSTRUCTOR = UserInterfaceHelper.addFormattingAlignLeft("1. View discussion board.") +
 															UserInterfaceHelper.addFormattingAlignLeft("2. Create a thread.") +
@@ -135,7 +138,7 @@ public class UserInterface {
 	private static void loginPage(String messages) {
 		displayPage(sLOG_IN, messages, null, null, null);	
 		String userNameTemp = console.readLine("User Name? ");
-		String password = console.readLine("Password? ");
+		char[] password = console.readPassword("Password? ");
 		
 		if (client.handleLogin(userNameTemp, password)){
 			currentUserName = userNameTemp;
@@ -183,8 +186,20 @@ public class UserInterface {
 				homePage(eCLASSROOM_REQUEST_ERROR);
 			}
 	        break;
-	    // Log out.
+	    // Change your password.
 	    case 4:
+	    	String userNameTemp = console.readLine("User Name? ");
+	    	char[] oldPassword = console.readPassword("Old Password? ");
+	    	char[] newPassword = console.readPassword("New Password? ");
+	    	char[] confirmNewPassword = console.readPassword("Confirm New Password? ");
+	    	if (client.changePassword(oldPassword, newPassword, confirmNewPassword, userNameTemp, currentUserName)){
+				homePage(mPASSWORD_CHANGE_SUCCESS);
+			} else {
+				homePage(ePASSWORD_CHANGE_ERROR);
+			}
+	        break;
+	    // Log out.
+	    case 5:
 	    	currentUserName = null;
 	        loginPage(mLOG_OUT_SUCCESS);
 	        break;

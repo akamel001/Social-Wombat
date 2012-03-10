@@ -23,8 +23,8 @@ public class Client {
 	 * @param userName
 	 * @return boolean corresponding to verification status
 	 */
-	public boolean handleLogin(String uName, String password){ // TODO: I (Julia) added a password parameter here, but currently nothing is being done with it.
-
+	public boolean handleLogin(String uName, char[] password){ // TODO: I (Julia) added a password parameter here, but currently nothing is being done with it.
+		// TODO: make sure to call zeroItOut(password)!
 		if(DEBUG)
 			return true; 
 		
@@ -500,6 +500,43 @@ public class Client {
 		Message response = handler.sendReceive();
 
 		return (response.getCode() == 1)? true : false;
+	}
+	
+	/**
+	 * This a method for changing a user's password.
+	 * Before changing a password, it must:
+	 *   verify that userNameTemp matches currentUserName;
+	 *   verify that oldPassword matches currentUserName's password;
+	 *   check that newPassword1 matches newPassword2.
+	 * This method deals with passwords and care must be taken to leave
+	 * no trace of any passwords, new or old.
+	 * @param oldPassword <- this is currentUserName's initial password
+	 * @param newPassword <- this is the desired password for currentUserName
+	 * @param confirmNewPassword <- again, this is the desired password for currentUserName (we ask for it again to minimize the effects of user typos)
+	 * @param userNameTemp <- this is the supplied name of the current user; it must match currentUserName for a password change
+	 * @param currentUserName <- this is the name of the current user
+	 * @return
+	 */
+	public boolean changePassword(char[] oldPassword, char[] newPassword,
+			char[] confirmNewPassword, String userNameTemp, String currentUserName) {
+		// TODO Auto-generated method stub
+		// TODO: make sure to call zeroItOut(oldPassword)!
+		// TODO: make sure to call zeroItOut(newPassword)!
+		// TODO: make sure to call zeroItOut(confirmNewPassword)!
+		return false;
+	}
+	
+	
+	// Helper methods.
+	/**
+	 * This methods zeroes out a given char array.
+	 * @param password
+	 */
+	public void zeroItOut(char[] password) {
+		for (int i = 0; i < password.length; i++){
+			password[i] = '0';
+		}
+		
 	}
 
 }
