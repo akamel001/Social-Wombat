@@ -19,10 +19,11 @@ public class Client {
 	 * This method is used in the login page to verify a user name.
 	 * It takes in a user name and returns true if the user name can be verified,
 	 * and false otherwise.
+	 * @param password 
 	 * @param userName
 	 * @return boolean corresponding to verification status
 	 */
-	public boolean handleLogin(String uName){
+	public boolean handleLogin(String uName, String password){ // TODO: I (Julia) added a password parameter here, but currently nothing is being done with it.
 
 		if(DEBUG)
 			return true; 

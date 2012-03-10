@@ -22,7 +22,7 @@ public class UserInterfaceTest {
 	private static final String sNEW_LINE = System.getProperty("line.separator");
 
 	/**
-	 * Test method for {@link UserInterface#convertIntToStringPermissions(int)}.
+	 * Test method for {@link UserInterfaceHelper#convertIntToStringPermissions(int)}.
 	 */
 	@Test
 	public void testConvertIntToStringPermissions() {
@@ -32,7 +32,7 @@ public class UserInterfaceTest {
 	}
 
 	/**
-	 * Test method for {@link UserInterface#mapStringKeysToList(java.util.Map)}.
+	 * Test method for {@link UserInterfaceHelper#mapStringKeysToList(java.util.Map)}.
 	 */
 	@Test
 	public void testMapStringKeysToList() {
@@ -57,7 +57,7 @@ public class UserInterfaceTest {
 	}
 
 	/**
-	 * Test method for {@link UserInterface#listToUIString(java.util.List)}.
+	 * Test method for {@link UserInterfaceHelper#listToUIString(java.util.List)}.
 	 * Depends on the iWindowWidth parameter in UserInterface.
 	 */
 	@Test

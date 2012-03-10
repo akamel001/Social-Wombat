@@ -27,109 +27,104 @@ public class UserInterface {
 	private static String currentMemberPermissions;
 	private static String currentPendingMemberName;
 	
-	static int iWINDOWWIDTH = 78;
-	
 	// Below is a bunch of strings used in the text-based user interface.
-	private static final String sNEW_LINE = 			System.getProperty("line.separator");
-	private static final String sBIG_DIVIDER = 			generateBigDivider();
-	private static final String sSMALL_DIVIDER =		generateSmallDivider();
-	private static final String sLOG_IN = 				addFormattingAlignCenter("LOG IN");
-	private static final String sHOME_PAGE = 			addFormattingAlignCenter("HOME"); 
-	private static final String sCLASSROOM_LIST_PAGE = 	addFormattingAlignCenter("CLASSROOM LIST"); 
-	private static final String sCLASSROOM_PAGE = 		addFormattingAlignCenter("CLASSROOM");
-	private static final String sTHREAD_LIST_PAGE = 	addFormattingAlignCenter("THREAD LIST");
-	private static final String sTHREAD_PAGE = 			addFormattingAlignCenter("THREAD");
-	private static final String sMEMBER_LIST_PAGE = 	addFormattingAlignCenter("MEMBER LIST");
-	private static final String sMEMBER_PAGE = 			addFormattingAlignCenter("MEMBER");
-	private static final String sREQUEST_LIST_PAGE = 	addFormattingAlignCenter("REQUEST LIST");
-	private static final String sREQUEST_PAGE = 		addFormattingAlignCenter("REQUEST");
+	private static final String sLOG_IN = 				UserInterfaceHelper.addFormattingAlignCenter("LOG IN");
+	private static final String sHOME_PAGE = 			UserInterfaceHelper.addFormattingAlignCenter("HOME"); 
+	private static final String sCLASSROOM_LIST_PAGE = 	UserInterfaceHelper.addFormattingAlignCenter("CLASSROOM LIST"); 
+	private static final String sCLASSROOM_PAGE = 		UserInterfaceHelper.addFormattingAlignCenter("CLASSROOM");
+	private static final String sTHREAD_LIST_PAGE = 	UserInterfaceHelper.addFormattingAlignCenter("THREAD LIST");
+	private static final String sTHREAD_PAGE = 			UserInterfaceHelper.addFormattingAlignCenter("THREAD");
+	private static final String sMEMBER_LIST_PAGE = 	UserInterfaceHelper.addFormattingAlignCenter("MEMBER LIST");
+	private static final String sMEMBER_PAGE = 			UserInterfaceHelper.addFormattingAlignCenter("MEMBER");
+	private static final String sREQUEST_LIST_PAGE = 	UserInterfaceHelper.addFormattingAlignCenter("REQUEST LIST");
+	private static final String sREQUEST_PAGE = 		UserInterfaceHelper.addFormattingAlignCenter("REQUEST");
 	
 	private static final String sINSTRUCTOR =			"Instructor";
 	private static final String sTEACHING_ASSISTANT = 	"Teaching Assistant";
 	private static final String sSTUDENT = 				"Student";
 	
-	private static final String eNON_VALID_SELECTION = 		"That is not a valid selection." + sNEW_LINE;
+	private static final String eNON_VALID_SELECTION = 		"That is not a valid selection." + UserInterfaceHelper.sNEW_LINE;
 	
-	private static final String eGENERAL_ERROR = 			addFormattingAlignLeft("An error has occurred.");
-	private static final String eLOG_IN_ERROR = 			addFormattingAlignLeft("There was an error in logging in with the provided username.");		
-	private static final String eCLASSROOM_CREATION_ERROR =	addFormattingAlignLeft("An error occured when creating the classroom.");
-	private static final String eCLASSROOM_REQUEST_ERROR =	addFormattingAlignLeft("An error occured when requesting to join a classroom.");	
-	private static final String eTHREAD_CREATION_ERROR = 	addFormattingAlignLeft("An error occured when creating your thread.");	
-	private static final String eCOMMENT_DELETION_ERROR =	addFormattingAlignLeft("An error occured when deleting the comment.");	
-	private static final String eTHREAD_DELETION_ERROR = 	addFormattingAlignLeft("An error occured when deleting the thread.");
-	private static final String eDENY_MEMBERSHIP_ERROR = 	addFormattingAlignLeft("An error occured when denying this membership request.");
-	private static final String eCONFIRM_AS_MEMBER_ERROR = 	addFormattingAlignLeft("An error occured when confirming this membership request.");
-	private static final String eCHANGE_STATUS_ERROR = 		addFormattingAlignLeft("An error occured when changing this member's status.");
-	private static final String eREMOVE_MEMBER_ERROR = 		addFormattingAlignLeft("An error occured when removing this member from the classroom.");
-	private static final String eDELETE_CLASSROOM_ERROR = 	addFormattingAlignLeft("An error occured when deleting your classroom.");
-	private static final String eDISJOIN_CLASSROOM_ERROR = 	addFormattingAlignLeft("An error occured when disjoining this classroom.");
+	private static final String eGENERAL_ERROR = 			UserInterfaceHelper.addFormattingAlignLeft("An error has occurred.");
+	private static final String eLOG_IN_ERROR = 			UserInterfaceHelper.addFormattingAlignLeft("There was an error in logging in with the provided username.");		
+	private static final String eCLASSROOM_CREATION_ERROR =	UserInterfaceHelper.addFormattingAlignLeft("An error occured when creating the classroom.");
+	private static final String eCLASSROOM_REQUEST_ERROR =	UserInterfaceHelper.addFormattingAlignLeft("An error occured when requesting to join a classroom.");	
+	private static final String eTHREAD_CREATION_ERROR = 	UserInterfaceHelper.addFormattingAlignLeft("An error occured when creating your thread.");	
+	private static final String eCOMMENT_DELETION_ERROR =	UserInterfaceHelper.addFormattingAlignLeft("An error occured when deleting the comment.");	
+	private static final String eTHREAD_DELETION_ERROR = 	UserInterfaceHelper.addFormattingAlignLeft("An error occured when deleting the thread.");
+	private static final String eDENY_MEMBERSHIP_ERROR = 	UserInterfaceHelper.addFormattingAlignLeft("An error occured when denying this membership request.");
+	private static final String eCONFIRM_AS_MEMBER_ERROR = 	UserInterfaceHelper.addFormattingAlignLeft("An error occured when confirming this membership request.");
+	private static final String eCHANGE_STATUS_ERROR = 		UserInterfaceHelper.addFormattingAlignLeft("An error occured when changing this member's status.");
+	private static final String eREMOVE_MEMBER_ERROR = 		UserInterfaceHelper.addFormattingAlignLeft("An error occured when removing this member from the classroom.");
+	private static final String eDELETE_CLASSROOM_ERROR = 	UserInterfaceHelper.addFormattingAlignLeft("An error occured when deleting your classroom.");
+	private static final String eDISJOIN_CLASSROOM_ERROR = 	UserInterfaceHelper.addFormattingAlignLeft("An error occured when disjoining this classroom.");
 	
-	private static final String mCLASSROOM_CREATION_SUCCESS =	addFormattingAlignLeft("You have successfully created a classroom!");
-	private static final String mCLASSROOM_REQUEST_SUCCESS =	addFormattingAlignLeft("You have successfully requested to join a classroom!");
-	private static final String mLOG_OUT_SUCCESS = 				addFormattingAlignLeft("You have successfully logged out.");
-	private static final String mTHREAD_CREATION_SUCCESS = 		addFormattingAlignLeft("You have successfully posted your new thread to the discussion board.");	
-	private static final String mDISJOIN_CLASSROOM_SUCCESS = 	addFormattingAlignLeft("You have successfully disjoined the classroom.");
-	private static final String mDELETE_CLASSROOM_SUCCESS =  	addFormattingAlignLeft("You have successfully deleted your classroom.");
-	private static final String mREMOVE_MEMBER_SUCCESS = 		addFormattingAlignLeft("You have successfully removed a member from this classroom.");
-	private static final String mCHANGE_STATUS_SUCCESS =		addFormattingAlignLeft("You have successfully changed the status of a member.");
-	private static final String mCONFIRM_AS_MEMBER_SUCCESS = 	addFormattingAlignLeft("You have successfully added a member to this classroom.");
-	private static final String mDENY_MEMBERSHIP_SUCCESS =   	addFormattingAlignLeft("You have successfully denied a user member to this classroom.");
-	private static final String mCOMMENT_DELETION_SUCCESS = 	addFormattingAlignLeft("You have successfully deleted the comment.");		
-	private static final String mTHREAD_DELETION_SUCCESS = 		addFormattingAlignLeft("You have successfully deleted the thread.");	
+	private static final String mCLASSROOM_CREATION_SUCCESS =	UserInterfaceHelper.addFormattingAlignLeft("You have successfully created a classroom!");
+	private static final String mCLASSROOM_REQUEST_SUCCESS =	UserInterfaceHelper.addFormattingAlignLeft("You have successfully requested to join a classroom!");
+	private static final String mLOG_OUT_SUCCESS = 				UserInterfaceHelper.addFormattingAlignLeft("You have successfully logged out.");
+	private static final String mTHREAD_CREATION_SUCCESS = 		UserInterfaceHelper.addFormattingAlignLeft("You have successfully posted your new thread to the discussion board.");	
+	private static final String mDISJOIN_CLASSROOM_SUCCESS = 	UserInterfaceHelper.addFormattingAlignLeft("You have successfully disjoined the classroom.");
+	private static final String mDELETE_CLASSROOM_SUCCESS =  	UserInterfaceHelper.addFormattingAlignLeft("You have successfully deleted your classroom.");
+	private static final String mREMOVE_MEMBER_SUCCESS = 		UserInterfaceHelper.addFormattingAlignLeft("You have successfully removed a member from this classroom.");
+	private static final String mCHANGE_STATUS_SUCCESS =		UserInterfaceHelper.addFormattingAlignLeft("You have successfully changed the status of a member.");
+	private static final String mCONFIRM_AS_MEMBER_SUCCESS = 	UserInterfaceHelper.addFormattingAlignLeft("You have successfully added a member to this classroom.");
+	private static final String mDENY_MEMBERSHIP_SUCCESS =   	UserInterfaceHelper.addFormattingAlignLeft("You have successfully denied a user member to this classroom.");
+	private static final String mCOMMENT_DELETION_SUCCESS = 	UserInterfaceHelper.addFormattingAlignLeft("You have successfully deleted the comment.");		
+	private static final String mTHREAD_DELETION_SUCCESS = 		UserInterfaceHelper.addFormattingAlignLeft("You have successfully deleted the thread.");	
 	
-	private static final String cNO_REQUESTS = 					addFormattingAlignLeft("This classroom has no requests to enroll.");
-	private static final String cNO_MEMBERS = 					addFormattingAlignLeft("This classroom has no enrolled members.");
-	private static final String cNO_THREADS = 					addFormattingAlignLeft("This discussions board has no threads.");
-	private static final String cNO_CLASSROOMS = 				addFormattingAlignLeft("You are not enrolled in any classrooms.");
+	private static final String cNO_REQUESTS = 					UserInterfaceHelper.addFormattingAlignLeft("This classroom has no requests to enroll.");
+	private static final String cNO_MEMBERS = 					UserInterfaceHelper.addFormattingAlignLeft("This classroom has no enrolled members.");
+	private static final String cNO_THREADS = 					UserInterfaceHelper.addFormattingAlignLeft("This discussions board has no threads.");
+	private static final String cNO_CLASSROOMS = 				UserInterfaceHelper.addFormattingAlignLeft("You are not enrolled in any classrooms.");
 	
-	private static final String sDEFAULT_OPTIONS = 			addFormattingAlignLeft("1. Go back home.");
+	private static final String sDEFAULT_OPTIONS = 			UserInterfaceHelper.addFormattingAlignLeft("1. Go back home.");
 	
-	private static final String sHOME_PAGE_OPTIONS =		addFormattingAlignLeft("1. View your classrooms.") +
-															addFormattingAlignLeft("2. Create a classroom.") +
-															addFormattingAlignLeft("3. Request to join a classroom.") +
-															addFormattingAlignLeft("4. Log out.");
+	private static final String sHOME_PAGE_OPTIONS =		UserInterfaceHelper.addFormattingAlignLeft("1. View your classrooms.") +
+															UserInterfaceHelper.addFormattingAlignLeft("2. Create a classroom.") +
+															UserInterfaceHelper.addFormattingAlignLeft("3. Request to join a classroom.") +
+															UserInterfaceHelper.addFormattingAlignLeft("4. Log out.");
 	
-	private static final String sCLASSROOM_PAGE_OPTIONS_INSTRUCTOR = addFormattingAlignLeft("1. View discussion board.") +
-															addFormattingAlignLeft("2. Create a thread.") +
-															addFormattingAlignLeft("3. View members of this classroom.") +
-															addFormattingAlignLeft("4. View requests to join this classroom.") +
-															addFormattingAlignLeft("5. Delete this classroom.") +
-															addFormattingAlignLeft("6. Go back home.");
+	private static final String sCLASSROOM_PAGE_OPTIONS_INSTRUCTOR = UserInterfaceHelper.addFormattingAlignLeft("1. View discussion board.") +
+															UserInterfaceHelper.addFormattingAlignLeft("2. Create a thread.") +
+															UserInterfaceHelper.addFormattingAlignLeft("3. View members of this classroom.") +
+															UserInterfaceHelper.addFormattingAlignLeft("4. View requests to join this classroom.") +
+															UserInterfaceHelper.addFormattingAlignLeft("5. Delete this classroom.") +
+															UserInterfaceHelper.addFormattingAlignLeft("6. Go back home.");
 	
-	private static final String sCLASSROOM_PAGE_OPTIONS_TEACHING_ASSISTANT =	addFormattingAlignLeft("1. View discussion board.") +
-															addFormattingAlignLeft("2. Create a thread.") +
-															addFormattingAlignLeft("3. View members of this classroom.") +
-															addFormattingAlignLeft("4. View requests to join this classroom.") +
-															addFormattingAlignLeft("5. Disjoin this classroom.") +
-															addFormattingAlignLeft("6. Go back home.");
+	private static final String sCLASSROOM_PAGE_OPTIONS_TEACHING_ASSISTANT =	UserInterfaceHelper.addFormattingAlignLeft("1. View discussion board.") +
+															UserInterfaceHelper.addFormattingAlignLeft("2. Create a thread.") +
+															UserInterfaceHelper.addFormattingAlignLeft("3. View members of this classroom.") +
+															UserInterfaceHelper.addFormattingAlignLeft("4. View requests to join this classroom.") +
+															UserInterfaceHelper.addFormattingAlignLeft("5. Disjoin this classroom.") +
+															UserInterfaceHelper.addFormattingAlignLeft("6. Go back home.");
 	
-	private static final String sCLASSROOM_PAGE_OPTIONS_STUDENT = addFormattingAlignLeft("1. View discussion board.") +
-															addFormattingAlignLeft("2. Create a thread.") +
-															addFormattingAlignLeft("3. Disjoin this classroom.") +
-															addFormattingAlignLeft("4. Go back home.");
+	private static final String sCLASSROOM_PAGE_OPTIONS_STUDENT = UserInterfaceHelper.addFormattingAlignLeft("1. View discussion board.") +
+															UserInterfaceHelper.addFormattingAlignLeft("2. Create a thread.") +
+															UserInterfaceHelper.addFormattingAlignLeft("3. Disjoin this classroom.") +
+															UserInterfaceHelper.addFormattingAlignLeft("4. Go back home.");
 
-	private static final String sTHREAD_PAGE_OPTIONS_INSTRUCTOR_AND_TEACHING_ASSISTANT = addFormattingAlignLeft("1. Comment on this thread.") +
-															addFormattingAlignLeft("2. Delete a comment.") +
-															addFormattingAlignLeft("3. Delete this entire thread.") +
-															addFormattingAlignLeft("4. Go back to this classroom's main page.");
+	private static final String sTHREAD_PAGE_OPTIONS_INSTRUCTOR_AND_TEACHING_ASSISTANT = UserInterfaceHelper.addFormattingAlignLeft("1. Comment on this thread.") +
+															UserInterfaceHelper.addFormattingAlignLeft("2. Delete a comment.") +
+															UserInterfaceHelper.addFormattingAlignLeft("3. Delete this entire thread.") +
+															UserInterfaceHelper.addFormattingAlignLeft("4. Go back to this classroom's main page.");
 	
-	private static final String sTHREAD_PAGE_OPTIONS_INSTRUCTOR_AND_TEACHING_ASSISTANT_NO_COMMENTS = addFormattingAlignLeft("1. Comment on this thread.") +
-															addFormattingAlignLeft("2. Delete this entire thread.") +
-															addFormattingAlignLeft("3. Go back to this classroom's main page.");
+	private static final String sTHREAD_PAGE_OPTIONS_INSTRUCTOR_AND_TEACHING_ASSISTANT_NO_COMMENTS = UserInterfaceHelper.addFormattingAlignLeft("1. Comment on this thread.") +
+															UserInterfaceHelper.addFormattingAlignLeft("2. Delete this entire thread.") +
+															UserInterfaceHelper.addFormattingAlignLeft("3. Go back to this classroom's main page.");
 	
-	private static final String sTHREAD_PAGE_OPTIONS_STUDENT = addFormattingAlignLeft("1. Comment on this thread.") +
-															addFormattingAlignLeft("2. Go back to this classroom's main page.");
+	private static final String sTHREAD_PAGE_OPTIONS_STUDENT = UserInterfaceHelper.addFormattingAlignLeft("1. Comment on this thread.") +
+															UserInterfaceHelper.addFormattingAlignLeft("2. Go back to this classroom's main page.");
 	
-	private static final String sMEMBER_PAGE_OPTIONS_INSTRUCTOR = addFormattingAlignLeft("1. Remove this member from this classroom.") +
-															addFormattingAlignLeft("2. Change this member's status.") +
-															addFormattingAlignLeft("3. Go back to this classroom's main page.");
+	private static final String sMEMBER_PAGE_OPTIONS_INSTRUCTOR = UserInterfaceHelper.addFormattingAlignLeft("1. Remove this member from this classroom.") +
+															UserInterfaceHelper.addFormattingAlignLeft("2. Change this member's status.") +
+															UserInterfaceHelper.addFormattingAlignLeft("3. Go back to this classroom's main page.");
 	
-	private static final String sMEMBER_PAGE_OPTIONS_TEACHING_ASSISTANT = addFormattingAlignLeft("1. Remove this member from this classroom.") +
-															addFormattingAlignLeft("2. Go back to this classroom's main page.");
+	private static final String sMEMBER_PAGE_OPTIONS_TEACHING_ASSISTANT = UserInterfaceHelper.addFormattingAlignLeft("1. Remove this member from this classroom.") +
+															UserInterfaceHelper.addFormattingAlignLeft("2. Go back to this classroom's main page.");
 	
-	private static final String sREQUEST_PAGE_OPTIONS = 	addFormattingAlignLeft("1. Confirm as a member.") +
-															addFormattingAlignLeft("2. Deny membership.") +
-															addFormattingAlignLeft("3. Go back to this classroom's main page.");
+	private static final String sREQUEST_PAGE_OPTIONS = 	UserInterfaceHelper.addFormattingAlignLeft("1. Confirm as a member.") +
+															UserInterfaceHelper.addFormattingAlignLeft("2. Deny membership.") +
+															UserInterfaceHelper.addFormattingAlignLeft("3. Go back to this classroom's main page.");
 	
 	/**
 	 * This is the login page. The login page requests a user name. If the user name is valid, 
@@ -140,10 +135,11 @@ public class UserInterface {
 	private static void loginPage(String messages) {
 		displayPage(sLOG_IN, messages, null, null, null);	
 		String userNameTemp = console.readLine("User Name? ");
+		String password = console.readLine("Password? ");
 		
-		if (client.handleLogin(userNameTemp)){
+		if (client.handleLogin(userNameTemp, password)){
 			currentUserName = userNameTemp;
-			homePage(addFormattingAlignLeft("Welcome, " + currentUserName + "!"));
+			homePage(UserInterfaceHelper.addFormattingAlignLeft("Welcome, " + currentUserName + "!"));
 		} else {
 			loginPage(eLOG_IN_ERROR);
 		}
@@ -158,7 +154,7 @@ public class UserInterface {
 	 * @param messages
 	 */
 	private static void homePage(String messages) {	
-		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
+		String info = UserInterfaceHelper.addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		displayPage(sHOME_PAGE, messages, info, null, sHOME_PAGE_OPTIONS);
 		int selection = getValidSelectionFromUser(4);
 		
@@ -204,7 +200,7 @@ public class UserInterface {
 	 * @param messages 
 	 */
 	private static void classroomListPage(String messages) {
-		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
+		String info = UserInterfaceHelper.addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		
 		Map<String, Integer> classroomMap = client.getClassroomMapForUser(currentUserName);	
 		List<String> classroomList = mapStringKeysToList(classroomMap);
@@ -254,9 +250,9 @@ public class UserInterface {
 	private static void classroomPage(String messages) {
 		int maxSelection = 0;
 		
-		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
-		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName));
-		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
+		String info = UserInterfaceHelper.addFormattingAlignLeft("Logged in as " + currentUserName + ".");
+		info = info.concat(UserInterfaceHelper.addFormattingAlignLeft("Current classroom: " + currentClassroomName));
+		info = info.concat(UserInterfaceHelper.addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
 		if (currentPermissions == sSTUDENT) {
 			displayPage(sCLASSROOM_PAGE, messages, info, null, sCLASSROOM_PAGE_OPTIONS_STUDENT);
 			maxSelection = 4;
@@ -331,9 +327,9 @@ public class UserInterface {
 	 * @param messages
 	 */
 	private static void threadListPage(String messages) {
-		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
-		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName));
-		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
+		String info = UserInterfaceHelper.addFormattingAlignLeft("Logged in as " + currentUserName + ".");
+		info = info.concat(UserInterfaceHelper.addFormattingAlignLeft("Current classroom: " + currentClassroomName));
+		info = info.concat(UserInterfaceHelper.addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
 		
 		Map<Integer, String> threadMap = client.getThreadMapForClassroom(currentClassroomName, currentUserName);
 		
@@ -375,10 +371,10 @@ public class UserInterface {
 		int maxSelection = 0;
 		int commentsExist = 0; // '0' for no comments, '1' for one or more comments.
 		
-		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
-		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName));
-		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
-		info = info.concat(addFormattingAlignLeft("Current thread: " + currentThreadName));
+		String info = UserInterfaceHelper.addFormattingAlignLeft("Logged in as " + currentUserName + ".");
+		info = info.concat(UserInterfaceHelper.addFormattingAlignLeft("Current classroom: " + currentClassroomName));
+		info = info.concat(UserInterfaceHelper.addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
+		info = info.concat(UserInterfaceHelper.addFormattingAlignLeft("Current thread: " + currentThreadName));
 		
 		Map<Integer, String> threadContentMap = client.getThreadGivenID(currentThreadID, currentClassroomName, currentUserName);
     	TreeMap<Integer, String> threadContentTreeMap = new TreeMap<Integer, String>(threadContentMap); // Converting to TreeMap to stabilize the order.
@@ -452,9 +448,9 @@ public class UserInterface {
 	 * @param messages
 	 */
 	private static void memberListPage(String messages) {		
-		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
-		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName));
-		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
+		String info = UserInterfaceHelper.addFormattingAlignLeft("Logged in as " + currentUserName + ".");
+		info = info.concat(UserInterfaceHelper.addFormattingAlignLeft("Current classroom: " + currentClassroomName));
+		info = info.concat(UserInterfaceHelper.addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
 		
 		Map<String, Integer> memberMap = client.getMemberMapForClassroom(currentClassroomName, currentUserName);
 		
@@ -494,11 +490,11 @@ public class UserInterface {
 	private static void memberPage(String messages) {
 		int maxSelection = 0;
 		
-		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
-		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName));
-		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
+		String info = UserInterfaceHelper.addFormattingAlignLeft("Logged in as " + currentUserName + ".");
+		info = info.concat(UserInterfaceHelper.addFormattingAlignLeft("Current classroom: " + currentClassroomName));
+		info = info.concat(UserInterfaceHelper.addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
 		
-		String memberContent = addFormattingAlignLeft("Currently viewing member: " + currentMemberName + " (" + currentMemberPermissions + ").");
+		String memberContent = UserInterfaceHelper.addFormattingAlignLeft("Currently viewing member: " + currentMemberName + " (" + currentMemberPermissions + ").");
 		
 		if (currentPermissions == sTEACHING_ASSISTANT) {
 			displayPage(sMEMBER_PAGE, messages, info, memberContent, sMEMBER_PAGE_OPTIONS_TEACHING_ASSISTANT); 
@@ -553,9 +549,9 @@ public class UserInterface {
 	 * @param messages
 	 */
 	private static void requestListPage(String messages) {
-		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
-		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName));
-		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
+		String info = UserInterfaceHelper.addFormattingAlignLeft("Logged in as " + currentUserName + ".");
+		info = info.concat(UserInterfaceHelper.addFormattingAlignLeft("Current classroom: " + currentClassroomName));
+		info = info.concat(UserInterfaceHelper.addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
 		
 		List<String> requestList = client.getRequestListForClassroom(currentClassroomName, currentUserName);
 		
@@ -585,10 +581,10 @@ public class UserInterface {
 	 * @param messages
 	 */
 	private static void requestPage(String messages) {
-		String info = addFormattingAlignLeft("Logged in as " + currentUserName + ".");
-		info = info.concat(addFormattingAlignLeft("Current classroom: " + currentClassroomName));
-		info = info.concat(addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
-		info = info.concat(addFormattingAlignLeft("Currently viewing request from member: " + currentPendingMemberName));
+		String info = UserInterfaceHelper.addFormattingAlignLeft("Logged in as " + currentUserName + ".");
+		info = info.concat(UserInterfaceHelper.addFormattingAlignLeft("Current classroom: " + currentClassroomName));
+		info = info.concat(UserInterfaceHelper.addFormattingAlignLeft("Status for this classroom: " + currentPermissions));
+		info = info.concat(UserInterfaceHelper.addFormattingAlignLeft("Currently viewing request from member: " + currentPendingMemberName));
 		
 		displayPage(sREQUEST_PAGE, messages, info, null, sREQUEST_PAGE_OPTIONS);		
 
@@ -882,7 +878,7 @@ public class UserInterface {
 				uiStringTemp = uiStringTemp.concat("Comment " + Integer.toString(i - 1) + ". ");
 			}			
 			uiStringTemp = uiStringTemp.concat(threadContentList.get(i));
-			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
+			uiString = uiString.concat(UserInterfaceHelper.addFormattingAlignLeft(uiStringTemp));
 		}
 		return uiString;
 	}		
@@ -901,7 +897,7 @@ public class UserInterface {
 			uiStringTemp = uiStringTemp.concat(Integer.toString(i) + ". ");
 			i++;
 			uiStringTemp = uiStringTemp.concat(entry.getKey() + " (" + convertIntToStringPermissions(entry.getValue()) + ")");
-			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
+			uiString = uiString.concat(UserInterfaceHelper.addFormattingAlignLeft(uiStringTemp));
 		}
 		return uiString;
 	}
@@ -918,7 +914,7 @@ public class UserInterface {
 			uiStringTemp = "";
 			uiStringTemp = uiStringTemp.concat(Integer.toString(i + 1) + ". ");
 			uiStringTemp = uiStringTemp.concat(list.get(i));
-			uiString = uiString.concat(addFormattingAlignLeft(uiStringTemp));
+			uiString = uiString.concat(UserInterfaceHelper.addFormattingAlignLeft(uiStringTemp));
 		}		
 		return uiString;		
 	}
@@ -926,44 +922,6 @@ public class UserInterface {
 	////////////////////////////////////////////////
 	//           UI FORMATTING FUNCTIONS          //
 	////////////////////////////////////////////////
-	
-	/**
-	 * Adds borders and appropriate amount of white space depending on the length of the input string.
-	 * Uses left text alignment.
-	 * @param string
-	 * @return formattedString
-	 */
-	public static String addFormattingAlignLeft(String string) {
-		String formattedString = "| ";
-		formattedString = formattedString.concat(string);
-		for (int i = 0; i < iWINDOWWIDTH - string.length() - 1; i++){
-			formattedString = formattedString.concat(" ");
-		}
-		formattedString = formattedString.concat("|" + sNEW_LINE);
-		return formattedString;
-	}
-	
-	/**
-	 * Adds borders and appropriate amount of white space depending on the length of the input string.
-	 * Uses center text alignment.
-	 * @param string
-	 * @return formattedString
-	 */
-	public static String addFormattingAlignCenter(String string) {
-		int leftWidth = (iWINDOWWIDTH - string.length())/2;
-		int rightWidth = iWINDOWWIDTH - string.length() - leftWidth;
-		
-		String formattedString = "|";
-		for (int i = 0; i < leftWidth; i++){
-			formattedString = formattedString.concat(" ");
-		}
-		formattedString = formattedString.concat(string);
-		for (int j = 0; j < rightWidth; j++){
-			formattedString = formattedString.concat(" ");
-		}
-		formattedString = formattedString.concat("|" + sNEW_LINE);
-		return formattedString;		
-	}
 	
 	/**
 	 * Clears the last page and displays the new one.
@@ -976,57 +934,22 @@ public class UserInterface {
 	 * @param options
 	 */
 	public static void displayPage(String pageName, String messages, String info, String content, String options){
-		clearScreen();
-		console.printf(sBIG_DIVIDER + pageName);
+		UserInterfaceHelper.clearScreen();
+		console.printf(UserInterfaceHelper.sBIG_DIVIDER + pageName);
 		if (messages != null) {
-			console.printf(sSMALL_DIVIDER + messages);
+			console.printf(UserInterfaceHelper.sSMALL_DIVIDER + messages);
 		}
 		if (info != null) {
-			console.printf(sSMALL_DIVIDER + info);
+			console.printf(UserInterfaceHelper.sSMALL_DIVIDER + info);
 		}
 		if (content != null) {
-			console.printf(sSMALL_DIVIDER + content);
+			console.printf(UserInterfaceHelper.sSMALL_DIVIDER + content);
 		}
 		if (options != null) {
-			console.printf(sSMALL_DIVIDER + options);
+			console.printf(UserInterfaceHelper.sSMALL_DIVIDER + options);
 		}
-		console.printf(sBIG_DIVIDER);
+		console.printf(UserInterfaceHelper.sBIG_DIVIDER);
 	}
-	
-	/**
-	 * Clears the the top of the screen depending on the size of your window.
-	 */
-	public static void clearScreen() {
-		System.out.println(((char) 27)+"[2J");
-	}
-		
-	////////////////////////////////////////////////
-	//         GENERATORS FOR UI BORDERS          //
-	////////////////////////////////////////////////
-	
-	/**
-	 * Generates a big divider string.
-	 * @return big divider
-	 */
-	public static String generateBigDivider() {
-		String bigDivider = "+";
-		for (int i = 0; i < iWINDOWWIDTH; i++){
-			bigDivider = bigDivider.concat("=");
-		}
-		return bigDivider.concat("+" + sNEW_LINE);		
-	}
-	
-	/**
-	 * Generates a small divider string.
-	 * @return small divider
-	 */
-	public static String generateSmallDivider() {
-		String smallDivider = "+";
-		for (int i = 0; i < iWINDOWWIDTH; i++){
-			smallDivider = smallDivider.concat("-");
-		}
-		return smallDivider.concat("+" + sNEW_LINE);		
-	}	
 	
 	
 	
