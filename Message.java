@@ -21,6 +21,7 @@ public class Message implements Serializable{
 	    Client_DeleteSelf,
 	    Client_RequestEnrollment,
 	    Client_ListClassroomRequests,
+	    Client_CloseSocket,
 
 	    // Client -> Hub -> Server
 	    Client_CreateClassroom,

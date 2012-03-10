@@ -35,7 +35,7 @@ class Hub extends Thread {
 	/*
 	 * Add a user to the userList.
 	 */
-	public static boolean addUser(String username){
+	public static boolean addUser(String username, char[] password){
 		//check nulls
 		if (username == null){
 			return false;
@@ -231,7 +231,7 @@ class Hub extends Thread {
 	/*
 	 * Main running loop for a Hub
 	 */
-	public static void main(String[] args) {
+	public void run() {
 		// Start Up the Hub
 		// Initialize Data Structures
 		initializeData();

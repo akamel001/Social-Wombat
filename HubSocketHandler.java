@@ -70,6 +70,7 @@ public class HubSocketHandler extends Thread{
 	 */
 	private void getMessage(){
 		try {
+			// blocking read
 			msg = (Message) ois.readObject();
 			//System.out.println("Just got a msg from: " + msg.getCookie().getKey());
 			//System.out.println("Contents of body: " + msg.getBody());
@@ -88,7 +89,6 @@ public class HubSocketHandler extends Thread{
 			oos.writeObject(msg);
 			oos.flush();
 			oos.reset();
-			((ObjectOutputStream) oos).reset();
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Return Message Failed");
@@ -157,7 +157,7 @@ public class HubSocketHandler extends Thread{
 	 */
 	public void run(){
 		boolean valid = true;
-		//Read and deserialize Message from Socket
+		//Wait, read and deserialize Message from Socket
 		getMessage();
 		
 		if (msg == null){
@@ -379,27 +379,24 @@ public class HubSocketHandler extends Thread{
 						returnMessage(msg);
 					}
 					break;	
-					
+				case Client_CloseSocket:
+					// Close everything
+					try {
+						oos.close();
+						ois.close();
+						socket.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+						System.out.println("Couldn't close");
+					}
+					break;
 				default:
 					msg.setBody("Request denied.");
 					msg.setCode(-1);
 					returnMessage(msg);
 					break;
-				
 			}
 		}
-		// Close everything
-		try {
-			oos.close();
-			ois.close();
-			socket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Couldn't close");
-		}
-
 	}
-	
-	
 } 
 	
