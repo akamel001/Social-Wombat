@@ -25,16 +25,16 @@ public class HubSocketHandler extends Thread{
 	/*
 	 * A handler thread that is spawned for each message sent to a socket.
 	 */
-	public HubSocketHandler(Socket ser, ClassList classList, UserList userList, ServerList serverList, HashMap<Integer,SocketPackage> serverPackages){
-		this.socket = ser;
+	public HubSocketHandler(Socket socket, ClassList classList, UserList userList, ServerList serverList, HashMap<Integer,SocketPackage> serverPackages){
+		this.socket = socket;
 		this.classList = classList;
 		this.userList = userList;
 		this.serverList = serverList;
 		this.serverPackages = serverPackages;
 		// Create datastreams
 		try {
-			this.oos = new ObjectOutputStream(this.socket.getOutputStream());
-			this.ois = new ObjectInputStream(this.socket.getInputStream());
+			oos = new ObjectOutputStream(socket.getOutputStream());
+			ois = new ObjectInputStream(socket.getInputStream());
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Could not create input and output streams");
@@ -122,13 +122,15 @@ public class HubSocketHandler extends Thread{
 		// Open a socket connection with appropriate server
 		if(DEBUG) System.out.println("Message forwarded to: " + getServer(msg));
 		forwardSocketPackage = serverPackages.get(getServer(msg));
-					
-		// Write out message
-		forwardSocketPackage.send(msg);
-		
-		// Get response
-		reply = forwardSocketPackage.receive();
+
+		//Only one user can be communicating with a server at one time
+		synchronized(forwardSocketPackage){
+			// Write out message
+			forwardSocketPackage.send(msg);
 			
+			// Get response
+			reply = forwardSocketPackage.receive();
+		}
 		return reply;
 	}
 	

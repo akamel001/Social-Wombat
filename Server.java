@@ -122,7 +122,7 @@ public class Server {
 				//hub has directed this message to the correct Server
 				ServerSocketHandler newRequest = new ServerSocketHandler(hub,classDB);
 				//Starts running the new thread
-				newRequest.start(); 
+				newRequest.run(); 
 			} 
 			catch (IOException e) {
 				System.out.println("Accept failed on port: " + SERVER_SOCKET);

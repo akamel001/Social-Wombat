@@ -6,7 +6,7 @@ import java.util.Map;
 
 //TODO: check permissions on the server.
 
-public class ServerSocketHandler extends Thread{
+public class ServerSocketHandler {
 	//private static int SERVER_SOCKET = 5050;
 	
 	static Message msg = new Message();
@@ -23,8 +23,8 @@ public class ServerSocketHandler extends Thread{
 		this.classDB = classDB;
 		// Create datastreams
 		try {
-			this.oos = new ObjectOutputStream(this.socket.getOutputStream());
-			this.ois = new ObjectInputStream(this.socket.getInputStream());
+			oos = new ObjectOutputStream(this.socket.getOutputStream());
+			ois = new ObjectInputStream(this.socket.getInputStream());
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Could not create input and output streams");
@@ -58,8 +58,9 @@ public class ServerSocketHandler extends Thread{
 	}
 	
 	public void run(){
+		boolean listen = true;
 		//servers will run indefinitely
-		while(true){
+		while(listen){
 			boolean valid = true;
 			//Read and deserialize Message from Socket
 			getMessage();
@@ -190,7 +191,6 @@ public class ServerSocketHandler extends Thread{
 				}
 			}
 		}
-		/* Not necessary if server just runs indefinitely
 		// Close everything
 		try {
 			oos.close();
@@ -200,7 +200,7 @@ public class ServerSocketHandler extends Thread{
 			e.printStackTrace();
 			System.out.println("Couldn't close");
 		}
-		*/
+		
 	}
 	
 	
