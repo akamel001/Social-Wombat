@@ -59,6 +59,7 @@ public class UserInterface {
 	private static final String eDELETE_CLASSROOM_ERROR = 	UserInterfaceHelper.addFormattingAlignLeft("An error occured when deleting your classroom.");
 	private static final String eDISJOIN_CLASSROOM_ERROR = 	UserInterfaceHelper.addFormattingAlignLeft("An error occured when disjoining this classroom.");
 	private static final String ePASSWORD_CHANGE_ERROR =	UserInterfaceHelper.addFormattingAlignLeft("An error occured when changing your password.");
+	private static final String eLOG_OUT_ERROR = 			UserInterfaceHelper.addFormattingAlignLeft("An error occured when attempting to log out.");
 	
 	private static final String mCLASSROOM_CREATION_SUCCESS =	UserInterfaceHelper.addFormattingAlignLeft("You have successfully created a classroom!");
 	private static final String mCLASSROOM_REQUEST_SUCCESS =	UserInterfaceHelper.addFormattingAlignLeft("You have successfully requested to join a classroom!");
@@ -159,7 +160,7 @@ public class UserInterface {
 	private static void homePage(String messages) {	
 		String info = UserInterfaceHelper.addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		displayPage(sHOME_PAGE, messages, info, null, sHOME_PAGE_OPTIONS);
-		int selection = getValidSelectionFromUser(4);
+		int selection = getValidSelectionFromUser(5);
 		
 		switch (selection) {
 		// View your classrooms.
@@ -200,8 +201,13 @@ public class UserInterface {
 	        break;
 	    // Log out.
 	    case 5:
-	    	currentUserName = null;
-	        loginPage(mLOG_OUT_SUCCESS);
+	    	
+	    	if (client.handleLogout(currentUserName)){
+	    		currentUserName = null;
+				loginPage(mLOG_OUT_SUCCESS);
+			} else {
+				homePage(eLOG_OUT_ERROR);
+			}
 	        break;
 	    default:
 	    	console.printf(eGENERAL_ERROR);

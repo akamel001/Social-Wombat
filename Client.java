@@ -37,6 +37,17 @@ public class Client {
 		
 		return (response.getCode() == 1)? true : false;	
 	}
+	
+	/**
+	 * This methods logs out a user corresponding to currentUserName.
+	 * @param currentUserName
+	 * @return
+	 */
+	public boolean handleLogout(String currentUserName) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
 	/**
 	 * This method is used to create a classroom.
 	 * It takes in a classroom name and returns true if the classroom can be created,
@@ -525,7 +536,6 @@ public class Client {
 		// TODO: make sure to call zeroItOut(confirmNewPassword)!
 		return false;
 	}
-	
 	
 	// Helper methods.
 	/**
