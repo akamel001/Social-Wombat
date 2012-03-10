@@ -5,6 +5,7 @@ import java.net.*;
 //Hub class. Handles communication between data servers and clients
 // Hub does authentication and forwards messages to the servers. 
 class Hub extends Thread {
+	
 	private static int CLIENT_SOCKET = 4444;
 	private static int SERVER_SOCKET = 5050;
 	private static volatile boolean listening = true;
@@ -19,11 +20,13 @@ class Hub extends Thread {
 	static ServerSocket hubSocket = null;
 	String hubIP = null;
 	
+	private static final boolean DEBUG = false;
+	
 	public Hub(){
 		// Constructor
 		try {
 			InetAddress addr = InetAddress.getLocalHost();
-			System.out.println("New Hub created: " + addr);
+			if(DEBUG) System.out.println("New Hub created: " + addr);
 			hubIP = addr.getHostAddress();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
@@ -41,10 +44,10 @@ class Hub extends Thread {
 		}
 		//Add
 		if(userList.addUser(username)){
-			System.out.println("User " + username + " added successfully!");
+			if(DEBUG) System.out.println("User " + username + " added successfully!");
 			return true;
 		} else {
-			System.out.println("User " + username + " could not be added");
+			if(DEBUG) System.out.println("User " + username + " could not be added");
 			return false;
 		}
 	}
@@ -55,10 +58,10 @@ class Hub extends Thread {
 	public static boolean removeUser(String username){
 		//check user exists
 		if(userList.validateUser(username)){
-			System.out.println(username + "removed.");
+			if(DEBUG) System.out.println(username + "removed.");
 			return userList.removeUser(username);
 		} else{
-			System.out.println(username + " was not in the user list");
+			if(DEBUG) System.out.println(username + " was not in the user list");
 			return false;
 		}
 	}
@@ -76,10 +79,10 @@ class Hub extends Thread {
 	public static int addServer(InetAddress server){
 		int r = serverList.addServer(server, SERVER_SOCKET);
 		if (r == -1){
-			System.out.println("Adding server " + server + "failed. It might already exist in serverList."); 
+			if(DEBUG) System.out.println("Adding server " + server + "failed. It might already exist in serverList."); 
 			return r;
 		} else {
-			System.out.println("Server" + server + " added under server id: " + r);
+			if(DEBUG) System.out.println("Server" + server + " added under server id: " + r);
 			return r;
 		}
 	}
@@ -104,13 +107,13 @@ class Hub extends Thread {
 		    FileInputStream fin = new FileInputStream(name);
 		    ObjectInputStream ois = new ObjectInputStream(fin);
 		    if (name.equals(classListName)){
-		    	//System.out.println("We are reading in ClassList");
+		    	//if(DEBUG) System.out.println("We are reading in ClassList");
 		    	o = (ClassList) ois.readObject();
 		    } else if (name.equals(userListName)){
-		    	//System.out.println("We are reading in UserList");
+		    	//if(DEBUG) System.out.println("We are reading in UserList");
 		    	o = (UserList) ois.readObject();
 		    } else if (name.equals(serverListName)){
-		    	//System.out.println("We are reading in ServerList");
+		    	//if(DEBUG) System.out.println("We are reading in ServerList");
 		    	o = (ServerList) ois.readObject();
 		    }
 		    ois.close();
@@ -131,13 +134,13 @@ class Hub extends Thread {
 			fos = new FileOutputStream(name);
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			if (o instanceof UserList){
-				//System.out.println("We have have an instance of UserList");
+				//if(DEBUG) System.out.println("We have have an instance of UserList");
 				oos.writeObject((UserList)o);
 			} else if (o instanceof ClassList){
-				//System.out.println("We have have an instance of ClassList");
+				//if(DEBUG) System.out.println("We have have an instance of ClassList");
 				oos.writeObject((ClassList)o);
 			} else if (o instanceof ServerList){
-				//System.out.println("We have have an instance of ServerList");
+				//if(DEBUG) System.out.println("We have have an instance of ServerList");
 				oos.writeObject((ServerList)o);
 			}
 			
@@ -206,7 +209,7 @@ class Hub extends Thread {
 				writeToDisk(classList, classListName);
 				writeToDisk(userList, userListName);
 				writeToDisk(serverList, serverListName);
-				System.out.println("Data safely written out.");
+				if(DEBUG) System.out.println("Data safely written out.");
 			}
 		});
 		
@@ -227,12 +230,12 @@ class Hub extends Thread {
 			// HubSocketHandler thread
 			
 			try {
-				System.out.println("Listening");
+				if(DEBUG) System.out.println("Listening");
 				Socket client = hubSocket.accept();
 				//Spawn new ServerSocketHandler thread, we assume that the
 				//hub has directed this message to the correct Server
 				HubSocketHandler newRequest = new HubSocketHandler(client,classList,userList,serverList);
-				System.out.println("Accepted a connection from: "+ client.getInetAddress());
+				if(DEBUG) System.out.println("Accepted a connection from: "+ client.getInetAddress());
 				//Starts running the new thread
 				newRequest.start(); 
 				

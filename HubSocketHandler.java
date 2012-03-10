@@ -10,6 +10,8 @@ public class HubSocketHandler extends Thread{
 	//private static int CLIENT_SOCKET = 4444;
 	private static int SERVER_SOCKET = 5050;
 	
+	private static final boolean DEBUG = false;
+	
 	static Message msg = new Message();
 	ClassList classList;
 	UserList userList;
@@ -40,7 +42,7 @@ public class HubSocketHandler extends Thread{
 	 * Checks that a user is part of a classroom
 	 */
 	private boolean isInClassroom(String user, String classroomID){
-		System.out.println("checking if user is in classroom");
+		if(DEBUG) System.out.println("checking if user is in classroom");
 		return (classList.getUserPermissions(user, classroomID) > 0);
 	}
 	
@@ -117,7 +119,7 @@ public class HubSocketHandler extends Thread{
 		Message reply = null;
 		try {
 			// Open a socket connection with appropriate server
-			System.out.println("Message forwarded to: " + getServer(msg));
+			if(DEBUG) System.out.println("Message forwarded to: " + getServer(msg));
 			forwardSocket = new Socket(getServer(msg),SERVER_SOCKET);
 			
 			// Create inputstream and outputstream
@@ -186,9 +188,9 @@ public class HubSocketHandler extends Thread{
 					if((sessionKey != null) && userList.validateUser(sessionKey)){
 						//Reply with confirmation
 						msg.setCode(1);
-						System.out.println("User " + msg.getCookie().getKey() + " logged in");
+						if(DEBUG) System.out.println("User " + msg.getCookie().getKey() + " logged in");
 					} else {
-						System.out.println("Attempted intrusion by: " + sessionKey);
+						if(DEBUG) System.out.println("Attempted intrusion by: " + sessionKey);
 					}
 					returnMessage(msg);
 					break;
@@ -208,7 +210,7 @@ public class HubSocketHandler extends Thread{
 				// Return in body a list of the classes that a client is enrolled in
 				case Client_GetUserEnrollment:
 					String usr = msg.getCookie().getKey();
-					System.out.println(usr + " wants to see all their class enrollments");
+					if(DEBUG) System.out.println(usr + " wants to see all their class enrollments");
 					Map<String, Integer> userEnroll = classList.getUserEnrollment(usr);
 					if (userEnroll != null){
 						msg.setCode(1);
@@ -232,7 +234,7 @@ public class HubSocketHandler extends Thread{
 				// Store user to be changed and the permissions as an arraylist
 				// [0] = username, [1] = permissions
 				case Client_SetPermissions:
-					System.out.println(msg.getCookie().getKey() + " setting permissions");
+					if(DEBUG) System.out.println(msg.getCookie().getKey() + " setting permissions");
 					@SuppressWarnings("unchecked")
 					ArrayList<String> a= (ArrayList<String>) msg.getBody();
 					// Person
@@ -243,13 +245,13 @@ public class HubSocketHandler extends Thread{
 					//Special case, instructor cannot be deleted
 					if((isClassInstructor(personToChange,msg.getClassroom_ID())) && (per == -1)){
 						//return failure
-						System.out.println("Denied. Instructor cannot delete self from classroom.");
+						if(DEBUG) System.out.println("Denied. Instructor cannot delete self from classroom.");
 						returnMessage(msg);
 						break;
 					} else if(isClassTAorInstructor(msg.getCookie().getKey(),msg.getClassroom_ID())){
 						//Now changing someone else's
 						// Server's return code
-						System.out.println("Setting " + personToChange + "'s permissions to: " + per);
+						if(DEBUG) System.out.println("Setting " + personToChange + "'s permissions to: " + per);
 						returnCode = classList.setUserPermissions(personToChange, msg.getClassroom_ID(), per);
 						// Reply
 						msg.setCode(returnCode);
@@ -281,13 +283,13 @@ public class HubSocketHandler extends Thread{
 				case Client_RequestEnrollment:
 					//check, cannot be already in class
 					String requestName = msg.getCookie().getKey();
-					System.out.println(requestName + " requested to be added to classroom: " + msg.getClassroom_ID());
+					if(DEBUG) System.out.println(requestName + " requested to be added to classroom: " + msg.getClassroom_ID());
 					if(!isInClassroom(requestName,msg.getClassroom_ID())){
 						// 0 for pending enrollment, -1 for dijoining
 						int p = (Integer)msg.getBody();
-						System.out.println("adding into classroom...");
+						if(DEBUG) System.out.println("adding into classroom...");
 						returnCode = classList.setUserPermissions(requestName, msg.getClassroom_ID(), p);
-						System.out.println("return code is: " + returnCode);
+						if(DEBUG) System.out.println("return code is: " + returnCode);
 						msg.setCode(returnCode);
 					}
 					returnMessage(msg);
