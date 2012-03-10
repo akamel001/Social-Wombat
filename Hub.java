@@ -15,7 +15,6 @@ class Hub extends Thread {
 	static String classListName = "hub.classlist";
 	static String userListName = "hub.userlist";
 	static String serverListName = "hub.serverlist";
-	static String addNewUserList = "hub.newuserlist";
 	
 	static ServerSocket hubSocket = null;
 	String hubIP = null;
@@ -157,40 +156,6 @@ class Hub extends Thread {
 		return new File(file).exists();
 	}
 	
-	/*
-	 * Read in New Students
-	 */
-	private static void importUsers(){
-		String user;
-		if (fileExists(addNewUserList)){
-			//addNewUserList is a textfile of new people to be added
-			try{
-			  // Open the file that is the first 
-			  // command line parameter
-			  FileInputStream fstream = new FileInputStream(addNewUserList);
-			  // Get the object of DataInputStream
-			  DataInputStream in = new DataInputStream(fstream);
-			  BufferedReader br = new BufferedReader(new InputStreamReader(in));
-			  String strLine;
-			  //Read File Line By Line
-			  while ((strLine = br.readLine()) != null)   {
-				  //strip out white space and newlines
-				  user = strLine.replace(System.getProperty("line.separator"), "").trim();
-				  //add user to userList, if already exists, ignore
-				  if(!userList.validateUser(user)){
-					  userList.addUser(user);
-					  System.out.println("User: " + user + " added to userlist");
-				  }
-			  }
-			  //Close the input stream
-			  in.close();
-			}	catch (Exception e){//Catch exception if any
-			  System.err.println("Error: " + e.getMessage());
-			}
-		}
-	}
-	
-	
 	
 	/*
 	 * Initializes our data structures
@@ -224,8 +189,6 @@ class Hub extends Thread {
 			System.out.println("Could not add a local host server");
 		}
 		
-		//Import new users
-		importUsers();
 	}
 	
 	/*
