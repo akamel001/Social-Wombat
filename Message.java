@@ -113,6 +113,4 @@ public class Message implements Serializable{
 	public void setCode(int code) {
 		this.code = code;
 	}
-
-
 }

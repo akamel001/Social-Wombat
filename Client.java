@@ -528,6 +528,7 @@ public class Client {
 	 * @param currentUserName <- this is the name of the current user
 	 * @return
 	 */
+	
 	public boolean changePassword(char[] oldPassword, char[] newPassword,
 			char[] confirmNewPassword, String userNameTemp, String currentUserName) {
 		// TODO Auto-generated method stub
@@ -543,10 +544,8 @@ public class Client {
 	 * @param password
 	 */
 	public void zeroItOut(char[] password) {
-		for (int i = 0; i < password.length; i++){
+		for (int i = 0; i < password.length; i++)
 			password[i] = '0';
-		}
-		
 	}
 
 }
