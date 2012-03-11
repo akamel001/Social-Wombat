@@ -38,6 +38,7 @@ public class UserInterface {
 	private static final String sMEMBER_PAGE = 			UserInterfaceHelper.addFormattingAlignCenter("MEMBER");
 	private static final String sREQUEST_LIST_PAGE = 	UserInterfaceHelper.addFormattingAlignCenter("REQUEST LIST");
 	private static final String sREQUEST_PAGE = 		UserInterfaceHelper.addFormattingAlignCenter("REQUEST");
+	private static final String sCHANGE_PASSWORD_PAGE = UserInterfaceHelper.addFormattingAlignCenter("CHANGE PASSWORD");
 	
 	private static final String sINSTRUCTOR =			"Instructor";
 	private static final String sTEACHING_ASSISTANT = 	"Teaching Assistant";
@@ -79,6 +80,8 @@ public class UserInterface {
 	private static final String cNO_MEMBERS = 					UserInterfaceHelper.addFormattingAlignLeft("This classroom has no enrolled members.");
 	private static final String cNO_THREADS = 					UserInterfaceHelper.addFormattingAlignLeft("This discussions board has no threads.");
 	private static final String cNO_CLASSROOMS = 				UserInterfaceHelper.addFormattingAlignLeft("You are not enrolled in any classrooms.");
+	
+	private static final String sCHANGE_PASSWORD_INSTRUCTIONS = UserInterfaceHelper.addFormattingAlignLeft("Specify your username and old/new passwords when prompted to by the system.");
 	
 	private static final String sDEFAULT_OPTIONS = 			UserInterfaceHelper.addFormattingAlignLeft("1. Go back home.");
 	
@@ -190,15 +193,7 @@ public class UserInterface {
 	        break;
 	    // Change your password.
 	    case 4:
-	    	String userNameTemp = console.readLine("User Name? ");
-	    	char[] oldPassword = console.readPassword("Old Password? ");
-	    	char[] newPassword = console.readPassword("New Password? ");
-	    	char[] confirmNewPassword = console.readPassword("Confirm New Password? ");
-	    	if (client.changePassword(oldPassword, newPassword, confirmNewPassword, userNameTemp, currentUserName)){
-				homePage(mPASSWORD_CHANGE_SUCCESS);
-			} else {
-				homePage(ePASSWORD_CHANGE_ERROR);
-			}
+	    	changePasswordPage(null);
 	        break;
 	    // Log out.
 	    case 5:
@@ -214,6 +209,25 @@ public class UserInterface {
 	    	console.printf(eGENERAL_ERROR);
 	        break;
 		}		
+	}
+	
+	/**
+	 * This is the change password page. It allows a user to change his/ her password.
+	 * @param messages 
+	 */
+	private static void changePasswordPage(String messages) {
+		String info = UserInterfaceHelper.addFormattingAlignLeft("Logged in as " + currentUserName + ".");		
+		displayPage(sCHANGE_PASSWORD_PAGE, messages, info, null, sCHANGE_PASSWORD_INSTRUCTIONS);
+		
+		String userNameTemp = console.readLine("User Name? ");
+    	char[] oldPassword = console.readPassword("Old Password? ");
+    	char[] newPassword = console.readPassword("New Password? ");
+    	char[] confirmNewPassword = console.readPassword("Confirm New Password? ");
+    	if (client.changePassword(oldPassword, newPassword, confirmNewPassword, userNameTemp, currentUserName)){
+			homePage(mPASSWORD_CHANGE_SUCCESS);
+		} else {
+			homePage(ePASSWORD_CHANGE_ERROR);
+		}
 	}
 	
 	/**

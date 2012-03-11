@@ -14,8 +14,8 @@ public class SysAdminInterface {
 	private static final String sLOG_IN = 					UserInterfaceHelper.addFormattingAlignCenter("SYSTEM LOG IN");
 	private static final String sHOME_PAGE = 				UserInterfaceHelper.addFormattingAlignCenter("SYSTEM HOME"); 
 	private static final String sSYSTEM_USER_LIST_PAGE = 	UserInterfaceHelper.addFormattingAlignCenter("SYSTEM USER LIST");
-	private static final String sREGISTRATION_PAGE = 		UserInterfaceHelper.addFormattingAlignCenter("SYSTEM REGISTRATION");
-	private static final String sPASSWORD_CHANGE_PAGE = 	UserInterfaceHelper.addFormattingAlignCenter("SYSTEM PASSWORD CHANGE");
+	private static final String sSYSTEM_REGISTRATION_PAGE = UserInterfaceHelper.addFormattingAlignCenter("SYSTEM REGISTRATION");
+	private static final String sSYSTEM_CHANGE_PASSWORD_PAGE = 	UserInterfaceHelper.addFormattingAlignCenter("SYSTEM PASSWORD CHANGE");
 	
 	private static final String sSYSTEM_HOME_PAGE_OPTIONS =	UserInterfaceHelper.addFormattingAlignLeft("1. View users enrolled in the system.") +
 															UserInterfaceHelper.addFormattingAlignLeft("2. Register a user in the system.") +
@@ -25,7 +25,8 @@ public class SysAdminInterface {
 	private static final String sSYSTEM_USER_LIST_OPTIONS = UserInterfaceHelper.addFormattingAlignLeft("1. Go back to system home.");
 	
 	private static final String sREGISTRATION_INSTRUCTIONS = UserInterfaceHelper.addFormattingAlignLeft("Specify a username and password when prompted to add a user to the system.");
-
+	private static final String sCHANGE_PASSWORD_INSTRUCTIONS = UserInterfaceHelper.addFormattingAlignLeft("Specify your username and old/new passwords when prompted to by the system.");
+	
 	private static final String eNON_VALID_SELECTION = 		"That is not a valid selection." + UserInterfaceHelper.sNEW_LINE;
 	
 	private static final String eGENERAL_ERROR = 			UserInterfaceHelper.addFormattingAlignLeft("An error has occurred.");
@@ -44,7 +45,7 @@ public class SysAdminInterface {
 		displayPage(sLOG_IN, messages, null, null, null);	
 		char[] password = console.readPassword("Password? ");
 		
-		if (handleSystemLogin(password)){ // TODO: SHOULD ZERO OUT PASSWORD
+		if (handleSystemLogin(password)){
 			systemHomePage(mLOG_IN_SUCCESS);
 		} else {
 			systemLoginPage(eLOG_IN_ERROR);
@@ -74,7 +75,7 @@ public class SysAdminInterface {
 	        break;
 	    // Change system password.
 	    case 3:
-	    	systemPasswordChangePage(null);
+	    	systemChangePasswordPage(null);
 	        break;
 	    // Log out.
 	    case 4:
@@ -106,7 +107,7 @@ public class SysAdminInterface {
 	}
 
 	private static void systemRegistrationPage(String messages) {
-		displayPage(sREGISTRATION_PAGE, messages, null, null, sREGISTRATION_INSTRUCTIONS);	
+		displayPage(sSYSTEM_REGISTRATION_PAGE, messages, null, null, sREGISTRATION_INSTRUCTIONS);	
 		String userNameTemp = console.readLine("User Name? ");
 		char[] password = console.readPassword("Password? ");
 		
@@ -117,8 +118,8 @@ public class SysAdminInterface {
 		} 
 	}
 	
-	private static void systemPasswordChangePage(String messages) {
-		displayPage(sPASSWORD_CHANGE_PAGE, messages, null, null, sREGISTRATION_INSTRUCTIONS);	
+	private static void systemChangePasswordPage(String messages) {
+		displayPage(sSYSTEM_CHANGE_PASSWORD_PAGE, messages, null, null, sCHANGE_PASSWORD_INSTRUCTIONS);	
 		char[] oldPassword = console.readPassword("Old Password? ");
     	char[] newPassword = console.readPassword("New Password? ");
     	
@@ -136,6 +137,7 @@ public class SysAdminInterface {
 	
 	private static boolean handleSystemLogin(char[] password) {
 		// TODO Auto-generated method stub
+		// TODO: SHOULD ZERO OUT PASSWORD
 		return false;
 	}
 
