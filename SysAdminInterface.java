@@ -1,4 +1,5 @@
 import java.io.Console;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -26,6 +27,8 @@ public class SysAdminInterface {
 	
 	private static final String sREGISTRATION_INSTRUCTIONS = UserInterfaceHelper.addFormattingAlignLeft("Specify a username and password when prompted to add a user to the system.");
 	private static final String sCHANGE_PASSWORD_INSTRUCTIONS = UserInterfaceHelper.addFormattingAlignLeft("Specify your username and old/new passwords when prompted to by the system.");
+	
+	private static final String cNO_USERS = 				UserInterfaceHelper.addFormattingAlignLeft("There are no users enrolled in the system.");
 	
 	private static final String eNON_VALID_SELECTION = 		"That is not a valid selection." + UserInterfaceHelper.sNEW_LINE;
 	
@@ -93,7 +96,12 @@ public class SysAdminInterface {
 	
 	private static void systemUserListPage(String messages) {
 		List<String> userList = getSystemUserList();
-		displayPage(sSYSTEM_USER_LIST_PAGE, messages, null, listToUIString(userList), sSYSTEM_USER_LIST_OPTIONS); // TODO: show user list
+		String content = cNO_USERS;		
+		if (userList != null) {
+			content = listToUIString(userList);
+		}
+		
+		displayPage(sSYSTEM_USER_LIST_PAGE, messages, null, content, sSYSTEM_USER_LIST_OPTIONS);
 		int selection = getValidSelectionFromUser(1);
 		
 		switch (selection) {
@@ -135,27 +143,56 @@ public class SysAdminInterface {
 	//               SYSTEM ACTIONS               //
 	////////////////////////////////////////////////
 	
+	/**
+	 * Logs in the system administrator.
+	 * @param password
+	 * @return
+	 */
 	private static boolean handleSystemLogin(char[] password) {
 		// TODO Auto-generated method stub
 		// TODO: SHOULD ZERO OUT PASSWORD
 		return true;
 	}
 
+	/**
+	 * Logs out the system administrator.
+	 * @return
+	 */
 	private static boolean handleSystemLogout() {
 		// TODO Auto-generated method stub
 		return true;
 	}
 	
+	/**
+	 * This a method for changing a user's password.
+	 * Before changing a password, it must:
+	 *   verify that oldPassword matches the system's password;
+	 *   check that newPassword1 matches newPassword2.
+	 * This method deals with passwords and care must be taken to leave
+	 * no trace of any passwords, new or old.
+	 * @param oldPassword <- this is currentUserName's initial password
+	 * @param newPassword <- this is the desired password for currentUserName
+	 * @param confirmNewPassword <- again, this is the desired password for currentUserName (we ask for it again to minimize the effects of user typos)
+	 * @return
+	 */
 	private static boolean changeSystemPassword(char[] oldPassword,
 			char[] newPassword, char[] confirmNewPassword) {
 		// TODO Auto-generated method stub
+		// TODO: make sure to call zeroItOut(oldPassword)!
+		// TODO: make sure to call zeroItOut(newPassword)!
+		// TODO: make sure to call zeroItOut(confirmNewPassword)!
 		return true;
 	}
 	
 	
+	/**
+	 * Retrieves the list of enrolled system users.
+	 * @return the list of enrolled system users.
+	 */
 	private static List<String> getSystemUserList() {
 		// TODO Auto-generated method stub should be done on Chris' side
-		return null;
+		List<String> list = Arrays.asList("Julia", "Yilok", "Chris");
+		return list;
 	}
 
 	////////////////////////////////////////////////
@@ -223,7 +260,6 @@ public class SysAdminInterface {
 		String uiStringTemp;
 		for (int i = 0; i < list.size(); i++){
 			uiStringTemp = "";
-			uiStringTemp = uiStringTemp.concat(Integer.toString(i + 1) + ". ");
 			uiStringTemp = uiStringTemp.concat(list.get(i));
 			uiString = uiString.concat(UserInterfaceHelper.addFormattingAlignLeft(uiStringTemp));
 		}		
