@@ -25,9 +25,7 @@ public class AES {
     private static final String ENCRYPT_ALGORITHM = "PBKDF2WithHmacSHA1" ;
     private static final int iterationCount = 100;
     private static final int keyLength = 128;
-    private static SecretKey secret;
     
-
     /**
      * Constructor for password-based encryption.
      * 
@@ -36,14 +34,14 @@ public class AES {
      * @param salt
      */
     
-	AES(char[] password, byte[] nonce, byte[] salt){
+	AES(char[] password, byte[] salt){
 
 		SecretKeyFactory factory;
 		try {
 			factory = SecretKeyFactory.getInstance(ENCRYPT_ALGORITHM);
 			KeySpec spec = new PBEKeySpec(password, salt, iterationCount, keyLength);
 			SecretKey tmp = factory.generateSecret(spec);
-			secret = new SecretKeySpec(tmp.getEncoded(), "AES");
+			SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
 			
 			/* Encrypt the message. */
 			ecipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
@@ -51,6 +49,7 @@ public class AES {
 			
 			AlgorithmParameters params = ecipher.getParameters();
 			byte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();
+			System.out.println(iv);
 			dcipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 			dcipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(iv));
 			
@@ -108,19 +107,19 @@ public class AES {
 	 public static void main(String args[]) 
 	 { 
 		    byte[] salt = new byte[8];
-		    byte[] naunce = new byte[8];
 		    SecureRandom random = new SecureRandom();
 			random.nextBytes(salt);
-			random.nextBytes(naunce);
 			
 			String password = "pwned";
 			String message = "lolz";
 			
-			AES obj = new AES(password.toCharArray(), naunce, salt);
-			byte[] enc = obj.encrypt(message);
-			System.out.println("Message encrypted: \n====> " + enc);
+			AES obj1 = new AES(password.toCharArray(), salt);
+			AES obj2 = new AES(password.toCharArray(), salt);
+
+			byte[] enc = obj1.encrypt(message);
+			//System.out.println("Message encrypted: \n====> " + enc);
 			
-			String tmp = obj.decrypt(enc);
+			String tmp = obj2.decrypt(enc);
 			System.out.println("Message decrypted: \n====> " + tmp);
 			
 	 }
