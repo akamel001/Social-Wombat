@@ -7,22 +7,52 @@ import java.io.*;
  */
 class SocketPackage {
 	Socket socket;
+	int port;
+	InetAddress addr;
 	ObjectOutputStream oos;
 	ObjectInputStream ois;
 	
+	private static final boolean DEBUG = false;
+	
 	/*
-	 * Creates a socket and opens an ObjectOutputStream and ObjectInputStream
+	 * Creates a socket. DOES NOT CONNECT
 	 */
 	public SocketPackage(InetAddress addr,int port){
+		if (DEBUG) System.out.println("Creating a socket");
+		socket = new Socket();
+		this.port = port;
+		this.addr = addr;
+	}
+	
+	/*
+	 * Connects the socket to the input inetaddress. Also creates the 
+	 * output and input streams
+	 */
+	public void socketConnect(){
+		SocketAddress socketAddr = new InetSocketAddress(addr, port);
+		//attempt to connect with a 5 second timeout
 		try {
-			socket = new Socket(addr,port);
-			oos = new ObjectOutputStream(socket.getOutputStream());
-			ois = new ObjectInputStream(socket.getInputStream());
+			socket.connect(socketAddr, 5000);
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println("Could not create a socket in SocketPackage. " +
-					"Make sure the machine you are connecting to is turned on.");
+			System.out.println("Could not connect");
 		}
+		try {
+			if (DEBUG) System.out.println("Creating an output stream");
+			oos = new ObjectOutputStream(socket.getOutputStream());
+			if (DEBUG) System.out.println("Creating an input stream");
+			ois = new ObjectInputStream(socket.getInputStream());
+		} catch (IOException e){
+			e.printStackTrace();
+			System.out.println("Could not get streams");
+		}
+	}
+	
+	/*
+	 * Checks if a socket package is connected
+	 */
+	public boolean isConnected(){
+		return socket.isConnected();
 	}
 	
 	/*
