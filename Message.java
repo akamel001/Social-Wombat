@@ -9,6 +9,7 @@ public class Message implements Serializable{
 	private Object body;
 	private MessageType type;
 	private Cookie cookie;
+	private CInit c_init;
 	private int code;
 	private String classroom_id;
 

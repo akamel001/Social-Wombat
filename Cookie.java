@@ -10,7 +10,7 @@ public class Cookie implements Serializable{
 	
 	private static final long serialVersionUID = 1585622412283602252L;
 	private final Calendar expTime;
-	private String sessionKey;
+	private String user_name;
 		
 	/**
 	 * Creates a cookie with a passed session key.
@@ -19,7 +19,7 @@ public class Cookie implements Serializable{
 	public Cookie(String s){
 		expTime = Calendar.getInstance();
 		expTime.add(Calendar.MINUTE, 10);
-		sessionKey = s;
+		user_name = s;
 	}
 	
 	/** Returns the session key for the cookie.
@@ -27,11 +27,11 @@ public class Cookie implements Serializable{
 	 * @return
 	 */
 	public String getKey(){
-		return sessionKey;
+		return user_name;
 	}
 	
 	public void setKey(String s){
-		sessionKey = s;
+		user_name = s;
 	}
 	
 	/** Returns true if the cookie's timestamp is greater than the current time.
