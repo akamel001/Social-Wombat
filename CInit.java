@@ -25,6 +25,8 @@ public class CInit {
 		initialization_vector = new byte[16];
 		try{
 		AlgorithmParameters params = Cipher.getInstance("AES/CBC/PKCS5Padding").getParameters();
+		if (params == null)
+			System.out.println("PARAMS IS NULL");
 		IvParameterSpec ips = params.getParameterSpec(IvParameterSpec.class);			    
 		initialization_vector = ips.getIV(); 
 		}catch (NoSuchAlgorithmException e){

@@ -129,13 +129,14 @@ public class AES {
 			random.nextBytes(naunce);
 			
 			String password = "pwned";
-			String message = "lolz";
+			String message = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque enim ligula, gravida nec vulputate in, eleifend at est. Donec eget nisl vel justo molestie euismod. Nulla metus velit, commodo nec sed.";
 			
-			AES obj = new AES(password.toCharArray(), naunce, salt);
-			byte[] enc = obj.encrypt(message);
-			System.out.println("Message encrypted: \n====> " + obj.encrypt(message));
+			AES obj1 = new AES(password.toCharArray(), naunce, salt);
+			AES obj2 = new AES(password.toCharArray(), naunce, salt);
+			byte[] enc = obj1.encrypt(message);
+			System.out.println("Message encrypted: \n====> " + obj1.encrypt(message));
 			
-			String tmp = obj.decrypt(enc);
+			String tmp = obj2.decrypt(enc);
 			System.out.println("Message decrypted: \n====> " + tmp);
 			
 	 }
