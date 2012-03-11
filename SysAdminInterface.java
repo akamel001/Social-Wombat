@@ -138,18 +138,18 @@ public class SysAdminInterface {
 	private static boolean handleSystemLogin(char[] password) {
 		// TODO Auto-generated method stub
 		// TODO: SHOULD ZERO OUT PASSWORD
-		return false;
+		return true;
 	}
 
 	private static boolean handleSystemLogout() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 	
 	private static boolean changeSystemPassword(char[] oldPassword,
 			char[] newPassword, char[] confirmNewPassword) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 	
 	
@@ -251,6 +251,6 @@ public class SysAdminInterface {
         System.out.println("The hub has been started up.");
 		
 		System.out.println("This is the sysadmin interface for Studious Wombat.");
-		systemRegistrationPage(null);
+		systemLoginPage(null);
 	}
 }
