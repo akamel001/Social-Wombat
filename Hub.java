@@ -40,7 +40,7 @@ class Hub extends Thread {
 	/*
 	 * Add a user to the userList.
 	 */
-	public static boolean addUser(String username, char[] password){
+	public boolean addUser(String username, char[] password){
 		//check nulls
 		if (username == null){
 			return false;
@@ -58,7 +58,7 @@ class Hub extends Thread {
 	/*
 	 * Remove a user from the userList
 	 */
-	public static boolean removeUser(String username){
+	public boolean removeUser(String username){
 		//check user exists
 		if(userList.validateUser(username)){
 			if(DEBUG) System.out.println(username + "removed.");
@@ -72,14 +72,14 @@ class Hub extends Thread {
 	/*
 	 * Check a user exists in the userList
 	 */
-	public static boolean userExists(String username){
+	public boolean userExists(String username){
 		return userList.validateUser(username);
 	}
 	
 	/*
 	 * Add a server to the serverList
 	 */
-	public static int addServer(InetAddress server){
+	public int addServer(InetAddress server){
 		int r = serverList.addServer(server, SERVER_SOCKET);
 		if (r == -1){
 			if(DEBUG) System.out.println("Adding server " + server + "failed. It might already exist in serverList."); 
@@ -96,7 +96,7 @@ class Hub extends Thread {
 	/*
 	 * Remove a server from the serverList
 	 */
-	public static boolean removeServer(int serverID){
+	public boolean removeServer(int serverID){
 		if(serverList.removeServer(serverID) == 1){
 			// also remove from serverSockets
 			serverPackages.remove(serverID);
@@ -136,7 +136,7 @@ class Hub extends Thread {
 	/*
 	 * Writes a given object to the filesystem
 	 */
-	private static void writeToDisk(Object o, String name){
+	private void writeToDisk(Object o, String name){
 		FileOutputStream fos;
 		try {
 			fos = new FileOutputStream(name);
@@ -163,7 +163,7 @@ class Hub extends Thread {
 	/*
 	 * Checks if a given file exists in the current running directory
 	 */
-	private static boolean fileExists(String file){
+	private boolean fileExists(String file){
 		return new File(file).exists();
 	}
 	
@@ -171,7 +171,7 @@ class Hub extends Thread {
 	/*
 	 * Initializes our data structures
 	 */
-	private static void initializeData(){
+	private void initializeData(){
 		//Create or import ClassList, UserList, ServerList
 		if (fileExists(classListName)){
 			classList = (ClassList) readFromDisk(classListName);
