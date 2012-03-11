@@ -207,9 +207,12 @@ class Hub extends Thread {
 	 * server number which is also the index + 1. So serverNum - 1 = index.
 	 * 
 	 */
-	private static void connectServers(){
+	public void connectServers() {
 		int numServers = serverList.getLastServer();
-		// start up a connection wit hall of the servers
+		if (numServers == 0) {
+			System.out.println("There are no servers to connect to. Please add some."); 
+		}
+		// start up a connection with all of the servers
 		for (int i = 1;i<=numServers;i++){
 			//Open a connection
 			SocketPackage newSocketPackage = new SocketPackage(serverList.getAddress(i),SERVER_SOCKET);
@@ -225,7 +228,12 @@ class Hub extends Thread {
 		// Initialize Data Structures
 		initializeData();
 		// Connect to Servers
-		connectServers();
+		try {
+			connectServers();
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			System.out.println("Servers could not be connected. Please boot up your servers.");
+		}
 		//add shutdown hook
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {

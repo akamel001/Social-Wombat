@@ -6,7 +6,7 @@ import java.io.*;
  * methods to send & flush, other setup/tear down methods
  */
 class SocketPackage {
-	static Socket socket;
+	Socket socket;
 	ObjectOutputStream oos;
 	ObjectInputStream ois;
 	
@@ -20,7 +20,8 @@ class SocketPackage {
 			ois = new ObjectInputStream(socket.getInputStream());
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println("Could not create a socket in SocketPackage");
+			System.out.println("Could not create a socket in SocketPackage. " +
+					"Make sure the machine you are connecting to is turned on.");
 		}
 	}
 	

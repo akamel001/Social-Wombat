@@ -115,17 +115,22 @@ public class Server {
 		// Spin until a new message is received and then spawn a 
 		// ServerSocketHandler thread
 		while(listening){
-			System.out.println("Listening...");
 			try {
-				Socket hub = serverSocket.accept();
-				//Spawn new ServerSocketHandler thread, we assume that the
-				//hub has directed this message to the correct Server
-				ServerSocketHandler newRequest = new ServerSocketHandler(hub,classDB);
-				//Starts running the new thread
-				newRequest.run(); 
-			} 
-			catch (IOException e) {
-				System.out.println("Accept failed on port: " + SERVER_SOCKET);
+				System.out.println("Listening...");
+				try {
+					Socket hub = serverSocket.accept();
+					//Spawn new ServerSocketHandler thread, we assume that the
+					//hub has directed this message to the correct Server
+					ServerSocketHandler newRequest = new ServerSocketHandler(hub,classDB);
+					//Starts running the new thread
+					newRequest.run(); 
+				} 
+				catch (IOException e) {
+					System.out.println("Accept failed on port: " + SERVER_SOCKET);
+				}
+			} catch (Exception e){
+				e.printStackTrace();
+				System.out.println("Encountered exception. See above. Server will continue running.");
 			}
 		}
 		//Close socket
