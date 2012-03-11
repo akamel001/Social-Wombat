@@ -6,6 +6,7 @@ import javax.crypto.SecretKey;
  *
  */
 public class AESEncrypter {
+	private SecretKey secretKey;
 	
 	/**
 	 * Constructor for password-based encryption.
@@ -13,7 +14,7 @@ public class AESEncrypter {
 	 * @param nonce
 	 */
 	AESEncrypter(char[] password, byte[] nonce){
-		
+		this.secretKey = null; // TODO: need to make secret key from password and nonce.		
 	}
 	
 	/**
@@ -21,7 +22,7 @@ public class AESEncrypter {
 	 * @param secretKey
 	 */
 	AESEncrypter(SecretKey secretKey){
-		
+		this.secretKey = secretKey;		
 	}
 	
 	/**
