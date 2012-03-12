@@ -1,9 +1,13 @@
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.AlgorithmParameters;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 import java.security.spec.KeySpec;
@@ -25,9 +29,7 @@ public class AES {
     private static final String ENCRYPT_ALGORITHM = "PBKDF2WithHmacSHA1" ;
     private static final int iterationCount = 100;
     private static final int keyLength = 128;
-    private static SecretKey secret;
     
-
     /**
      * Constructor for password-based encryption.
      * 
@@ -36,14 +38,14 @@ public class AES {
      * @param salt
      */
     
-	AES(char[] password, byte[] nonce, byte[] salt){
+	AES(char[] password, byte[] salt){
 
 		SecretKeyFactory factory;
 		try {
 			factory = SecretKeyFactory.getInstance(ENCRYPT_ALGORITHM);
 			KeySpec spec = new PBEKeySpec(password, salt, iterationCount, keyLength);
 			SecretKey tmp = factory.generateSecret(spec);
-			secret = new SecretKeySpec(tmp.getEncoded(), "AES");
+			SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
 			
 			/* Encrypt the message. */
 			ecipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
@@ -88,6 +90,65 @@ public class AES {
         return null;
 	}
 	
+	
+	public byte[] encrypt(Object o){
+        try {
+			byte[] ciphertext = ecipher.doFinal(toByteArray(o));
+			return ciphertext;
+        } catch (javax.crypto.BadPaddingException e) {
+        	e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+        	e.printStackTrace();
+        }  
+        return null;
+	}
+	 
+	public Object toObject (byte[] bytes)
+	{
+	  Object obj = null;
+	  try {
+	    ByteArrayInputStream bis = new ByteArrayInputStream (bytes);
+	    ObjectInputStream ois = new ObjectInputStream (bis);
+	    obj = ois.readObject();
+	  }
+	  catch (IOException ex) {
+	    //TODO: Handle the exception
+	  }
+	  catch (ClassNotFoundException ex) {
+	    //TODO: Handle the exception
+	  }
+	  return obj;
+	}
+	
+	public byte[] toByteArray (Object obj)
+	{
+	  byte[] bytes = null;
+	  ByteArrayOutputStream bos = new ByteArrayOutputStream();
+	  try {
+	    ObjectOutputStream oos = new ObjectOutputStream(bos); 
+	    oos.writeObject(obj);
+	    oos.flush(); 
+	    oos.close(); 
+	    bos.close();
+	    bytes = bos.toByteArray ();
+	  }
+	  catch (IOException ex) {
+	    //TODO: Handle the exception
+	  }
+	  return bytes;
+	}
+	
+	public Object decryptObject(byte[] o){
+        try {
+			Object obj = toObject(dcipher.doFinal(o));		
+        	//String plaintext = new String(dcipher.doFinal(o), "UTF-8");			
+			return obj;
+        } catch (javax.crypto.BadPaddingException e) {
+        } catch (IllegalBlockSizeException e) {
+        } 
+        return null;
+	}
+	
 	/**
 	 * Decrypts an encrypted message and returns the decrypted version of the message.
 	 * @param message
@@ -104,32 +165,4 @@ public class AES {
 		
         return null;
 	}
-	
-	 public static void main(String args[]) 
-	 { 
-		    byte[] salt = new byte[8];
-		    byte[] naunce = new byte[8];
-		    SecureRandom random = new SecureRandom();
-			random.nextBytes(salt);
-			random.nextBytes(naunce);
-			
-			String password = "pwned";
-			String message = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque enim ligula, gravida nec vulputate in, eleifend at est. Donec eget nisl vel justo molestie euismod. Nulla metus velit, commodo nec sed.";
-			
-<<<<<<< HEAD
-			AES obj1 = new AES(password.toCharArray(), naunce, salt);
-			AES obj2 = new AES(password.toCharArray(), naunce, salt);
-			byte[] enc = obj1.encrypt(message);
-			System.out.println("Message encrypted: \n====> " + obj1.encrypt(message));
-=======
-			AES obj = new AES(password.toCharArray(), naunce, salt);
-			byte[] enc = obj.encrypt(message);
-			System.out.println("Message encrypted: \n====> " + enc);
->>>>>>> 409faee5d52bbd0dea6939da0ce9c992ac8d95bd
-			
-			String tmp = obj2.decrypt(enc);
-			System.out.println("Message decrypted: \n====> " + tmp);
-			
-	 }
-	
 }

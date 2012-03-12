@@ -8,10 +8,14 @@ public class Message implements Serializable{
 	private InetAddress recipient;
 	private Object body;
 	private MessageType type;
-	private Cookie cookie;
-	private CInit c_init;
+	//private Cookie cookie;
+	private byte[] salt;
+	private String userName;
 	private int code;
 	private String classroom_id;
+
+
+
 
 	public enum MessageType {
 	    // Client -> Hub only
@@ -50,9 +54,9 @@ public class Message implements Serializable{
 	    Server_B
 	}
 
-	public Message(){
-		this.cookie = new Cookie("");
-	}
+//	public Message(){
+//		this.cookie = new Cookie("");
+//	}
 
 	/* This is neccessary for message forwarding because the client doesn't
 	 * know which server its message should be sent to. So the Hub does the job 
@@ -98,14 +102,14 @@ public class Message implements Serializable{
 		this.type = type;
 	}
 
-	public Cookie getCookie() {
-		return cookie;
-		
-	}
-
-	public void setCookie(Cookie cookie) {
-		this.cookie = cookie;
-	}
+//	public Cookie getCookie() {
+//		return cookie;
+//		
+//	}
+//
+//	public void setCookie(Cookie cookie) {
+//		this.cookie = cookie;
+//	}
 
 	public int getCode() {
 		return code;
@@ -113,5 +117,20 @@ public class Message implements Serializable{
 
 	public void setCode(int code) {
 		this.code = code;
+	}
+	public byte[] getSalt() {
+		return salt;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setSalt(byte[] salt) {
+		this.salt = salt;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 }

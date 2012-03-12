@@ -6,26 +6,82 @@ import java.io.*;
  * methods to send & flush, other setup/tear down methods
  */
 class SocketPackage {
-	Socket socket;
-	ObjectOutputStream oos;
-	ObjectInputStream ois;
-	
-	/*
-	 * Creates a socket and opens an ObjectOutputStream and ObjectInputStream
+	private Socket socket;
+	private int port;
+	private InetAddress addr;
+	private ObjectOutputStream oos;
+	private ObjectInputStream ois;
+	private DataOutputStream dout;
+//	private DataInputStream din;
+	private static final int TIMEOUT = 5000;
+	private static final int MAX_RETRY = 16;
+	private static final boolean DEBUG = false;
+
+	/**
+	 * Creates a socket. DOES NOT CONNECT
 	 */
 	public SocketPackage(InetAddress addr,int port){
-		try {
-			socket = new Socket(addr,port);
-			oos = new ObjectOutputStream(socket.getOutputStream());
-			ois = new ObjectInputStream(socket.getInputStream());
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Could not create a socket in SocketPackage. " +
-					"Make sure the machine you are connecting to is turned on.");
+		if (DEBUG) System.out.println("Creating a socket");
+		socket = new Socket();
+		this.port = port;
+		this.addr = addr;
+	}
+
+	/**
+	 * Connects the socket to the input inetaddress. Also creates the 
+	 * output and input streams
+	 */
+	public void socketConnect(){
+		SocketAddress socketAddr = new InetSocketAddress(addr, port);
+		//attempt to connect with a 5 second timeout
+		for(int i = 1; !socket.isConnected(); i*=2){
+			try {
+				socket.connect(socketAddr, TIMEOUT);
+			}catch (SocketTimeoutException e){
+				e.printStackTrace();
+				System.out.println("Connection has timed out.");
+			} catch (ConnectException e) {
+				System.out.println("Connection was refused, retrying in " + (long)(2000*Math.log(i))/1000 + " seconds.");
+				try {
+					Thread.sleep((long) (2000*Math.log(i)));
+				} catch (InterruptedException e1) {
+					System.out.println("Another thread interupted me while sleeping.");
+					e1.printStackTrace();
+					System.exit(-1);
+				}
+			}catch (IOException e) {
+				e.printStackTrace();
+				System.out.println("No I/O");
+			}
+			try {
+				if (DEBUG) System.out.println("Creating an output stream");
+				oos = new ObjectOutputStream(socket.getOutputStream());
+				if (DEBUG) System.out.println("Creating an input stream");
+				ois = new ObjectInputStream(socket.getInputStream());
+				if (DEBUG) System.out.println("Creating a byte output stream");
+				dout = new DataOutputStream(socket.getOutputStream());
+//				if (DEBUG) System.out.println("Creating a byte input stream");
+//				din = new DataInputStream(socket.getInputStream());
+			} catch (IOException e){
+				e.printStackTrace();
+				System.out.println("Could not get streams");
+			}
+
+			if(!socket.isConnected() && i == MAX_RETRY){
+				System.out.println("Reached maximum retries, exiting client");
+				System.exit(-1);
+			}
 		}
 	}
-	
-	/*
+
+	/**
+	 * Checks if a socket package is connected
+	 */
+	public boolean isConnected(){
+		return socket.isConnected();
+	}
+
+	/**
 	 * Send a message with flushing
 	 */
 	public void send(Message msg){
@@ -37,10 +93,26 @@ class SocketPackage {
 			e.printStackTrace();
 			System.out.println("System send failed");
 		}
-		
+
 	}
 	
-	/*
+	public void send(byte msg){
+		try {
+			dout.write(msg);
+			dout.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Send byte message failed");
+		}
+
+	}
+	
+	public byte[] receiveBytes(){
+		//TODO need to think about this one... 
+		return null;
+	}
+	
+	/**
 	 * Receive a message
 	 */
 	public Message receive(){
@@ -56,7 +128,7 @@ class SocketPackage {
 		}
 		return msg;
 	}
-	
+
 	/*
 	 * Close socket and streams
 	 */

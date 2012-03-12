@@ -77,7 +77,8 @@ class Hub extends Thread {
 	}
 	
 	/*
-	 * Add a server to the serverList
+	 * Add a server to the serverList. Doesn't activate it.
+	 * Returns the server id
 	 */
 	public int addServer(InetAddress server){
 		int r = serverList.addServer(server, SERVER_SOCKET);
@@ -215,8 +216,25 @@ class Hub extends Thread {
 		// start up a connection with all of the servers
 		for (int i = 1;i<=numServers;i++){
 			//Open a connection
-			SocketPackage newSocketPackage = new SocketPackage(serverList.getAddress(i),SERVER_SOCKET);
-			serverPackages.put(i, newSocketPackage);
+			if (DEBUG) System.out.println("Connecting to server " + i);
+			
+			//Check if pre-existing
+			if (serverPackages.containsKey(i)){
+				//connect
+				SocketPackage tempSocket = serverPackages.get(i);
+				//make sure not already connected
+				if(!tempSocket.isConnected()){
+					tempSocket.socketConnect();
+				}
+			} else{
+				//add to map and connect (happens at hub start up)
+				SocketPackage newSocketPackage = new SocketPackage(serverList.getAddress(i),SERVER_SOCKET);
+				if(!newSocketPackage.isConnected()){
+					newSocketPackage.socketConnect();
+				}
+				serverPackages.put(i, newSocketPackage);
+			}
+
 		}
 	}
 	
@@ -229,11 +247,13 @@ class Hub extends Thread {
 		initializeData();
 		// Connect to Servers
 		try {
+			if (DEBUG) System.out.println("Connecting to Servers");
 			connectServers();
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			System.out.println("Servers could not be connected. Please boot up your servers.");
 		}
+		if (DEBUG) System.out.println("Finished connecting to servers");
 		//add shutdown hook
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
@@ -277,7 +297,6 @@ class Hub extends Thread {
 				
 			} catch (IOException e) {
 				System.out.println("Accept failed on port: " + CLIENT_SOCKET);
-				System.exit(-1);
 			} 
 		}
 		//Close socket after done listening
