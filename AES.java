@@ -87,6 +87,18 @@ public class AES {
         return null;
 	}
 	
+	public byte[] encrypt(Object o){
+        try {
+			byte[] ciphertext = ecipher.doFinal((byte []) o);
+			return ciphertext;
+        } catch (javax.crypto.BadPaddingException e) {
+        	e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+        	e.printStackTrace();
+        }  
+        return null;
+	}
+	
 	/**
 	 * Decrypts an encrypted message and returns the decrypted version of the message.
 	 * @param message

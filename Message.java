@@ -9,7 +9,33 @@ public class Message implements Serializable{
 	private Object body;
 	private MessageType type;
 	private Cookie cookie;
-	private CInit c_init;
+	private byte[] salt;
+	private String userName;
+	
+	public String getClassroom_id() {
+		return classroom_id;
+	}
+
+	public void setClassroom_id(String classroom_id) {
+		this.classroom_id = classroom_id;
+	}
+
+	public byte[] getSalt() {
+		return salt;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setSalt(byte[] salt) {
+		this.salt = salt;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
 	private int code;
 	private String classroom_id;
 

@@ -22,8 +22,9 @@ public class ClientSocketHandler {
 
 	//Variables used for graceful reconnect 
 	private Boolean connected = false;
-	private static final int MAX_RETRY = 8;
-
+	private static final int MAX_RETRY = 16;
+	private static final int TIMEOUT = 5000;
+	
 	public Message sendReceive(){
 
 		if(messageSending == null){
@@ -39,7 +40,7 @@ public class ClientSocketHandler {
 				socketAddr = new InetSocketAddress(hub, HUB_PORT);
 
 				//attempts to connect with 5second timeout
-				socket.connect(socketAddr, 5000);
+				socket.connect(socketAddr, TIMEOUT);
 				connected = true;
 
 				// open I/O streams for objects
@@ -83,10 +84,10 @@ public class ClientSocketHandler {
 				e.printStackTrace();
 			} 
 
-//			if(!connected && i == MAX_RETRY){
-//				System.out.println("Reached maximum retries, exiting client");
-//				System.exit(-1);
-//			}
+			if(!connected && i == MAX_RETRY){
+				System.out.println("Reached maximum retries, exiting client");
+				System.exit(-1);
+			}
 		}
 
 		return messageReceived;
@@ -94,6 +95,10 @@ public class ClientSocketHandler {
 
 	public Message getMessageSending() {
 		return messageSending;
+	}
+
+	public static String getHubAddr() {
+		return hub_addr;
 	}
 
 	public static int getServerPort() {
