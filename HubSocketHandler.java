@@ -180,7 +180,7 @@ public class HubSocketHandler extends Thread{
 		if (msg == null){
 			System.out.println("Message was null");
 			listen = false; // Don't waste time on bad transmissions
-		} else if (msg.getCookie().getKey() == null){
+		} else if (msg.getUserName() == null){
 			System.out.println("Session key was null");
 			listen = false;
 		}
@@ -195,7 +195,7 @@ public class HubSocketHandler extends Thread{
 			if (msg == null){
 				System.out.println("Message was null");
 				valid = false; // Don't waste time on bad transmissions
-			} else if (msg.getCookie().getKey() == null){
+			} else if (msg.getUserName() == null){
 				System.out.println("Session key was null");
 				valid = false;
 			}
@@ -214,7 +214,7 @@ public class HubSocketHandler extends Thread{
 					// Returns in body all users in a classroom
 					case Client_GetClassEnrollment:
 						//check permissions
-						if(isClassTAorInstructor(msg.getCookie().getKey(),msg.getClassroom_ID())){
+						if(isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
 							//String = User, Integer = Permission
 							Map<String, Integer> classEnroll = classList.getClassEnrolled(msg.getClassroom_ID());
 							if (classEnroll != null){				
@@ -226,7 +226,7 @@ public class HubSocketHandler extends Thread{
 						break;
 					// Return in body a list of the classes that a client is enrolled in
 					case Client_GetUserEnrollment:
-						String usr = msg.getCookie().getKey();
+						String usr = msg.getUserName();
 						if(DEBUG) System.out.println(usr + " wants to see all their class enrollments");
 						Map<String, Integer> userEnroll = classList.getUserEnrollment(usr);
 						if (userEnroll != null){
@@ -237,7 +237,7 @@ public class HubSocketHandler extends Thread{
 						break;
 					case Client_ListClassroomRequests:
 						//check permissions
-						if(isClassTAorInstructor(msg.getCookie().getKey(),msg.getClassroom_ID())){
+						if(isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
 							//gets list of users
 							List<String> requests = classList.getClassPending(msg.getClassroom_ID());
 							if (requests != null){
@@ -251,7 +251,7 @@ public class HubSocketHandler extends Thread{
 					// Store user to be changed and the permissions as an arraylist
 					// [0] = username, [1] = permissions
 					case Client_SetPermissions:
-						if(DEBUG) System.out.println(msg.getCookie().getKey() + " setting permissions");
+						if(DEBUG) System.out.println(msg.getUserName() + " setting permissions");
 						@SuppressWarnings("unchecked")
 						ArrayList<String> a= (ArrayList<String>) msg.getBody();
 						// Person
@@ -265,17 +265,17 @@ public class HubSocketHandler extends Thread{
 							if(DEBUG) System.out.println("Denied. Instructor cannot delete self from classroom.");
 							returnMessage(msg);
 							break;
-						} else if(isClassTAorInstructor(msg.getCookie().getKey(),msg.getClassroom_ID())){
+						} else if(isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
 							//Now changing someone else's
 							// Server's return code
 							if(DEBUG) System.out.println("Setting " + personToChange + "'s permissions to: " + per);
 							returnCode = classList.setUserPermissions(personToChange, msg.getClassroom_ID(), per);
 							// Reply
 							msg.setCode(returnCode);
-						} else if (isClassStudent(msg.getCookie().getKey(),msg.getClassroom_ID())){
+						} else if (isClassStudent(msg.getUserName(),msg.getClassroom_ID())){
 							//Students can only delete themselves
 							//Check student requestor matches up with requestee
-							if (msg.getCookie().getKey().equals(personToChange)){
+							if (msg.getUserName().equals(personToChange)){
 								// Server's return code
 								returnCode = classList.setUserPermissions(personToChange, msg.getClassroom_ID(), per);
 								// Reply
@@ -285,7 +285,7 @@ public class HubSocketHandler extends Thread{
 						returnMessage(msg);
 						break;
 					case Client_DeleteSelf:
-						String u = msg.getCookie().getKey();
+						String u = msg.getUserName();
 						if(userList.removeUser(u)){
 							//success
 							//TODO: remove the users from classList and if prof, remove serverlist
@@ -299,7 +299,7 @@ public class HubSocketHandler extends Thread{
 					// Request to be added to a class
 					case Client_RequestEnrollment:
 						//check, cannot be already in class
-						String requestName = msg.getCookie().getKey();
+						String requestName = msg.getUserName();
 						if(DEBUG) System.out.println(requestName + " requested to be added to classroom: " + msg.getClassroom_ID());
 						if(!isInClassroom(requestName,msg.getClassroom_ID())){
 							// 0 for pending enrollment, -1 for dijoining
@@ -317,7 +317,7 @@ public class HubSocketHandler extends Thread{
 					// CLASSROOM_ID TO BE SET IN THE MESSAGE ALREADY!!!!!
 					case Client_CreateClassroom:
 						//Add that classroom id to a server
-						ClassData c = new ClassData(msg.getCookie().getKey());
+						ClassData c = new ClassData(msg.getUserName());
 						c.setClassName(msg.getClassroom_ID());
 						
 						//Generate some server number
@@ -339,7 +339,7 @@ public class HubSocketHandler extends Thread{
 					 * Array[1] = Post_body 	
 					 */
 					case Client_CreateThread:
-						if (isInClassroom(msg.getCookie().getKey(),msg.getClassroom_ID())){
+						if (isInClassroom(msg.getUserName(),msg.getClassroom_ID())){
 							reply = forwardToServer(msg);
 							returnMessage(reply);
 						} else {
@@ -347,7 +347,7 @@ public class HubSocketHandler extends Thread{
 						}
 						break;
 					case Client_CreateComment:
-						if (isInClassroom(msg.getCookie().getKey(),msg.getClassroom_ID())){
+						if (isInClassroom(msg.getUserName(),msg.getClassroom_ID())){
 							reply = forwardToServer(msg);
 							returnMessage(reply);
 						} else {
@@ -355,7 +355,7 @@ public class HubSocketHandler extends Thread{
 						}
 						break;
 					case Client_GoToClassroom:
-						if (isInClassroom(msg.getCookie().getKey(),msg.getClassroom_ID())){
+						if (isInClassroom(msg.getUserName(),msg.getClassroom_ID())){
 							reply = forwardToServer(msg);
 							returnMessage(reply);
 						} else {
@@ -363,7 +363,7 @@ public class HubSocketHandler extends Thread{
 						}
 						break;
 					case Client_GoToThread:
-						if (isInClassroom(msg.getCookie().getKey(),msg.getClassroom_ID())){
+						if (isInClassroom(msg.getUserName(),msg.getClassroom_ID())){
 							reply = forwardToServer(msg);
 							returnMessage(reply);
 						} else {
@@ -371,7 +371,7 @@ public class HubSocketHandler extends Thread{
 						}
 						break;
 					case Client_DeleteClassroom:
-						if (isClassTAorInstructor(msg.getCookie().getKey(),msg.getClassroom_ID())){
+						if (isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
 							reply = forwardToServer(msg);
 							//Check that the reply code is affirmative
 							if(reply.getCode() == 1){
@@ -383,7 +383,7 @@ public class HubSocketHandler extends Thread{
 						}
 						break;
 					case Client_DeleteThread:
-						if (isClassTAorInstructor(msg.getCookie().getKey(),msg.getClassroom_ID())){
+						if (isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
 							reply = forwardToServer(msg);
 							returnMessage(reply);
 						} else {
@@ -391,7 +391,7 @@ public class HubSocketHandler extends Thread{
 						}
 						break;
 					case Client_DeleteComment:
-						if (isClassTAorInstructor(msg.getCookie().getKey(),msg.getClassroom_ID())){
+						if (isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
 							reply = forwardToServer(msg);
 							returnMessage(reply);
 						} else {
