@@ -18,8 +18,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 /**
  * This is the class used for AES encryption and decryption.
- * @author Julia
- *
  */
 public class AES {
     private static Cipher ecipher;
@@ -50,7 +48,12 @@ public class AES {
 			/* Encrypt the message. */
 			ecipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 			ecipher.init(Cipher.ENCRYPT_MODE, secret);
-
+			
+			AlgorithmParameters params = ecipher.getParameters();
+			byte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();
+			dcipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			dcipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(iv));
+			
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		} catch (InvalidKeySpecException e) {
@@ -59,15 +62,11 @@ public class AES {
 			e.printStackTrace();
 		} catch (InvalidKeyException e) {
 			e.printStackTrace();
+		} catch (InvalidParameterSpecException e) {
+			e.printStackTrace();
+		} catch (InvalidAlgorithmParameterException e) {
+			e.printStackTrace();
 		}
-	}
-	
-	/**
-	 * Constructor for key-based encryption.
-	 * @param secretKey
-	 */
-	AES(SecretKey secretKey){
-		
 	}
 	
 	/**
@@ -96,26 +95,12 @@ public class AES {
 	 */
 	public String decrypt(byte[] message){
         try {
-			AlgorithmParameters params = ecipher.getParameters();
-			byte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();
-			dcipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-			dcipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(iv));
 			String plaintext = new String(dcipher.doFinal(message), "UTF-8");			
 			return plaintext;
         } catch (javax.crypto.BadPaddingException e) {
         } catch (IllegalBlockSizeException e) {
         } catch (UnsupportedEncodingException e) {
-        } catch (InvalidParameterSpecException e) {
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (NoSuchPaddingException e) {
-			e.printStackTrace();
-		} catch (InvalidKeyException e) {
-			e.printStackTrace();
-		} catch (InvalidAlgorithmParameterException e) {
-			e.printStackTrace();
-		}
+        }
 		
         return null;
 	}
@@ -131,10 +116,16 @@ public class AES {
 			String password = "pwned";
 			String message = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque enim ligula, gravida nec vulputate in, eleifend at est. Donec eget nisl vel justo molestie euismod. Nulla metus velit, commodo nec sed.";
 			
+<<<<<<< HEAD
 			AES obj1 = new AES(password.toCharArray(), naunce, salt);
 			AES obj2 = new AES(password.toCharArray(), naunce, salt);
 			byte[] enc = obj1.encrypt(message);
 			System.out.println("Message encrypted: \n====> " + obj1.encrypt(message));
+=======
+			AES obj = new AES(password.toCharArray(), naunce, salt);
+			byte[] enc = obj.encrypt(message);
+			System.out.println("Message encrypted: \n====> " + enc);
+>>>>>>> 409faee5d52bbd0dea6939da0ce9c992ac8d95bd
 			
 			String tmp = obj2.decrypt(enc);
 			System.out.println("Message decrypted: \n====> " + tmp);

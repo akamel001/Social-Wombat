@@ -62,14 +62,19 @@ public class UserList implements Serializable{
 	 * @param newId The username for the new user.
 	 * @return Returns true if the user was added. Returns false if the user already exists.
 	 */
-	public boolean addUser(String newId){
+	public boolean addUser(String newId, char[] p){
 		if (newId==null){
+			return false;
+		}
+		if (newId.length()<3 || newId.length()>30){
 			return false;
 		}
 		boolean found = false;
 		synchronized(userList){
 			if (!userList.containsKey(newId)){
-				userList.put(newId, new User(newId));
+				//TODO: encrypt User!!!
+				User in = new User(newId, p);
+				userList.put(newId, in);
 				found = true;
 			}
 		}
@@ -100,15 +105,25 @@ public class UserList implements Serializable{
 	public class User implements Serializable{
 		
 		private static final long serialVersionUID = 2971288288578571927L;
-		private final String id;
-		//private String password;
+		private final String name;
+		private char[] password;
 	
+		@SuppressWarnings("unused")
+		private User(){
+			name = "";
+		}
+		
 		/**
 		 * Constructor for User class.
+		 * @param u The username
+		 * @param p The password. Note that a new char[] is created to store the password. The original 
+		 * array should be zeroed out. Otherwise it will stay in memory.
 		 */
-		public User(String u){
-			id = u;
-			//password = null;
+		public User(String u, char[] p){
+			name = u;
+			password = new char[p.length];
+			for(int i=0; i<p.length; i++)	
+				password[i]=p[i];
 		}
 		
 		/**
@@ -116,7 +131,29 @@ public class UserList implements Serializable{
 		 * @return
 		 */
 		public String getId(){
-			return id;
+			return name;
+		}
+		
+		public void setPass(char[] p){
+			// Zero out the old pass.
+			for(int i=0; i<password.length; i++)	
+				p[i]=0;
+			// Create and fill a new pass.
+			password = new char[p.length];
+			for(int i=0; i<p.length; i++)	
+				password[i]=p[i];
+		}
+		
+		/**
+		 * Returns a copy of the char[] array containing the password. </br>
+		 * NOTE: you MUST zero out the returned array AS SOON AS you are done with it.
+		 * @return Returns a copy of the char[] containing the password.
+		 */
+		public char[] getPass(){
+			char[] out = new char[password.length];
+			for(int i=0; i<password.length; i++)	
+				out[i]=password[i];
+			return out;
 		}
 	}
 	
