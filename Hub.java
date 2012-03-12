@@ -297,7 +297,6 @@ class Hub extends Thread {
 				
 			} catch (IOException e) {
 				System.out.println("Accept failed on port: " + CLIENT_SOCKET);
-				System.exit(-1);
 			} 
 		}
 		//Close socket after done listening

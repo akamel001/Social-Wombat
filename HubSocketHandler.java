@@ -9,6 +9,7 @@ public class HubSocketHandler extends Thread{
 	
 	private static final boolean DEBUG = false;
 	
+	AES aesObject = null;
 	static Message msg = new Message();
 	ClassList classList;
 	UserList userList;
@@ -35,6 +36,40 @@ public class HubSocketHandler extends Thread{
 			e.printStackTrace();
 			System.out.println("Could not create input and output streams");
 		}
+	}
+	
+	private boolean authenticate(Message msg){
+		//Client user id is stored as the sessionKey in the Cookie of the message
+		// TODO: Possibly move this above switch statement to authenticate all requests
+		if (msg.getType() == Message.MessageType.Client_LogIn){
+			// extract neccessary info from msg
+			String userName = msg.getUserName();
+			
+			// check existence of username
+			if (!userList.validateUser(userName)){
+				//send back error code
+				msg.setCode(-1);
+				if(DEBUG) System.out.println("Attempted intrusion by: " + userName);
+				returnMessage(msg);
+				return false;
+			}
+			
+			//look up salt
+			byte[] salt = msg.getSalt();
+			// TODO: lookup the password
+			char[] pass = null;
+			
+			//Generate aes key
+			aesObject = new AES(pass,salt);
+			
+			// TODO: verify body type. Should be a date?
+			aesObject.decrypt((byte[]) msg.getBody());
+						
+			// TODO: timestamp
+			
+			//if timestamp within 5 mins of now, send back timestamp encrypted.
+		}
+		return false;
 	}
 	
 	/*
@@ -138,6 +173,20 @@ public class HubSocketHandler extends Thread{
 	public void run(){
 		//takes over to infinitely listen for each user
 		boolean listen = true;
+		
+		//First accept
+		getMessage();
+		//checks
+		if (msg == null){
+			System.out.println("Message was null");
+			listen = false; // Don't waste time on bad transmissions
+		} else if (msg.getCookie().getKey() == null){
+			System.out.println("Session key was null");
+			listen = false;
+		}
+		//Authenticate
+		listen = authenticate(msg);
+		
 		while (listen){
 			boolean valid = true;
 			//Wait, read and deserialize Message from Socket
@@ -162,19 +211,6 @@ public class HubSocketHandler extends Thread{
 				
 					// Client -> Hub
 					
-					//Client user id is stored as the sessionKey in the Cookie of the message
-					// TODO: Possibly move this above switch statement to authenticate all requests
-					case Client_LogIn: 
-						String sessionKey = msg.getCookie().getKey();
-						if((sessionKey != null) && userList.validateUser(sessionKey)){
-							//Reply with confirmation
-							msg.setCode(1);
-							if(DEBUG) System.out.println("User " + msg.getCookie().getKey() + " logged in");
-						} else {
-							if(DEBUG) System.out.println("Attempted intrusion by: " + sessionKey);
-						}
-						returnMessage(msg);
-						break;
 					// Returns in body all users in a classroom
 					case Client_GetClassEnrollment:
 						//check permissions
