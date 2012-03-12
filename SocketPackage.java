@@ -11,6 +11,8 @@ class SocketPackage {
 	private InetAddress addr;
 	private ObjectOutputStream oos;
 	private ObjectInputStream ois;
+	private DataOutputStream dout;
+//	private DataInputStream din;
 	private static final int TIMEOUT = 5000;
 	private static final int MAX_RETRY = 16;
 	private static final boolean DEBUG = false;
@@ -56,6 +58,10 @@ class SocketPackage {
 				oos = new ObjectOutputStream(socket.getOutputStream());
 				if (DEBUG) System.out.println("Creating an input stream");
 				ois = new ObjectInputStream(socket.getInputStream());
+				if (DEBUG) System.out.println("Creating a byte output stream");
+				dout = new DataOutputStream(socket.getOutputStream());
+//				if (DEBUG) System.out.println("Creating a byte input stream");
+//				din = new DataInputStream(socket.getInputStream());
 			} catch (IOException e){
 				e.printStackTrace();
 				System.out.println("Could not get streams");
@@ -89,7 +95,23 @@ class SocketPackage {
 		}
 
 	}
+	
+	public void send(byte msg){
+		try {
+			dout.write(msg);
+			dout.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Send byte message failed");
+		}
 
+	}
+	
+	public byte[] receiveBytes(){
+		//TODO need to think about this one... 
+		return null;
+	}
+	
 	/**
 	 * Receive a message
 	 */
