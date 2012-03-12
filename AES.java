@@ -1,9 +1,13 @@
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.AlgorithmParameters;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 import java.security.spec.KeySpec;
@@ -49,7 +53,6 @@ public class AES {
 			
 			AlgorithmParameters params = ecipher.getParameters();
 			byte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();
-			System.out.println(iv);
 			dcipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 			dcipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(iv));
 			
@@ -87,15 +90,62 @@ public class AES {
         return null;
 	}
 	
+	
 	public byte[] encrypt(Object o){
         try {
-			byte[] ciphertext = ecipher.doFinal((byte []) o);
+			byte[] ciphertext = ecipher.doFinal(toByteArray(o));
 			return ciphertext;
         } catch (javax.crypto.BadPaddingException e) {
         	e.printStackTrace();
         } catch (IllegalBlockSizeException e) {
         	e.printStackTrace();
         }  
+        return null;
+	}
+	 
+	public Object toObject (byte[] bytes)
+	{
+	  Object obj = null;
+	  try {
+	    ByteArrayInputStream bis = new ByteArrayInputStream (bytes);
+	    ObjectInputStream ois = new ObjectInputStream (bis);
+	    obj = ois.readObject();
+	  }
+	  catch (IOException ex) {
+	    //TODO: Handle the exception
+	  }
+	  catch (ClassNotFoundException ex) {
+	    //TODO: Handle the exception
+	  }
+	  return obj;
+	}
+	
+	public byte[] toByteArray (Object obj)
+	{
+	  byte[] bytes = null;
+	  ByteArrayOutputStream bos = new ByteArrayOutputStream();
+	  try {
+	    ObjectOutputStream oos = new ObjectOutputStream(bos); 
+	    oos.writeObject(obj);
+	    oos.flush(); 
+	    oos.close(); 
+	    bos.close();
+	    bytes = bos.toByteArray ();
+	  }
+	  catch (IOException ex) {
+	    //TODO: Handle the exception
+	  }
+	  return bytes;
+	}
+	
+	public Object decryptObject(byte[] o){
+        try {
+			Object obj = toObject(dcipher.doFinal(o));		
+        	//String plaintext = new String(dcipher.doFinal(o), "UTF-8");			
+			return obj;
+        } catch (javax.crypto.BadPaddingException e) {
+        } catch (IllegalBlockSizeException e) {
+        } 
         return null;
 	}
 	
@@ -115,25 +165,4 @@ public class AES {
 		
         return null;
 	}
-	
-	 public static void main(String args[]) 
-	 { 
-		    byte[] salt = new byte[8];
-		    SecureRandom random = new SecureRandom();
-			random.nextBytes(salt);
-			
-			String password = "pwned";
-			String message = "lolz";
-			
-			AES obj1 = new AES(password.toCharArray(), salt);
-			AES obj2 = new AES(password.toCharArray(), salt);
-
-			byte[] enc = obj1.encrypt(message);
-			//System.out.println("Message encrypted: \n====> " + enc);
-			
-			String tmp = obj2.decrypt(enc);
-			System.out.println("Message decrypted: \n====> " + tmp);
-			
-	 }
-	
 }

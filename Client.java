@@ -1,21 +1,28 @@
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * 
- * @author 
- *
- */
 
+//global add socket 
+//get ride of cookie message and client
+//handle login has salt value, username and timestamp encripted in body
+//date object formated in for timestamp
+//todo use an overloaded send in socketpackage to send byte array 
 
 public class Client {
 
 	private static final boolean DEBUG = false;
-	private Cookie cookie = new Cookie("");
-
+	//private Cookie cookie = new Cookie("");
+	private static final String hub_addr = "127.0.0.1";
+	private static final int HUB_PORT = 4444;
+	private SocketPackage socket;
+	private byte[] salt;
 	/**
 	 *  
 	 * This method is used in the login page to verify a user name.
@@ -25,18 +32,51 @@ public class Client {
 	 * @param userName
 	 * @return boolean corresponding to verification status
 	 */
-	public boolean handleLogin(String uName, char[] password){ // TODO: I (Julia) added a password parameter here, but currently nothing is being done with it.
-		// TODO: make sure to call zeroItOut(password)!
+	
+	public Client(){
+		InetAddress hub;
+		try {
+			//Generating a random salt value
+			salt = new byte[8];
+		    SecureRandom random = new SecureRandom();
+			random.nextBytes(salt);
+			
+			//setting hub address and connecting
+			hub = InetAddress.getByName(hub_addr);
+			socket = new SocketPackage(hub, HUB_PORT);
+			socket.socketConnect();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public boolean handleLogin(String uName, char[] password){
+		
 		if(DEBUG)
 			return true; 
-		
-		ClientSocketHandler handler = new ClientSocketHandler();
-		cookie.setKey(uName);
-		handler.getMessageSending().setCookie(cookie);
-		handler.getMessageSending().setType(Message.MessageType.Client_LogIn);
+		AES aes = new AES(password, salt);
 
-		Message response = handler.sendReceive();
+		//Zeros out password
+		Arrays.fill(password, '0');
+
+		Message message = new Message();
+		message.setType(Message.MessageType.Client_LogIn);
+		message.setSalt(salt);
+		message.setUserName(uName);
+
 		
+		Date date = new Date();
+		message.setBody(aes.encrypt(date));
+		socket.send(message);
+		
+		//ClientSocketHandler handler = new ClientSocketHandler();
+		//cookie.setKey(uName);
+		//handler.getMessageSending().setCookie(cookie);
+		//handler.getMessageSending().setUserName(uName);
+		//handler.getMessageSending().setType(Message.MessageType.Client_LogIn);
+		Message response = socket.receive();
+		
+		//TODO check if date returned is within 5 min
 		return (response.getCode() == 1)? true : false;	
 	}
 	
@@ -46,7 +86,7 @@ public class Client {
 	 * @return
 	 */
 	public boolean handleLogout(String currentUserName) {
-		// TODO Auto-generated method stub
+		// TODO Close active socket connection and streams
 		return false;
 	}
 	
@@ -63,15 +103,21 @@ public class Client {
 		if(DEBUG)
 			return true;
 
-		ClientSocketHandler handler = new ClientSocketHandler();
-		cookie.setKey(uName);
-		handler.getMessageSending().setCookie(cookie);
-		handler.getMessageSending().setClassroom_ID(classroomName);
-		handler.getMessageSending().setType(Message.MessageType.Client_CreateClassroom);
+		Message message = new Message();
+		message.setUserName(uName);
+		message.setClassroom_ID(classroomName);
+		message.setType(Message.MessageType.Client_CreateClassroom);
+		
+		socket.send(message);
+//		ClientSocketHandler handler = new ClientSocketHandler();
+//		cookie.setKey(uName);
+//		handler.getMessageSending().setCookie(cookie);
+//		handler.getMessageSending().setClassroom_ID(classroomName);
+//		handler.getMessageSending().setType(Message.MessageType.Client_CreateClassroom);
+//
+//		Message response = handler.sendReceive();
 
-		Message response = handler.sendReceive();
-
-		return (response.getCode() == 1)? true : false;	
+		return (socket.receive().getCode() == 1)? true : false;	
 	}
 
 	/**
@@ -87,15 +133,24 @@ public class Client {
 		if(DEBUG)
 			return true;
 
-		ClientSocketHandler handler = new ClientSocketHandler();
-		cookie.setKey(requesterUserName);
-		handler.getMessageSending().setCookie(cookie);
-		handler.getMessageSending().setClassroom_ID(classroomRequestName);
-		handler.getMessageSending().setType(Message.MessageType.Client_RequestEnrollment);
-		handler.getMessageSending().setBody(0);
-		Message response = handler.sendReceive();
 
-		return (response.getCode() == 1)? true : false;			
+		Message message = new Message();
+		message.setUserName(requesterUserName);
+		message.setType(Message.MessageType.Client_RequestEnrollment);
+		message.setClassroom_ID(classroomRequestName);
+		message.setBody(0);
+		
+		socket.send(message);
+		
+//		ClientSocketHandler handler = new ClientSocketHandler();
+//		cookie.setKey(requesterUserName);
+//		handler.getMessageSending().setCookie(cookie);
+//		handler.getMessageSending().setClassroom_ID(classroomRequestName);
+//		handler.getMessageSending().setType(Message.MessageType.Client_RequestEnrollment);
+//		handler.getMessageSending().setBody(0);
+//		Message response = handler.sendReceive();
+
+		return (socket.receive().getCode() == 1)? true : false;			
 	}
 
 	/**
@@ -115,15 +170,20 @@ public class Client {
 			classroomList.put("HD 3260", 3);
 			return classroomList;		
 		}
+		Message message = new Message();
+		
+		message.setUserName(userName);
+		message.setType(Message.MessageType.Client_GetUserEnrollment);
+		
+		socket.send(message);
+		
+//		ClientSocketHandler handler = new ClientSocketHandler();
+//
+//		cookie.setKey(userName);
+//		handler.getMessageSending().setCookie(cookie);
+//		handler.getMessageSending().setType(Message.MessageType.Client_GetUserEnrollment);
 
-		ClientSocketHandler handler = new ClientSocketHandler();
-
-		cookie.setKey(userName);
-		handler.getMessageSending().setCookie(cookie);
-		handler.getMessageSending().setType(Message.MessageType.Client_GetUserEnrollment);
-
-		Message responce = handler.sendReceive();
-
+		Message responce = socket.receive();
 		return (Map<String, Integer>) ((responce.getCode() == 1)? responce.getBody() : null);	
 	}
 
@@ -139,20 +199,27 @@ public class Client {
 		if(DEBUG)
 			return true;
 
-		ClientSocketHandler handler = new ClientSocketHandler();
+//		ClientSocketHandler handler = new ClientSocketHandler();
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(0, threadName);
 		list.add(1, postContent);
 
-		cookie.setKey(currentUserName);
-		handler.getMessageSending().setCookie(cookie);
-		handler.getMessageSending().setClassroom_ID(classroomName);
-		handler.getMessageSending().setType(Message.MessageType.Client_CreateThread);
-		handler.getMessageSending().setBody(list);
+		Message message = new Message();
+		message.setUserName(currentUserName);
+		message.setClassroom_ID(classroomName);
+		message.setType(Message.MessageType.Client_CreateThread);
+		message.setBody(list);
+		
+		socket.send(message);
+//		cookie.setKey(currentUserName);
+//		handler.getMessageSending().setCookie(cookie);
+//		handler.getMessageSending().setClassroom_ID(classroomName);
+//		handler.getMessageSending().setType(Message.MessageType.Client_CreateThread);
+//		handler.getMessageSending().setBody(list);
+//
+//		Message responce = handler.sendReceive();
 
-		Message responce = handler.sendReceive();
-
-		return (responce.getCode() == 1)? true : false;	
+		return (socket.receive().getCode() == 1)? true : false;	
 	}
 
 	/**
@@ -162,15 +229,22 @@ public class Client {
 		
 		if(DEBUG)
 			return true;
-
-		ClientSocketHandler handler = new ClientSocketHandler();
-		cookie.setKey(userName);
-		handler.getMessageSending().setCookie(cookie);
-		handler.getMessageSending().setClassroom_ID(classroomName);
-		handler.getMessageSending().setType(Message.MessageType.Client_DeleteClassroom);
-
-		Message response = handler.sendReceive();
-		return (response.getCode() == 1)? true : false;	
+		
+		Message message = new Message();
+		message.setUserName(userName);
+		message.setType(Message.MessageType.Client_DeleteClassroom);
+		message.setClassroom_ID(classroomName);
+		message.setBody(0);
+		socket.send(message);
+//		
+//		ClientSocketHandler handler = new ClientSocketHandler();
+//		cookie.setKey(userName);
+//		handler.getMessageSending().setCookie(cookie);
+//		handler.getMessageSending().setClassroom_ID(classroomName);
+//		handler.getMessageSending().setType(Message.MessageType.Client_DeleteClassroom);
+//
+//		Message response = handler.sendReceive();
+		return (socket.receive().getCode() == 1)? true : false;	
 	}
 
 	/**
@@ -182,21 +256,29 @@ public class Client {
 		if(DEBUG)
 			return true;
 
-		ClientSocketHandler handler = new ClientSocketHandler();
+//		ClientSocketHandler handler = new ClientSocketHandler();
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(0, userName);
 		list.add(1, "-1");
-
-		cookie.setKey(userName);
-		handler.getMessageSending().setCookie(cookie);
-		handler.getMessageSending().setClassroom_ID(classroomName);
-		handler.getMessageSending().setBody(list);
-		handler.getMessageSending().setType(Message.MessageType.Client_SetPermissions);
-		handler.getMessageSending().setBody(list);
 		
-		Message response = handler.sendReceive();
+		Message message = new Message();
+		message.setUserName(userName);
+		message.setClassroom_ID(classroomName);
+		message.setType(Message.MessageType.Client_SetPermissions);
+		message.setBody(list);
+		
+		socket.send(message);
+		
+//		cookie.setKey(userName);
+//		handler.getMessageSending().setCookie(cookie);
+//		handler.getMessageSending().setClassroom_ID(classroomName);
+//		handler.getMessageSending().setBody(list);
+//		handler.getMessageSending().setType(Message.MessageType.Client_SetPermissions);
+//		handler.getMessageSending().setBody(list);
+//		
+//		Message response = handler.sendReceive();
 
-		return (response.getCode() == 1)? true : false;		
+		return (socket.receive().getCode() == 1)? true : false;		
 	}
 
 	/**
@@ -216,14 +298,20 @@ public class Client {
 			return defaultMap;	
 		}
 
-		ClientSocketHandler handler = new ClientSocketHandler();
+		Message message = new Message();
+		message.setUserName(userName);
+		message.setClassroom_ID(classroomName);
+		message.setType(Message.MessageType.Client_GoToClassroom);
+		
+		socket.send(message);
+		
+//		ClientSocketHandler handler = new ClientSocketHandler();
+//		cookie.setKey(userName);
+//		handler.getMessageSending().setCookie(cookie);
+//		handler.getMessageSending().setClassroom_ID(classroomName);
+//		handler.getMessageSending().setType(Message.MessageType.Client_GoToClassroom);
 
-		cookie.setKey(userName);
-		handler.getMessageSending().setCookie(cookie);
-		handler.getMessageSending().setClassroom_ID(classroomName);
-		handler.getMessageSending().setType(Message.MessageType.Client_GoToClassroom);
-
-		Message responce = handler.sendReceive();
+		Message responce = socket.receive();
 
 		return (Map<Integer, String>) ((responce.getCode() == 1)? responce.getBody() : null);	
 	}
@@ -245,19 +333,22 @@ public class Client {
 			defaultMap.put(new Integer(7), "I like to comment on stuff!");
 			return defaultMap;	
 		}
-
-		ClientSocketHandler handler = new ClientSocketHandler();
 		
-		cookie.setKey(userName);
-		handler.getMessageSending().setCookie(cookie);
-
-		handler.getMessageSending().setClassroom_ID(classroomName);
+		Message message = new Message();
+		message.setUserName(userName);
+		message.setClassroom_ID(classroomName);
+		message.setBody(threadID);
+		message.setType(Message.MessageType.Client_GoToThread);
 		
-		handler.getMessageSending().setBody(threadID);
+		socket.send(message);
+//		ClientSocketHandler handler = new ClientSocketHandler();	
+//		cookie.setKey(userName);
+//		handler.getMessageSending().setCookie(cookie);
+//		handler.getMessageSending().setClassroom_ID(classroomName);
+//		handler.getMessageSending().setBody(threadID);
+//		handler.getMessageSending().setType(Message.MessageType.Client_GoToThread);
 		
-		handler.getMessageSending().setType(Message.MessageType.Client_GoToThread);
-
-		Message response = handler.sendReceive();
+		Message response = socket.receive();
 
 		return (Map<Integer, String>) ((response.getCode() == 1)? response.getBody() : null);
 	}
@@ -267,22 +358,30 @@ public class Client {
 		if(DEBUG)
 			return true;
 
-		ClientSocketHandler handler = new ClientSocketHandler();
 
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(0, Integer.toString(threadID));
 		list.add(1, commentContent);
 
-		cookie.setKey(userName);
-		handler.getMessageSending().setCookie(cookie);
+		
+		Message message = new Message();
+		message.setUserName(userName);
+		message.setClassroom_ID(classroomName);
+		message.setType(Message.MessageType.Client_CreateComment);
+		message.setBody(list);
+		
+		socket.send(message);
+		
+//		ClientSocketHandler handler = new ClientSocketHandler();
+//		cookie.setKey(userName);
+//		handler.getMessageSending().setCookie(cookie);
+//		handler.getMessageSending().setClassroom_ID(classroomName);
+//		handler.getMessageSending().setBody(list);
+//		handler.getMessageSending().setType(Message.MessageType.Client_CreateComment);
+//
+//		Message response = handler.sendReceive();
 
-		handler.getMessageSending().setClassroom_ID(classroomName);
-		handler.getMessageSending().setBody(list);
-		handler.getMessageSending().setType(Message.MessageType.Client_CreateComment);
-
-		Message response = handler.sendReceive();
-
-		return (response.getCode() == 1)? true : false;		
+		return (socket.receive().getCode() == 1)? true : false;		
 	}
 
 	/**
@@ -302,15 +401,21 @@ public class Client {
 			defaultMap.put("Nikolai", new Integer(2));
 			return defaultMap;	
 		}
+		
+		Message message = new Message();
+		message.setUserName(userName);
+		message.setClassroom_ID(classroomName);
+		message.setType(Message.MessageType.Client_GetClassEnrollment);
+		
+		socket.send(message);
+		
+//		ClientSocketHandler handler = new ClientSocketHandler();
+//		cookie.setKey(userName);
+//		handler.getMessageSending().setCookie(cookie);
+//		handler.getMessageSending().setClassroom_ID(classroomName);
+//		handler.getMessageSending().setType(Message.MessageType.Client_GetClassEnrollment);
 
-		ClientSocketHandler handler = new ClientSocketHandler();
-
-		cookie.setKey(userName);
-		handler.getMessageSending().setCookie(cookie);
-		handler.getMessageSending().setClassroom_ID(classroomName);
-		handler.getMessageSending().setType(Message.MessageType.Client_GetClassEnrollment);
-
-		Message response = handler.sendReceive();
+		Message response = socket.receive();
 
 		return (Map<String, Integer>) ((response.getCode() == 1)? response.getBody() : null);
 	}
@@ -327,22 +432,30 @@ public class Client {
 		if(DEBUG)
 			return true;
 		
-		ClientSocketHandler handler = new ClientSocketHandler();
 
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(0, memberName);
 		list.add(1, "-1");
+		
+		Message message = new Message();
+		message.setUserName(userName);
+		message.setClassroom_ID(classroomName);
+		message.setType(Message.MessageType.Client_SetPermissions);
+		message.setBody(list);
+		
+		socket.send(message);
+//		
+//		ClientSocketHandler handler = new ClientSocketHandler();
+//		cookie.setKey(userName);
+//		handler.getMessageSending().setCookie(cookie);
+//
+//		handler.getMessageSending().setClassroom_ID(classroomName);
+//		handler.getMessageSending().setType(Message.MessageType.Client_SetPermissions);
+//		handler.getMessageSending().setBody(list);
+//
+//		Message response = handler.sendReceive();
 
-		cookie.setKey(userName);
-		handler.getMessageSending().setCookie(cookie);
-
-		handler.getMessageSending().setClassroom_ID(classroomName);
-		handler.getMessageSending().setType(Message.MessageType.Client_SetPermissions);
-		handler.getMessageSending().setBody(list);
-
-		Message response = handler.sendReceive();
-
-		return (response.getCode() == 1)? true : false;	
+		return (socket.receive().getCode() == 1)? true : false;	
 	}
 
 	/**
@@ -356,22 +469,29 @@ public class Client {
 		if(DEBUG)
 			return true;
 
-		ClientSocketHandler handler = new ClientSocketHandler();
 
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(0, currentMemberName);
 		list.add(1, Integer.toString(currentMemberPerm));
 
-		cookie.setKey(userName);
-		handler.getMessageSending().setCookie(cookie);
+		Message message = new Message();
+		message.setUserName(userName);
+		message.setClassroom_ID(classroomName);
+		message.setType(Message.MessageType.Client_SetPermissions);
+		message.setBody(list);
+		
+		socket.send(message);
+		
+//		ClientSocketHandler handler = new ClientSocketHandler();
+//		cookie.setKey(userName);
+//		handler.getMessageSending().setCookie(cookie);
+//
+//		handler.getMessageSending().setClassroom_ID(classroomName);
+//		handler.getMessageSending().setType(Message.MessageType.Client_SetPermissions);
+//		handler.getMessageSending().setBody(list);
+//		Message response = handler.sendReceive();
 
-		handler.getMessageSending().setClassroom_ID(classroomName);
-		handler.getMessageSending().setType(Message.MessageType.Client_SetPermissions);
-		handler.getMessageSending().setBody(list);
-
-		Message response = handler.sendReceive();
-
-		return (response.getCode() == 1)? true : false;
+		return (socket.receive().getCode() == 1)? true : false;
 	}
 
 	/**
@@ -387,16 +507,21 @@ public class Client {
 			List<String> defaultList = Arrays.asList("Bob", "Julia", "Cornelia");
 			return defaultList;	
 		}
+		
+		Message message = new Message();
+		message.setUserName(userName);
+		message.setClassroom_ID(currentClassroomName);
+		message.setType(Message.MessageType.Client_ListClassroomRequests);
+		
+		socket.send(message);
+//		ClientSocketHandler handler = new ClientSocketHandler();
+//
+//		cookie.setKey(userName);
+//		handler.getMessageSending().setCookie(cookie);
+//		handler.getMessageSending().setClassroom_ID(currentClassroomName);
+//		handler.getMessageSending().setType(Message.MessageType.Client_ListClassroomRequests);
 
-		ClientSocketHandler handler = new ClientSocketHandler();
-
-		cookie.setKey(userName);
-		handler.getMessageSending().setCookie(cookie);
-		handler.getMessageSending().setClassroom_ID(currentClassroomName);
-		handler.getMessageSending().setType(Message.MessageType.Client_ListClassroomRequests);
-
-		Message responce = handler.sendReceive();
-
+		Message responce = socket.receive();
 		return (List<String>) ((responce.getCode() == 1)? responce.getBody() : null);
 	}
 
@@ -411,22 +536,30 @@ public class Client {
 		if(DEBUG)
 			return true;
 
-		ClientSocketHandler handler = new ClientSocketHandler();
 
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(0, pendingMember);
 		list.add(1, "1");
+		
+		Message message = new Message();
+		message.setUserName(userName);
+		message.setClassroom_ID(classroomName);
+		message.setType(Message.MessageType.Client_SetPermissions);
+		message.setBody(list);
+		
+		socket.send(message);
+		
+//		ClientSocketHandler handler = new ClientSocketHandler();
+//		cookie.setKey(userName);
+//		handler.getMessageSending().setCookie(cookie);
+//
+//		handler.getMessageSending().setClassroom_ID(classroomName);
+//		handler.getMessageSending().setType(Message.MessageType.Client_SetPermissions);
+//		handler.getMessageSending().setBody(list);
+//
+//		Message response = handler.sendReceive();
 
-		cookie.setKey(userName);
-		handler.getMessageSending().setCookie(cookie);
-
-		handler.getMessageSending().setClassroom_ID(classroomName);
-		handler.getMessageSending().setType(Message.MessageType.Client_SetPermissions);
-		handler.getMessageSending().setBody(list);
-
-		Message response = handler.sendReceive();
-
-		return (response.getCode() == 1)? true : false;
+		return (socket.receive().getCode() == 1)? true : false;
 	}
 
 	/**
@@ -440,22 +573,29 @@ public class Client {
 		if(DEBUG)
 			return true;
 
-		ClientSocketHandler handler = new ClientSocketHandler();
 
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(0, pendingMember);
 		list.add(1, "-1");
+		
+		Message message = new Message();
+		message.setUserName(userName);
+		message.setClassroom_ID(classroomName);
+		message.setType(Message.MessageType.Client_SetPermissions);
+		message.setBody(list);
+		
+		socket.send(message);
+		
+//		ClientSocketHandler handler = new ClientSocketHandler();
+//		cookie.setKey(userName);
+//		handler.getMessageSending().setCookie(cookie);
+//		handler.getMessageSending().setClassroom_ID(classroomName);
+//		handler.getMessageSending().setType(Message.MessageType.Client_SetPermissions);
+//		handler.getMessageSending().setBody(list);
+//
+//		Message response = handler.sendReceive();
 
-		cookie.setKey(userName);
-		handler.getMessageSending().setCookie(cookie);
-
-		handler.getMessageSending().setClassroom_ID(classroomName);
-		handler.getMessageSending().setType(Message.MessageType.Client_SetPermissions);
-		handler.getMessageSending().setBody(list);
-
-		Message response = handler.sendReceive();
-
-		return (response.getCode() == 1)? true : false;
+		return (socket.receive().getCode() == 1)? true : false;
 	}
 	
 	/**
@@ -471,22 +611,28 @@ public class Client {
 		if(DEBUG)
 			return true;
 
-		ClientSocketHandler handler = new ClientSocketHandler();
 
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		list.add(0, threadID);
 		list.add(1, commentID);
 
-		cookie.setKey(userName);
-		handler.getMessageSending().setCookie(cookie);
+		Message message = new Message();
+		message.setUserName(userName);
+		message.setClassroom_ID(classroomName);
+		message.setType(Message.MessageType.Client_DeleteComment);
+		message.setBody(list);
+		
+		socket.send(message);
+		
+//		ClientSocketHandler handler = new ClientSocketHandler();
+//		cookie.setKey(userName);
+//		handler.getMessageSending().setCookie(cookie);
+//		handler.getMessageSending().setClassroom_ID(classroomName);
+//		handler.getMessageSending().setType(Message.MessageType.Client_DeleteComment);
+//		handler.getMessageSending().setBody(list);
+//		Message response = handler.sendReceive();
 
-		handler.getMessageSending().setClassroom_ID(classroomName);
-		handler.getMessageSending().setType(Message.MessageType.Client_DeleteComment);
-		handler.getMessageSending().setBody(list);
-
-		Message response = handler.sendReceive();
-
-		return (response.getCode() == 1)? true : false;
+		return (socket.receive().getCode() == 1)? true : false;
 	}
 	
 	/**
@@ -501,18 +647,24 @@ public class Client {
 		if(DEBUG)
 			return true;
 
-		ClientSocketHandler handler = new ClientSocketHandler();
+		
+		Message message = new Message();
+		message.setUserName(userName);
+		message.setClassroom_ID(classroomName);
+		message.setType(Message.MessageType.Client_DeleteThread);
+		message.setBody(threadID);
+		
+		socket.send(message);
+		
+//		ClientSocketHandler handler = new ClientSocketHandler();
+//		cookie.setKey(userName);
+//		handler.getMessageSending().setCookie(cookie);
+//		handler.getMessageSending().setClassroom_ID(classroomName);
+//		handler.getMessageSending().setType(Message.MessageType.Client_DeleteThread);
+//		handler.getMessageSending().setBody(threadID);
+//		Message response = handler.sendReceive();
 
-		cookie.setKey(userName);
-		handler.getMessageSending().setCookie(cookie);
-
-		handler.getMessageSending().setClassroom_ID(classroomName);
-		handler.getMessageSending().setType(Message.MessageType.Client_DeleteThread);
-		handler.getMessageSending().setBody(threadID);
-
-		Message response = handler.sendReceive();
-
-		return (response.getCode() == 1)? true : false;
+		return (socket.receive().getCode() == 1)? true : false;
 	}
 	
 	/**
@@ -539,15 +691,4 @@ public class Client {
 		// TODO: make sure to call zeroItOut(confirmNewPassword)!
 		return false;
 	}
-	
-	// Helper methods.
-	/**
-	 * This methods zeroes out a given char array.
-	 * @param password
-	 */
-	public void zeroItOut(char[] password) {
-		for (int i = 0; i < password.length; i++)
-			password[i] = '0';
-	}
-
 }
