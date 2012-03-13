@@ -7,6 +7,7 @@
 *.gif
 *.css
 .class
+*.orig
 *.serverlist
 bin
 javadoc
