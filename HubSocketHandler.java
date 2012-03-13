@@ -62,12 +62,10 @@ public class HubSocketHandler extends Thread{
 			//Generate aes key
 			aesObject = new AES(pass,salt);
 			
-			// TODO: verify body type. Should be a date?
-			aesObject.decrypt((byte[]) msg.getBody());
-						
 			// TODO: timestamp
+			Date date = (Date)aesObject.decryptObject((byte[])msg.getBody());
 			
-			//if timestamp within 5 mins of now, send back timestamp encrypted.
+			//if timestamp within 5 mins of now, true.
 		}
 		return false;
 	}
