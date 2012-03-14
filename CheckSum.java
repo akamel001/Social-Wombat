@@ -4,8 +4,16 @@ import java.io.ObjectOutputStream;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
+/**
+ * A class with a single static 
+ * @author chris d
+ *
+ */
 public final class CheckSum {
 
+	/**
+	 * Constructor is private to disallow instantiation.
+	 */
 	private CheckSum(){}
 	
 	/**
