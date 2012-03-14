@@ -13,7 +13,7 @@ import java.util.List;
  * @author chris
  *
  */
-public class ClassData implements Serializable{
+public final class ClassData implements Serializable{
 
 	private static final long serialVersionUID = 8032346506582721809L;
 	private int id;
@@ -33,8 +33,12 @@ public class ClassData implements Serializable{
 	 * Creates a class with the passed user as instructor
 	 */
 	public ClassData(String inst){
+		
 		userList = Collections.synchronizedMap(new TreeMap<String, Integer>());
-		instructor = inst;
+		if (inst==null)
+			instructor = "default name";
+		else
+			instructor = inst;
 		id = -1;
 		name = null;
 		server = -1;
@@ -45,6 +49,8 @@ public class ClassData implements Serializable{
 	 * Sets the name of the class.
 	 */
 	public int setClassName(String n){
+		if (n==null)
+			return -1;
 		name = n;
 		return 1;
 	}
@@ -149,9 +155,11 @@ public class ClassData implements Serializable{
 	 * @param id The id of the user to be changed.
 	 * @param p The value to which the permissions will be changed. Value must be -1<=p<=2<br>
 	 * -1: removes user from list<b>
-	 * @return
+	 * @return Returns -1 if id is out of range or p is null.
 	 */
 	public int setPermission(String id, int p){
+		if (id==null)
+			return -1;
 		// if input is out of range, return -1
 		if (p<-1 || p>2)
 			return -1;
