@@ -1,6 +1,7 @@
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TreeMap;
@@ -27,15 +28,32 @@ public final class UserList implements Serializable{
 	}
 
 	/**
-	 * Shows whether a username exists in the userlist
-	 * @param id The username to be validated.
-	 * @return Returns true if the username is present in the user list, false otherwise.
+	 * Rerturne
+	 * @param user_name The username to be checked
+	 * @param pass The password to be checked. Zero out with Arrays.fill(password, (byte)0) when no longer needed.
+	 * @param encryptor
+	 * @return True if the user password combo exist.
 	 */
-	public boolean validateUser(String userId){
-		if (userId==null){
+	public boolean validateUser(String user_name, char[] pass, AES encryptor){
+		if (user_name==null){
 			return false;
 		}
-		return user_list.containsKey(userId);
+		if ( !user_list.containsKey(user_name))
+			return false;
+		
+		// (a) get user
+		User temp_guy = this.getAndDecryptUser(user_name, encryptor);
+		
+		// (b) test user's pass against passed pass
+		if (Arrays.equals(pass, temp_guy.password)){
+			// Must zero out password in temp user
+			temp_guy.zeroUser();
+			return true;
+		}
+		else{
+			temp_guy.zeroUser();
+			return false;
+		}
 	}
 
 	/**
@@ -202,6 +220,7 @@ public final class UserList implements Serializable{
 			return 1;
 		}
 		else
+			
 			return -1;
 	}
 
@@ -276,18 +295,16 @@ public final class UserList implements Serializable{
 		 * Constructor for User class.
 		 * @param u The username
 		 * @param p The password. Note that a new char[] is created to store the password. The original 
-		 * array should be zeroed out. Otherwise, it will stay in memory.
+		 * array should be zeroed out. Otherwise, it will stay in memory. Zero out with Arrays.fill(password, '0')
 		 */
 		public User(String u, char[] p){
 			if (u==null)
 				name = "void";
 			else
 				name = u;
-			password = new char[p.length];
+			password = Arrays.copyOf(p, p.length);
 			last_login_time = new Date();
 			last_login_address = null;
-			for(int i=0; i<p.length; i++)	
-				password[i]=p[i];
 		}
 		
 		/**
@@ -295,9 +312,7 @@ public final class UserList implements Serializable{
 		 */
 		public void zeroUser(){
 			if(password!=null){
-				int l = password.length;
-				for (int i=0; i<l; i++)
-					password[i] = '0';
+				Arrays.fill(password, '0');
 			}
 		}
 
@@ -310,32 +325,28 @@ public final class UserList implements Serializable{
 		}
 
 		/**
-		 * Resets a User's password.
-		 * @param p The new password. NOTE: this parameter will be zeroed out after the password is set!!!
+		 * Resets an encrypted version of the User's password.
+		 * @param p An encrypted version of the new password. NOTE: this parameter will NOT be 
+		 * zeroed out after the password is set!!! Use Arrays.fill(password, (byte)0)
 		 */
 		public void setPass(char[] p){
+			if (p==null)
+				return;
+			
 			// Zero out the old pass.
-			for(int i=0; i<password.length; i++)	
-				password[i]='0';
+			Arrays.fill(password, '0');
+			
 			// Create and fill a new pass.
-			password = new char[p.length];
-			for(int i=0; i<p.length; i++)	
-				password[i]=p[i];
-			// Zero out the passed password
-			for(int i=0; i<p.length; i++)	
-				p[i]='0';
+			password = Arrays.copyOf(p, p.length);
 		}
 
 		/**
-		 * Returns a copy of the char[] array containing the password. </br>
+		 * Returns a copy of the byte[] array containing the encrypted password. </br>
 		 * NOTE: you MUST zero out the returned array AS SOON AS you are done with it.
-		 * @return Returns a copy of the char[] containing the password.
+		 * @return Returns a copy of the char[] containing the password. Zero out with Arrays.fill(password, (byte)0)
 		 */
-		public char[] getPass(){
-			char[] out = new char[password.length];
-			for(int i=0; i<password.length; i++)	
-				out[i]=password[i];
-			return out;
+		private char[] getPass(){
+			return Arrays.copyOf(password, password.length);
 		}
 
 		/**

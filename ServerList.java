@@ -1,5 +1,6 @@
 import java.io.Serializable;
 import java.net.*;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.TreeMap;
 import java.util.Map;
@@ -115,6 +116,35 @@ public final class ServerList implements Serializable{
 	public int getLastServer(){
 		return nextId-1;
 	}
+	
+	/**
+	 * Validates a server pass combo
+	 * @param server_id The server id
+	 * @param pass The server pass. NOTE: must be zeroed after use!! Use Arrays.fill(pass, '0')
+	 * @param encryptor The AES object to decrypt the server password
+	 * @return Returns true is the server_id pass is a valid combo.
+	 */
+	public boolean validateServer(int server_id, char[] pass, AES encryptor){
+		ServerData temp_server = serverList.get(server_id);
+		try{
+			// decrypt pass
+			char[] temp_pass = (char[])encryptor.decryptObject(temp_server.password);
+			
+			// test for equality
+			if (Arrays.equals(temp_pass, pass)){
+				// zero temp pass
+				Arrays.fill(temp_pass, '0');
+				return true;
+			}
+			else{
+				// zero temp pass
+				Arrays.fill(temp_pass, '0');
+				return false;
+			}
+		}catch(ClassCastException e){
+			return false;
+		}
+	}
 
 	/**
 	 * Server class holds the info for a single server.
@@ -223,21 +253,7 @@ public final class ServerList implements Serializable{
 				p[i]=0;
 			return 1;
 		}
-		
-		/**
-		 * Returns an encrypted copy of the server's password.
-		 * @return Returns a copy of the password. NOTE: you must zero put the returned array as soon as you are finished with it!!!!!! 
-		 */
-		protected byte[] getPassword(){
-			if (password==null)
-				return null;
-			else{
-				byte[] out = new byte[password.length];
-				for(int i=0; i<password.length; i++)
-					out[i]=password[i];
-				return out;
-			}
-		}
+
 		
 	}
 }
