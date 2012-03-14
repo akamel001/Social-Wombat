@@ -76,17 +76,19 @@ public final class ClassDB implements Serializable{
 		if(post_body.length()<1 || post_body.length()>Post.maxCommentLength)
 			return -1;
 
-		// (a): decrypt the ClassRoom object
-		ClassRoom class_room = this.getAndDecryptClassRoom(class_name, encryptor);
-		if (class_room==null)
-			return -1;
-
-		// (b) add post to ClassRoom		
-		if (class_room.addNewPost(post_title, post_body)==-1) 
-			return -1;
-
-		// (c) reencrypt the ClassRoom object, and reinsert the cipher into the classRoomList
-		return this.encryptAndAddClassRoom(class_room, encryptor);
+		synchronized(classRoomList){
+			// (a): decrypt the ClassRoom object
+			ClassRoom class_room = this.getAndDecryptClassRoom(class_name, encryptor);
+			if (class_room==null)
+				return -1;
+	
+			// (b) add post to ClassRoom		
+			if (class_room.addNewPost(post_title, post_body)==-1) 
+				return -1;
+	
+			// (c) reencrypt the ClassRoom object, and reinsert the cipher into the classRoomList
+			return this.encryptAndAddClassRoom(class_room, encryptor);
+		}
 	}
 
 	/**
@@ -102,18 +104,20 @@ public final class ClassDB implements Serializable{
 		if (class_name==null || encryptor==null)
 			return -1;
 
-		// (a): decrypt the ClassRoom object,
-		ClassRoom class_room = this.getAndDecryptClassRoom(class_name, encryptor);
-		if (class_room==null)
-			return -1;
-
-		// (b): remove the post from the ClassRoom object,
-		if (class_room.removePost(post_id)==-1)
-			return -1;
-
-		//  (c) reencrypt the ClassRoom object, and reinsert the ClassRoom 
-		//      cipher into the classRoomList (replacing the old ClassRoom)
-		return this.encryptAndAddClassRoom(class_room, encryptor);
+		synchronized(classRoomList){
+			// (a): decrypt the ClassRoom object,
+			ClassRoom class_room = this.getAndDecryptClassRoom(class_name, encryptor);
+			if (class_room==null)
+				return -1;
+	
+			// (b): remove the post from the ClassRoom object,
+			if (class_room.removePost(post_id)==-1)
+				return -1;
+	
+			//  (c) reencrypt the ClassRoom object, and reinsert the ClassRoom 
+			//      cipher into the classRoomList (replacing the old ClassRoom)
+			return this.encryptAndAddClassRoom(class_room, encryptor);
+		}
 	}
 
 	/**
@@ -129,18 +133,20 @@ public final class ClassDB implements Serializable{
 		if (class_name==null || comment==null || encryptor==null)
 			return -1;
 
-		// (a): decrypt the ClassRoom object,
-		ClassRoom class_room = this.getAndDecryptClassRoom(class_name, encryptor);
-		if (class_room==null)
-			return -1;
-		
-		// (b) add a comment to the ClassRoom object
-		if (class_room.addComment(post_id, comment)==-1)
-			return -1;
-
-		//  (c) reencrypt the ClassRoom object, and reinsert the ClassRoom 
-		//      cipher into the classRoomList (replacing the old ClassRoom)
-		return this.encryptAndAddClassRoom(class_room, encryptor);
+		synchronized(classRoomList){
+			// (a): decrypt the ClassRoom object,
+			ClassRoom class_room = this.getAndDecryptClassRoom(class_name, encryptor);
+			if (class_room==null)
+				return -1;
+			
+			// (b) add a comment to the ClassRoom object
+			if (class_room.addComment(post_id, comment)==-1)
+				return -1;
+	
+			//  (c) reencrypt the ClassRoom object, and reinsert the ClassRoom 
+			//      cipher into the classRoomList (replacing the old ClassRoom)
+			return this.encryptAndAddClassRoom(class_room, encryptor);
+		}
 	}
 
 	/**
@@ -155,18 +161,20 @@ public final class ClassDB implements Serializable{
 		if (class_name==null || encryptor==null)
 			return -1;
 		
-		// (a): decrypt the ClassRoom object,
-		ClassRoom class_room = this.getAndDecryptClassRoom(class_name, encryptor);
-		if (class_room==null)
-			return -1;
-		
-		// (b) Remove comment from ClassRoom 
-		if( class_room.removeComment(post_id, comment_id) == -1)
-			return -1;
-		
-		//  (c) reencrypt the ClassRoom object, and reinsert the ClassRoom 
-		//      cipher into the classRoomList (replacing the old ClassRoom)
-		return this.encryptAndAddClassRoom(class_room, encryptor);
+		synchronized(classRoomList){
+			// (a): decrypt the ClassRoom object,
+			ClassRoom class_room = this.getAndDecryptClassRoom(class_name, encryptor);
+			if (class_room==null)
+				return -1;
+			
+			// (b) Remove comment from ClassRoom 
+			if( class_room.removeComment(post_id, comment_id) == -1)
+				return -1;
+			
+			//  (c) reencrypt the ClassRoom object, and reinsert the ClassRoom 
+			//      cipher into the classRoomList (replacing the old ClassRoom)
+			return this.encryptAndAddClassRoom(class_room, encryptor);
+		}
 	}
 
 	/**

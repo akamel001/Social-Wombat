@@ -32,31 +32,10 @@ public class ClassList implements Serializable{
 	 * will not be added and -1 will be returned.
 	 * @param c
 	 * @param encryptor An AES object that will be used by the function to encrypt the ClassData object
-	 * @return
+	 * @return 1 on success, -1 on failure
 	 */
-	protected int addClass(ClassData c, AES encryptor){
-		if (c==null || encryptor==null)
-			return -1;
-		int out = -1;
-		synchronized(classList){
-			if (classList.containsKey(c.getClassName()))
-				out = -1;
-			else{
-				byte[] cipher;
-				try{
-					cipher = encryptor.encrypt((Object)c);
-					if(cipher!=null){
-						classList.put(c.getClassName(), cipher);
-						out = 1;
-					}
-					else 
-						out = -1;
-				}catch(ClassCastException e){ 
-					out = -1;
-				}
-			}
-		}
-		return out;
+	protected int addClass(ClassData class_data, AES encryptor){
+		return encryptAndAddClass(class_data, encryptor);
 	}
 
 	/**
@@ -78,19 +57,17 @@ public class ClassList implements Serializable{
 	 * @param decryptor An AES object that will be used by the function to decrypt the ClassData object
 	 * @return User permissions or -1 if user has no permissions for that classroom
 	 */
-	protected int getUserPermissions(String user, String c, AES decryptor){
-		if (user==null || c==null || decryptor==null)
+	protected int getUserPermissions(String user_name, String class_name, AES encryptor){
+		if (user_name==null || class_name==null || encryptor==null)
 			return -1;
-		byte[] cipher = classList.get(c);
-		ClassData class_out;
-		try{
-			class_out = (ClassData)decryptor.decryptObject(cipher);
-		}catch(ClassCastException e){
-			return -1;
-		}
+
+		// Get class
+		ClassData class_out = getAndDecryptClass(class_name, encryptor);
 		if(class_out==null)
 			return -1;
-		Integer out = class_out.getPermissions(user);
+
+		// Get permissions
+		Integer out = class_out.getPermissions(user_name);
 		if (out==null)
 			return -1;
 		else
@@ -110,47 +87,26 @@ public class ClassList implements Serializable{
 	 * @return Returns 1 on success, -1 otherwise.
 	 */
 	protected int setUserPermissions(String user, String class_name, int per, AES encryptor){
+		// sanity checks
 		if(user==null || class_name==null || encryptor==null)
 			return -1;
 		if (per<-1 || per>2)
 			return -1;
-		else{
+		
+		synchronized(classList){
 			
-			/*
-			 * In order to change a user's permissions, you must 
-			 * (a) decrypt the class object, 
-			 * (b) do your work on it,  
-			 * (c) reencrypt it, and then 
-			 * (d) reinsert the cipher into the class list (replacing the old class).
-			 */
-			
-			// (a): decrypt the class object
-			byte[] cipher = classList.get(class_name);
-			ClassData temp_class;
-			try{
-				temp_class = (ClassData)encryptor.decryptObject(cipher);
-			}catch(ClassCastException e){ 
-				return -1; 
-			}
+			// (a): get class
+			ClassData temp_class = this.getAndDecryptClass(class_name, encryptor);
 			if (temp_class==null)
 				return -1;
-			
+
 			// (b): set user permissions
-			else{
-				int out = temp_class.setPermission(user, per);
-				
-				// (c): reencrypt class
-				try{
-					cipher = encryptor.encrypt((Object)temp_class);
-				}catch(ClassCastException e){ 
-					return -1; 
-				}
-				
-				// (d): reinsert class into class list
-				classList.put(temp_class.getClassName(), cipher);
-				return out;
-			}
-		}
+			if (temp_class.setPermission(user, per)==-1)
+				return -1;;
+
+			// (c): reencrypt and re-add class
+			return this.encryptAndAddClass(temp_class, encryptor);
+	}
 	}
 
 	/**
@@ -159,19 +115,16 @@ public class ClassList implements Serializable{
 	 * @param decryptor AES object used to decrypt the ClassData object before getting the instructor's name
 	 * @return Returns the value of the instructor field from the ClassData object with the given name.
 	 */
-	public String getInstructor(String className, AES decryptor){
-		if (className==null || decryptor==null)
+	public String getInstructor(String class_name, AES encryptor){
+		if (class_name==null || encryptor==null)
 			return null;
-		ClassData temp_class;
-		byte[] cipher = classList.get(className);
-		try{
-			temp_class = (ClassData)decryptor.decryptObject(cipher);
-		}catch(ClassCastException e){
-			return null;
-		}
+		
+		// Get class
+		ClassData temp_class = this.getAndDecryptClass(class_name, encryptor);
 		if (temp_class==null)
 			return null;
 		else 
+			//return instructor
 			return temp_class.getInstructor();			
 	}
 
@@ -183,16 +136,12 @@ public class ClassList implements Serializable{
 	 * The Integers represent their permissions with respect to the classroom. A value of ) indicates
 	 *  pending enrollment, 1 indicates a student, and 2 indicates a TA. 
 	 */
-	protected Map<String, Integer> getClassAll(String className, AES encryptor){
-		if (className == null || encryptor==null)
+	protected Map<String, Integer> getClassAll(String class_name, AES encryptor){
+		if (class_name == null || encryptor==null)
 			return null;
-		ClassData temp_class;
-		byte[] cipher = classList.get(className);
-		try{
-			temp_class = (ClassData)encryptor.decryptObject(cipher);
-		}catch(ClassCastException e){
-			return null;
-		}
+		
+		// Get class
+		ClassData temp_class = this.getAndDecryptClass(class_name, encryptor);
 		if (temp_class==null)
 			return null;	
 		else
@@ -207,16 +156,12 @@ public class ClassList implements Serializable{
 	 * The Integers represent their permissions with respect to the classroom. A value of 1 indicates a 
 	 * student, 2 indicates a TA, 3 indicates an instructor.
 	 */
-	protected Map<String, Integer> getClassEnrolled(String className, AES encryptor){
-		if (className == null || encryptor==null)
+	protected Map<String, Integer> getClassEnrolled(String class_name, AES encryptor){
+		if (class_name == null || encryptor==null)
 			return null;
-		ClassData temp_class;
-		byte[] cipher = classList.get(className);
-		try{
-			temp_class = (ClassData)encryptor.decryptObject(cipher);
-		}catch(ClassCastException e){
-			return null;
-		}
+		
+		// Get class
+		ClassData temp_class = this.getAndDecryptClass(class_name, encryptor);
 		if (temp_class==null)
 			return null;	
 		else
@@ -230,16 +175,12 @@ public class ClassList implements Serializable{
 	 * @return Returns a list of strings representing the usernames of every user 
 	 * in the class with permissions==0.
 	 */ 
-	protected List<String> getClassPending(String className, AES encryptor){
-		if (className == null || encryptor==null)
+	protected List<String> getClassPending(String class_name, AES encryptor){
+		if (class_name == null || encryptor==null)
 			return null;
-		ClassData temp_class;
-		byte[] cipher = classList.get(className);
-		try{
-			temp_class = (ClassData)encryptor.decryptObject(cipher);
-		}catch(ClassCastException e){
-			return null;
-		}
+		
+		// Get class
+		ClassData temp_class = this.getAndDecryptClass(class_name, encryptor);
 		if (temp_class==null)
 			return null;	
 		else
@@ -261,18 +202,12 @@ public class ClassList implements Serializable{
 		synchronized(classList) {  
 			Iterator<String> i = s.iterator(); 
 			while (i.hasNext()){
-				String className = i.next();
+				String class_name = i.next();
 				/*
 				 * You must decrypt each class as you iterate through the list.
 				 * Since the class is not changed, there is no need to reëncrypt.
 				 */
-				ClassData temp_class;
-				byte[] cipher = classList.get(className);
-				try{
-					temp_class = (ClassData)encryptor.decryptObject(cipher);
-				}catch(ClassCastException e){
-					return null;
-				}
+				ClassData temp_class = this.getAndDecryptClass(class_name, encryptor);
 				if (temp_class==null){
 					// noöp
 				}
@@ -301,15 +236,13 @@ public class ClassList implements Serializable{
 	 * @param encryptor An AES object used to decrypt the ClassRoom object
 	 * @return Returns the server number on success, -1 on 
 	 */
-	public int getClassServer(String className, AES encryptor){
-		ClassData temp_class;
-		byte[] cipher = classList.get(className);
-		try{
-			temp_class = (ClassData)encryptor.decryptObject(cipher);
-		}catch(ClassCastException e){
+	public int getClassServer(String class_name, AES encryptor){
+		if(class_name==null || encryptor==null)
 			return -1;
-		}
-		if(temp_class==null)
+
+		// Get class
+		ClassData temp_class = this.getAndDecryptClass(class_name, encryptor);
+		if (temp_class==null)
 			return -1;
 		else
 			return temp_class.getClassServer();
@@ -321,15 +254,13 @@ public class ClassList implements Serializable{
 	 * @param encryptor The AES object used to decrypt the classromm object
 	 * @return Returns port for the class, -1 if class is not present in class list
 	 */
-	public int getClassPort(String className, AES encryptor){
-		ClassData temp_class;
-		byte[] cipher = classList.get(className);
-		try{
-			temp_class = (ClassData)encryptor.decryptObject(cipher);
-		}catch(ClassCastException e){
+	public int getClassPort(String class_name, AES encryptor){
+		if(class_name==null || encryptor==null)
 			return -1;
-		}
-		if(temp_class==null)
+
+		// Get class
+		ClassData temp_class = this.getAndDecryptClass(class_name, encryptor);
+		if (temp_class==null)
 			return -1;
 		else
 			return temp_class.getClassPort();
@@ -346,49 +277,83 @@ public class ClassList implements Serializable{
 		synchronized(classList) {  
 			Iterator<String> i = s.iterator(); 
 			while (i.hasNext()){
-				String className = i.next();
-				
-				/*
-				 * In order to change a class, you must 
-				 * (a) deecrypt it, 
-				 * (b) do your work on it,
-				 * (c) reencrypt it, and then 
-				 * (d) reinsert the cipher into the class
-				 */
-				
-				// (a): Decrypt class
-				ClassData current_class;
-				byte[] cipher = classList.get(className);
-				try{
-					current_class = (ClassData)encryptor.decryptObject(cipher);
-				}catch(ClassCastException e){
-					current_class=null;
-				}
-				// (b): do your business
+				String class_name = i.next();
+
+				// (a): Get class
+				ClassData current_class = this.getAndDecryptClass(class_name, encryptor);
 				if (current_class==null){
 					//noop
 				}
-				// if the user is the instructor, delete the classroom and
-				// add the classroom to the list of classes to be deleted
+				
+				// (b): if the user is the instructor, delete the classroom and
+				//		add the classroom to the list of classes to be deleted
 				else if (current_class.getInstructor().equals(userName)){
-					classList.remove(className);
-					classesToBeDeleted.add(className);
+					classList.remove(class_name);
+					classesToBeDeleted.add(class_name);
 				}
+				
 				// if the user is not the instructor, call removeUser on the class
 				else{
 					current_class.removeUser(userName);
 				}
-				// (c): reencrypt class
-				try{
-					cipher = encryptor.encrypt((Object)current_class);
-				}catch(ClassCastException e){ 
-					//TODO: how to handle? 
-				}
-				// (d): put class back in class list
-				if(cipher!=null)
-					classList.put(current_class.getClassName(), cipher);
+				// (c): Put class back into list
+				this.encryptAndAddClass(current_class, encryptor);
 			}
 		}
 		return classesToBeDeleted;
+	}
+
+	/**
+	 * Encrypts and adds a class to the class list
+	 * @param c
+	 * @param encryptor
+	 * @return 1 on success, -1 on failure
+	 */
+	private int encryptAndAddClass(ClassData c, AES encryptor){
+		// sanity check
+		if (c==null || encryptor==null)
+			return -1;
+		
+		synchronized(classList){
+			if (classList.containsKey(c.getClassName()))
+				return -1;
+			else{
+				// (a) encrypt + add class
+				try{
+					byte[] cipher = encryptor.encrypt((Object)c);
+					if(cipher!=null){
+						classList.put(c.getClassName(), cipher);
+						return 1;
+					}
+					else 
+						return -1;
+				}catch(ClassCastException e){ 
+					return -1;
+				}
+			}
+		}	
+	}
+
+	/**
+	 * 
+	 * @param class_name
+	 * @param encryptor
+	 * @return The ClassData on success, null on failure
+	 */
+	private ClassData getAndDecryptClass(String class_name, AES encryptor){
+		byte[] cipher = classList.get(class_name);
+		if (cipher==null)
+			return null;
+
+		ClassData class_out;
+		try{
+			class_out = (ClassData)encryptor.decryptObject(cipher);
+			if (class_out==null)
+				return null;
+			else
+				return class_out;
+		}catch(ClassCastException e){
+			return null;
+		}
 	}
 }

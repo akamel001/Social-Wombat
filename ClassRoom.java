@@ -10,7 +10,7 @@ import java.util.Iterator;
  * @author chris d
  *
  */
-public class ClassRoom implements Serializable{
+public final class ClassRoom implements Serializable{
 
 	static final long serialVersionUID = 2158685748414139162L;
 	private static final int maxNameLength = 30;
