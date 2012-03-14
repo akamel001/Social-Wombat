@@ -117,9 +117,11 @@ public class ClassList implements Serializable{
 		else{
 			
 			/*
-			 * In order to change a user's permissions, you must (a) decrypt the class object, 
-			 * (b) do your work on it,  (c) reencrypt it, and then (d) reinsert the cipher into the 
-			 * class list (replacing the old class).
+			 * In order to change a user's permissions, you must 
+			 * (a) decrypt the class object, 
+			 * (b) do your work on it,  
+			 * (c) reencrypt it, and then 
+			 * (d) reinsert the cipher into the class list (replacing the old class).
 			 */
 			
 			// (a): decrypt the class object
@@ -347,8 +349,11 @@ public class ClassList implements Serializable{
 				String className = i.next();
 				
 				/*
-				 * In order to change a class, you must (a)deecrypt it, (b) do your work on it,
-				 * (c) reencrypt it, and then (d) reinsert the cipher into the class
+				 * In order to change a class, you must 
+				 * (a) deecrypt it, 
+				 * (b) do your work on it,
+				 * (c) reencrypt it, and then 
+				 * (d) reinsert the cipher into the class
 				 */
 				
 				// (a): Decrypt class
