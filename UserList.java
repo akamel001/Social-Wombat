@@ -30,7 +30,7 @@ public final class UserList implements Serializable{
 	/**
 	 * Rerturne
 	 * @param user_name The username to be checked
-	 * @param pass The password to be checked. Zero out with Arrays.fill(password, (byte)0) when no longer needed.
+	 * @param pass The password to be checked. Zero out with Arrays.fill(pass, '0') when no longer needed.
 	 * @param encryptor
 	 * @return True if the user password combo exist.
 	 */
@@ -54,6 +54,18 @@ public final class UserList implements Serializable{
 			temp_guy.zeroUser();
 			return false;
 		}
+	}
+	
+	/**
+	 * Returns the user's password
+	 * @param user_name The user's name
+	 * @param encryptor The hub encryption
+	 * @return A char[] with the user's pass. NOTE: MUST BE ZEROED> Use Arrays.fill(pass, '0')
+	 */
+	public char[] getUserPass(String user_name, AES encryptor){
+		// (a) get user
+		User temp_guy = this.getAndDecryptUser(user_name, encryptor);
+		return temp_guy.password;
 	}
 
 	/**

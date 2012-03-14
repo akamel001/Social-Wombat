@@ -147,6 +147,20 @@ public final class ServerList implements Serializable{
 	}
 
 	/**
+	 * Gets the server's password
+	 * @param server_id
+	 * @param encryptor
+	 * @return A char[] containing the server's password. NOTE: MUST BE ZEROED. Use Arrays.fill(pass, '0').
+	 */
+	public char[] getServerPass(int server_id, AES encryptor){
+		ServerData temp_server = serverList.get(server_id);
+		try{
+			return (char[])encryptor.decryptObject(temp_server.password);
+		}catch(ClassCastException e){
+			return null;
+		}
+	}
+	/**
 	 * Server class holds the info for a single server.
 	 * @author chris
 	 * The only part of this class that is encrypted is the password.
