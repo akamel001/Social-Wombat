@@ -74,9 +74,12 @@ public class AES {
 	/**
 	 * Encypts a message and returns the encrypted version of the message.
 	 * @param message
-	 * @return
+	 * @return Returns a byte array containing the encrypted String. Returns null on failure or 
+	 * if passed a null object. 
 	 */
 	public byte[] encrypt(String message){
+		if (message==null)
+			return null;
         try {
 			byte[] ciphertext = ecipher.doFinal(message.getBytes("UTF-8"));
 			return ciphertext;
@@ -90,8 +93,15 @@ public class AES {
         return null;
 	}
 	
-	
+	/**
+	 * 
+	 * @param o
+	 * @return Returns a byte array containing the encrypted Object. Returns null on failure or 
+	 * if passed a null object.
+	 */
 	public byte[] encrypt(Object o){
+		if (o==null)
+			return null;
         try {
 			byte[] ciphertext = ecipher.doFinal(toByteArray(o));
 			return ciphertext;
@@ -139,6 +149,8 @@ public class AES {
 	}
 	
 	public Object decryptObject(byte[] o){
+		if (o==null)
+			return null;
         try {
 			Object obj = toObject(dcipher.doFinal(o));		
         	//String plaintext = new String(dcipher.doFinal(o), "UTF-8");			
@@ -152,9 +164,11 @@ public class AES {
 	/**
 	 * Decrypts an encrypted message and returns the decrypted version of the message.
 	 * @param message
-	 * @return
+	 * @return Returns the decrypted String. Returns null on error or if passed byte array equals null.
 	 */
 	public String decrypt(byte[] message){
+		if (message==null)
+			return null;
         try {
 			String plaintext = new String(dcipher.doFinal(message), "UTF-8");			
 			return plaintext;
@@ -162,7 +176,6 @@ public class AES {
         } catch (IllegalBlockSizeException e) {
         } catch (UnsupportedEncodingException e) {
         }
-		
         return null;
 	}
 }
