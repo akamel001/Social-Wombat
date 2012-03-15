@@ -8,14 +8,14 @@ public class Message implements Serializable{
 	private InetAddress recipient;
 	private Object body;
 	private MessageType type;
-	//private Cookie cookie;
+	private long checksum;
+
 	private byte[] salt;
+	private byte[] iv;
+	
 	private String userName;
 	private int code;
 	private String classroom_id;
-
-
-
 
 	public enum MessageType {
 	    // Client -> Hub only
@@ -27,7 +27,8 @@ public class Message implements Serializable{
 	    Client_RequestEnrollment,
 	    Client_ListClassroomRequests,
 	    Client_CloseSocket,
-
+	    Client_ChangePassword,
+	    
 	    // Client -> Hub -> Server
 	    Client_CreateClassroom,
 	    /*
@@ -81,7 +82,14 @@ public class Message implements Serializable{
 	public InetAddress getRecipient() {
 		return recipient;
 	}
+	
+	public byte[] getIv() {
+		return iv;
+	}
 
+	public void setIv(byte[] iv) {
+		this.iv = iv;
+	}
 	public void setRecipient(InetAddress recipient) {
 		this.recipient = recipient;
 	}
@@ -101,15 +109,6 @@ public class Message implements Serializable{
 	public void setType(MessageType type) {
 		this.type = type;
 	}
-
-//	public Cookie getCookie() {
-//		return cookie;
-//		
-//	}
-//
-//	public void setCookie(Cookie cookie) {
-//		this.cookie = cookie;
-//	}
 
 	public int getCode() {
 		return code;
@@ -132,5 +131,12 @@ public class Message implements Serializable{
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+	public long getChecksum() {
+		return checksum;
+	}
+
+	public void setChecksum(long checksum) {
+		this.checksum = checksum;
 	}
 }

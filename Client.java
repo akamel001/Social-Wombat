@@ -3,10 +3,12 @@ import java.net.UnknownHostException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 
 //global add socket 
@@ -15,14 +17,14 @@ import java.util.Map;
 //date object formated in for timestamp
 // TODO use an overloaded send in socketpackage to send byte array 
 
+//TODO every message being sent add checksum in it... only of body
 public class Client {
 
 	private static final boolean DEBUG = false;
-	//private Cookie cookie = new Cookie("");
 	private static final String hub_addr = "127.0.0.1";
 	private static final int HUB_PORT = 4444;
 	private SocketPackage socket;
-	private byte[] salt;
+	private AES aes = null;
 	/**
 	 *  
 	 * This method is used in the login page to verify a user name.
@@ -35,12 +37,7 @@ public class Client {
 	
 	public Client(){
 		InetAddress hub;
-		try {
-			//Generating a random salt value
-			salt = new byte[8];
-		    SecureRandom random = new SecureRandom();
-			random.nextBytes(salt);
-			
+		try {			
 			//setting hub address and connecting
 			hub = InetAddress.getByName(hub_addr);
 			socket = new SocketPackage(hub, HUB_PORT);
@@ -54,19 +51,27 @@ public class Client {
 		
 		if(DEBUG)
 			return true; 
-		AES aes = new AES(password, salt);
-
+		
+		aes = new AES(password);
+		Calendar c = Calendar.getInstance();
+		SecureRandom r = new SecureRandom();
+		
+		Long nonce = r.nextLong();
+		
 		//Zeros out password
 		Arrays.fill(password, '0');
 
 		Message message = new Message();
 		message.setType(Message.MessageType.Client_LogIn);
-		message.setSalt(salt);
+		message.setSalt(aes.getSalt());
+		message.setIv(aes.getIv());
 		message.setUserName(uName);
 
+		ArrayList<Long> list = new ArrayList<Long>();
+		list.add(0, c.getTimeInMillis());
+		list.add(1, nonce);
 		
-		Date date = new Date();
-		message.setBody(aes.encrypt(date));
+		message.setBody(aes.encrypt(list));
 		socket.send(message);
 		
 		//ClientSocketHandler handler = new ClientSocketHandler();
@@ -76,7 +81,7 @@ public class Client {
 		//handler.getMessageSending().setType(Message.MessageType.Client_LogIn);
 		Message response = socket.receive();
 		
-		//TODO check if date returned is within 5 min
+		//TODO check if date returned is within 5 min & nonce+1
 		return (response.getCode() == 1)? true : false;	
 	}
 	
@@ -686,6 +691,15 @@ public class Client {
 	public boolean changePassword(char[] oldPassword, char[] newPassword,
 			char[] confirmNewPassword, String userNameTemp, String currentUserName) {
 		// TODO Auto-generated method stub
+		
+		//message type is Client_ChangePassword
+		//list of of all perams, oldpass, newpass, confirmNewPassword, userName, CurrentUser
+		//message set username
+		//message body set (list)
+		//encript message 
+		//set checksum over body in message
+		//send message 
+		
 		// TODO: make sure to call zeroItOut(oldPassword)!
 		// TODO: make sure to call zeroItOut(newPassword)!
 		// TODO: make sure to call zeroItOut(confirmNewPassword)!
