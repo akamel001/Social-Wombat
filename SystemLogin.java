@@ -11,11 +11,11 @@ public class SystemLogin {
 	
 	private static byte[]  initialization_vector; // TODO: set this
 	
-	public static boolean handleSystemLogin(char[] password) {
+	public static AES handleSystemLogin(char[] password) {
 		if (validateSystemPassword(password)){
 			
 		}
-		return false;
+		return null;
 	}
 	
 	public static boolean changeSystemPassword(char[] oldPassword, char[] newPassword, char[] confirmNewPassword) {

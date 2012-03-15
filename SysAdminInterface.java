@@ -2,7 +2,7 @@ import java.io.Console;
 import java.util.Arrays;
 import java.util.List;
 
-// TODO: add/delete server; add/delete users
+// TODO: add/delete server;
 
 /**
  * This is the system administrator interface for Social Wombat.
@@ -12,20 +12,28 @@ public class SysAdminInterface {
 	
 	static Console console;
 	static Hub hub;
+	static AES aes;
 	private static final String sLOG_IN = 					UserInterfaceHelper.addFormattingAlignCenter("SYSTEM LOG IN");
 	private static final String sHOME_PAGE = 				UserInterfaceHelper.addFormattingAlignCenter("SYSTEM HOME"); 
 	private static final String sSYSTEM_USER_LIST_PAGE = 	UserInterfaceHelper.addFormattingAlignCenter("SYSTEM USER LIST");
 	private static final String sSYSTEM_REGISTRATION_PAGE = UserInterfaceHelper.addFormattingAlignCenter("SYSTEM REGISTRATION");
 	private static final String sSYSTEM_CHANGE_PASSWORD_PAGE = 	UserInterfaceHelper.addFormattingAlignCenter("SYSTEM PASSWORD CHANGE");
+	private static final String sADD_SERVER_PAGE = 			UserInterfaceHelper.addFormattingAlignCenter("ADD SERVER");
 	
 	private static final String sSYSTEM_HOME_PAGE_OPTIONS =	UserInterfaceHelper.addFormattingAlignLeft("1. View users enrolled in the system.") +
 															UserInterfaceHelper.addFormattingAlignLeft("2. Register a user in the system.") +
-															UserInterfaceHelper.addFormattingAlignLeft("3. Change system password.") +
-															UserInterfaceHelper.addFormattingAlignLeft("4. Log out.");
+															UserInterfaceHelper.addFormattingAlignLeft("3. Add a server.") +
+															UserInterfaceHelper.addFormattingAlignLeft("4. Start the hub.") +
+															UserInterfaceHelper.addFormattingAlignLeft("5. Shut down the hub.") +
+															UserInterfaceHelper.addFormattingAlignLeft("6. Change system password.") +
+															UserInterfaceHelper.addFormattingAlignLeft("7. Log out.");
 	
 	private static final String sSYSTEM_USER_LIST_OPTIONS = UserInterfaceHelper.addFormattingAlignLeft("1. Go back to system home.");
 	
 	private static final String sREGISTRATION_INSTRUCTIONS = UserInterfaceHelper.addFormattingAlignLeft("Specify a username and password when prompted to add a user to the system.");
+	
+	private static final String sADD_SERVER_INSTRUCTIONS = 	UserInterfaceHelper.addFormattingAlignLeft("Specify the name of the server you would like to add when prompted to by the system.");
+	
 	private static final String sCHANGE_PASSWORD_INSTRUCTIONS = UserInterfaceHelper.addFormattingAlignLeft("Specify your username and old/new passwords when prompted to by the system.");
 	
 	private static final String cNO_USERS = 				UserInterfaceHelper.addFormattingAlignLeft("There are no users enrolled in the system.");
@@ -37,35 +45,43 @@ public class SysAdminInterface {
 	private static final String eLOG_IN_ERROR = 			UserInterfaceHelper.addFormattingAlignLeft("An error occured when logging in to the system.");
 	private static final String eLOG_OUT_ERROR = 			UserInterfaceHelper.addFormattingAlignLeft("An error occured when attempting to log out.");
 	private static final String ePASSWORD_CHANGE_ERROR =	UserInterfaceHelper.addFormattingAlignLeft("An error occured when changing your password.");
+	private static final String eSTART_HUB_ERROR =			UserInterfaceHelper.addFormattingAlignLeft("An error occured when starting up the hub.");
+	private static final String eSHUT_DOWN_HUB_ERROR = 		UserInterfaceHelper.addFormattingAlignLeft("An error occured when shutting down the hub.");
 	
 	private static final String mREGISTRATION_SUCCESS = 	UserInterfaceHelper.addFormattingAlignLeft("The user has been successfully added to the sytem.");
 	private static final String mLOG_IN_SUCCESS = 			UserInterfaceHelper.addFormattingAlignLeft("You have successfully logged in to system.");
 	private static final String mLOG_OUT_SUCCESS = 			UserInterfaceHelper.addFormattingAlignLeft("You have successfully logged out.");
 	private static final String mPASSWORD_CHANGE_SUCCESS = 	UserInterfaceHelper.addFormattingAlignLeft("You have successfully changed your password.");
-	
+	private static final String mSTART_HUB_SUCCESS =		UserInterfaceHelper.addFormattingAlignLeft("You have successfully start up the hub.");
+	private static final String mSHUT_DOWN_HUB_SUCCESS = 	UserInterfaceHelper.addFormattingAlignLeft("You have successfully shut down the hub.");
 	
 	private static void systemLoginPage(String messages) {
 		displayPage(sLOG_IN, messages, null, null, null);	
 		char[] password = console.readPassword("Password? ");
 		
-		if (handleSystemLogin(password)){
+		aes = handleSystemLogin(password);
+		
+		if (aes != null){
 			systemHomePage(mLOG_IN_SUCCESS);
 		} else {
 			systemLoginPage(eLOG_IN_ERROR);
 		} 
 	}
-
+	
 	/**
 	 * This is the home page. It displays four options:
 	 * 1. View users enrolled in the system.
 	 * 2. Register a user in the system.
-	 * 3. Change system password.
-	 * 4. Log out.
+	 * 3. Add a server.
+	 * 4. Start the hub.
+	 * 5. Shut down the hub.
+	 * 6. Change system password.
+	 * 7. Log out.
 	 * @param messages
 	 */
 	private static void systemHomePage(String messages) {	
 		displayPage(sHOME_PAGE, messages, null, null, sSYSTEM_HOME_PAGE_OPTIONS);
-		int selection = getValidSelectionFromUser(4);
+		int selection = getValidSelectionFromUser(7);
 		
 		switch (selection) {
 		// View users enrolled in the system.
@@ -76,12 +92,27 @@ public class SysAdminInterface {
 	    case 2: 
 	    	systemRegistrationPage(null);
 	        break;
+	    // Add a server.
+	    case 3: 
+	    	addServerPage(null);
+	        break;
+	     // Start the hub.
+	    case 4: 
+	        hub = new Hub(aes); // TODO: error stuffs
+	        hub.start();
+	    	systemHomePage(mSTART_HUB_SUCCESS);
+	        break;
+	     // Shut down the hub.
+	    case 5:
+	    	hub.shutDown();// TODO: error stuffs
+	    	systemHomePage(mSHUT_DOWN_HUB_SUCCESS);
+	        break;
 	    // Change system password.
-	    case 3:
+	    case 6:
 	    	systemChangePasswordPage(null);
 	        break;
 	    // Log out.
-	    case 4:
+	    case 7:
 	    	if (handleSystemLogout()){
 				systemLoginPage(mLOG_OUT_SUCCESS);
 			} else {
@@ -93,7 +124,7 @@ public class SysAdminInterface {
 	        break;
 		}		
 	}
-	
+
 	private static void systemUserListPage(String messages) {
 		List<String> userList = getSystemUserList();
 		String content = cNO_USERS;		
@@ -126,12 +157,19 @@ public class SysAdminInterface {
 		} 
 	}
 	
+	private static void addServerPage(String messages) {
+		displayPage(sADD_SERVER_PAGE, messages, null, null, sADD_SERVER_INSTRUCTIONS);	
+		String serverName = console.readLine("Server Name? ");
+		hub.addServer(serverName);
+		systemHomePage(mADD_SERVER_SUCCESS);		
+	}
+	
 	private static void systemChangePasswordPage(String messages) {
 		displayPage(sSYSTEM_CHANGE_PASSWORD_PAGE, messages, null, null, sCHANGE_PASSWORD_INSTRUCTIONS);	
 		char[] oldPassword = console.readPassword("Old Password? ");
-    	char[] newPassword = console.readPassword("New Password? ");
-    	
+    	char[] newPassword = console.readPassword("New Password? ");    	
     	char[] confirmNewPassword = console.readPassword("Confirm New Password? ");
+    	
     	if (changeSystemPassword(oldPassword, newPassword, confirmNewPassword)){
 			systemHomePage(mPASSWORD_CHANGE_SUCCESS);
 		} else {
@@ -148,13 +186,14 @@ public class SysAdminInterface {
 	 * @param password
 	 * @return
 	 */
-	private static boolean handleSystemLogin(char[] password) {
-		if (SystemLogin.handleSystemLogin(password)) {
+	private static AES handleSystemLogin(char[] password) {
+		AES aes = SystemLogin.handleSystemLogin(password);
+		if (aes != null) {
 			Arrays.fill(password, '0');
-			return true;
+			return aes;
 		}
 		Arrays.fill(password, '0');
-		return false;
+		return null;
 	}
 
 	/**
@@ -197,9 +236,7 @@ public class SysAdminInterface {
 	 * @return the list of enrolled system users.
 	 */
 	private static List<String> getSystemUserList() {
-		// TODO Auto-generated method stub should be done on Chris' side
-		List<String> list = Arrays.asList("Julia", "Yilok", "Chris");
-		return list;
+		return hub.getUsers();
 	}
 
 	////////////////////////////////////////////////
@@ -287,11 +324,6 @@ public class SysAdminInterface {
             System.err.println("No console.");
             System.exit(1);
         }
-        
-        System.out.println("Starting up the hub for Studious Wombat...");
-        hub = new Hub();
-        hub.start();
-        System.out.println("The hub has been started up.");
 		
 		System.out.println("This is the sysadmin interface for Studious Wombat.");
 		systemLoginPage(null);
