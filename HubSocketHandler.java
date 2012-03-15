@@ -46,14 +46,20 @@ public class HubSocketHandler extends Thread{
 			// extract neccessary info from msg
 			String userName = msg.getUserName();
 			
+			//Pull out the password
+			char[] password = userList.getUserPass(userName, aesObject);
 			// check existence of username
-			if (!userList.validateUser(userName)){
+			if (password == null){
 				//send back error code
 				msg.setCode(-1);
 				if(DEBUG) System.out.println("Attempted intrusion by: " + userName);
 				returnMessage(msg);
 				return false;
 			}
+			
+			//Zero out password
+			Arrays.fill(password,'0');
+			
 			
 			//look up salt
 			byte[] salt = msg.getSalt();
