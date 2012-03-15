@@ -17,6 +17,7 @@ class Hub extends Thread {
 	static String classListName = "hub.classlist";
 	static String userListName = "hub.userlist";
 	static String serverListName = "hub.serverlist";
+	AES aesObject;
 	
 	static HashMap<Integer,SocketPackage> serverPackages = new HashMap<Integer,SocketPackage>();
 	
@@ -25,7 +26,8 @@ class Hub extends Thread {
 	
 	private static final boolean DEBUG = false;
 	
-	public Hub(){
+	public Hub(AES aesObject){
+		this.aesObject = aesObject;
 		// Constructor
 		try {
 			InetAddress addr = InetAddress.getLocalHost();
@@ -74,6 +76,10 @@ class Hub extends Thread {
 		//compare passhash to newly hashed password
 		
 		return false;
+	}
+	
+	public static void shutDown(){
+		listening = false;
 	}
 	
 	/*
@@ -145,6 +151,11 @@ class Hub extends Thread {
 			return false;
 		}
 	}
+	
+	/*
+	 * Get a list of all the servers in serverList
+	 */
+	
 	
 	/*
 	 * Populates serverSockets with the socket associated with the appropriate
@@ -355,5 +366,7 @@ class Hub extends Thread {
 		writeToDisk(classList, classListName);
 		writeToDisk(userList, userListName);
 		writeToDisk(serverList, serverListName);
+		
+		if (DEBUG) System.out.println("Hub shut down.");
 	}
 }
