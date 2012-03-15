@@ -179,6 +179,30 @@ public class HubSocketHandler extends Thread{
 		//takes over to infinitely listen for each user
 		boolean listen = true;
 		
+		//Handling first request
+		//Message will have salt, IV, username in the clear
+		//in body(encrypted): calendar.getMilisec(long), and nonce(long) in ArrayList<long>. 
+		
+		//steps
+		
+		
+		
+		//send back
+		//nonce + 1
+		
+		
+		//all future messages
+		//have checksum of all fields except checksum, store checksum in checksum field
+		//message is completely encrypted
+		
+		//decrypt
+		//check checksum
+		//do stuff after
+		//always create new messages
+		
+		//if works, create aes object with given salt and iv
+		
+		//TODO: change
 		//First accept
 		getMessage();
 		//checks
@@ -216,6 +240,11 @@ public class HubSocketHandler extends Thread{
 				
 					// Client -> Hub
 					
+					case Client_ChangePassword:
+						//TODO: do
+						
+						break;
+				
 					// Returns in body all users in a classroom
 					case Client_GetClassEnrollment:
 						//check permissions
