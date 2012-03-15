@@ -1,7 +1,9 @@
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 //Hub class. Handles communication between data servers and clients
 // Hub does authentication and forwards messages to the servers. 
@@ -122,10 +124,20 @@ class Hub extends Thread {
 	}
 	
 	/*
+	 * Get an arraylist of strings of all the users in userlist
+	 */
+	public ArrayList<String> getUsers(){
+		//TODO: finish
+		return null;
+	}
+	
+	
+	/*
 	 * Add a server to the serverList. Doesn't activate it.
 	 * Returns the server id
 	 */
-	public int addServer(InetAddress server){
+	public int addServer(String s){
+		InetAddress server = InetAddress.getByName(s);
 		int r = serverList.addServer(server, SERVER_SOCKET);
 		if (r == -1){
 			if(DEBUG) System.out.println("Adding server " + server + "failed. It might already exist in serverList."); 
@@ -155,7 +167,11 @@ class Hub extends Thread {
 	/*
 	 * Get a list of all the servers in serverList
 	 */
-	
+	public Map<Integer,String> getServers(){
+		//TODO: finish
+		return null;
+		
+	}
 	
 	/*
 	 * Populates serverSockets with the socket associated with the appropriate
