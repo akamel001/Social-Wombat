@@ -2,8 +2,6 @@ import java.io.Console;
 import java.util.Arrays;
 import java.util.List;
 
-// TODO: add/delete server;
-
 /**
  * This is the system administrator interface for Social Wombat.
  * 
@@ -100,13 +98,21 @@ public class SysAdminInterface {
 	        break;
 	     // Start the hub.
 	    case 4: 
-	        hub = new Hub(aes); // TODO: error stuffs
-	        hub.start();
-	    	systemHomePage(mSTART_HUB_SUCCESS);
+	    	try {
+		        hub = new Hub(aes);
+		        hub.start();
+	    	} catch (Exception e) {
+	    		systemHomePage(eSTART_HUB_ERROR);
+	    	}
+	        systemHomePage(mSTART_HUB_SUCCESS);
 	        break;
 	     // Shut down the hub.
 	    case 5:
-	    	hub.shutDown();// TODO: error stuffs
+	    	try {
+	    		hub.shutDown();
+	    	} catch (Exception e) {
+	    		systemHomePage(eSHUT_DOWN_HUB_ERROR);
+	    	}
 	    	systemHomePage(mSHUT_DOWN_HUB_SUCCESS);
 	        break;
 	    // Change system password.
@@ -162,8 +168,11 @@ public class SysAdminInterface {
 	private static void addServerPage(String messages) {
 		displayPage(sADD_SERVER_PAGE, messages, null, null, sADD_SERVER_INSTRUCTIONS);	
 		String serverName = console.readLine("Server Name? ");
-		hub.addServer(serverName);
-		systemHomePage(mADD_SERVER_SUCCESS);		// error stuff
+		if (hub.addServer(serverName) != -1){
+			systemHomePage(mADD_SERVER_SUCCESS);
+		} else {
+			systemHomePage(eADD_SERVER_ERROR);
+		}
 	}
 	
 	private static void systemChangePasswordPage(String messages) {
