@@ -93,7 +93,8 @@ class Hub extends Thread {
 			return false;
 		}
 		//Add
-		if(userList.addUser(username)){
+		//TODO: check the output of userlist
+		if(userList.addUser(username, password, aesObject) != -1){
 			if(DEBUG) System.out.println("User " + username + " added successfully!");
 			return true;
 		} else {

@@ -46,28 +46,28 @@ public class HubSocketHandler extends Thread{
 	 */
 	private boolean isInClassroom(String user, String classroomID){
 		if(DEBUG) System.out.println("checking if user is in classroom");
-		return (classList.getUserPermissions(user, classroomID) > 0);
+		return (classList.getUserPermissions(user, classroomID, hubAESObject) > 0);
 	}
 	
 	/*
 	 * Check that a user is the instructor of a classroom
 	 */
 	private boolean isClassInstructor(String user, String classroomID){
-		return (classList.getUserPermissions(user, classroomID) == 3);
+		return (classList.getUserPermissions(user, classroomID, hubAESObject) == 3);
 	}
 	
 	/*
 	 * Check that a user is the TA or instructor of a classroom
 	 */
 	private boolean isClassTAorInstructor(String user, String classroomID){
-		return (classList.getUserPermissions(user, classroomID) > 1);
+		return (classList.getUserPermissions(user, classroomID, hubAESObject) > 1);
 	}
 	
 	/*
 	 * Check that a user is the student of a classroom
 	 */
 	private boolean isClassStudent(String user, String classroomID){
-		return (classList.getUserPermissions(user, classroomID) == 1);
+		return (classList.getUserPermissions(user, classroomID, hubAESObject) == 1);
 	}
 	
 	/*
@@ -232,7 +232,7 @@ public class HubSocketHandler extends Thread{
 		//get classroom name from msg
 		String classID = msg.getClassroom_ID();
 		//table lookup of classrooms and their appropriate server
-		return classList.getClassServer(classID);
+		return classList.getClassServer(classID, hubAESObject);
 	}
 	
 	/*
@@ -265,45 +265,12 @@ public class HubSocketHandler extends Thread{
 	 */
 	public void run(){
 		//takes over to infinitely listen for each user
-		boolean listen = true;
+		boolean listen = false;
 		
-		//Handling first request
-		//Message will have salt, IV, username in the clear
-		//in body(encrypted): calendar.getMilisec(long), and nonce(long) in ArrayList<long>. 
-		
-		//steps
-		
-		
-		
-		//send back
-		//nonce + 1
-		
-		
-		//all future messages
-		//have checksum of all fields except checksum, store checksum in checksum field
-		//message is completely encrypted
-		
-		//decrypt
-		//check checksum
-		//do stuff after
-		//always create new messages
-		
-		//if works, create aes object with given salt and iv
-		
-		//TODO: change
-		//First accept
-		getMessage();
-		//checks
-		if (msg == null){
-			System.out.println("Message was null");
-			listen = false; // Don't waste time on bad transmissions
-		} else if (msg.getUserName() == null){
-			System.out.println("Session key was null");
-			listen = false;
-		}
 		//Authenticate
-		listen = authenticate(msg);
+		listen = authenticate();
 		
+		//All further communications
 		while (listen){
 			boolean valid = true;
 			//Wait, read and deserialize Message from Socket
@@ -338,7 +305,7 @@ public class HubSocketHandler extends Thread{
 						//check permissions
 						if(isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
 							//String = User, Integer = Permission
-							Map<String, Integer> classEnroll = classList.getClassEnrolled(msg.getClassroom_ID());
+							Map<String, Integer> classEnroll = classList.getClassEnrolled(msg.getClassroom_ID(), hubAESObject);
 							if (classEnroll != null){				
 								msg.setCode(1);
 								msg.setBody(classEnroll);
@@ -350,7 +317,7 @@ public class HubSocketHandler extends Thread{
 					case Client_GetUserEnrollment:
 						String usr = msg.getUserName();
 						if(DEBUG) System.out.println(usr + " wants to see all their class enrollments");
-						Map<String, Integer> userEnroll = classList.getUserEnrollment(usr);
+						Map<String, Integer> userEnroll = classList.getUserEnrollment(usr, hubAESObject);
 						if (userEnroll != null){
 							msg.setCode(1);
 							msg.setBody(userEnroll);
@@ -361,7 +328,7 @@ public class HubSocketHandler extends Thread{
 						//check permissions
 						if(isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
 							//gets list of users
-							List<String> requests = classList.getClassPending(msg.getClassroom_ID());
+							List<String> requests = classList.getClassPending(msg.getClassroom_ID(), hubAESObject);
 							if (requests != null){
 								msg.setCode(1);
 								msg.setBody(requests);
@@ -391,7 +358,7 @@ public class HubSocketHandler extends Thread{
 							//Now changing someone else's
 							// Server's return code
 							if(DEBUG) System.out.println("Setting " + personToChange + "'s permissions to: " + per);
-							returnCode = classList.setUserPermissions(personToChange, msg.getClassroom_ID(), per);
+							returnCode = classList.setUserPermissions(personToChange, msg.getClassroom_ID(), per, hubAESObject);
 							// Reply
 							msg.setCode(returnCode);
 						} else if (isClassStudent(msg.getUserName(),msg.getClassroom_ID())){
@@ -399,7 +366,7 @@ public class HubSocketHandler extends Thread{
 							//Check student requestor matches up with requestee
 							if (msg.getUserName().equals(personToChange)){
 								// Server's return code
-								returnCode = classList.setUserPermissions(personToChange, msg.getClassroom_ID(), per);
+								returnCode = classList.setUserPermissions(personToChange, msg.getClassroom_ID(), per, hubAESObject);
 								// Reply
 								msg.setCode(returnCode);
 							}
@@ -408,7 +375,7 @@ public class HubSocketHandler extends Thread{
 						break;
 					case Client_DeleteSelf:
 						String u = msg.getUserName();
-						if(userList.removeUser(u)){
+						if(userList.removeUser(u)==1){
 							//success
 							//TODO: remove the users from classList and if prof, remove serverlist
 							msg.setCode(1);
@@ -427,7 +394,7 @@ public class HubSocketHandler extends Thread{
 							// 0 for pending enrollment, -1 for dijoining
 							int p = (Integer)msg.getBody();
 							if(DEBUG) System.out.println("adding into classroom...");
-							returnCode = classList.setUserPermissions(requestName, msg.getClassroom_ID(), p);
+							returnCode = classList.setUserPermissions(requestName, msg.getClassroom_ID(), p, hubAESObject);
 							if(DEBUG) System.out.println("return code is: " + returnCode);
 							msg.setCode(returnCode);
 						}
@@ -448,7 +415,7 @@ public class HubSocketHandler extends Thread{
 						int serverNum = r.nextInt(maxServer) + 1;
 						
 						c.setClassServer(serverNum, SERVER_SOCKET);
-						classList.addClass(c);
+						classList.addClass(c, hubAESObject);
 						
 						reply = forwardToServer(msg);
 						returnMessage(reply);
