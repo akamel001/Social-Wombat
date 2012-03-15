@@ -24,6 +24,8 @@ import javax.crypto.spec.SecretKeySpec;
 /**
  * This is the class used for AES encryption and decryption.
  */
+
+// TODO: destruct any sensitive information
 public class AES {
 
 	

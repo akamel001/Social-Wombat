@@ -11,12 +11,12 @@ public class SysAdminInterface {
 	static Console console;
 	static Hub hub;
 	static boolean hubIsRunning = false;
-	static AES aes;
+	static AES aesHub;
 	private static final String sLOG_IN = 					UserInterfaceHelper.addFormattingAlignCenter("SYSTEM LOG IN");
 	private static final String sHOME_PAGE = 				UserInterfaceHelper.addFormattingAlignCenter("SYSTEM HOME"); 
 	private static final String sSYSTEM_USER_LIST_PAGE = 	UserInterfaceHelper.addFormattingAlignCenter("SYSTEM USER LIST");
 	private static final String sSYSTEM_REGISTRATION_PAGE = UserInterfaceHelper.addFormattingAlignCenter("SYSTEM REGISTRATION");
-	private static final String sSYSTEM_CHANGE_PASSWORD_PAGE = 	UserInterfaceHelper.addFormattingAlignCenter("SYSTEM PASSWORD CHANGE");
+	private static final String sSYSTEM_CHANGE_PASSWORD_PAGE = UserInterfaceHelper.addFormattingAlignCenter("SYSTEM PASSWORD CHANGE");
 	private static final String sADD_SERVER_PAGE = 			UserInterfaceHelper.addFormattingAlignCenter("ADD SERVER");
 	
 	private static final String sSYSTEM_HOME_PAGE_OPTIONS_HUB_RUNNING =	UserInterfaceHelper.addFormattingAlignLeft("1. View users enrolled in the system.") +
@@ -26,7 +26,7 @@ public class SysAdminInterface {
 															UserInterfaceHelper.addFormattingAlignLeft("5. Change system password.") +
 															UserInterfaceHelper.addFormattingAlignLeft("6. Log out.");	
 	private static final String sSYSTEM_HOME_PAGE_OPTIONS_HUB_NOT_RUNNING = UserInterfaceHelper.addFormattingAlignLeft("1. Start the hub.") +
-															UserInterfaceHelper.addFormattingAlignLeft("2. Log out.");;
+															UserInterfaceHelper.addFormattingAlignLeft("2. Log out.");
 	private static final String sSYSTEM_USER_LIST_OPTIONS = UserInterfaceHelper.addFormattingAlignLeft("1. Go back to system home.");
 	private static final String sREGISTRATION_INSTRUCTIONS = UserInterfaceHelper.addFormattingAlignLeft("Specify a username and password when prompted to add a user to the system.");
 	private static final String sADD_SERVER_INSTRUCTIONS = 	UserInterfaceHelper.addFormattingAlignLeft("Specify the name of the server you would like to add when prompted to by the system.");
@@ -60,9 +60,9 @@ public class SysAdminInterface {
 		displayPage(sLOG_IN, messages, null, null, null);	
 		char[] password = console.readPassword("Password? ");
 		
-		aes = handleSystemLogin(password);
+		aesHub = handleSystemLogin(password);
 		
-		if (aes != null){
+		if (aesHub != null) {
 			systemHomePage(mLOG_IN_SUCCESS);
 		} else {
 			systemLoginPage(eLOG_IN_ERROR);
@@ -117,7 +117,7 @@ public class SysAdminInterface {
 		        break;
 		    // Log out.
 		    case 6:
-		    	if (handleSystemLogout()){
+		    	if (handleSystemLogout()) {
 					systemLoginPage(mLOG_OUT_SUCCESS);
 				} else {
 					systemHomePage(eLOG_OUT_ERROR);
@@ -132,9 +132,11 @@ public class SysAdminInterface {
 			int selection = getValidSelectionFromUser(2);
 			
 			switch (selection) {
+			// Start the hub.
 			case 1: 
 		    	try {
-			        hub = new Hub(aes);
+			        hub = new Hub(aesHub);
+			        //Arrays.fill(aesHub, '0'); // TODO: check this
 			        hub.start();
 		    	} catch (Exception e) {
 		    		systemHomePage(eSTART_HUB_ERROR);
@@ -144,7 +146,7 @@ public class SysAdminInterface {
 		        break;
 			 // Log out.
 		    case 2: 
-		    	if (handleSystemLogout()){
+		    	if (handleSystemLogout()) {
 					systemLoginPage(mLOG_OUT_SUCCESS);
 				} else {
 					systemHomePage(eLOG_OUT_ERROR);
@@ -189,7 +191,7 @@ public class SysAdminInterface {
 		String userNameTemp = console.readLine("User Name? ");
 		char[] password = console.readPassword("Password? ");
 		
-		if (hub.addUser(userNameTemp, password)){
+		if (hub.addUser(userNameTemp, password)) {
 			systemHomePage(mREGISTRATION_SUCCESS);
 		} else {
 			systemHomePage(eREGISTRATION_ERROR);
@@ -203,7 +205,7 @@ public class SysAdminInterface {
 	private static void addServerPage(String messages) {
 		displayPage(sADD_SERVER_PAGE, messages, null, null, sADD_SERVER_INSTRUCTIONS);	
 		String serverName = console.readLine("Server Name? ");
-		if (hub.addServer(serverName) != -1){
+		if (hub.addServer(serverName) != -1) {
 			systemHomePage(mADD_SERVER_SUCCESS);
 		} else {
 			systemHomePage(eADD_SERVER_ERROR);
@@ -221,7 +223,7 @@ public class SysAdminInterface {
     	char[] newPassword = console.readPassword("New Password? ");    	
     	char[] confirmNewPassword = console.readPassword("Confirm New Password? ");
     	
-    	if (changeSystemPassword(oldPassword, newPassword, confirmNewPassword)){
+    	if (changeSystemPassword(oldPassword, newPassword, confirmNewPassword)) {
 			systemHomePage(mPASSWORD_CHANGE_SUCCESS);
 		} else {
 			systemHomePage(ePASSWORD_CHANGE_ERROR);
@@ -303,7 +305,7 @@ public class SysAdminInterface {
 	 * @param content
 	 * @param options
 	 */
-	public static void displayPage(String pageName, String messages, String info, String content, String options){
+	public static void displayPage(String pageName, String messages, String info, String content, String options) {
 		UserInterfaceHelper.clearScreen();
 		console.printf(UserInterfaceHelper.sBIG_DIVIDER + pageName);
 		if (messages != null) {
@@ -353,7 +355,7 @@ public class SysAdminInterface {
 	public static String listToUIString(List<String> list) {
 		String uiString = "";
 		String uiStringTemp;
-		for (int i = 0; i < list.size(); i++){
+		for (int i = 0; i < list.size(); i++) {
 			uiStringTemp = "";
 			uiStringTemp = uiStringTemp.concat(list.get(i));
 			uiString = uiString.concat(UserInterfaceHelper.addFormattingAlignLeft(uiStringTemp));
