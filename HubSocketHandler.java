@@ -9,7 +9,8 @@ public class HubSocketHandler extends Thread{
 	
 	private static final boolean DEBUG = false;
 	
-	AES aesObject = null;
+	AES hubAESObject = null;
+	AES clientAESObject = null;
 	static Message msg = new Message();
 	ClassList classList;
 	UserList userList;
@@ -22,13 +23,13 @@ public class HubSocketHandler extends Thread{
 	/*
 	 * A handler thread that is spawned for each message sent to a socket.
 	 */
-	public HubSocketHandler(Socket socket, ClassList classList, UserList userList, ServerList serverList, HashMap<Integer,SocketPackage> serverPackages, AES aesObject){
+	public HubSocketHandler(Socket socket, ClassList classList, UserList userList, ServerList serverList, HashMap<Integer,SocketPackage> serverPackages, AES hubAESObject){
 		this.socket = socket;
 		this.classList = classList;
 		this.userList = userList;
 		this.serverList = serverList;
 		this.serverPackages = serverPackages;
-		this.aesObject = aesObject;	// to be used for communciation with servers
+		this.hubAESObject = hubAESObject;	// to be used for communciation with servers
 		// Create datastreams
 		try {
 			oos = new ObjectOutputStream(socket.getOutputStream());
@@ -39,43 +40,6 @@ public class HubSocketHandler extends Thread{
 		}
 	}
 	
-	private boolean authenticate(Message msg){
-		//Client user id is stored as the sessionKey in the Cookie of the message
-		// TODO: Possibly move this above switch statement to authenticate all requests
-		if (msg.getType() == Message.MessageType.Client_LogIn){
-			// extract neccessary info from msg
-			String userName = msg.getUserName();
-			
-			//Pull out the password
-			char[] password = userList.getUserPass(userName, aesObject);
-			// check existence of username
-			if (password == null){
-				//send back error code
-				msg.setCode(-1);
-				if(DEBUG) System.out.println("Attempted intrusion by: " + userName);
-				returnMessage(msg);
-				return false;
-			}
-			
-			//Zero out password
-			Arrays.fill(password,'0');
-			
-			
-			//look up salt
-			byte[] salt = msg.getSalt();
-			// TODO: lookup the password
-			char[] pass = null;
-			
-			//Generate aes key
-			aesObject = new AES(pass,salt);
-			
-			// TODO: timestamp
-			Date date = (Date)aesObject.decryptObject((byte[])msg.getBody());
-			
-			//if timestamp within 5 mins of now, true.
-		}
-		return false;
-	}
 	
 	/*
 	 * Checks that a user is part of a classroom
@@ -104,6 +68,77 @@ public class HubSocketHandler extends Thread{
 	 */
 	private boolean isClassStudent(String user, String classroomID){
 		return (classList.getUserPermissions(user, classroomID) == 1);
+	}
+	
+	/*
+	 * Authentication method to deserialize the first received message
+	 * and authenticate clients
+	 * Message will have salt, IV, username in the clear. In the
+	 * body (encrypted): calendar.getMilisec(long), nonce(long) stored 
+	 * in ArrayList<long>. 
+	 * 
+	 * Returns true if user is authenticated and future transmissions are 
+	 * allowed. False otherwise.
+	 */
+	private boolean authenticate(){
+		Message firstMessage = null;
+		try {
+			firstMessage = (Message) ois.readObject();
+			// null check
+			if (firstMessage == null){
+				if (DEBUG) System.out.println("First msg received was null");
+				return false;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		//Check message type
+		if (msg.getType() != Message.MessageType.Client_LogIn){
+			return false;
+		}
+		
+		//extract fields
+		String usr = firstMessage.getUserName();
+		byte[] salt = firstMessage.getSalt();
+		byte[] iv = firstMessage.getIv();
+		
+		//null check
+		if ((usr==null)||(salt==null)||(iv==null)){
+			if (DEBUG) System.out.println("Either username, salt, or iv received in first message was null.");
+			return false;
+		}
+		
+		//check if the user exists
+		//Pull out the password
+		char[] password = userList.getUserPass(usr, hubAESObject);
+		// check existence of username
+		if (password == null){
+			//send back error code
+			//TODO: send back
+			if(DEBUG) System.out.println("Attempted intrusion by: " + usr);
+			
+			return false;
+		}
+		
+		//Create client aes object
+		clientAESObject = new AES(password, iv, salt);
+		
+		//Zero out password
+		Arrays.fill(password,'0');
+		
+		//null check aes object
+		if (clientAESObject == null){
+			if (DEBUG) System.out.println("clientAESObject creation failed");
+			return false;
+		}
+		
+		//Decrypt the body and check timestamp and add 1 to the nonce
+		
+		
+		return false;
 	}
 	
 	/*
