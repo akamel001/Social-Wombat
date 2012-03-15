@@ -205,13 +205,16 @@ public class SysAdminInterface {
 	private static void addServerPage(String messages) {
 		displayPage(sADD_SERVER_PAGE, messages, null, null, sADD_SERVER_INSTRUCTIONS);	
 		String serverName = console.readLine("Server Name? ");
-		if (hub.addServer(serverName) != -1) {
+		char[] serverPassword = console.readPassword("Password? ");
+		if (hub.addServer(serverName, serverPassword) != -1) {
+			Arrays.fill(serverPassword, '0');
 			systemHomePage(mADD_SERVER_SUCCESS);
 		} else {
+			Arrays.fill(serverPassword, '0');
 			systemHomePage(eADD_SERVER_ERROR);
 		}
 	}
-	
+
 	/**
 	 * Allows the system admin to change the password by providing the old password,
 	 * the new password, and a confirmation of the new password.
@@ -254,7 +257,6 @@ public class SysAdminInterface {
 	 * @return
 	 */
 	private static boolean handleSystemLogout() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 	

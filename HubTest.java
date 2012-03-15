@@ -48,7 +48,8 @@ public class HubTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		testHub = new Hub();
+		AES newAES = new AES("password".toCharArray());
+		testHub = new Hub(newAES);
 	}
 
 	/**

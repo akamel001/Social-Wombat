@@ -47,6 +47,7 @@ public class Client {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public boolean handleLogin(String uName, char[] password){
 		
 		if(DEBUG)
@@ -73,12 +74,7 @@ public class Client {
 		
 		message.setBody(aes.encrypt(list));
 		socket.send(message);
-		
-		//ClientSocketHandler handler = new ClientSocketHandler();
-		//cookie.setKey(uName);
-		//handler.getMessageSending().setCookie(cookie);
-		//handler.getMessageSending().setUserName(uName);
-		//handler.getMessageSending().setType(Message.MessageType.Client_LogIn);
+
 		
 		// Get timestamp message
 		Message response = socket.receive();

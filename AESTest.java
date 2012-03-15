@@ -11,7 +11,7 @@ public class AESTest {
 	public void testAES() {
 
 		String password = "secure";
-		String password2 = "seucre";
+
 		AES obj1 = new AES(password.toCharArray());
 		
 		AES obj2 = new AES(password.toCharArray(), obj1.getIv(), obj1.getSalt());
@@ -19,27 +19,25 @@ public class AESTest {
 		Message message = new Message();
 		
 		message.setClassroom_ID("Class1");
-		message.setBody("1337 H4kr");
+		message.setBody(obj1.encrypt("1337 H4kr"));
 		
-		//String message = "I am 1337";
-		//String message2 = "lolcatz";
-		
-		byte[] enc1 = obj1.encrypt(message);
+		byte[] enc1 = obj2.encrypt(message);
 		byte[] enc2 = obj2.encrypt(message);
-		
+
 		if(Arrays.equals(enc1, enc2))
-			System.out.println("EQUALLL!!!");
-		//byte[] enc2 = obj1.encrypt(message2);
-		//byte[] enc2 = obj2.encrypt(message);
+			System.out.println("Encrypting is equal!!");
 
 		Message deMessage = (Message) obj1.decryptObject(enc1);
 		Message deMessage2 = (Message) obj2.decryptObject(enc1);
 
-		System.out.println("Message encrypted: \n====> " + enc1);
-		//System.out.println("Message encrypted: \n====> " + enc2);
-		
-		assertEquals("1337 H4kr", deMessage.getBody());
-		assertEquals("1337 H4kr", deMessage2.getBody());
+		System.out.println(obj1.decrypt((byte [])deMessage.getBody()));
 
+//		assertEquals("1337 H4kr", obj1.decryptObject((byte[]) deMessage.getBody()));
+//		assertEquals("Class1", deMessage.getClassroom_ID());
+//		
+//		assertEquals("1337 H4kr", deMessage2.getBody());
+//		assertEquals("Class1", deMessage2.getClassroom_ID());
+
+		
 	}
 }

@@ -5,6 +5,8 @@ import java.io.*;
  * A custom class to hold a socket, it's input stream, it's output stream,
  * methods to send & flush, other setup/tear down methods
  */
+
+//NEEDS TO HANDLE AES OBJECTS
 class SocketPackage {
 	private Socket socket;
 	private int port;
