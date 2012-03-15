@@ -71,6 +71,26 @@ public final class ServerList implements Serializable{
 	}
 
 	/**
+	 * Returns a map of server ids mapped to strings containing the ip:port
+	 * @return Returns a list of ints mapped to ips
+	 */
+	public Map<Integer, String> getServerList(){
+		Map <Integer, String> list_out = Collections.synchronizedMap(new TreeMap<Integer, String>());
+		Set<Integer> set = serverList.keySet();
+		synchronized(serverList) { 
+			Iterator<Integer> i = set.iterator();
+			while (i.hasNext()){
+				Integer key = i.next();
+				ServerData s_d = serverList.get(key);
+				if (s_d!=null){
+					String to_string = s_d.ip.toString() + ":" + s_d.port;
+					list_out.put(key, to_string);
+				}
+			}
+		}
+		return list_out;
+	}
+	/**
 	 * Removes a server from the server list.
 	 * @param s The id of the server to be removed.
 	 * @return 1 if a server with that id exists, -1 otherwise.
