@@ -1,8 +1,10 @@
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.TreeMap;
 import java.util.Map;
 import java.util.Iterator;
@@ -65,7 +67,7 @@ public final class UserList implements Serializable{
 		// (a) get user
 		User temp_guy = this.getAndDecryptUser(user_name, encryptor);
 		return temp_guy.password;
-
+	}
 
 	/**
 	 *  @deprecated I must have been drunk when I wrote this -- cd.
@@ -85,7 +87,6 @@ public final class UserList implements Serializable{
 				return true;
 			}
 		}
-		Arrays.e
 		return false;
 	}
 	
@@ -281,6 +282,29 @@ public final class UserList implements Serializable{
 		}catch(ClassCastException e){
 			return null;
 		}
+	}
+	
+	/**
+	 * Returns a list containing every user
+	 * @param encryptor Hub encryptor
+	 * @return Returns a list with every user
+	 */
+	public List<String> getAllUsers(AES encryptor){
+		List<String> list_out = Collections.synchronizedList(new ArrayList<String>());
+		Set<String> s = user_list.keySet();
+		synchronized(user_list) {
+			Iterator <String> i = s.iterator();
+			while (i.hasNext()){
+				String st = i.next();
+				User user = this.getAndDecryptUser(st, encryptor);
+				if (user!=null){
+					String name = user.name;
+					list_out.add(name);
+					user.zeroUser();
+				}
+			}
+		}
+		return list_out;
 	}
 
 	
