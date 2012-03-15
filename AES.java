@@ -29,7 +29,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class AES {
 
 	
-	private byte[] iv= null;
+	private byte[] iv = null;
     public int numIterations = 1024;
     private SecretKey secretKey = null;
     private Cipher ecipher = null;

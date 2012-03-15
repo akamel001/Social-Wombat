@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /**
  * This class handles a system login.
  * @author Julia
@@ -13,6 +15,7 @@ public class SystemLogin {
 	private static byte[] system_admin_enc;
 
 	private static byte[]  initialization_vector; // TODO: set this
+	private static byte[]  salt; // TODO: set this
 	
 	/**
 	 * Handles the system login.
@@ -22,7 +25,7 @@ public class SystemLogin {
 	public static AES handleSystemLogin(char[] password) {
 		AES aes = validateSystemPassword(password);
 		if (aes != null) {
-			return new AES(aes.decrypt(hub_key_enc).toCharArray()); // TODO: use different constructor
+			return new AES(aes.decrypt(hub_key_enc)); // TODO: use different constructor
 		} 
 		return null;
 	}
@@ -39,8 +42,8 @@ public class SystemLogin {
 	public static boolean changeSystemPassword(char[] oldPassword, char[] newPassword, char[] confirmNewPassword) {
 		AES aes = validateSystemPassword(oldPassword);
 		if (aes != null) {
-			if (newPassword.equals(confirmNewPassword)) { // TODO: can i do this comparison on char[]? correct equals? i don't think so...
-				AES aesNew = new AES(newPassword); // TODO: use different constructor
+			if (Arrays.equals(newPassword,confirmNewPassword)) {
+				AES aesNew = new AES(newPassword, initialization_vector, salt); // TODO: use different constructor
 				aesNew.encrypt(aes.decrypt(system_admin_enc)); // re-encrypt the "system admin" string
 				aesNew.encrypt(aes.decrypt(hub_key_enc));	   // and hub key				
 			}			
@@ -58,7 +61,7 @@ public class SystemLogin {
 	 * @return the hub AES object
 	 */
 	private static AES validateSystemPassword(char[] password) {
-		AES aes = new AES(password); // TODO: use different constructor
+		AES aes = new AES(password, initialization_vector, salt);
 		if (aes.decrypt(system_admin_enc).equals("system_admin")) {
 			return aes;
 		}

@@ -254,7 +254,6 @@ public class SysAdminInterface {
 	 * @return
 	 */
 	private static boolean handleSystemLogout() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 	
