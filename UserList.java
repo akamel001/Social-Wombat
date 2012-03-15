@@ -29,13 +29,12 @@ public final class UserList implements Serializable{
 	}
 
 	/**
-	 * Rerturne
+	 * @deprecated
 	 * @param user_name The username to be checked
 	 * @param pass The password to be checked. Zero out with Arrays.fill(pass, '0') when no longer needed.
 	 * @param encryptor
 	 * @return True if the user password combo exist.
-	 */
-	public boolean validateUser(String user_name, char[] pass, AES encryptor){
+	 */	public boolean validateUser(String user_name, char[] pass, AES encryptor){
 		if (user_name==null){
 			return false;
 		}
