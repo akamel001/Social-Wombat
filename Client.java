@@ -79,10 +79,32 @@ public class Client {
 		//handler.getMessageSending().setCookie(cookie);
 		//handler.getMessageSending().setUserName(uName);
 		//handler.getMessageSending().setType(Message.MessageType.Client_LogIn);
+		
+		// Get timestamp message
 		Message response = socket.receive();
 		
-		//TODO check if date returned is within 5 min & nonce+1
-		return (response.getCode() == 1)? true : false;	
+		byte[] encryptedBody = (byte[])response.getBody();
+		
+		ArrayList<Long> return_list = (ArrayList<Long>)aes.decryptObject(encryptedBody);
+		
+		if (return_list==null){
+			if (DEBUG) System.out.println("unable to decrypt msg body");
+			return false;
+		}
+		
+		long now =	c.getTimeInMillis();
+		long hub_time = return_list.get(0); 
+		long hub_nonce = return_list.get(0);
+		
+		boolean allowed = false;
+		
+		if( now <= hub_time+300000 && hub_time-300000 <= hub_time && hub_nonce==nonce+1)
+			allowed=true;
+		if(allowed){
+			return true;
+		}
+		else
+			return false;
 	}
 	
 	/**

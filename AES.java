@@ -26,7 +26,7 @@ import javax.crypto.spec.SecretKeySpec;
  */
 
 // TODO: destruct any sensitive information
-public class AES {
+public final class AES {
 
 	
 	private byte[] iv= null;
@@ -71,6 +71,23 @@ public class AES {
 		} catch (NoSuchPaddingException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	AES(SecretKey s_k, byte[] iv, byte[] salt){
+		try {
+			secretKey = s_k;
+	        ecipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+	        dcipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+	        init(iv, salt);		
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (NoSuchPaddingException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	protected SecretKey getSecretKey(){
+		return this.secretKey;
 	}
 	
 	private void init(){
@@ -152,6 +169,12 @@ public class AES {
         return null;
 	}
 	
+	/**
+	 * Decrypts a byte[] into an object. <\b>
+	 * NOTE: Strings must be cast with "new String decryptObject()" NOT "(String)"
+	 * @param o the byte[] to be decrypted
+	 * @return Returns the decrypted object.
+	 */
 	public Object decryptObject(byte[] o){
 		if (o==null)
 			return null;
@@ -216,5 +239,26 @@ public class AES {
 			System.out.println("Bad padding Exception. Probably bad IV");
 		} 
         return null;
+	}
+
+	public static void main(String args[]){
+		String pass_1 = new String("HELLO DOLLY");
+		String plain_text = ("TEXT");
+		
+		AES aes1 = new AES(pass_1.toCharArray());
+		AES aes2 = new AES(aes1.getSecretKey(),aes1.getIv(),aes1.getSalt());
+		
+		byte[] cipher = aes2.encrypt(plain_text);
+		
+		String out = new String(aes1.decrypt(cipher));
+		
+		Message m = new Message();
+		m.setBody((Object)plain_text);
+		
+		cipher = aes2.encrypt(m);
+		
+		m = (Message)aes1.decryptObject(cipher);
+		System.out.println(m.getBody());
+		System.out.println(out);
 	}
 }
