@@ -135,8 +135,46 @@ public class HubSocketHandler extends Thread{
 			return false;
 		}
 		
-		//Decrypt the body and check timestamp and add 1 to the nonce
+		//Decrypt the body, cast to ArrayList<Long>
+		byte[] encryptedBody = (byte[]) firstMessage.getBody();
+		ArrayList<Long> body = (ArrayList<Long>)clientAESObject.decryptObject(encryptedBody);
+		if (body==null){
+			if (DEBUG) System.out.println("unable to decrypt msg body");
+			return false;
+		}
 		
+		long clientTimestamp = body.get(0);
+		long clientNonce = body.get(1);
+		
+		boolean allowed = false;
+		
+		//Check timestamp
+		long myTimestamp = Calendar.getInstance().getTimeInMillis();
+		if (((myTimestamp - 300000) <= clientTimestamp) && (clientTimestamp <= (myTimestamp + 300000))){
+			allowed = true;
+		}
+		
+		//Return the authenticated message
+		if (allowed){
+			//Create return message
+			Message returnMsg = new Message();
+			ArrayList<Long> returnBody = new ArrayList<Long>();
+			//set my timestamp
+			returnBody.set(0, Calendar.getInstance().getTimeInMillis());
+			//set the nonce+1
+			returnBody.set(1, clientNonce+1);
+			//set the body
+			returnMsg.setBody(returnBody);
+			
+			//encrypt
+			byte[] returnMessage = clientAESObject.encrypt(returnMsg);
+			
+			//send
+			sendEncryptedMessage(returnMessage);
+			
+			//put thread in a state to receive future messages
+			return true;
+		}
 		
 		return false;
 	}
@@ -154,6 +192,21 @@ public class HubSocketHandler extends Thread{
 			System.out.println(e.getMessage());
 			System.out.println("Deserializing message failed.");
 		}
+	}
+	
+	/*
+	 * Method to send an encrypted message to the precreated streams.
+	 */
+	private void sendEncryptedMessage(byte[] msg){
+		try {
+			oos.write(msg);
+			oos.flush();
+			oos.reset();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Sending an encrypted message failed");
+		}
+		
 	}
 	
 	/*
