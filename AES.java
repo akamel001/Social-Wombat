@@ -1,12 +1,9 @@
-import static org.junit.Assert.assertEquals;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
-import java.security.AlgorithmParameters;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -14,8 +11,6 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 import java.security.spec.KeySpec;
-import java.util.Arrays;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -39,10 +34,11 @@ public class AES {
     private Cipher dcipher = null;
     private SecureRandom random =  new SecureRandom();
     
-    //private byte[] salt = new byte[8];
+    private byte[] salt = new byte[8];
     
-	AES(char[] password, byte[] salt){
+	AES(char[] password){
 		try {		
+    		random.nextBytes(salt);
 	        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
 	        KeySpec spec = new PBEKeySpec(password, salt, 1024, 128);
 	        secretKey = new SecretKeySpec(factory.generateSecret(spec).getEncoded(), "AES");
@@ -65,7 +61,7 @@ public class AES {
 	        secretKey = new SecretKeySpec(factory.generateSecret(spec).getEncoded(), "AES");
 	        ecipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 	        dcipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-	        init(iv);		
+	        init(iv, salt);		
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		} catch (InvalidKeySpecException e) {
@@ -88,12 +84,15 @@ public class AES {
 			e.printStackTrace();
 		}
 	}
-	
-	private void init(byte[] IV){
+
+	private void init(byte[] IV, byte[] SALT){
 		try {
-			ecipher.init(Cipher.ENCRYPT_MODE, secretKey);
+			
         	iv = IV;
+        	salt = SALT;
 			dcipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv));
+			ecipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(iv));
+			
 		} catch (InvalidKeyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -124,6 +123,13 @@ public class AES {
         return null;
 	}
 	
+	public byte[] getSalt() {
+		return salt;
+	}	
+	public byte[] getIv() {
+		return iv;
+	}
+
 	/**
 	 * 
 	 * @param o
@@ -165,10 +171,10 @@ public class AES {
 	    obj = ois.readObject();
 	  }
 	  catch (IOException ex) {
-	    //TODO: Handle the exception
+		  ex.printStackTrace();
 	  }
 	  catch (ClassNotFoundException ex) {
-	    //TODO: Handle the exception
+		  ex.printStackTrace();
 	  }
 	  return obj;
 	}
@@ -186,7 +192,7 @@ public class AES {
 	    bytes = bos.toByteArray ();
 	  }
 	  catch (IOException ex) {
-	    //TODO: Handle the exception
+		  ex.printStackTrace();
 	  }
 	  return bytes;
 	}
@@ -211,52 +217,5 @@ public class AES {
 			System.out.println("Bad padding Exception. Probably bad IV");
 		} 
         return null;
-	}
-	
-	public static void main(String[] args) {
-	    byte[] salt = new byte[8];
-	    byte[] salt2 = new byte[8];
-	    
-	    SecureRandom random = new SecureRandom();
-		random.nextBytes(salt);
-		random.nextBytes(salt2);
-
-		String password = "secure";
-		String password2 = "seucre";
-		AES obj1 = new AES(password.toCharArray(), salt);
-		
-		AES obj2 = new AES(password.toCharArray(), obj1.getIv(), salt);
-		
-		Message message = new Message();
-		
-		message.setClassroom_ID("Class1");
-		message.setBody("1337 H4kr");
-		
-		//String message = "I am 1337";
-		//String message2 = "lolcatz";
-		
-		byte[] enc1 = obj1.encrypt(message);
-		byte[] enc2 = obj2.encrypt(message);
-		
-		if(Arrays.equals(enc1, enc2))
-			System.out.println("EQUALLL!!!");
-		//byte[] enc2 = obj1.encrypt(message2);
-		//byte[] enc2 = obj2.encrypt(message);
-
-		//obj2.setIv(obj1.getIv());
-		Message deMessage = (Message) obj1.decryptObject(enc1);
-		Message deMessage2 = (Message) obj1.decryptObject(enc2);
-
-		System.out.println("Message encrypted: \n====> " + enc1);
-		//System.out.println("Message encrypted: \n====> " + enc2);
-
-		System.out.println(deMessage.getBody());
-		System.out.println(deMessage2.getBody());
-
-		//System.out.println(obj2.decrypt(enc1));
-    }
-	
-	public byte[] getIv() {
-		return iv;
 	}
 }
