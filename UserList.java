@@ -2,7 +2,6 @@ import java.io.Serializable;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.TreeMap;
 import java.util.Map;
@@ -66,7 +65,7 @@ public final class UserList implements Serializable{
 		// (a) get user
 		User temp_guy = this.getAndDecryptUser(user_name, encryptor);
 		return temp_guy.password;
-	}
+
 
 	/**
 	 *  @deprecated I must have been drunk when I wrote this -- cd.
@@ -86,6 +85,7 @@ public final class UserList implements Serializable{
 				return true;
 			}
 		}
+		Arrays.e
 		return false;
 	}
 	
@@ -215,7 +215,6 @@ public final class UserList implements Serializable{
 	 */
 	public User getUser(String user_name, AES decryptor){
 		return this.getAndDecryptUser(user_name, decryptor);
-
 	}
 	
 
