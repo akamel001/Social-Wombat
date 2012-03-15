@@ -13,8 +13,7 @@ public class StringLegalityChecker {
 																										   				   // must contain at least one lowercase letter; 
 																										   				   // must contain at least one numeral;
 																										   				   // must contain at least one special character.
-																										   // TODO: make sure above is enforced, fails tests as of now...
-	
+																										
 	/**
 	 * Checks that a given string is a legal username string.
 	 * @param str

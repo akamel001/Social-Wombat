@@ -2,7 +2,7 @@ import java.io.Console;
 import java.util.Arrays;
 import java.util.List;
 
-
+// TODO: add/delete server; add/delete users
 
 /**
  * This is the system administrator interface for Social Wombat.
@@ -149,9 +149,12 @@ public class SysAdminInterface {
 	 * @return
 	 */
 	private static boolean handleSystemLogin(char[] password) {
-		// TODO Auto-generated method stub
-		// TODO: SHOULD ZERO OUT PASSWORD
-		return true;
+		if (SystemLogin.handleSystemLogin(password)) {
+			Arrays.fill(password, '0');
+			return true;
+		}
+		Arrays.fill(password, '0');
+		return false;
 	}
 
 	/**
@@ -175,13 +178,17 @@ public class SysAdminInterface {
 	 * @param confirmNewPassword <- again, this is the desired password for currentUserName (we ask for it again to minimize the effects of user typos)
 	 * @return
 	 */
-	private static boolean changeSystemPassword(char[] oldPassword,
-			char[] newPassword, char[] confirmNewPassword) {
-		// TODO Auto-generated method stub
-		// TODO: make sure to call zeroItOut(oldPassword)!
-		// TODO: make sure to call zeroItOut(newPassword)!
-		// TODO: make sure to call zeroItOut(confirmNewPassword)!
-		return true;
+	private static boolean changeSystemPassword(char[] oldPassword, char[] newPassword, char[] confirmNewPassword) {
+		if (SystemLogin.changeSystemPassword(oldPassword, newPassword, confirmNewPassword)) {
+			Arrays.fill(oldPassword, '0');
+			Arrays.fill(newPassword, '0');
+			Arrays.fill(confirmNewPassword, '0');
+			return true;
+		}
+		Arrays.fill(oldPassword, '0');
+		Arrays.fill(newPassword, '0');
+		Arrays.fill(confirmNewPassword, '0');
+		return false;
 	}
 	
 	
