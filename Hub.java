@@ -2,6 +2,7 @@
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +20,7 @@ class Hub extends Thread {
 	static String classListName = "hub.classlist";
 	static String userListName = "hub.userlist";
 	static String serverListName = "hub.serverlist";
-	AES aesObject;
+	AES hubAESObject;
 	
 	static HashMap<Integer,SocketPackage> serverPackages = new HashMap<Integer,SocketPackage>();
 	
@@ -29,7 +30,7 @@ class Hub extends Thread {
 	private static final boolean DEBUG = false;
 	
 	public Hub(AES aesObject){
-		this.aesObject = aesObject;
+		this.hubAESObject = aesObject;
 		// Constructor
 		try {
 			InetAddress addr = InetAddress.getLocalHost();
@@ -94,7 +95,7 @@ class Hub extends Thread {
 		}
 		//Add
 		//TODO: check the output of userlist
-		if(userList.addUser(username, password, aesObject) != -1){
+		if(userList.addUser(username, password, hubAESObject) != -1){
 			if(DEBUG) System.out.println("User " + username + " added successfully!");
 			return true;
 		} else {
@@ -108,9 +109,13 @@ class Hub extends Thread {
 	 */
 	public boolean removeUser(String username){
 		//check user exists
-		if(userList.validateUser(username)){
-			if(DEBUG) System.out.println(username + "removed.");
-			return userList.removeUser(username);
+		if(userExists(username)){
+			if( userList.removeUser(username) == 1){
+				if(DEBUG) System.out.println(username + "removed.");
+				return true;
+			} else{
+				return false;
+			}
 		} else{
 			if(DEBUG) System.out.println(username + " was not in the user list");
 			return false;
@@ -119,9 +124,15 @@ class Hub extends Thread {
 	
 	/*
 	 * Check a user exists in the userList
+	 * Replaced the deprecated validate user in user list
 	 */
-	public boolean userExists(String username){
-		return userList.validateUser(username);
+	private boolean userExists(String username){
+		char[] pass = userList.getUserPass(username, hubAESObject);
+		if (pass != null){
+			Arrays.fill(pass, '0');
+			return true;
+		}
+		return false;
 	}
 	
 	/*
@@ -137,9 +148,14 @@ class Hub extends Thread {
 	 * Add a server to the serverList. Doesn't activate it.
 	 * Returns the server id
 	 */
-	public int addServer(String s){
-		InetAddress server = InetAddress.getByName(s);
-		int r = serverList.addServer(server, SERVER_SOCKET);
+	public int addServer(String s, char[] password){
+		InetAddress server = null;
+		try {
+			server = InetAddress.getByName(s);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		int r = serverList.addServer(server, SERVER_SOCKET,password,hubAESObject);
 		if (r == -1){
 			if(DEBUG) System.out.println("Adding server " + server + "failed. It might already exist in serverList."); 
 			return r;
@@ -301,7 +317,8 @@ class Hub extends Thread {
 		
 		//TODO: Remove for multiple computers
 		try {
-			addServer(InetAddress.getLocalHost());
+			//TODO: possible error because we're making the inet address into a string now
+			addServer(InetAddress.getLocalHost().getHostAddress(),"password".toCharArray());
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 			System.out.println("Could not add a local host server");
@@ -361,7 +378,7 @@ class Hub extends Thread {
 				Socket client = hubSocket.accept();
 				//Spawn new ServerSocketHandler thread, we assume that the
 				//hub has directed this message to the correct Server
-				HubSocketHandler newRequest = new HubSocketHandler(client,classList,userList,serverList,serverPackages);
+				HubSocketHandler newRequest = new HubSocketHandler(client,classList,userList,serverList,serverPackages,hubAESObject);
 				if(DEBUG) System.out.println("Accepted a connection from: "+ client.getInetAddress());
 				//Starts running the new thread
 				newRequest.start(); 

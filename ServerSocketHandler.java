@@ -14,6 +14,7 @@ public class ServerSocketHandler {
 	Socket socket;
 	ObjectOutput oos;
 	ObjectInput ois;
+	AES hubAESObject;
 
 	/*
 	 * A handler thread that is spawned for each message sent to server
@@ -81,7 +82,7 @@ public class ServerSocketHandler {
 						
 						System.out.println(msg.getUserName()+ "wants to add: " + msg.getClassroom_ID());
 						
-						returnCode = classDB.addClassRoom(msg.getClassroom_ID());
+						returnCode = classDB.addClassRoom(msg.getClassroom_ID(), hubAESObject);
 						if (returnCode == 1){
 							System.out.println(msg.getClassroom_ID() + " added.");
 						}
@@ -101,7 +102,7 @@ public class ServerSocketHandler {
 						ArrayList<String> post = (ArrayList<String>) msg.getBody();
 						String postName = (String)post.get(0);
 						String postBody = (String)post.get(1);
-						returnCode = classDB.addPost(msg.getClassroom_ID(), postName, postBody);
+						returnCode = classDB.addPost(msg.getClassroom_ID(), postName, postBody, hubAESObject);
 						msg.setCode(returnCode);
 						returnMessage(msg);
 						break;
@@ -115,13 +116,13 @@ public class ServerSocketHandler {
 						ArrayList<String> com = (ArrayList<String>)msg.getBody();
 						int postId = Integer.parseInt(com.get(0));
 						String comment = com.get(1);
-						returnCode = classDB.addComment(msg.getClassroom_ID(), postId, comment);
+						returnCode = classDB.addComment(msg.getClassroom_ID(), postId, comment, hubAESObject);
 						msg.setCode(returnCode);
 						returnMessage(msg);
 						break;
 					case Client_GoToClassroom:
 						System.out.println(msg.getUserName()+ "wants to enter: " + msg.getClassroom_ID());
-						Map<Integer, String> threadList = classDB.getThreadList(msg.getClassroom_ID());
+						Map<Integer, String> threadList = classDB.getThreadList(msg.getClassroom_ID(), hubAESObject);
 						if (threadList == null){
 							//return failure
 							msg.setCode(-1);
@@ -143,7 +144,7 @@ public class ServerSocketHandler {
 						int threadID = (Integer)msg.getBody();
 						System.out.println(msg.getUserName() + " wants to view thread #: " + threadID);
 						
-						Map<Integer, String> thread = classDB.getThread(msg.getClassroom_ID(), threadID);
+						Map<Integer, String> thread = classDB.getThread(msg.getClassroom_ID(), threadID, hubAESObject);
 						if (thread == null){
 							//return failure
 							msg.setCode(-1);
@@ -164,7 +165,7 @@ public class ServerSocketHandler {
 					case Client_DeleteThread:
 						System.out.println(msg.getUserName()+ "wants to delete a thread.");
 						int p = (Integer)msg.getBody();
-						returnCode = classDB.removePost(msg.getClassroom_ID(), p);
+						returnCode = classDB.removePost(msg.getClassroom_ID(), p, hubAESObject);
 						msg.setCode(returnCode);
 						returnMessage(msg);
 						break;
@@ -178,7 +179,7 @@ public class ServerSocketHandler {
 						ArrayList<Integer> commentParams = (ArrayList<Integer>)msg.getBody();
 						int postID = commentParams.get(0);
 						int commentID = commentParams.get(1);
-						returnCode = classDB.removeComment(msg.getClassroom_ID(), postID, commentID);
+						returnCode = classDB.removeComment(msg.getClassroom_ID(), postID, commentID, hubAESObject);
 						msg.setCode(returnCode);
 						returnMessage(msg);
 						break;	
