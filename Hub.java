@@ -80,7 +80,7 @@ class Hub extends Thread {
 		return false;
 	}
 	
-	public static void shutDown(){
+	public void shutDown(){
 		listening = false;
 	}
 	
