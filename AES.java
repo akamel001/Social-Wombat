@@ -201,17 +201,14 @@ public class AES {
 	/**
 	 * Decrypts an encrypted message and returns the decrypted version of the message.
 	 * @param message
-	 * @return Returns the decrypted String. Returns null on error or if passed byte array equals null.
+	 * @return Returns the decrypted byte[]. Returns null on error or if passed byte array equals null.
 	 */
-	public String decrypt(byte[] message){
+	public byte[] decrypt(byte[] message){
 		if (message==null)
 			return null;
         try {
-        	return new String(dcipher.doFinal(message), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-        	System.out.println("Unsupported Encodeing.");
-			e.printStackTrace();
-		} catch (IllegalBlockSizeException e) {
+        	return dcipher.doFinal(message);
+        } catch (IllegalBlockSizeException e) {
 			e.printStackTrace();
 		} catch (BadPaddingException e) {
 			System.out.println("Bad padding Exception. Probably bad IV");
