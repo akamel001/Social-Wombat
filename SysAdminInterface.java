@@ -154,6 +154,11 @@ public class SysAdminInterface {
 		}
 	}
 
+	/**
+	 * Displays a list of enrolled users in the system.
+	 * Gives an option to go back to the system home page.
+	 * @param messages
+	 */
 	private static void systemUserListPage(String messages) {
 		List<String> userList = getSystemUserList();
 		String content = cNO_USERS;		
@@ -174,6 +179,11 @@ public class SysAdminInterface {
 		}
 	}
 
+	/**
+	 * Allows the system admin to enroll a user in the system by specifying 
+	 * that user's username and password.
+	 * @param messages
+	 */
 	private static void systemRegistrationPage(String messages) {
 		displayPage(sSYSTEM_REGISTRATION_PAGE, messages, null, null, sREGISTRATION_INSTRUCTIONS);	
 		String userNameTemp = console.readLine("User Name? ");
@@ -186,6 +196,10 @@ public class SysAdminInterface {
 		} 
 	}
 	
+	/**
+	 * Allows the system admin the add a server by specifying that server's name.
+	 * @param messages
+	 */
 	private static void addServerPage(String messages) {
 		displayPage(sADD_SERVER_PAGE, messages, null, null, sADD_SERVER_INSTRUCTIONS);	
 		String serverName = console.readLine("Server Name? ");
@@ -196,6 +210,11 @@ public class SysAdminInterface {
 		}
 	}
 	
+	/**
+	 * Allows the system admin to change the password by providing the old password,
+	 * the new password, and a confirmation of the new password.
+	 * @param messages
+	 */
 	private static void systemChangePasswordPage(String messages) {
 		displayPage(sSYSTEM_CHANGE_PASSWORD_PAGE, messages, null, null, sCHANGE_PASSWORD_INSTRUCTIONS);	
 		char[] oldPassword = console.readPassword("Old Password? ");
@@ -244,9 +263,9 @@ public class SysAdminInterface {
 	 *   check that newPassword1 matches newPassword2.
 	 * This method deals with passwords and care must be taken to leave
 	 * no trace of any passwords, new or old.
-	 * @param oldPassword <- this is currentUserName's initial password
-	 * @param newPassword <- this is the desired password for currentUserName
-	 * @param confirmNewPassword <- again, this is the desired password for currentUserName (we ask for it again to minimize the effects of user typos)
+	 * @param oldPassword <- this is the system's initial password
+	 * @param newPassword <- this is the desired password for the system
+	 * @param confirmNewPassword <- again, this is the desired password for the system (we ask for it again to minimize the effects of user typos)
 	 * @return
 	 */
 	private static boolean changeSystemPassword(char[] oldPassword, char[] newPassword, char[] confirmNewPassword) {
@@ -357,7 +376,7 @@ public class SysAdminInterface {
             System.exit(1);
         }
 		
-		System.out.println("This is the sysadmin interface for Studious Wombat.");
+		System.out.println("This is the system admin interface for Studious Wombat.");
 		systemLoginPage(null);
 	}
 }
