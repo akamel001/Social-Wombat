@@ -13,7 +13,7 @@ import java.util.Map;
 //get ride of cookie message and client
 //handle login has salt value, username and timestamp encripted in body
 //date object formated in for timestamp
-//todo use an overloaded send in socketpackage to send byte array 
+// TODO use an overloaded send in socketpackage to send byte array 
 
 public class Client {
 

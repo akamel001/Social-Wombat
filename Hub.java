@@ -37,6 +37,45 @@ class Hub extends Thread {
 		}
 	}
 	
+	
+	//////////////////////////////////////////////////////
+	//					SYS-ADMIN ACTIONS				//
+	//////////////////////////////////////////////////////
+	
+	/*
+	 * "Installs" the Hub program. i.e. Lets a sys-admin
+	 * generate a hub key and encrypt that with their own 
+	 * 128-bit password. This encrypted hub key is what is 
+	 * stored on file. In the future, the sys-admin uses their
+	 * 128-bit password to decrypt the hub-key which will be used
+	 * to decrypt other data. We use an encrypted hub-key so that 
+	 * it won't have to change even  
+	 */
+	public void installHub(char[] password){
+		//TODO: create a hub-key (also set to global hub-key to use during session)
+		
+		//encrypt hub-key with password
+		
+		//clear password field
+		
+		//store encrypted hub-key on filesystem
+		
+		
+	}
+	
+	/*
+	 * Handles the sys admin logging in
+	 */
+	public boolean sysAdminLogin(char[] password){
+		//hash password
+		
+		//clear password field
+		
+		//compare passhash to newly hashed password
+		
+		return false;
+	}
+	
 	/*
 	 * Add a user to the userList.
 	 */
@@ -106,6 +145,45 @@ class Hub extends Thread {
 			return false;
 		}
 	}
+	
+	/*
+	 * Populates serverSockets with the socket associated with the appropriate
+	 * server number which is also the index + 1. So serverNum - 1 = index.
+	 * 
+	 */
+	public void connectServers() {
+		int numServers = serverList.getLastServer();
+		if (numServers == 0) {
+			System.out.println("There are no servers to connect to. Please add some."); 
+		}
+		// start up a connection with all of the servers
+		for (int i = 1;i<=numServers;i++){
+			//Open a connection
+			if (DEBUG) System.out.println("Connecting to server " + i);
+			
+			//Check if pre-existing
+			if (serverPackages.containsKey(i)){
+				//connect
+				SocketPackage tempSocket = serverPackages.get(i);
+				//make sure not already connected
+				if(!tempSocket.isConnected()){
+					tempSocket.socketConnect();
+				}
+			} else{
+				//add to map and connect (happens at hub start up)
+				SocketPackage newSocketPackage = new SocketPackage(serverList.getAddress(i),SERVER_SOCKET);
+				if(!newSocketPackage.isConnected()){
+					newSocketPackage.socketConnect();
+				}
+				serverPackages.put(i, newSocketPackage);
+			}
+
+		}
+	}
+	
+	//////////////////////////////////////////////////////
+	//					SYSTEM ACTIONS					//
+	//////////////////////////////////////////////////////
 	
 	/* 
 	 * Reads a given object from the filesystem
@@ -201,41 +279,6 @@ class Hub extends Thread {
 			System.out.println("Could not add a local host server");
 		}
 		
-	}
-	
-	/*
-	 * Populates serverSockets with the socket associated with the appropriate
-	 * server number which is also the index + 1. So serverNum - 1 = index.
-	 * 
-	 */
-	public void connectServers() {
-		int numServers = serverList.getLastServer();
-		if (numServers == 0) {
-			System.out.println("There are no servers to connect to. Please add some."); 
-		}
-		// start up a connection with all of the servers
-		for (int i = 1;i<=numServers;i++){
-			//Open a connection
-			if (DEBUG) System.out.println("Connecting to server " + i);
-			
-			//Check if pre-existing
-			if (serverPackages.containsKey(i)){
-				//connect
-				SocketPackage tempSocket = serverPackages.get(i);
-				//make sure not already connected
-				if(!tempSocket.isConnected()){
-					tempSocket.socketConnect();
-				}
-			} else{
-				//add to map and connect (happens at hub start up)
-				SocketPackage newSocketPackage = new SocketPackage(serverList.getAddress(i),SERVER_SOCKET);
-				if(!newSocketPackage.isConnected()){
-					newSocketPackage.socketConnect();
-				}
-				serverPackages.put(i, newSocketPackage);
-			}
-
-		}
 	}
 	
 	/*

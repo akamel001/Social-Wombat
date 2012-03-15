@@ -22,12 +22,13 @@ public class HubSocketHandler extends Thread{
 	/*
 	 * A handler thread that is spawned for each message sent to a socket.
 	 */
-	public HubSocketHandler(Socket socket, ClassList classList, UserList userList, ServerList serverList, HashMap<Integer,SocketPackage> serverPackages){
+	public HubSocketHandler(Socket socket, ClassList classList, UserList userList, ServerList serverList, HashMap<Integer,SocketPackage> serverPackages, AES aesObject){
 		this.socket = socket;
 		this.classList = classList;
 		this.userList = userList;
 		this.serverList = serverList;
 		this.serverPackages = serverPackages;
+		this.aesObject = aesObject;	// to be used for communciation with servers
 		// Create datastreams
 		try {
 			oos = new ObjectOutputStream(socket.getOutputStream());
