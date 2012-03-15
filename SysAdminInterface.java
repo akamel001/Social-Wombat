@@ -47,6 +47,7 @@ public class SysAdminInterface {
 	private static final String ePASSWORD_CHANGE_ERROR =	UserInterfaceHelper.addFormattingAlignLeft("An error occured when changing your password.");
 	private static final String eSTART_HUB_ERROR =			UserInterfaceHelper.addFormattingAlignLeft("An error occured when starting up the hub.");
 	private static final String eSHUT_DOWN_HUB_ERROR = 		UserInterfaceHelper.addFormattingAlignLeft("An error occured when shutting down the hub.");
+	private static final String eADD_SERVER_ERROR = 		UserInterfaceHelper.addFormattingAlignLeft("An error occured when adding the server.");
 	
 	private static final String mREGISTRATION_SUCCESS = 	UserInterfaceHelper.addFormattingAlignLeft("The user has been successfully added to the sytem.");
 	private static final String mLOG_IN_SUCCESS = 			UserInterfaceHelper.addFormattingAlignLeft("You have successfully logged in to system.");
@@ -54,6 +55,7 @@ public class SysAdminInterface {
 	private static final String mPASSWORD_CHANGE_SUCCESS = 	UserInterfaceHelper.addFormattingAlignLeft("You have successfully changed your password.");
 	private static final String mSTART_HUB_SUCCESS =		UserInterfaceHelper.addFormattingAlignLeft("You have successfully start up the hub.");
 	private static final String mSHUT_DOWN_HUB_SUCCESS = 	UserInterfaceHelper.addFormattingAlignLeft("You have successfully shut down the hub.");
+	private static final String mADD_SERVER_SUCCESS = 		UserInterfaceHelper.addFormattingAlignLeft("You have successfully added a server.");
 	
 	private static void systemLoginPage(String messages) {
 		displayPage(sLOG_IN, messages, null, null, null);	
@@ -161,7 +163,7 @@ public class SysAdminInterface {
 		displayPage(sADD_SERVER_PAGE, messages, null, null, sADD_SERVER_INSTRUCTIONS);	
 		String serverName = console.readLine("Server Name? ");
 		hub.addServer(serverName);
-		systemHomePage(mADD_SERVER_SUCCESS);		
+		systemHomePage(mADD_SERVER_SUCCESS);		// error stuff
 	}
 	
 	private static void systemChangePasswordPage(String messages) {
