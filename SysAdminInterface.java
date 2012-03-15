@@ -10,6 +10,7 @@ public class SysAdminInterface {
 	
 	static Console console;
 	static Hub hub;
+	static boolean hubIsRunning = false;
 	static AES aes;
 	private static final String sLOG_IN = 					UserInterfaceHelper.addFormattingAlignCenter("SYSTEM LOG IN");
 	private static final String sHOME_PAGE = 				UserInterfaceHelper.addFormattingAlignCenter("SYSTEM HOME"); 
@@ -18,21 +19,21 @@ public class SysAdminInterface {
 	private static final String sSYSTEM_CHANGE_PASSWORD_PAGE = 	UserInterfaceHelper.addFormattingAlignCenter("SYSTEM PASSWORD CHANGE");
 	private static final String sADD_SERVER_PAGE = 			UserInterfaceHelper.addFormattingAlignCenter("ADD SERVER");
 	
-	private static final String sSYSTEM_HOME_PAGE_OPTIONS =	UserInterfaceHelper.addFormattingAlignLeft("1. View users enrolled in the system.") +
+	private static final String sSYSTEM_HOME_PAGE_OPTIONS_HUB_RUNNING =	UserInterfaceHelper.addFormattingAlignLeft("1. View users enrolled in the system.") +
 															UserInterfaceHelper.addFormattingAlignLeft("2. Register a user in the system.") +
 															UserInterfaceHelper.addFormattingAlignLeft("3. Add a server.") +
-															UserInterfaceHelper.addFormattingAlignLeft("4. Start the hub.") +
-															UserInterfaceHelper.addFormattingAlignLeft("5. Shut down the hub.") +
-															UserInterfaceHelper.addFormattingAlignLeft("6. Change system password.") +
-															UserInterfaceHelper.addFormattingAlignLeft("7. Log out.");
-	
+															UserInterfaceHelper.addFormattingAlignLeft("4. Shut down the hub.") +
+															UserInterfaceHelper.addFormattingAlignLeft("5. Change system password.") +
+															UserInterfaceHelper.addFormattingAlignLeft("6. Log out.");	
+	private static final String sSYSTEM_HOME_PAGE_OPTIONS_HUB_NOT_RUNNING = UserInterfaceHelper.addFormattingAlignLeft("1. Start the hub.") +
+															UserInterfaceHelper.addFormattingAlignLeft("2. Log out.");;
 	private static final String sSYSTEM_USER_LIST_OPTIONS = UserInterfaceHelper.addFormattingAlignLeft("1. Go back to system home.");
-	
 	private static final String sREGISTRATION_INSTRUCTIONS = UserInterfaceHelper.addFormattingAlignLeft("Specify a username and password when prompted to add a user to the system.");
-	
 	private static final String sADD_SERVER_INSTRUCTIONS = 	UserInterfaceHelper.addFormattingAlignLeft("Specify the name of the server you would like to add when prompted to by the system.");
-	
 	private static final String sCHANGE_PASSWORD_INSTRUCTIONS = UserInterfaceHelper.addFormattingAlignLeft("Specify your username and old/new passwords when prompted to by the system.");
+	
+	private static final String sHUB_IS_RUNNING = 			UserInterfaceHelper.addFormattingAlignLeft("The hub is running.");
+	private static final String sHUB_IS_NOT_RUNNING = 		UserInterfaceHelper.addFormattingAlignLeft("The hub is not running.");
 	
 	private static final String cNO_USERS = 				UserInterfaceHelper.addFormattingAlignLeft("There are no users enrolled in the system.");
 	
@@ -69,68 +70,88 @@ public class SysAdminInterface {
 	}
 	
 	/**
-	 * This is the home page. It displays four options:
+	 * This is the home page. It displays six options if the hub is running:
 	 * 1. View users enrolled in the system.
 	 * 2. Register a user in the system.
 	 * 3. Add a server.
-	 * 4. Start the hub.
-	 * 5. Shut down the hub.
-	 * 6. Change system password.
-	 * 7. Log out.
+	 * 4. Shut down the hub.
+	 * 5. Change system password.
+	 * 6. Log out.
+	 * 
+	 * and two options when the hub is not running:
+	 * 1. Start the hub.
+	 * 2. Log out.
 	 * @param messages
 	 */
 	private static void systemHomePage(String messages) {	
-		displayPage(sHOME_PAGE, messages, null, null, sSYSTEM_HOME_PAGE_OPTIONS);
-		int selection = getValidSelectionFromUser(7);
-		
-		switch (selection) {
-		// View users enrolled in the system.
-	    case 1: 
-	    	systemUserListPage(null);
-	        break;
-	    // Register a user in the system.
-	    case 2: 
-	    	systemRegistrationPage(null);
-	        break;
-	    // Add a server.
-	    case 3: 
-	    	addServerPage(null);
-	        break;
-	     // Start the hub.
-	    case 4: 
-	    	try {
-		        hub = new Hub(aes);
-		        hub.start();
-	    	} catch (Exception e) {
-	    		systemHomePage(eSTART_HUB_ERROR);
-	    	}
-	        systemHomePage(mSTART_HUB_SUCCESS);
-	        break;
-	     // Shut down the hub.
-	    case 5:
-	    	try {
-	    		hub.shutDown();
-	    	} catch (Exception e) {
-	    		systemHomePage(eSHUT_DOWN_HUB_ERROR);
-	    	}
-	    	systemHomePage(mSHUT_DOWN_HUB_SUCCESS);
-	        break;
-	    // Change system password.
-	    case 6:
-	    	systemChangePasswordPage(null);
-	        break;
-	    // Log out.
-	    case 7:
-	    	if (handleSystemLogout()){
-				systemLoginPage(mLOG_OUT_SUCCESS);
-			} else {
-				systemHomePage(eLOG_OUT_ERROR);
+		if (hubIsRunning == true) {
+			displayPage(sHOME_PAGE, messages, sHUB_IS_RUNNING, null, sSYSTEM_HOME_PAGE_OPTIONS_HUB_RUNNING);
+			int selection = getValidSelectionFromUser(6);
+			
+			switch (selection) {
+			// View users enrolled in the system.
+		    case 1: 
+		    	systemUserListPage(null);
+		        break;
+		    // Register a user in the system.
+		    case 2: 
+		    	systemRegistrationPage(null);
+		        break;
+		    // Add a server.
+		    case 3: 
+		    	addServerPage(null);
+		        break;
+		     // Shut down the hub.
+		    case 4:
+		    	try {
+		    		hub.shutDown();
+		    	} catch (Exception e) {
+		    		systemHomePage(eSHUT_DOWN_HUB_ERROR);
+		    	}
+		    	hubIsRunning = false;
+		    	systemHomePage(mSHUT_DOWN_HUB_SUCCESS);
+		        break;
+		    // Change system password.
+		    case 5:
+		    	systemChangePasswordPage(null);
+		        break;
+		    // Log out.
+		    case 6:
+		    	if (handleSystemLogout()){
+					systemLoginPage(mLOG_OUT_SUCCESS);
+				} else {
+					systemHomePage(eLOG_OUT_ERROR);
+				}
+		        break;
+		    default:
+		    	console.printf(eGENERAL_ERROR);
+		        break;
+			}	
+		} else {
+			displayPage(sHOME_PAGE, messages, sHUB_IS_NOT_RUNNING, null, sSYSTEM_HOME_PAGE_OPTIONS_HUB_NOT_RUNNING);
+			int selection = getValidSelectionFromUser(2);
+			
+			switch (selection) {
+			case 1: 
+		    	try {
+			        hub = new Hub(aes);
+			        hub.start();
+		    	} catch (Exception e) {
+		    		systemHomePage(eSTART_HUB_ERROR);
+		    	}
+		    	hubIsRunning = true;
+		        systemHomePage(mSTART_HUB_SUCCESS);
+		        break;
+			 // Log out.
+		    case 2: 
+		    	if (handleSystemLogout()){
+					systemLoginPage(mLOG_OUT_SUCCESS);
+				} else {
+					systemHomePage(eLOG_OUT_ERROR);
+				}
+		        break;
 			}
-	        break;
-	    default:
-	    	console.printf(eGENERAL_ERROR);
-	        break;
-		}		
+		}
 	}
 
 	private static void systemUserListPage(String messages) {
