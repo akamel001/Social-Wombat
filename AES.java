@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -12,7 +11,6 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 import java.security.spec.KeySpec;
-import java.util.ArrayList;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -222,31 +220,32 @@ public final class AES implements Serializable {
         return null;
 	}
 
-	public static void main(String args[]){
-		String pass_1 = new String("Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..." +
-"There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain...");
-		String plain_text = ("TEXT");
-		
-		
-		AES aes1 = new AES(pass_1.toCharArray());
-		AES aes2 = new AES(aes1.getSecretKey(),aes1.getIv(),aes1.getSalt());
-		
-		Message m = new Message();
-		ArrayList<Integer> tmp = new ArrayList<Integer>();
-		tmp.add(0, 1);
-		tmp.add(1,2);
-		m.setBody(aes1.encrypt(tmp));
-		
-		byte[] enc1 = (byte []) m.getBody();
-		
-		ArrayList<Integer> tmp2 = new ArrayList<Integer>();
-		tmp2 = (ArrayList<Integer>) (aes1.decryptObject(enc1));
-		
-		m.setBody(tmp2);
-		
-		//m = (Message)aes1.decryptObject(cipher);
-		System.out.println(m.getBody());
-		//System.out.println(out);
-	}
+	// TODO: Get rid of the following. Left temporarily for testing purposes.
+//	public static void main(String args[]){
+//		String pass_1 = new String("Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..." +
+//"There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain...");
+//		String plain_text = ("TEXT");
+//		
+//		
+//		AES aes1 = new AES(pass_1.toCharArray());
+//		AES aes2 = new AES(aes1.getSecretKey(),aes1.getIv(),aes1.getSalt());
+//		
+//		Message m = new Message();
+//		ArrayList<Integer> tmp = new ArrayList<Integer>();
+//		tmp.add(0, 1);
+//		tmp.add(1,2);
+//		m.setBody(aes1.encrypt(tmp));
+//		
+//		byte[] enc1 = (byte []) m.getBody();
+//		
+//		ArrayList<Integer> tmp2 = new ArrayList<Integer>();
+//		tmp2 = (ArrayList<Integer>) (aes1.decryptObject(enc1));
+//		
+//		m.setBody(tmp2);
+//		
+//		//m = (Message)aes1.decryptObject(cipher);
+//		System.out.println(m.getBody());
+//		//System.out.println(out);
+//	}
 	
 }
