@@ -373,13 +373,14 @@ class Hub extends Thread {
 		}
 		
 		//TODO: Remove for multiple computers
+		/*
 		try {
 			//TODO: possible error because we're making the inet address into a string now
 			addServer(InetAddress.getLocalHost().getHostAddress(),"password".toCharArray());
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 			System.out.println("Could not add a local host server");
-		}
+		}*/
 		
 	}
 	
