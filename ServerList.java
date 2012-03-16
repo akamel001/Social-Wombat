@@ -1,7 +1,9 @@
 import java.io.Serializable;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.TreeMap;
 import java.util.Map;
 import java.util.Set;
@@ -206,6 +208,7 @@ public final class ServerList implements Serializable{
 		private int port;
 		private byte[] password;
 		private byte[] server_AES;
+		List<byte[]> iv_salt;
 
 		
 		@SuppressWarnings("unused")
@@ -220,17 +223,18 @@ public final class ServerList implements Serializable{
 		 * 		port = -1<br>
 		 */
 		protected ServerData(int i){
+			iv_salt = Collections.synchronizedList(new ArrayList<byte[]>());
 			id = i;
 			ip = null;
 			port = -1;
 		}
 
 		/**
-		 * Returns the serve
-		 * @return
+		 * Returns the iv, salt list
+		 * @return a List<byte>. [0]=iv, [1]=salt
 		 */
-		protected byte[] getServer_AES() {
-			return server_AES;
+		public List<byte[]> getIvSalt() {
+			return iv_salt;
 		}
 
 		
@@ -238,8 +242,9 @@ public final class ServerList implements Serializable{
 		 * Sets the 
 		 * @param encrypted_AES
 		 */
-		protected void setServerAES(byte[] encrypted_AES){
-			server_AES = encrypted_AES;
+		public void setServerAES(byte[] iv, byte[] salt){
+			iv_salt.add(0, iv);
+			iv_salt.add(1,salt);
 		}
 		/** Returns the server id
 		 * 
