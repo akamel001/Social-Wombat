@@ -4,7 +4,8 @@ Abdel Kamel		-- ak883
 Chris Ducharme	-- cgd39
 ________________________________________________________________________________
 
-Julia Tazin 	-- Authentication and encryption-system design. 
+Julia Tazin 	-- Authentication and encryption-system design. Designed and implemented
+system administrator interface to add users and servers to the system.
 
 Yilok Wong 		-- Authentication and encryption-system design.
 
