@@ -6,10 +6,15 @@ ________________________________________________________________________________
 
 Julia Tazin 	-- Authentication and encryption-system design. Designed and implemented
 system administrator interface to add users and servers to the system.
+Tested encryption in the message passing. General testing.
 
-Yilok Wong 		-- Authentication and encryption-system design.
+Yilok Wong 		-- Authentication and encryption-system design. Designed and implemented
+client to hub and hub to server authentication and encryption. Created new encryption classes
+and helper functions. Tested encryption in the message passing. General testing. 
 
-Abdel Kamel 	-- Authentication and encryption-system design.
+Abdel Kamel 	-- Authentication and encryption-system design. Designed and implemented client
+authentication. General testing.
 
 Chris Ducharme	-- Authentication and encryption-system design. Implemented database and 
-                   back-end encryption. Implemented checksum.  
+                   back-end encryption. Implemented checksum.  Implemented encryption on 
+                   the back-end. Tested encryption in the message passing. General testing.
