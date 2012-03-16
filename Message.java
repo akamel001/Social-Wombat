@@ -50,9 +50,8 @@ public class Message implements Serializable{
 	    Client_DeleteThread,	// also known as remove post
 	    Client_DeleteComment,	//also known as remove comment
 
-	    // Server -> Hub -> Client
-	    Server_A,
-	    Server_B
+	    // Hub -> Server
+	    Hub_AuthServer
 	}
 
 //	public Message(){

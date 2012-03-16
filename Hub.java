@@ -13,6 +13,7 @@ class Hub extends Thread {
 	private static int CLIENT_SOCKET = 4444;
 	private static int SERVER_SOCKET = 5050;
 	private static volatile boolean listening = true;
+	private static volatile boolean demo = true;
 	
 	static ClassList classList;
 	static UserList userList;
@@ -143,18 +144,24 @@ class Hub extends Thread {
 		return null;
 	}
 	
-	
-	/*
+	/**
 	 * Add a server to the serverList. Doesn't activate it.
 	 * Returns the server id
+	 * @param serverIP
+	 * @param password
+	 * @return
 	 */
-	public int addServer(String s, char[] password){
+	public int addServer(String serverIP, char[] password){
 		InetAddress server = null;
 		try {
-			server = InetAddress.getByName(s);
+			server = InetAddress.getByName(serverIP);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
+		//Specifically written for demo to allow a startup script
+		//In the real world the servers would have to be started up manually
+		if (demo) password = "password".toCharArray();
+		
 		int r = serverList.addServer(server, SERVER_SOCKET,password,hubAESObject);
 		if (r == -1){
 			if(DEBUG) System.out.println("Adding server " + server + "failed. It might already exist in serverList."); 
@@ -162,14 +169,17 @@ class Hub extends Thread {
 		} else {
 			if(DEBUG) System.out.println("Server" + server + " added under server id: " + r);
 			//create new socket to add
-			SocketPackage newSocketPackage = new SocketPackage(server,SERVER_SOCKET);
+			SocketPackage newSocketPackage = new SocketPackage(server,SERVER_SOCKET, null);
 			serverPackages.put(r, newSocketPackage);
 			return r;
 		}
 	}
+
 	
-	/*
+	/**
 	 * Remove a server from the serverList
+	 * @param serverID
+	 * @return
 	 */
 	public boolean removeServer(int serverID){
 		if(serverList.removeServer(serverID) == 1){
@@ -205,6 +215,13 @@ class Hub extends Thread {
 			//Open a connection
 			if (DEBUG) System.out.println("Connecting to server " + i);
 			
+			//Generate the new AES key safely
+			char[] pass = serverList.getServerPass(i, hubAESObject);
+			AES tempAES = new AES(pass);
+			
+			//clear pass
+			Arrays.fill(pass, '0');
+			
 			//Check if pre-existing
 			if (serverPackages.containsKey(i)){
 				//connect
@@ -215,7 +232,7 @@ class Hub extends Thread {
 				}
 			} else{
 				//add to map and connect (happens at hub start up)
-				SocketPackage newSocketPackage = new SocketPackage(serverList.getAddress(i),SERVER_SOCKET);
+				SocketPackage newSocketPackage = new SocketPackage(serverList.getAddress(i),SERVER_SOCKET, tempAES);
 				if(!newSocketPackage.isConnected()){
 					newSocketPackage.socketConnect();
 				}

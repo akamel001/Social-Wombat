@@ -6,7 +6,6 @@ import java.io.*;
  * methods to send & flush, other setup/tear down methods
  */
 
-//NEEDS TO HANDLE AES OBJECTS
 class SocketPackage {
 	private Socket socket;
 	private int port;
@@ -18,17 +17,24 @@ class SocketPackage {
 	private static final int TIMEOUT = 5000;
 	private static final int MAX_RETRY = 16;
 	private static final boolean DEBUG = false;
+	private AES serverAESObject;
 
 	/**
 	 * Creates a socket. DOES NOT CONNECT
+	 * @param aesObject TODO
 	 */
-	public SocketPackage(InetAddress addr,int port){
+	public SocketPackage(InetAddress addr,int port, AES aesObject){
 		if (DEBUG) System.out.println("Creating a socket");
 		socket = new Socket();
 		this.port = port;
 		this.addr = addr;
+		this.serverAESObject = aesObject;
 	}
 
+	private AES getServerAESObject(){
+		return serverAESObject;
+	}
+	
 	/**
 	 * Connects the socket to the input inetaddress. Also creates the 
 	 * output and input streams

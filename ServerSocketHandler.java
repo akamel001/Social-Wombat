@@ -14,14 +14,18 @@ public class ServerSocketHandler {
 	Socket socket;
 	ObjectOutput oos;
 	ObjectInput ois;
-	AES hubAESObject;
+	AES serverAESObject;
+	char[] password;
+	
+	private static final boolean DEBUG = false;
 
 	/*
 	 * A handler thread that is spawned for each message sent to server
 	 */
-	public ServerSocketHandler(Socket ser, ClassDB classDB){
+	public ServerSocketHandler(Socket ser, ClassDB classDB, char[] password){
 		this.socket = ser;
 		this.classDB = classDB;
+		this.password = password;
 		// Create datastreams
 		try {
 			oos = new ObjectOutputStream(this.socket.getOutputStream());
@@ -30,6 +34,30 @@ public class ServerSocketHandler {
 			e.printStackTrace();
 			System.out.println("Could not create input and output streams");
 		}
+	}
+	
+	/**
+	 * First method that is run, expects a message type Hub_AuthServer
+	 * 
+	 * @return true if the hub is authenticated, false otherwise
+	 */
+	private boolean authenticate(){
+		Message firstMessage = null;
+		try {
+			firstMessage = (Message) ois.readObject();
+			// null check
+			if (firstMessage == null){
+				if (DEBUG) System.out.println("First msg received was null");
+				return false;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		
+		
 	}
 	
 	/*
@@ -82,7 +110,7 @@ public class ServerSocketHandler {
 						
 						System.out.println(msg.getUserName()+ "wants to add: " + msg.getClassroom_ID());
 						
-						returnCode = classDB.addClassRoom(msg.getClassroom_ID(), hubAESObject);
+						returnCode = classDB.addClassRoom(msg.getClassroom_ID(), serverAESObject);
 						if (returnCode == 1){
 							System.out.println(msg.getClassroom_ID() + " added.");
 						}
@@ -102,7 +130,7 @@ public class ServerSocketHandler {
 						ArrayList<String> post = (ArrayList<String>) msg.getBody();
 						String postName = (String)post.get(0);
 						String postBody = (String)post.get(1);
-						returnCode = classDB.addPost(msg.getClassroom_ID(), postName, postBody, hubAESObject);
+						returnCode = classDB.addPost(msg.getClassroom_ID(), postName, postBody, serverAESObject);
 						msg.setCode(returnCode);
 						returnMessage(msg);
 						break;
@@ -116,13 +144,13 @@ public class ServerSocketHandler {
 						ArrayList<String> com = (ArrayList<String>)msg.getBody();
 						int postId = Integer.parseInt(com.get(0));
 						String comment = com.get(1);
-						returnCode = classDB.addComment(msg.getClassroom_ID(), postId, comment, hubAESObject);
+						returnCode = classDB.addComment(msg.getClassroom_ID(), postId, comment, serverAESObject);
 						msg.setCode(returnCode);
 						returnMessage(msg);
 						break;
 					case Client_GoToClassroom:
 						System.out.println(msg.getUserName()+ "wants to enter: " + msg.getClassroom_ID());
-						Map<Integer, String> threadList = classDB.getThreadList(msg.getClassroom_ID(), hubAESObject);
+						Map<Integer, String> threadList = classDB.getThreadList(msg.getClassroom_ID(), serverAESObject);
 						if (threadList == null){
 							//return failure
 							msg.setCode(-1);
@@ -144,7 +172,7 @@ public class ServerSocketHandler {
 						int threadID = (Integer)msg.getBody();
 						System.out.println(msg.getUserName() + " wants to view thread #: " + threadID);
 						
-						Map<Integer, String> thread = classDB.getThread(msg.getClassroom_ID(), threadID, hubAESObject);
+						Map<Integer, String> thread = classDB.getThread(msg.getClassroom_ID(), threadID, serverAESObject);
 						if (thread == null){
 							//return failure
 							msg.setCode(-1);
@@ -165,7 +193,7 @@ public class ServerSocketHandler {
 					case Client_DeleteThread:
 						System.out.println(msg.getUserName()+ "wants to delete a thread.");
 						int p = (Integer)msg.getBody();
-						returnCode = classDB.removePost(msg.getClassroom_ID(), p, hubAESObject);
+						returnCode = classDB.removePost(msg.getClassroom_ID(), p, serverAESObject);
 						msg.setCode(returnCode);
 						returnMessage(msg);
 						break;
@@ -179,7 +207,7 @@ public class ServerSocketHandler {
 						ArrayList<Integer> commentParams = (ArrayList<Integer>)msg.getBody();
 						int postID = commentParams.get(0);
 						int commentID = commentParams.get(1);
-						returnCode = classDB.removeComment(msg.getClassroom_ID(), postID, commentID, hubAESObject);
+						returnCode = classDB.removeComment(msg.getClassroom_ID(), postID, commentID, serverAESObject);
 						msg.setCode(returnCode);
 						returnMessage(msg);
 						break;	

@@ -80,6 +80,7 @@ public class HubSocketHandler extends Thread{
 	 * Returns true if user is authenticated and future transmissions are 
 	 * allowed. False otherwise.
 	 */
+	@SuppressWarnings("unchecked")
 	private boolean authenticate(){
 		Message firstMessage = null;
 		try {
