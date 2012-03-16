@@ -82,6 +82,15 @@ public class SystemLogin {
 	 */
 	private AES validateSystemPassword(char[] password) {
 		AES aes = new AES(password, system_admin_init_vector, system_admin_salt);
+		if (aes==null){
+			return null;
+		}
+		byte[] b = aes.decrypt(system_admin_enc);
+		if (b==null)
+			return null;
+		char[] pass = new String().toCharArray();
+		System.out.println(Arrays.toString(pass));
+		
 		if (aes.decrypt(system_admin_enc).equals(password)) {
 			return aes;
 		}

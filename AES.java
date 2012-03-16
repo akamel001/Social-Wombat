@@ -29,8 +29,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 // TODO: destruct any sensitive information
 public final class AES {
-
-	
 	private byte[] iv = null;
     public int numIterations = 1024;
     private SecretKey secretKey = null;
@@ -212,7 +210,10 @@ public final class AES {
 		if (message==null)
 			return null;
         try {
-        	return dcipher.doFinal(message);
+        	if (dcipher==null)
+        		return null;
+        	else
+        		return dcipher.doFinal(message);
         } catch (IllegalBlockSizeException e) {
 			e.printStackTrace();
 		} catch (BadPaddingException e) {
@@ -224,11 +225,11 @@ public final class AES {
 	public static void main(String args[]){
 		String pass_1 = new String("Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..." +
 "There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain...");
-		String plain_text = ("TEXT");
+		//String plain_text = ("TEXT");
 		
 		
 		AES aes1 = new AES(pass_1.toCharArray());
-		AES aes2 = new AES(aes1.getSecretKey(),aes1.getIv(),aes1.getSalt());
+		//AES aes2 = new AES(aes1.getSecretKey(),aes1.getIv(),aes1.getSalt());
 		
 		Message m = new Message();
 		ArrayList<Integer> tmp = new ArrayList<Integer>();
@@ -236,10 +237,10 @@ public final class AES {
 		tmp.add(1,2);
 		m.setBody(aes1.encrypt(tmp));
 		
-		byte[] enc1 = (byte []) m.getBody();
+		//byte[] enc1 = (byte []) m.getBody();
 		
 		ArrayList<Integer> tmp2 = new ArrayList<Integer>();
-		tmp2 = (ArrayList<Integer>) (aes1.decryptObject(enc1));
+		//tmp2 = (ArrayList<Integer>) (aes1.decryptObject(enc1));
 		
 		m.setBody(tmp2);
 		
