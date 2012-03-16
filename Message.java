@@ -16,7 +16,10 @@ public class Message implements Serializable{
 	private String userName;
 	private int code;
 	private String classroom_id;
-
+	
+	public long generateCheckSum(){
+		return CheckSum.getChecksum(body);
+	}
 	public enum MessageType {
 	    // Client -> Hub only
 		Client_LogIn, 

@@ -11,6 +11,8 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 import java.security.spec.KeySpec;
+import java.util.ArrayList;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -126,21 +128,21 @@ public final class AES {
 	 * @return Returns a byte array containing the encrypted String. Returns null on failure or 
 	 * if passed a null object. 
 	 */
-	public byte[] encrypt(String message){
-		if (message==null)
-			return null;
-        try {
-        	return ecipher.doFinal(message.getBytes("UTF-8"));
-        } catch (IllegalBlockSizeException e) {
-			e.printStackTrace();
-		} catch (BadPaddingException e) {
-			System.out.println("Bad padding Exception. Probably bad IV");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} 
-        
-        return null;
-	}
+//	public byte[] encrypt(String message){
+//		if (message==null)
+//			return null;
+//        try {
+//        	return ecipher.doFinal(message.getBytes("UTF-8"));
+//        } catch (IllegalBlockSizeException e) {
+//			e.printStackTrace();
+//		} catch (BadPaddingException e) {
+//			System.out.println("Bad padding Exception. Probably bad IV");
+//		} catch (UnsupportedEncodingException e) {
+//			e.printStackTrace();
+//		} 
+//        
+//        return null;
+//	}
 	
 	public byte[] getSalt() {
 		return salt;
@@ -249,19 +251,22 @@ public final class AES {
 		AES aes1 = new AES(pass_1.toCharArray());
 		AES aes2 = new AES(aes1.getSecretKey(),aes1.getIv(),aes1.getSalt());
 		
-		byte[] cipher = aes2.encrypt(plain_text);
-		
-		String out = new String(aes1.decrypt(cipher));
-		
 		Message m = new Message();
-		m.setBody((Object)plain_text);
+		ArrayList<Integer> tmp = new ArrayList<Integer>();
+		tmp.add(0, 1);
+		tmp.add(1,2);
+		m.setBody(aes1.encrypt(tmp));
 		
-		cipher = aes2.encrypt(m);
+		byte[] enc1 = (byte []) m.getBody();
 		
-		m = (Message)aes1.decryptObject(cipher);
+		ArrayList<Integer> tmp2 = new ArrayList<Integer>();
+		tmp2 = (ArrayList<Integer>) (aes1.decryptObject(enc1));
+		
+		m.setBody(tmp2);
+		
+		//m = (Message)aes1.decryptObject(cipher);
 		System.out.println(m.getBody());
-		System.out.println(out);
-	
+		//System.out.println(out);
 	}
 	
 }
