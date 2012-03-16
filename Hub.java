@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.security.SecureRandom;
 
@@ -190,14 +191,30 @@ class Hub extends Thread {
 				SocketPackage tempSocket = serverPackages.get(i);
 				//make sure not already connected
 				if(!tempSocket.isConnected()){
-					authenticatedConnect(tempSocket, serverList.getServerAES(i, hubAESObject));
+					//regenerate serverAES object
+					//grab pass
+					char[] servPass = serverList.getServerPass(i, hubAESObject);
+					//grab iv(0), salt(1)
+					List<byte[]> serveIvSalt = serverList.getIvSalt(i, hubAESObject);
+					AES servAES = new AES(servPass,serveIvSalt.get(0),serveIvSalt.get(1));
+					//zero out password
+					Arrays.fill(servPass, '0');
+					authenticatedConnect(tempSocket, servAES);
 				}
 			} else{
 				//add to map and connect (happens at hub start up)
 				SocketPackage newSocketPackage = 
 						new SocketPackage(serverList.getAddress(i), SERVER_SOCKET);
 				if(!newSocketPackage.isConnected()){
-					authenticatedConnect(newSocketPackage, serverList.getServerAES(i, hubAESObject));
+					//regenerate serverAES object
+					//grab pass
+					char[] servPass = serverList.getServerPass(i, hubAESObject);
+					//grab iv(0), salt(1)
+					List<byte[]> serveIvSalt = serverList.getIvSalt(i, hubAESObject);
+					AES servAES = new AES(servPass,serveIvSalt.get(0),serveIvSalt.get(1));
+					//zero out password
+					Arrays.fill(servPass, '0');
+					authenticatedConnect(newSocketPackage, servAES);
 				}
 				serverPackages.put(i, newSocketPackage);
 			}
