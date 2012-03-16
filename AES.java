@@ -3,6 +3,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -28,9 +29,9 @@ import javax.crypto.spec.SecretKeySpec;
  */
 
 // TODO: destruct any sensitive information
-public final class AES {
+public final class AES implements Serializable {
 
-	
+	private static final long serialVersionUID = -7942831124421437491L;
 	private byte[] iv = null;
     public int numIterations = 1024;
     private SecretKey secretKey = null;
