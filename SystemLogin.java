@@ -115,14 +115,17 @@ public class SystemLogin {
 		try {
 		    FileInputStream fin = new FileInputStream(name);
 		    ObjectInputStream ois = new ObjectInputStream(fin);
+		    o = (SystemLogin) ois.readObject();
 		    
 		    ois.close();
 		} catch (IOException e) { 
 			e.printStackTrace(); 
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
 		}
 		return o;
 	}
-	
+
 	/**
 	 * Writes an object o to a file with the specified name.
 	 * @param o
@@ -133,14 +136,14 @@ public class SystemLogin {
 		try {
 			fos = new FileOutputStream(name);
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			
+			oos.writeObject((SystemLogin)o);
 			oos.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
+	}	
 	
 	/**
 	 * Checks if a file with the given name exists.
@@ -164,7 +167,7 @@ public class SystemLogin {
 			systemStartup.system_admin_enc = systemAdminAES.encrypt(systemAdminPassword);
 			systemStartup.system_admin_init_vector = systemAdminAES.getIv();
 			systemStartup.system_admin_salt = systemAdminAES.getSalt();
-			
+
 			// Hub
 			char[] hubPassword = generateString(allowedChars, 64);
 			AES hubAES = new AES(hubPassword);
@@ -172,8 +175,7 @@ public class SystemLogin {
 			systemStartup.hub_init_vector = hubAES.getIv();
 			systemStartup.hub_salt = hubAES.getSalt();
 			
-			writeToDisk(systemStartup, "system_startup");
-			
+			writeToDisk(systemStartup, "system_startup");			
 		} else {
 			systemStartup = (SystemLogin)readFromDisk("system_startup");
 		}

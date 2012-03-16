@@ -122,27 +122,6 @@ public final class AES {
 			e.printStackTrace();
 		}
 	}
-	/**
-	 * Encypts a message and returns the encrypted version of the message.
-	 * @param message
-	 * @return Returns a byte array containing the encrypted String. Returns null on failure or 
-	 * if passed a null object. 
-	 */
-//	public byte[] encrypt(String message){
-//		if (message==null)
-//			return null;
-//        try {
-//        	return ecipher.doFinal(message.getBytes("UTF-8"));
-//        } catch (IllegalBlockSizeException e) {
-//			e.printStackTrace();
-//		} catch (BadPaddingException e) {
-//			System.out.println("Bad padding Exception. Probably bad IV");
-//		} catch (UnsupportedEncodingException e) {
-//			e.printStackTrace();
-//		} 
-//        
-//        return null;
-//	}
 	
 	public byte[] getSalt() {
 		return salt;

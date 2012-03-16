@@ -4,20 +4,10 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
-
-//global add socket 
-//get ride of cookie message and client
-//handle login has salt value, username and timestamp encripted in body
-//date object formated in for timestamp
-// TODO use an overloaded send in socketpackage to send byte array 
-
-//TODO every message being sent add checksum in it... only of body
 public class Client {
 
 	private static final boolean DEBUG = false;
@@ -133,9 +123,12 @@ public class Client {
 		message.setClassroom_ID(classroomName);
 		message.setType(Message.MessageType.Client_CreateClassroom);
 		//**NO CHECKSUM**//
-		socket.send(message);
-
-		return (socket.receive().getCode() == 1)? true : false;	
+		socket.sendEncrypted(aes.encrypt(message));
+		
+		byte[] encMessage = socket.receiveEncrypted();
+		Message response = (Message) aes.decryptObject(encMessage);
+		
+		return (response.getCode() == 1)? true : false;	
 	}
 
 	/**
@@ -158,9 +151,12 @@ public class Client {
 		message.setClassroom_ID(classroomRequestName);
 		message.setBody(0);
 		message.setChecksum(message.generateCheckSum());
-		socket.send(message);
+		socket.sendEncrypted(aes.encrypt(message));
 		
-		return (socket.receive().getCode() == 1)? true : false;			
+		byte[] encMessage = socket.receiveEncrypted();
+		Message response = (Message) aes.decryptObject(encMessage);
+		
+		return (response.getCode() == 1)? true : false;			
 	}
 
 	/**
@@ -185,10 +181,12 @@ public class Client {
 		message.setUserName(userName);
 		message.setType(Message.MessageType.Client_GetUserEnrollment);
 		//**NO CHECKSUM HERE**// no body
-		socket.send(message);
+		socket.sendEncrypted(aes.encrypt(message));
 	
-		Message responce = socket.receive();
-		return (Map<String, Integer>) ((responce.getCode() == 1)? responce.getBody() : null);	
+		byte[] encMessage = socket.receiveEncrypted();
+		Message response = (Message) aes.decryptObject(encMessage);
+		
+		return (Map<String, Integer>) ((response.getCode() == 1)? response.getBody() : null);	
 	}
 
 	/**
@@ -214,9 +212,12 @@ public class Client {
 		message.setType(Message.MessageType.Client_CreateThread);
 		message.setBody(list);
 		message.setChecksum(message.generateCheckSum());
-		socket.send(message);
+		socket.sendEncrypted(aes.encrypt(message));
 		
-		return (socket.receive().getCode() == 1)? true : false;	
+		byte[] encMessage = socket.receiveEncrypted();
+		Message response = (Message) aes.decryptObject(encMessage);
+		
+		return (response.getCode() == 1)? true : false;	
 	}
 
 	/**
@@ -233,9 +234,12 @@ public class Client {
 		message.setClassroom_ID(classroomName);
 		message.setBody(0);
 		message.setChecksum(message.generateCheckSum());
-		socket.send(message);
+		socket.sendEncrypted(aes.encrypt(message));
 
-		return (socket.receive().getCode() == 1)? true : false;	
+		byte[] encMessage = socket.receiveEncrypted();
+		Message response = (Message) aes.decryptObject(encMessage);
+		
+		return (response.getCode() == 1)? true : false;	
 	}
 
 	/**
@@ -258,9 +262,13 @@ public class Client {
 		message.setType(Message.MessageType.Client_SetPermissions);
 		message.setBody(list);
 		message.setChecksum(message.generateCheckSum());
-		socket.send(message);
+		socket.sendEncrypted(aes.encrypt(message));
 		
-		return (socket.receive().getCode() == 1)? true : false;		
+
+		byte[] encMessage = socket.receiveEncrypted();
+		Message response = (Message) aes.decryptObject(encMessage);
+		
+		return (response.getCode() == 1)? true : false;		
 	}
 
 	/**
@@ -285,11 +293,14 @@ public class Client {
 		message.setClassroom_ID(classroomName);
 		message.setType(Message.MessageType.Client_GoToClassroom);
 		//** NO CHECKSUM**// no body
-		socket.send(message);
+		socket.sendEncrypted(aes.encrypt(message));
 		
-		Message responce = socket.receive();
 
-		return (Map<Integer, String>) ((responce.getCode() == 1)? responce.getBody() : null);	
+		byte[] encMessage = socket.receiveEncrypted();
+		Message response = (Message) aes.decryptObject(encMessage);
+		
+
+		return (Map<Integer, String>) ((response.getCode() == 1)? response.getBody() : null);	
 	}
 
 	/**
@@ -316,9 +327,10 @@ public class Client {
 		message.setBody(threadID);
 		message.setType(Message.MessageType.Client_GoToThread);
 		message.setChecksum(message.generateCheckSum());
-		socket.send(message);
+		socket.sendEncrypted(aes.encrypt(message));
 
-		Message response = socket.receive();
+		byte[] encMessage = socket.receiveEncrypted();
+		Message response = (Message) aes.decryptObject(encMessage);
 
 		return (Map<Integer, String>) ((response.getCode() == 1)? response.getBody() : null);
 	}
@@ -340,9 +352,13 @@ public class Client {
 		message.setType(Message.MessageType.Client_CreateComment);
 		message.setBody(list);
 		message.setChecksum(message.generateCheckSum());
-		socket.send(message);
+		socket.sendEncrypted(aes.encrypt(message));
 		
-		return (socket.receive().getCode() == 1)? true : false;		
+		byte[] encMessage = socket.receiveEncrypted();
+		Message response = (Message) aes.decryptObject(encMessage);
+		
+
+		return (response.getCode() == 1)? true : false;		
 	}
 
 	/**
@@ -368,9 +384,10 @@ public class Client {
 		message.setClassroom_ID(classroomName);
 		message.setType(Message.MessageType.Client_GetClassEnrollment);
 		//** NO CHECKSUM HERE**// no body...
-		socket.send(message);
+		socket.sendEncrypted(aes.encrypt(message));
 		
-		Message response = socket.receive();
+		byte[] encMessage = socket.receiveEncrypted();
+		Message response = (Message) aes.decryptObject(encMessage);
 
 		return (Map<String, Integer>) ((response.getCode() == 1)? response.getBody() : null);
 	}
@@ -398,9 +415,12 @@ public class Client {
 		message.setType(Message.MessageType.Client_SetPermissions);
 		message.setBody(list);
 		message.setChecksum(message.generateCheckSum());
-		socket.send(message);
+		socket.sendEncrypted(aes.encrypt(message));
 
-		return (socket.receive().getCode() == 1)? true : false;	
+		byte[] encMessage = socket.receiveEncrypted();
+		Message response = (Message) aes.decryptObject(encMessage);
+		
+		return (response.getCode() == 1)? true : false;	
 	}
 
 	/**
@@ -425,9 +445,12 @@ public class Client {
 		message.setType(Message.MessageType.Client_SetPermissions);
 		message.setBody(list);
 		message.setChecksum(message.generateCheckSum());
-		socket.send(message);
+		socket.sendEncrypted(aes.encrypt(message));
 
-		return (socket.receive().getCode() == 1)? true : false;
+		byte[] encMessage = socket.receiveEncrypted();
+		Message response = (Message) aes.decryptObject(encMessage);
+		
+		return (response.getCode() == 1)? true : false;
 	}
 
 	/**
@@ -452,10 +475,12 @@ public class Client {
 		//** NO CHECKSUM HERE**//
 		//message.setChecksum(message.generateCheckSum());
 		
-		socket.send(message);
+		socket.sendEncrypted(aes.encrypt(message));
 
-		Message responce = socket.receive();
-		return (List<String>) ((responce.getCode() == 1)? responce.getBody() : null);
+		byte[] encMessage = socket.receiveEncrypted();
+		Message response = (Message) aes.decryptObject(encMessage);
+		
+		return (List<String>) ((response.getCode() == 1)? response.getBody() : null);
 	}
 
 	/**
@@ -480,10 +505,12 @@ public class Client {
 		message.setType(Message.MessageType.Client_SetPermissions);
 		message.setBody(list);
 		message.setChecksum(message.generateCheckSum());
-		socket.send(message);
-		
+		socket.sendEncrypted(aes.encrypt(message));
 
-		return (socket.receive().getCode() == 1)? true : false;
+		byte[] encMessage = socket.receiveEncrypted();
+		Message response = (Message) aes.decryptObject(encMessage);
+
+		return (response.getCode() == 1)? true : false;
 	}
 
 	/**
@@ -508,10 +535,13 @@ public class Client {
 		message.setType(Message.MessageType.Client_SetPermissions);
 		message.setBody(list);
 		message.setChecksum(message.generateCheckSum());
-		socket.send(message);
-		
+		socket.sendEncrypted(aes.encrypt(message));
 
-		return (socket.receive().getCode() == 1)? true : false;
+		byte[] encMessage = socket.receiveEncrypted();
+		Message response = (Message) aes.decryptObject(encMessage);
+
+
+		return (response.getCode() == 1)? true : false;
 	}
 	
 	/**
@@ -538,9 +568,12 @@ public class Client {
 		message.setType(Message.MessageType.Client_DeleteComment);
 		message.setBody(list);
 		message.setChecksum(message.generateCheckSum());
-		socket.send(message);
+		socket.sendEncrypted(aes.encrypt(message));
 		
-		return (socket.receive().getCode() == 1)? true : false;
+		byte[] encMessage = socket.receiveEncrypted();
+		Message response = (Message) aes.decryptObject(encMessage);
+
+		return (response.getCode() == 1)? true : false;
 	}
 	
 	/**
@@ -562,9 +595,12 @@ public class Client {
 		message.setType(Message.MessageType.Client_DeleteThread);
 		message.setBody(threadID);
 		message.setChecksum(message.generateCheckSum());
-		socket.send(message);
+		socket.sendEncrypted(aes.encrypt(message));
+		
+		byte[] encMessage = socket.receiveEncrypted();
+		Message response = (Message) aes.decryptObject(encMessage);
 
-		return (socket.receive().getCode() == 1)? true : false;
+		return (response.getCode() == 1)? true : false;
 	}
 	
 	/**
@@ -601,13 +637,16 @@ public class Client {
 		message.setBody(list);
 		message.setChecksum(message.generateCheckSum());
 		
-		socket.send(message);
+		socket.sendEncrypted(aes.encrypt(message));
 		
 		//Clearing password arrays
 		Arrays.fill(oldPassword, '0');
 		Arrays.fill(newPassword, '0');
 		Arrays.fill(confirmNewPassword, '0');
 
-		return (socket.receive().getCode() == 1)? true : false;
+		byte[] encMessage = socket.receiveEncrypted();
+		Message response = (Message) aes.decryptObject(encMessage);
+
+		return (response.getCode() == 1)? true : false;
 	}
 }

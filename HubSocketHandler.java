@@ -166,6 +166,9 @@ public class HubSocketHandler extends Thread{
 			returnBody.set(1, clientNonce+1);
 			//set the body
 			returnMsg.setBody(returnBody);
+			//set checksum
+			long checksum = CheckSum.getChecksum(returnMsg);
+			returnMsg.setChecksum(checksum);
 			
 			//encrypt
 			byte[] returnMessage = clientAESObject.encrypt(returnMsg);
@@ -202,24 +205,33 @@ public class HubSocketHandler extends Thread{
 	 * passes. Will return false otherwise.
 	 */
 	private boolean getAndDecryptMessage(){
+		//length
+		int length = 0;
+		//read the length of the byte [] first
 		try {
-			//pull message
-			byte[] eMsg = (byte[])ois.readObject();
-			msg = (Message)clientAESObject.decryptObject(eMsg);
-			
-			//do checksum
-			long oldChecksum = msg.getChecksum();
-			long newChecksum = CheckSum.getChecksum(msg.getBody());
-			
-			return (oldChecksum == newChecksum);
+			length = ois.readInt();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return false;
 		}
-		return false;
+		//set a buffer to correct length
+		byte[] encryptedMsg = new byte[length];
+		//read encrypted message
+		try {
+			ois.readFully(encryptedMsg);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		msg = (Message)clientAESObject.decryptObject(encryptedMsg);
+		
+		//do checksum
+		long oldChecksum = msg.getChecksum();
+		long newChecksum = CheckSum.getChecksum(msg.getBody());
+		
+		return (oldChecksum == newChecksum);
+		
 		
 	}
 	
@@ -227,7 +239,10 @@ public class HubSocketHandler extends Thread{
 	 * Method to send an encrypted message to the precreated streams.
 	 */
 	private void sendEncryptedMessage(byte[] msg){
+		int length = msg.length;
 		try {
+			//send the length along first
+			oos.writeInt(length);
 			oos.write(msg);
 			oos.flush();
 			oos.reset();
@@ -264,6 +279,9 @@ public class HubSocketHandler extends Thread{
 		byte[] eMsg = clientAESObject.encrypt(msg);
 		//send over wire
 		try {
+			//write in the length first
+			oos.writeInt(eMsg.length);
+			//then write message
 			oos.write(eMsg);
 			oos.flush();
 			oos.reset();
@@ -291,19 +309,32 @@ public class HubSocketHandler extends Thread{
 	private Message forwardToServer(Message msg){
 		SocketPackage forwardSocketPackage;
 		Message reply = null;
-
+		byte[] eReply = null;
 		// Open a socket connection with appropriate server
 		if(DEBUG) System.out.println("Message forwarded to: " + getServer(msg));
-		forwardSocketPackage = serverPackages.get(getServer(msg));
+		int serverID = getServer(msg);
+		forwardSocketPackage = serverPackages.get(serverID);
 
+		//Set checksum
+		long checksum = CheckSum.getChecksum(msg);
+		msg.setChecksum(checksum);
+		
+		//encrypt
+		AES aesObj = serverList.getServerAES(serverID, hubAESObject);
+		byte[] eMsg = aesObj.encrypt(msg);
+		
 		//Only one user can be communicating with a server at one time
 		synchronized(forwardSocketPackage){
 			// Write out message
-			forwardSocketPackage.send(msg);
+			forwardSocketPackage.sendEncrypted(eMsg);
 			
 			// Get response
-			reply = forwardSocketPackage.receive();
+			eReply = forwardSocketPackage.receiveEncrypted();
 		}
+		
+		//decrypt
+		reply = (Message)aesObj.decryptObject(eReply);
+		
 		return reply;
 	}
 	
