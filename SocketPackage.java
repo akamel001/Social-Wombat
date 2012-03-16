@@ -35,29 +35,6 @@ class SocketPackage {
 		return addr.getHostAddress();
 	}
 	
-	/*
-	 * Used to receive an encrypted servermessage. Only for communication with 
-	 * server because the AES key can be stored in socketPackage because the 
-	 * socketPackage object will reside on the hub.
-	 * Server message will be encrypted. So we must use the AESObject
-	 * stored from beforehand.
-	 * 
-	 * returns null when it can't
-	 */
-	public byte[] receiveEncryptedBytes(){
-		//TODO: TEST!
-		try {
-			//read stream
-			return (byte[])ois.readObject();
-			
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		} catch (ClassNotFoundException e1) {
-			e1.printStackTrace();
-		}
-		return null;
-	}
-	
 	/**
 	 * Connects the socket to the input inetaddress. Also creates the 
 	 * output and input streams
@@ -113,8 +90,7 @@ class SocketPackage {
 	}
 
 	/**
-	 * Send a message with flushing
-	 * UNENCRYPTED
+	 * Send an unencrypted message with flushing
 	 */
 	public void send(Message msg){
 		try {
@@ -128,42 +104,8 @@ class SocketPackage {
 
 	}
 	
-	/*
-	 * Assumes a message is encrypted before calling this function
-	 */
-	public void sendEncrypted(byte[] msg){
-		try {
-			oos.writeObject(msg);
-			oos.flush();
-			oos.reset();
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("System send failed");
-		}
-	}
-	
-	
-	/*
-	 * NOT SURE WHAT THIS IS
-	 */
-	public void send(byte msg){
-		try {
-			dout.write(msg);
-			dout.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Send byte message failed");
-		}
-
-	}
-	
-	public byte[] receiveBytes(){
-		//TODO need to think about this one... 
-		return null;
-	}
-	
 	/**
-	 * Receive a message
+	 * Receive an unencrypted message
 	 */
 	public Message receive(){
 		Message msg = null;
@@ -177,6 +119,46 @@ class SocketPackage {
 			System.out.println("Object received was not of type Message");
 		}
 		return msg;
+	}
+	
+	
+	/**
+	 * Sends an encrypted (byte[]) message
+	 */
+	public void sendEncrypted(byte[] msg){
+		try {
+			//write an int of the byte[] length first
+			oos.writeInt(msg.length);
+			//write rest of message
+			oos.writeObject(msg);
+			oos.flush();
+			oos.reset();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("System send failed");
+		}
+	}
+	
+
+	/**
+	 * Receives an encrypted message but looks in the header for the
+	 * length of the byte to read.
+	 * @return
+	 */
+	public byte[] receiveEncryted(){
+		int length = 0;
+		try {
+			length = ois.readInt();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		byte[] encryptedMsg = new byte[length];
+		try {
+			ois.readFully(encryptedMsg);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return encryptedMsg;
 	}
 
 	/*
