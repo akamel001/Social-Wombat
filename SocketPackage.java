@@ -12,8 +12,6 @@ class SocketPackage {
 	private InetAddress addr;
 	private ObjectOutputStream oos;
 	private ObjectInputStream ois;
-	private DataOutputStream dout;
-//	private DataInputStream din;
 	private static final int TIMEOUT = 5000;
 	private static final int MAX_RETRY = 16;
 	private static final boolean DEBUG = false;
@@ -66,10 +64,6 @@ class SocketPackage {
 				oos = new ObjectOutputStream(socket.getOutputStream());
 				if (DEBUG) System.out.println("Creating an input stream");
 				ois = new ObjectInputStream(socket.getInputStream());
-				if (DEBUG) System.out.println("Creating a byte output stream");
-				dout = new DataOutputStream(socket.getOutputStream());
-//				if (DEBUG) System.out.println("Creating a byte input stream");
-//				din = new DataInputStream(socket.getInputStream());
 			} catch (IOException e){
 				e.printStackTrace();
 				System.out.println("Could not get streams");
