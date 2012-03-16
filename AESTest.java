@@ -19,25 +19,24 @@ public class AESTest {
 		Message message = new Message();
 		
 		message.setClassroom_ID("Class1");
-		message.setBody(obj1.encrypt("1337 H4kr"));
+		message.setBody("1337 H4kr");
 		
 		byte[] enc1 = obj2.encrypt(message);
 		byte[] enc2 = obj2.encrypt(message);
 
-		if(Arrays.equals(enc1, enc2))
-			System.out.println("Encrypting is equal!!");
-
+		assert(Arrays.equals(enc1, enc2));
+		
 		Message deMessage = (Message) obj1.decryptObject(enc1);
 		Message deMessage2 = (Message) obj2.decryptObject(enc1);
 
-		System.out.println(obj1.decrypt((byte [])deMessage.getBody()));
-
-//		assertEquals("1337 H4kr", obj1.decryptObject((byte[]) deMessage.getBody()));
-//		assertEquals("Class1", deMessage.getClassroom_ID());
-//		
-//		assertEquals("1337 H4kr", deMessage2.getBody());
-//		assertEquals("Class1", deMessage2.getClassroom_ID());
-
+		assertEquals("1337 H4kr", deMessage.getBody());
+		assertEquals("Class1", deMessage.getClassroom_ID());
+		
+		assertEquals("1337 H4kr", deMessage2.getBody());
+		assertEquals("Class1", deMessage2.getClassroom_ID());
+	}
+	
+	public void testAES2() {
 		
 	}
 }
