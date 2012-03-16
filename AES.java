@@ -221,8 +221,7 @@ public final class AES {
 	  }
 	  return bytes;
 	}
-
-	
+    
 	/**
 	 * Decrypts an encrypted message and returns the decrypted version of the message.
 	 * @param message

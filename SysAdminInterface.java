@@ -12,6 +12,7 @@ public class SysAdminInterface {
 	static Hub hub;
 	static boolean hubIsRunning = false;
 	static AES aesHub;
+	static SystemLogin systemLogin;
 	private static final String sLOG_IN = 					UserInterfaceHelper.addFormattingAlignCenter("SYSTEM LOG IN");
 	private static final String sHOME_PAGE = 				UserInterfaceHelper.addFormattingAlignCenter("SYSTEM HOME"); 
 	private static final String sSYSTEM_USER_LIST_PAGE = 	UserInterfaceHelper.addFormattingAlignCenter("SYSTEM USER LIST");
@@ -243,7 +244,7 @@ public class SysAdminInterface {
 	 * @return
 	 */
 	private static AES handleSystemLogin(char[] password) {
-		AES aes = SystemLogin.handleSystemLogin(password);
+		AES aes = systemLogin.handleSystemLogin(password);
 		if (aes != null) {
 			Arrays.fill(password, '0');
 			return aes;
@@ -273,7 +274,7 @@ public class SysAdminInterface {
 	 * @return
 	 */
 	private static boolean changeSystemPassword(char[] oldPassword, char[] newPassword, char[] confirmNewPassword) {
-		if (SystemLogin.changeSystemPassword(oldPassword, newPassword, confirmNewPassword)) {
+		if (systemLogin.changeSystemPassword(oldPassword, newPassword, confirmNewPassword)) {
 			Arrays.fill(oldPassword, '0');
 			Arrays.fill(newPassword, '0');
 			Arrays.fill(confirmNewPassword, '0');
@@ -379,6 +380,7 @@ public class SysAdminInterface {
             System.err.println("No console.");
             System.exit(1);
         }
+        systemLogin = SystemLogin.systemStartup();
 		
 		System.out.println("This is the system admin interface for Studious Wombat.");
 		systemLoginPage(null);

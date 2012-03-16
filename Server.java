@@ -5,17 +5,19 @@ public class Server {
 	//private static int CLIENT_SOCKET = 4444;
 	private static int SERVER_SOCKET = 5050;
 	public static boolean listening = true;
-
+	
 	//datastructure that will be passed to every spawned serversockethandler thread
 	private static ClassDB classDB;
+	private static char[] password;
 	
 	//default, is reset in constructor
 	static String classDBName = "server.classDB";	
 
 	// Constructor
-	public Server(String name) {
+	public Server(String name, char[] password) {
 		// Constructor
 		classDBName = name + ".classDB";
+		this.password = password;	//needs to wait for an iv, and salt
 		//get ip
 		InetAddress thisIp = null;
 		try {
@@ -121,7 +123,7 @@ public class Server {
 					Socket hub = serverSocket.accept();
 					//Spawn new ServerSocketHandler thread, we assume that the
 					//hub has directed this message to the correct Server
-					ServerSocketHandler newRequest = new ServerSocketHandler(hub,classDB);
+					ServerSocketHandler newRequest = new ServerSocketHandler(hub,classDB,password);
 					System.out.println("New socket handler created");
 					//Starts running the new thread
 					newRequest.run(); 

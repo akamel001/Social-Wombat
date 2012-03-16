@@ -80,6 +80,7 @@ public class HubSocketHandler extends Thread{
 	 * Returns true if user is authenticated and future transmissions are 
 	 * allowed. False otherwise.
 	 */
+	@SuppressWarnings("unchecked")
 	private boolean authenticate(){
 		Message firstMessage = null;
 		try {
@@ -195,6 +196,34 @@ public class HubSocketHandler extends Thread{
 	}
 	
 	/*
+	 * Gets and decrypts a message. Also does checksumming
+	 * Blocking read.
+	 * Will return true if was able to decrypt message and checksum
+	 * passes. Will return false otherwise.
+	 */
+	private boolean getAndDecryptMessage(){
+		try {
+			//pull message
+			byte[] eMsg = (byte[])ois.readObject();
+			msg = (Message)clientAESObject.decryptObject(eMsg);
+			
+			//do checksum
+			long oldChecksum = msg.getChecksum();
+			long newChecksum = CheckSum.getChecksum(msg.getBody());
+			
+			return (oldChecksum == newChecksum);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+		
+	}
+	
+	/*
 	 * Method to send an encrypted message to the precreated streams.
 	 */
 	private void sendEncryptedMessage(byte[] msg){
@@ -206,7 +235,6 @@ public class HubSocketHandler extends Thread{
 			e.printStackTrace();
 			System.out.println("Sending an encrypted message failed");
 		}
-		
 	}
 	
 	/*
@@ -222,6 +250,27 @@ public class HubSocketHandler extends Thread{
 			e.printStackTrace();
 			System.out.println("Return Message Failed");
 		}	
+	}
+	
+	/*
+	 * Encrypt and return a message. Takes a message and will set the checksum for you.
+	 * 
+	 */
+	private void returnAndEncryptMessage(Message msg){
+		//calculate checksum
+		long thisChecksum = CheckSum.getChecksum(msg.getBody());
+		msg.setChecksum(thisChecksum);
+		//encrypt message why client aes key
+		byte[] eMsg = clientAESObject.encrypt(msg);
+		//send over wire
+		try {
+			oos.write(eMsg);
+			oos.flush();
+			oos.reset();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Return Message Failed");
+		}
 	}
 	
 	/*
@@ -274,7 +323,7 @@ public class HubSocketHandler extends Thread{
 		while (listen){
 			boolean valid = true;
 			//Wait, read and deserialize Message from Socket
-			getMessage();
+			valid = getAndDecryptMessage();
 			
 			if (msg == null){
 				System.out.println("Message was null");
@@ -311,7 +360,7 @@ public class HubSocketHandler extends Thread{
 								msg.setBody(classEnroll);
 							} 
 						} 
-						returnMessage(msg);
+						returnAndEncryptMessage(msg);
 						break;
 					// Return in body a list of the classes that a client is enrolled in
 					case Client_GetUserEnrollment:
@@ -322,7 +371,7 @@ public class HubSocketHandler extends Thread{
 							msg.setCode(1);
 							msg.setBody(userEnroll);
 						} 
-						returnMessage(msg);
+						returnAndEncryptMessage(msg);
 						break;
 					case Client_ListClassroomRequests:
 						//check permissions
@@ -334,7 +383,7 @@ public class HubSocketHandler extends Thread{
 								msg.setBody(requests);
 							}
 						}
-						returnMessage(msg);
+						returnAndEncryptMessage(msg);
 						break;
 					// Change the permissions for another user, special case for student
 					// Store user to be changed and the permissions as an arraylist
@@ -371,7 +420,7 @@ public class HubSocketHandler extends Thread{
 								msg.setCode(returnCode);
 							}
 						}
-						returnMessage(msg);
+						returnAndEncryptMessage(msg);
 						break;
 					case Client_DeleteSelf:
 						String u = msg.getUserName();
@@ -383,7 +432,7 @@ public class HubSocketHandler extends Thread{
 							//fail
 							msg.setCode(-1);
 						}
-						returnMessage(msg);
+						returnAndEncryptMessage(msg);
 						break;
 					// Request to be added to a class
 					case Client_RequestEnrollment:
@@ -398,7 +447,7 @@ public class HubSocketHandler extends Thread{
 							if(DEBUG) System.out.println("return code is: " + returnCode);
 							msg.setCode(returnCode);
 						}
-						returnMessage(msg);
+						returnAndEncryptMessage(msg);
 						break;
 						
 					// Client -> Hub -> Server
@@ -418,7 +467,7 @@ public class HubSocketHandler extends Thread{
 						classList.addClass(c, hubAESObject);
 						
 						reply = forwardToServer(msg);
-						returnMessage(reply);
+						returnAndEncryptMessage(reply);
 						break;
 					/*
 					 * Create post requires Post Name, and Post Body.
@@ -430,33 +479,33 @@ public class HubSocketHandler extends Thread{
 					case Client_CreateThread:
 						if (isInClassroom(msg.getUserName(),msg.getClassroom_ID())){
 							reply = forwardToServer(msg);
-							returnMessage(reply);
+							returnAndEncryptMessage(reply);
 						} else {
-							returnMessage(msg);
+							returnAndEncryptMessage(msg);
 						}
 						break;
 					case Client_CreateComment:
 						if (isInClassroom(msg.getUserName(),msg.getClassroom_ID())){
 							reply = forwardToServer(msg);
-							returnMessage(reply);
+							returnAndEncryptMessage(reply);
 						} else {
-							returnMessage(msg);
+							returnAndEncryptMessage(msg);
 						}
 						break;
 					case Client_GoToClassroom:
 						if (isInClassroom(msg.getUserName(),msg.getClassroom_ID())){
 							reply = forwardToServer(msg);
-							returnMessage(reply);
+							returnAndEncryptMessage(reply);
 						} else {
-							returnMessage(msg);
+							returnAndEncryptMessage(msg);
 						}
 						break;
 					case Client_GoToThread:
 						if (isInClassroom(msg.getUserName(),msg.getClassroom_ID())){
 							reply = forwardToServer(msg);
-							returnMessage(reply);
+							returnAndEncryptMessage(reply);
 						} else {
-							returnMessage(msg);
+							returnAndEncryptMessage(msg);
 						}
 						break;
 					case Client_DeleteClassroom:
@@ -466,25 +515,25 @@ public class HubSocketHandler extends Thread{
 							if(reply.getCode() == 1){
 								classList.removeClass(reply.getClassroom_ID());
 							}
-							returnMessage(reply);
+							returnAndEncryptMessage(reply);
 						} else {
-							returnMessage(msg);
+							returnAndEncryptMessage(msg);
 						}
 						break;
 					case Client_DeleteThread:
 						if (isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
 							reply = forwardToServer(msg);
-							returnMessage(reply);
+							returnAndEncryptMessage(reply);
 						} else {
-							returnMessage(msg);
+							returnAndEncryptMessage(msg);
 						}
 						break;
 					case Client_DeleteComment:
 						if (isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
 							reply = forwardToServer(msg);
-							returnMessage(reply);
+							returnAndEncryptMessage(reply);
 						} else {
-							returnMessage(msg);
+							returnAndEncryptMessage(msg);
 						}
 						break;	
 					case Client_CloseSocket:
@@ -502,7 +551,7 @@ public class HubSocketHandler extends Thread{
 					default:
 						msg.setBody("Request denied.");
 						msg.setCode(-1);
-						returnMessage(msg);
+						returnAndEncryptMessage(msg);
 						break;
 				}
 			}

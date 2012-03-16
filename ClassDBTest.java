@@ -16,6 +16,7 @@ import org.junit.Test;
  */
 public class ClassDBTest {
 
+	AES aes; //dummy aes to stop errors
 	/**
 	 * Test method for {@link ClassDB#addClassRoom(java.lang.String)}.
 	 */
@@ -24,16 +25,16 @@ public class ClassDBTest {
 		ClassDB db = new ClassDB();
 		
 		// add 1 class
-		int t = db.addClassRoom("CLASS1");
+		int t = db.addClassRoom("CLASS1", aes);
 		assertEquals("Result", 1, t);
 		
 		// add a duplicate class
-		t = db.addClassRoom("CLASS1");
+		t = db.addClassRoom("CLASS1", aes);
 		assertEquals("Result", -1, t);
 		
 		// Add 1000 classes
 		for (int i=0; i<1000; i++){
-			t = db.addClassRoom("CLASS_" + i);
+			t = db.addClassRoom("CLASS_" + i, aes);
 			assertEquals(1, t);
 		}
 		
@@ -45,7 +46,7 @@ public class ClassDBTest {
 	@Test
 	public final void testRemoveClassRoom() {
 		ClassDB db = new ClassDB();
-		int t = db.addClassRoom("CLASS1");
+		int t = db.addClassRoom("CLASS1", aes);
 		
 		// remove class
 		t = db.removeClassRoom("CLASS1");
@@ -57,7 +58,7 @@ public class ClassDBTest {
 		
 		// add and remove 1000 classes
 		for (int i=0; i<1000; i++){
-			t = db.addClassRoom("CLASS_" + i);
+			t = db.addClassRoom("CLASS_" + i, aes);
 			assertEquals(1, t);
 		}
 		for (int i=0; i<1000; i++){
@@ -73,24 +74,24 @@ public class ClassDBTest {
 	public final void testAddPost() {
 		ClassDB db = new ClassDB();
 		String class_name = "TEST_CLASS_1";
-		db.addClassRoom(class_name);
+		db.addClassRoom(class_name, aes);
 		
 		// Add a post.
-		int t = db.addPost(class_name, "test post", "BODY OF TEST POST");
+		int t = db.addPost(class_name, "test post", "BODY OF TEST POST", aes);
 		assertEquals(1, t);
 		
 		// Add 1000 posts
 		for (int i=0; i<1000; i++){
-			 t = db.addPost(class_name, "test post", "BODY OF TEST POST");
+			 t = db.addPost(class_name, "test post", "BODY OF TEST POST", aes);
 			assertEquals(1, t);
 		}
 		
 		// Add 1000 classes and 1000 posts to each
 		for (int i=0; i<1000; i++){
-			t = db.addClassRoom("CLASS_" + i);
+			t = db.addClassRoom("CLASS_" + i, aes);
 			assertEquals(1, t);
 			for (int j=0; j<1000; j++){
-				t = db.addPost("CLASS_" + i, "test post", "BODY OF TEST POST");
+				t = db.addPost("CLASS_" + i, "test post", "BODY OF TEST POST", aes);
 				assertEquals(1, t);
 			}
 		}
@@ -109,22 +110,22 @@ public class ClassDBTest {
 	public final void testRemovePost() {
 		ClassDB db = new ClassDB();
 		String class_name = "TEST_CLASS_1";
-		db.addClassRoom(class_name);
+		db.addClassRoom(class_name, aes);
 		
 		int t;
 		
 		// Add and remove a post
-		t = db.addPost(class_name, "test post", "BODY OF TEST POST");
+		t = db.addPost(class_name, "test post", "BODY OF TEST POST", aes);
 		assertEquals(1, t);
-		t = db.removePost(class_name, 1);
+		t = db.removePost(class_name, 1, aes);
 		assertEquals(1, t);
 		
 		// Add 1000 classes and 1000 posts to each
 		for (int i=0; i<1000; i++){
-			t = db.addClassRoom("CLASS_" + i);
+			t = db.addClassRoom("CLASS_" + i, aes);
 			assertEquals(1, t);
 			for (int j=0; j<1000; j++){
-				t = db.addPost("CLASS_" + i, "test post", "BODY OF TEST POST");
+				t = db.addPost("CLASS_" + i, "test post", "BODY OF TEST POST", aes);
 				assertEquals(1, t);
 			}
 		}
@@ -132,7 +133,7 @@ public class ClassDBTest {
 		// Delete all 1000 x 1000 posts (not classrooms)
 		for (int i=0; i<1000; i++){
 			for (int j=1; j<2; j++){
-				t = db.removePost("CLASS_" + i, j);
+				t = db.removePost("CLASS_" + i, j, aes);
 				assertEquals(1, t);
 			}
 		}
@@ -151,24 +152,24 @@ public class ClassDBTest {
 	public final void testAddComment() {
 		ClassDB db = new ClassDB();
 		String class_name = "TEST_CLASS_1";
-		db.addClassRoom(class_name);
-		db.addPost(class_name, "POST 1", "POST 1 BODY");
+		db.addClassRoom(class_name, aes);
+		db.addPost(class_name, "POST 1", "POST 1 BODY", aes);
 		
 		int t;
 		
 		// add a comment
-		t = db.addComment(class_name, 1, "COMMENT!");
+		t = db.addComment(class_name, 1, "COMMENT!", aes);
 		assertEquals(1, t);
 		
 		// add 100 comments to 100 threads in 100 classrooms
 		for (int i=0; i<100; i++){
-			t = db.addClassRoom("CLASS_" + i);
+			t = db.addClassRoom("CLASS_" + i, aes);
 			assertEquals(1, t);
 			for (int j=0; j<100; j++){
-				t = db.addPost("CLASS_" + i, "test post", "BODY OF TEST POST");
+				t = db.addPost("CLASS_" + i, "test post", "BODY OF TEST POST", aes);
 				assertEquals(1, t);
 				for(int k=0; k<100; k++){
-					t = db.addComment("CLASS_" + i, j+1, "THIS IS THE COMMENT");
+					t = db.addComment("CLASS_" + i, j+1, "THIS IS THE COMMENT", aes);
 					assertEquals(1, t);
 				}
 			}
@@ -183,30 +184,30 @@ public class ClassDBTest {
 	public final void testRemoveComment() {
 		ClassDB db = new ClassDB();
 		String class_name = "TEST_CLASS_1";
-		db.addClassRoom(class_name);
-		db.addPost(class_name, "POST 1", "POST 1 BODY");
+		db.addClassRoom(class_name, aes);
+		db.addPost(class_name, "POST 1", "POST 1 BODY", aes);
 		
 		int t;
 		
 		// add a comment
-		t = db.addComment(class_name, 1, "COMMENT!");
+		t = db.addComment(class_name, 1, "COMMENT!", aes);
 		assertEquals(1, t);
 		
 		// Try to remove comment 1 or 2
-		t = db.removeComment(class_name, 1, 1);
+		t = db.removeComment(class_name, 1, 1, aes);
 		assertEquals(-1, t);
-		t = db.removeComment(class_name, 1, 2);
+		t = db.removeComment(class_name, 1, 2, aes);
 		assertEquals(-1, t);
 		
 		// add 464^3 comments to 464^2 threads in 464 classrooms
 		for (int i=0; i<100; i++){
-			t = db.addClassRoom("CLASS_" + i);
+			t = db.addClassRoom("CLASS_" + i, aes);
 			assertEquals(1, t);
 			for (int j=0; j<100; j++){
-				t = db.addPost("CLASS_" + i, "test post", "BODY OF TEST POST");
+				t = db.addPost("CLASS_" + i, "test post", "BODY OF TEST POST", aes);
 				assertEquals(1, t);
 				for(int k=0; k<100; k++){
-					t = db.addComment("CLASS_" + i, j+1, "THIS IS THE COMMENT");
+					t = db.addComment("CLASS_" + i, j+1, "THIS IS THE COMMENT", aes);
 					assertEquals(1, t);
 				}
 			}
@@ -216,7 +217,7 @@ public class ClassDBTest {
 		for (int i=0; i<100; i++){
 			for (int j=0; j<100; j++){
 				for(int k=3; k<103; k++){
-					t = db.removeComment("CLASS_" + i, j+1, k);
+					t = db.removeComment("CLASS_" + i, j+1, k, aes);
 					assertEquals(1, t);
 				}
 			}
@@ -225,7 +226,7 @@ public class ClassDBTest {
 		// then, delete the posts
 		for (int i=0; i<100; i++){
 			for (int j=0; j<100; j++){
-				t = db.removePost("CLASS_" + i, j+1);
+				t = db.removePost("CLASS_" + i, j+1, aes);
 				assertEquals(1, t);
 			}
 		}

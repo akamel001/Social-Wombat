@@ -2,6 +2,8 @@
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Map;
 
 //TODO: check permissions on the server.
@@ -12,16 +14,20 @@ public class ServerSocketHandler {
 	static Message msg = new Message();
 	ClassDB classDB;
 	Socket socket;
-	ObjectOutput oos;
-	ObjectInput ois;
-	AES hubAESObject;
+	ObjectOutputStream oos;
+	ObjectInputStream ois;
+	AES serverAESObject;
+	char[] password;
+	
+	private static final boolean DEBUG = false;
 
 	/*
 	 * A handler thread that is spawned for each message sent to server
 	 */
-	public ServerSocketHandler(Socket ser, ClassDB classDB){
+	public ServerSocketHandler(Socket ser, ClassDB classDB, char[] password){
 		this.socket = ser;
 		this.classDB = classDB;
+		this.password = password;
 		// Create datastreams
 		try {
 			oos = new ObjectOutputStream(this.socket.getOutputStream());
@@ -30,6 +36,106 @@ public class ServerSocketHandler {
 			e.printStackTrace();
 			System.out.println("Could not create input and output streams");
 		}
+	}
+	
+	/**
+	 * First method that is run, expects a message type Hub_AuthServer
+	 * 
+	 * @return true if the hub is authenticated, false otherwise
+	 */
+	private boolean authenticate(){
+		Message firstMessage = null;
+		try {
+			firstMessage = (Message) ois.readObject();
+			// null check
+			if (firstMessage == null){
+				if (DEBUG) System.out.println("First msg received was null");
+				return false;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		//Check message type
+		if (msg.getType() != Message.MessageType.Hub_AuthServer){
+			return false;
+		}
+		
+		//extract fields
+		byte[] salt = firstMessage.getSalt();
+		byte[] iv = firstMessage.getIv();
+		
+		//Create server aes object
+		serverAESObject = new AES(password, iv, salt);
+		
+		//Zero out password
+		Arrays.fill(password,'0');
+		
+		//null check aes object
+		if (serverAESObject == null){
+			if (DEBUG) System.out.println("clientAESObject creation failed");
+			return false;
+		}
+		
+		//Decrypt the body, cast to ArrayList<Long>
+		byte[] encryptedBody = (byte[]) firstMessage.getBody();
+		ArrayList<Long> body = (ArrayList<Long>)serverAESObject.decryptObject(encryptedBody);
+		if (body==null){
+			if (DEBUG) System.out.println("unable to decrypt msg body");
+			return false;
+		}
+		
+		long hubTimestamp = body.get(0);
+		long hubNonce = body.get(1);
+		
+		boolean allowed = false;
+		
+		//Check timestamp
+		long myTimestamp = Calendar.getInstance().getTimeInMillis();
+		if (((myTimestamp - 300000) <= hubTimestamp) && (hubTimestamp <= (myTimestamp + 300000))){
+			allowed = true;
+		}
+		
+		//Return the authenticated message
+		if (allowed){
+			//Create return message
+			Message returnMsg = new Message();
+			ArrayList<Long> returnBody = new ArrayList<Long>();
+			//set my timestamp
+			returnBody.set(0, Calendar.getInstance().getTimeInMillis());
+			//set the nonce+1
+			returnBody.set(1, hubNonce+1);
+			//set the body
+			returnMsg.setBody(returnBody);
+			
+			//encrypt
+			byte[] returnMessage = serverAESObject.encrypt(returnMsg);
+			
+			//send back success
+			sendEncryptedMessage(returnMessage);
+			
+			//put thread in a state to receive future messages
+			return true;
+		}
+		
+		return false;	
+	}
+	
+	/*
+	 * Method to send an encrypted message to the precreated streams.
+	 */
+	private void sendEncryptedMessage(byte[] msg){
+		try {
+			oos.write(msg);
+			oos.flush();
+			oos.reset();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Sending an encrypted message failed");
+		}
+		
 	}
 	
 	/*
@@ -59,8 +165,12 @@ public class ServerSocketHandler {
 	}
 	
 	public void run(){
-		boolean listen = true;
-		//servers will run indefinitely
+		boolean listen = false;
+		
+		//wait for first message and authenticate
+		listen = authenticate();
+		
+		//servers will run indefinitely if authenticated
 		while(listen){
 			boolean valid = true;
 			//Read and deserialize Message from Socket
@@ -82,7 +192,7 @@ public class ServerSocketHandler {
 						
 						System.out.println(msg.getUserName()+ "wants to add: " + msg.getClassroom_ID());
 						
-						returnCode = classDB.addClassRoom(msg.getClassroom_ID(), hubAESObject);
+						returnCode = classDB.addClassRoom(msg.getClassroom_ID(), serverAESObject);
 						if (returnCode == 1){
 							System.out.println(msg.getClassroom_ID() + " added.");
 						}
@@ -102,7 +212,7 @@ public class ServerSocketHandler {
 						ArrayList<String> post = (ArrayList<String>) msg.getBody();
 						String postName = (String)post.get(0);
 						String postBody = (String)post.get(1);
-						returnCode = classDB.addPost(msg.getClassroom_ID(), postName, postBody, hubAESObject);
+						returnCode = classDB.addPost(msg.getClassroom_ID(), postName, postBody, serverAESObject);
 						msg.setCode(returnCode);
 						returnMessage(msg);
 						break;
@@ -116,13 +226,13 @@ public class ServerSocketHandler {
 						ArrayList<String> com = (ArrayList<String>)msg.getBody();
 						int postId = Integer.parseInt(com.get(0));
 						String comment = com.get(1);
-						returnCode = classDB.addComment(msg.getClassroom_ID(), postId, comment, hubAESObject);
+						returnCode = classDB.addComment(msg.getClassroom_ID(), postId, comment, serverAESObject);
 						msg.setCode(returnCode);
 						returnMessage(msg);
 						break;
 					case Client_GoToClassroom:
 						System.out.println(msg.getUserName()+ "wants to enter: " + msg.getClassroom_ID());
-						Map<Integer, String> threadList = classDB.getThreadList(msg.getClassroom_ID(), hubAESObject);
+						Map<Integer, String> threadList = classDB.getThreadList(msg.getClassroom_ID(), serverAESObject);
 						if (threadList == null){
 							//return failure
 							msg.setCode(-1);
@@ -144,7 +254,7 @@ public class ServerSocketHandler {
 						int threadID = (Integer)msg.getBody();
 						System.out.println(msg.getUserName() + " wants to view thread #: " + threadID);
 						
-						Map<Integer, String> thread = classDB.getThread(msg.getClassroom_ID(), threadID, hubAESObject);
+						Map<Integer, String> thread = classDB.getThread(msg.getClassroom_ID(), threadID, serverAESObject);
 						if (thread == null){
 							//return failure
 							msg.setCode(-1);
@@ -165,7 +275,7 @@ public class ServerSocketHandler {
 					case Client_DeleteThread:
 						System.out.println(msg.getUserName()+ "wants to delete a thread.");
 						int p = (Integer)msg.getBody();
-						returnCode = classDB.removePost(msg.getClassroom_ID(), p, hubAESObject);
+						returnCode = classDB.removePost(msg.getClassroom_ID(), p, serverAESObject);
 						msg.setCode(returnCode);
 						returnMessage(msg);
 						break;
@@ -179,7 +289,7 @@ public class ServerSocketHandler {
 						ArrayList<Integer> commentParams = (ArrayList<Integer>)msg.getBody();
 						int postID = commentParams.get(0);
 						int commentID = commentParams.get(1);
-						returnCode = classDB.removeComment(msg.getClassroom_ID(), postID, commentID, hubAESObject);
+						returnCode = classDB.removeComment(msg.getClassroom_ID(), postID, commentID, serverAESObject);
 						msg.setCode(returnCode);
 						returnMessage(msg);
 						break;	
