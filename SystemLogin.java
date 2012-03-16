@@ -20,10 +20,6 @@ import javax.crypto.SecretKey;
 
 public class SystemLogin implements Serializable {
 	private static final long serialVersionUID = 732364698179994154L;
-<<<<<<< HEAD
-
-=======
->>>>>>> cfcd9c0c565778e111f78d3543fd3f799c71adf1
 	// This is the hub key encrypted with the system admin password.
 	private byte[] hub_key_enc;
 	private byte[] hub_init_vector;
@@ -70,7 +66,8 @@ public class SystemLogin implements Serializable {
 			if (Arrays.equals(newPassword,confirmNewPassword)) {
 				AES aesNew = new AES(newPassword, system_admin_init_vector, system_admin_salt);
 				system_admin_enc = aesNew.encrypt(newPassword); // re-encrypt the "system admin" string
-				hub_key_enc = aesNew.encrypt(aes.decrypt(hub_key_enc));	   // and hub key // TODO: possible error here in encrypt
+				SecretKey temp = (SecretKey)aes.decryptObject(hub_key_enc);
+				hub_key_enc = aesNew.encrypt(temp);	   // and hub key // TODO: possible error here in encrypt
 				writeToDisk(this, "system_startup");
 				return true;
 			}			
