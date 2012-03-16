@@ -101,6 +101,13 @@ public class HubSocketHandler extends Thread{
 			return false;
 		}
 		
+		//Checksum
+		long newChecksum = msg.generateCheckSum();
+		long oldChecksum = msg.getChecksum();
+		if (newChecksum != oldChecksum){
+			return false;
+		}
+		
 		//extract fields
 		String usr = firstMessage.getUserName();
 		byte[] salt = firstMessage.getSalt();
@@ -167,7 +174,7 @@ public class HubSocketHandler extends Thread{
 			//set the body
 			returnMsg.setBody(returnBody);
 			//set checksum
-			long checksum = CheckSum.getChecksum(returnMsg);
+			long checksum = returnMsg.generateCheckSum();
 			returnMsg.setChecksum(checksum);
 			
 			//encrypt
@@ -228,7 +235,7 @@ public class HubSocketHandler extends Thread{
 		
 		//do checksum
 		long oldChecksum = msg.getChecksum();
-		long newChecksum = CheckSum.getChecksum(msg.getBody());
+		long newChecksum = msg.generateCheckSum();
 		
 		return (oldChecksum == newChecksum);
 		
@@ -273,7 +280,7 @@ public class HubSocketHandler extends Thread{
 	 */
 	private void returnAndEncryptMessage(Message msg){
 		//calculate checksum
-		long thisChecksum = CheckSum.getChecksum(msg.getBody());
+		long thisChecksum = msg.generateCheckSum();
 		msg.setChecksum(thisChecksum);
 		//encrypt message why client aes key
 		byte[] eMsg = clientAESObject.encrypt(msg);
@@ -316,7 +323,7 @@ public class HubSocketHandler extends Thread{
 		forwardSocketPackage = serverPackages.get(serverID);
 
 		//Set checksum
-		long checksum = CheckSum.getChecksum(msg);
+		long checksum = msg.generateCheckSum();
 		msg.setChecksum(checksum);
 		
 		//encrypt

@@ -250,7 +250,7 @@ class Hub extends Thread {
 		//send the initial contact
 		
 		//make the message
-		Message initial = new Message();
+		Message initial = new Message();	
 		//setters
 		initial.setType(Message.MessageType.Hub_AuthServer);
 		initial.setIv(socketAES.getIv());
