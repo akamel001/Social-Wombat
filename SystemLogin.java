@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
@@ -17,7 +18,12 @@ import javax.crypto.SecretKey;
 
 // TODO: black out sensitive variables
 
-public class SystemLogin {
+public class SystemLogin implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// This is the hub key encrypted with the system admin password.
 	private byte[] hub_key_enc;
 	private byte[] hub_init_vector;
@@ -81,17 +87,17 @@ public class SystemLogin {
 	 * @return the hub AES object
 	 */
 	private AES validateSystemPassword(char[] password) {
+		if (password==null)
+			return null;
 		AES aes = new AES(password, system_admin_init_vector, system_admin_salt);
 		if (aes==null){
 			return null;
 		}
-		byte[] b = aes.decrypt(system_admin_enc);
-		if (b==null)
+		byte[] test_password_enc = aes.encrypt(password);
+		if (test_password_enc==null)
 			return null;
-		char[] pass = new String().toCharArray();
-		System.out.println(Arrays.toString(pass));
-		
-		if (aes.decrypt(system_admin_enc).equals(password)) {
+
+		if (Arrays.equals( test_password_enc, system_admin_enc)) {
 			return aes;
 		}
 		return null;

@@ -17,6 +17,6 @@ hub.serverlist
 hub.userlist
 *.classDB
 YilokTest.java
-system_startup
+*system_startup*
 YilokTest2.java
 *.goutputstream*

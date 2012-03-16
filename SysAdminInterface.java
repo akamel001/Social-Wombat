@@ -61,6 +61,10 @@ public class SysAdminInterface {
 		displayPage(sLOG_IN, messages, null, null, null);	
 		char[] password = console.readPassword("Password? ");
 		
+		if (password == null) {
+			systemHomePage(eLOG_IN_ERROR);
+		}
+		
 		aesHub = handleSystemLogin(password);
 		
 		if (aesHub != null) {
@@ -381,6 +385,10 @@ public class SysAdminInterface {
             System.exit(1);
         }
         systemLogin = SystemLogin.systemStartup();
+        if (systemLogin == null) {
+            System.err.println("No system login object.");
+            System.exit(1);
+        }
         
 		System.out.println("This is the system admin interface for Studious Wombat.");
 		systemLoginPage(null);

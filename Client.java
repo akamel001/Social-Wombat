@@ -61,9 +61,9 @@ public class Client {
 		ArrayList<Long> list = new ArrayList<Long>();
 		list.add(0, c.getTimeInMillis());
 		list.add(1, nonce);
-		
-		message.setBody(aes.encrypt(list));
+		message.setBody(list);
 		message.setChecksum(message.generateCheckSum());
+		message.setBody(aes.encrypt(list));
 		
 		socket.send(message);
 
