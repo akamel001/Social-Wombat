@@ -4,20 +4,10 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
-
-//global add socket 
-//get ride of cookie message and client
-//handle login has salt value, username and timestamp encripted in body
-//date object formated in for timestamp
-// TODO use an overloaded send in socketpackage to send byte array 
-
-//TODO every message being sent add checksum in it... only of body
 public class Client {
 
 	private static final boolean DEBUG = false;
