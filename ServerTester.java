@@ -26,8 +26,8 @@ static ObjectInputStream ois;
 
 		//set up streams
 		try {
-			oos = (ObjectOutputStream) socket.getOutputStream();
-			ois = (ObjectInputStream) socket.getInputStream();
+			oos = new ObjectOutputStream(socket.getOutputStream());
+			ois = new ObjectInputStream(socket.getInputStream());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -40,10 +40,55 @@ static ObjectInputStream ois;
 		//send some thing
 		try {
 			oos.writeObject(newArray);
+			oos.flush();
+			oos.reset();
+			System.out.println("Sent something");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		//now encrypt a message and send it
+		
+		//create an aes object
+		char[] pass = "password".toCharArray();
+		AES newAES = new AES(pass);
+		byte[] iv = newAES.getIv();
+		byte[] salt = newAES.getSalt();
+		
+		//get it over to hub
+		ArrayList<byte[]> newArray2 = new ArrayList<byte[]>();
+		newArray2.add(0, iv);
+		newArray2.add(1, salt);
+		
+		//send
+		try {
+			oos.writeObject(newArray2);
+			oos.flush();
+			oos.reset();
+			System.out.println("Sent over encryption info");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		//encrypt an object
+		byte[] eMsg = newAES.encrypt(newArray);	//has the "Hello World."
+		int length = eMsg.length;
+		System.out.println("length of encrypted message: " + length);
+		try {
+			oos.writeInt(length);
+			oos.write(eMsg);
+			oos.flush();
+			oos.reset();
+			System.out.println("Sent over encrypted message");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 	}
 
 }
