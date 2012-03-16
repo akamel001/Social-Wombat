@@ -114,6 +114,7 @@ class SocketPackage {
 
 	/**
 	 * Send a message with flushing
+	 * UNENCRYPTED
 	 */
 	public void send(Message msg){
 		try {
@@ -139,13 +140,6 @@ class SocketPackage {
 			e.printStackTrace();
 			System.out.println("System send failed");
 		}
-	}
-	
-	/*
-	 * Encrypts and send a message (can take a message of type msg)
-	 */
-	public void encryptAndSend(Message msg){
-		
 	}
 	
 	
