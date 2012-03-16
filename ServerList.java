@@ -60,6 +60,8 @@ public final class ServerList implements Serializable{
 			s.setAddress(ip);
 			s.setPort(port);
 			s.setPassword(encrypter.encrypt(pass));
+			AES server_aes = new AES(pass);
+			s.setServerAES(encrypter.encrypt(server_aes));
 			// Zero out passed password
 			for(int j=0; j<pass.length; j++)
 				pass[j]='0';
@@ -180,6 +182,17 @@ public final class ServerList implements Serializable{
 			return null;
 		}
 	}
+	
+	
+	public AES getServerAES(int server_id, AES encryptor){
+		ServerData temp_server = serverList.get(server_id);
+		try{
+			return (AES)encryptor.decryptObject(temp_server.server_AES);
+		}catch(ClassCastException e){
+			return null;
+		}
+	}
+	
 	/**
 	 * Server class holds the info for a single server.
 	 * @author chris
@@ -192,6 +205,7 @@ public final class ServerList implements Serializable{
 		private InetAddress ip;
 		private int port;
 		private byte[] password;
+		private byte[] server_AES;
 
 		
 		@SuppressWarnings("unused")
@@ -211,6 +225,22 @@ public final class ServerList implements Serializable{
 			port = -1;
 		}
 
+		/**
+		 * Returns the serve
+		 * @return
+		 */
+		protected byte[] getServer_AES() {
+			return server_AES;
+		}
+
+		
+		/**
+		 * Sets the 
+		 * @param encrypted_AES
+		 */
+		protected void setServerAES(byte[] encrypted_AES){
+			server_AES = encrypted_AES;
+		}
 		/** Returns the server id
 		 * 
 		 * @return
