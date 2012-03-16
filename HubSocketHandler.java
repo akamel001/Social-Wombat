@@ -171,17 +171,14 @@ public class HubSocketHandler extends Thread{
 			returnBody.set(0, Calendar.getInstance().getTimeInMillis());
 			//set the nonce+1
 			returnBody.set(1, clientNonce+1);
-			//set the body
-			returnMsg.setBody(returnBody);
 			//set checksum
 			long checksum = returnMsg.generateCheckSum();
 			returnMsg.setChecksum(checksum);
+			//encrypt and set the body 
+			returnMsg.setBody(clientAESObject.encrypt(returnBody));
 			
-			//encrypt
-			byte[] returnMessage = clientAESObject.encrypt(returnMsg);
-			
-			//send
-			sendEncryptedMessage(returnMessage);
+			//send unencrypted message
+			returnMessage(returnMsg);
 			
 			//put thread in a state to receive future messages
 			return true;
@@ -258,7 +255,7 @@ public class HubSocketHandler extends Thread{
 		}
 	}
 	
-	/**@deprecated
+	/**
 	 * Send an unencryted message back after it's been altered
 	 */
 	private void returnMessage(Message msg){
