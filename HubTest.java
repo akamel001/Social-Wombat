@@ -1,7 +1,7 @@
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import static org.junit.Assert.*;
 import java.net.InetAddress;
-import java.net.Socket;
 import java.net.UnknownHostException;
 
 
