@@ -63,7 +63,7 @@ public final class ServerList implements Serializable{
 			s.setPort(port);
 			s.setPassword(encrypter.encrypt(pass));
 			AES server_aes = new AES(pass);
-			s.setServerAES(encrypter.encrypt(server_aes));
+			s.setIvSalt(server_aes.getIv(), server_aes.getSalt());
 			// Zero out passed password
 			for(int j=0; j<pass.length; j++)
 				pass[j]='0';
@@ -242,7 +242,7 @@ public final class ServerList implements Serializable{
 		 * Sets the 
 		 * @param encrypted_AES
 		 */
-		public void setServerAES(byte[] iv, byte[] salt){
+		public void setIvSalt(byte[] iv, byte[] salt){
 			iv_salt.add(0, iv);
 			iv_salt.add(1,salt);
 		}

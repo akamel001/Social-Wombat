@@ -44,7 +44,7 @@ See:
 
 The system uses 128-bit password-based AES encryption with cipher-block 
 chaining and PKCS5 padding. AES keys are generated using passwords 
-combined with 8-byte randomly generated salts.  
+combined with 8-byte randomly generated salts. 
 
 
 
