@@ -62,8 +62,11 @@ public final class ServerList implements Serializable{
 			s.setAddress(ip);
 			s.setPort(port);
 			s.setPassword(encrypter.encrypt(pass));
-			AES server_aes = new AES(pass);
-			s.setIvSalt(server_aes.getIv(), server_aes.getSalt());
+			AES encryptor = new AES(pass);
+			List<byte[]> out = Collections.synchronizedList(new ArrayList<byte[]>());
+			out.add(0, encryptor.getIv());
+			out.add(1, encryptor.getSalt());
+			s.iv_salt = encryptor.encrypt(out);
 			// Zero out passed password
 			for(int j=0; j<pass.length; j++)
 				pass[j]='0';
@@ -195,6 +198,16 @@ public final class ServerList implements Serializable{
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<byte[]> getIvSalt(int server_id, AES encryptor){
+		ServerData temp_server = serverList.get(server_id);
+		try{
+			return (List<byte[]>)encryptor.decryptObject(temp_server.iv_salt);
+		}catch(ClassCastException e){
+			return null;
+		}
+	}
+	
 	/**
 	 * Server class holds the info for a single server.
 	 * @author chris
@@ -208,7 +221,7 @@ public final class ServerList implements Serializable{
 		private int port;
 		private byte[] password;
 		private byte[] server_AES;
-		List<byte[]> iv_salt;
+		byte[] iv_salt;
 
 		
 		@SuppressWarnings("unused")
@@ -223,7 +236,6 @@ public final class ServerList implements Serializable{
 		 * 		port = -1<br>
 		 */
 		protected ServerData(int i){
-			iv_salt = Collections.synchronizedList(new ArrayList<byte[]>());
 			id = i;
 			ip = null;
 			port = -1;
@@ -233,7 +245,7 @@ public final class ServerList implements Serializable{
 		 * Returns the iv, salt list
 		 * @return a List<byte>. [0]=iv, [1]=salt
 		 */
-		public List<byte[]> getIvSalt() {
+		public byte[] getIvSalt() {
 			return iv_salt;
 		}
 
@@ -242,10 +254,10 @@ public final class ServerList implements Serializable{
 		 * Sets the 
 		 * @param encrypted_AES
 		 */
-		public void setIvSalt(byte[] iv, byte[] salt){
-			iv_salt.add(0, iv);
-			iv_salt.add(1,salt);
-		}
+		//public void setIvSalt(byte[] iv, byte[] salt){
+		//	iv_salt.add(0, iv);
+		//	iv_salt.add(1,salt);
+		//}
 		/** Returns the server id
 		 * 
 		 * @return
