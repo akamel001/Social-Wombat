@@ -32,6 +32,18 @@ See:
 				    SYSADMIN LOG-IN PROTOCOL
 <------------------------------------------------------------------>
 
+The sysadmin accesses the Hub by means of a password. That password is 
+combined with a stored initialization vector and salt to create an AES
+encryption object. The the encryption object is used to decrypt an
+encrypted copy of the password stored on the server. If the new an old
+password match, the sysadmin is considered authenticated. 
+
+The AES object created with the sysadmin password is also used to 
+decrypt a second AES key. This key, along with a second initialization
+vector and salt, is used to create a second AES object with which
+objects stored on the Hub's disk will be encrypted. The reason for 
+this second key is so that the sysadmin password can be changed 
+without having to re-encrypt everything in stable storage.
 
 <------------------------------------------------------------------>
 				    SERVER LOG-IN PROTOCOL
