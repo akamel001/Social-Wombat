@@ -1,7 +1,7 @@
 import java.io.*;
 import java.net.*;
 
-public class Server {
+public class Server extends Thread{
 	//private static int CLIENT_SOCKET = 4444;
 	private static int SERVER_SOCKET = 5050;
 	public static boolean listening = true;
@@ -9,6 +9,7 @@ public class Server {
 	//datastructure that will be passed to every spawned serversockethandler thread
 	private static ClassDB classDB;
 	private static char[] password;
+	private static String ip;
 	
 	//default, is reset in constructor
 	static String classDBName = "server.classDB";	
@@ -25,7 +26,12 @@ public class Server {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-		System.out.println("New Server created with IP: "+thisIp.getHostAddress());		
+		System.out.println("New Server created with IP: "+thisIp.getHostAddress());	
+		ip = thisIp.getHostAddress();
+	}
+	
+	public String getIP(){
+		return ip;
 	}
 	
 	/* 
@@ -86,7 +92,7 @@ public class Server {
 		}
 	}
 	
-	public static void main(String[] args) {
+	public void run() {
 		// Start Up the Server
 		// Initialize Data Structures
 		initializeData();
