@@ -50,40 +50,6 @@ class Hub extends Thread {
 	//					SYS-ADMIN ACTIONS				//
 	//////////////////////////////////////////////////////
 	
-	/*
-	 * "Installs" the Hub program. i.e. Lets a sys-admin
-	 * generate a hub key and encrypt that with their own 
-	 * 128-bit password. This encrypted hub key is what is 
-	 * stored on file. In the future, the sys-admin uses their
-	 * 128-bit password to decrypt the hub-key which will be used
-	 * to decrypt other data. We use an encrypted hub-key so that 
-	 * it won't have to change even  
-	 */
-	public void installHub(char[] password){
-		//TODO: create a hub-key (also set to global hub-key to use during session)
-		
-		//encrypt hub-key with password
-		
-		//clear password field
-		
-		//store encrypted hub-key on filesystem
-		
-		
-	}
-	
-	/*
-	 * Handles the sys admin logging in
-	 */
-	public boolean sysAdminLogin(char[] password){
-		//hash password
-		
-		//clear password field
-		
-		//compare passhash to newly hashed password
-		
-		return false;
-	}
-	
 	public void shutDown(){
 		listening = false;
 	}
