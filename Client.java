@@ -66,13 +66,13 @@ public class Client {
 		message.setBody(list);
 		message.setChecksum(message.generateCheckSum());
 		message.setBody(aes.encrypt(list));
-		
+		System.out.println("Sending authenticating message...");
 		socket.send(message);
 
 		
 		// Get timestamp message
 		Message response = socket.receive();
-		
+		System.out.println("Received a response");
 		byte[] encryptedBody = (byte[])response.getBody();
 		
 		ArrayList<Long> return_list = (ArrayList<Long>)aes.decryptObject(encryptedBody);

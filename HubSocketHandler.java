@@ -7,7 +7,7 @@ public class HubSocketHandler extends Thread{
 	//private static int CLIENT_SOCKET = 4444;
 	private static int SERVER_SOCKET = 5050;
 	
-	private static final boolean DEBUG = false;
+	private static final boolean DEBUG = true;
 	
 	AES hubAESObject = null;
 	AES clientAESObject = null;
@@ -82,6 +82,7 @@ public class HubSocketHandler extends Thread{
 	 */
 	@SuppressWarnings("unchecked")
 	private boolean authenticate(){
+		if (DEBUG) System.out.println("Received an authentication request");
 		Message firstMessage = null;
 		try {
 			firstMessage = (Message) ois.readObject();

@@ -31,7 +31,7 @@ class Hub extends Thread {
 	static ServerSocket hubSocket = null;
 	String hubIP = null;
 	
-	private static final boolean DEBUG = false;
+	private static final boolean DEBUG = true;
 	
 	public Hub(AES aesObject){
 		this.hubAESObject = aesObject;
@@ -63,6 +63,9 @@ class Hub extends Thread {
 		if (username == null){
 			return false;
 		}
+		//TODO: debug check
+		if(userList == null) System.out.println("userlist is null");
+		
 		//Add
 		//TODO: check the output of userlist
 		if(userList.addUser(username, password, hubAESObject) != -1){
@@ -408,10 +411,12 @@ class Hub extends Thread {
 				writeToDisk(userList, userListName);
 				writeToDisk(serverList, serverListName);
 				if(DEBUG) System.out.println("Data safely written out.");
+				/*
 				// Disconnect from Servers
 				for (SocketPackage socketPackage : serverPackages.values()){
 					socketPackage.close();
 				}
+				*/
 			}
 		});
 		

@@ -48,7 +48,9 @@ without having to re-encrypt everything in stable storage.
 <------------------------------------------------------------------>
 				    SERVER LOG-IN PROTOCOL
 <------------------------------------------------------------------>
-
+The server log-in protocol is very similar to the user log-in protocol.
+The Server password is stored and encrypted in the Hub server. An AES 
+encryption object AES_S 
 
 <------------------------------------------------------------------>
 				      ENCRYPTION PROTOCOL
