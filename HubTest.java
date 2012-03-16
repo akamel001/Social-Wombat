@@ -1,9 +1,3 @@
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
-
 
 /**
  * @author yilok
@@ -11,8 +5,8 @@ import java.net.UnknownHostException;
  */
 public class HubTest {
 
-	private static int CLIENT_SOCKET = 4444;
-	private static int SERVER_SOCKET = 5050;
+	//private static int CLIENT_SOCKET = 4444;
+	//private static int SERVER_SOCKET = 5050;
 	
 	static Hub testHub;
 	

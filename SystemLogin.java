@@ -20,7 +20,10 @@ import javax.crypto.SecretKey;
 
 public class SystemLogin implements Serializable {
 	private static final long serialVersionUID = 732364698179994154L;
+<<<<<<< HEAD
 
+=======
+>>>>>>> cfcd9c0c565778e111f78d3543fd3f799c71adf1
 	// This is the hub key encrypted with the system admin password.
 	private byte[] hub_key_enc;
 	private byte[] hub_init_vector;

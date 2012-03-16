@@ -14,10 +14,10 @@ public class Server {
 	static String classDBName = "server.classDB";	
 
 	// Constructor
-	public Server(String name, char[] password) {
+	public Server(String name, char[] password2) {
 		// Constructor
 		classDBName = name + ".classDB";
-		this.password = password;	//needs to wait for an iv, and salt
+		password = password2;	//needs to wait for an iv, and salt
 		//get ip
 		InetAddress thisIp = null;
 		try {

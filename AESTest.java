@@ -1,7 +1,3 @@
-import static org.junit.Assert.*;
-import java.security.SecureRandom;
-import java.util.Arrays;
-
 import org.junit.Test;
 
 
@@ -14,7 +10,7 @@ public class AESTest {
 
 		AES obj1 = new AES(password.toCharArray());
 		
-		AES obj2 = new AES(password.toCharArray(), obj1.getIv(), obj1.getSalt());
+//		AES obj2 = new AES(password.toCharArray(), obj1.getIv(), obj1.getSalt());
 		
 		Message message = new Message();
 		
