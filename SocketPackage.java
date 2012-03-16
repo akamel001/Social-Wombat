@@ -139,7 +139,7 @@ class SocketPackage {
 	 * length of the byte to read.
 	 * @return
 	 */
-	public byte[] receiveEncryted(){
+	public byte[] receiveEncrypted(){
 		int length = 0;
 		try {
 			length = ois.readInt();

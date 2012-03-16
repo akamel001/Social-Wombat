@@ -270,7 +270,7 @@ class Hub extends Thread {
 		socketPack.sendEncrypted(socketAES.encrypt(initial));
 		
 		//block and wait for reply, will be type message
-		byte[] eReply = socketPack.receiveEncryted();
+		byte[] eReply = socketPack.receiveEncrypted();
 		
 		//decrypt
 		Message reply = (Message)socketAES.decryptObject(eReply);
