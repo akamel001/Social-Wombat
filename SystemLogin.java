@@ -69,9 +69,10 @@ public class SystemLogin implements Serializable {
 		if (aes != null) {
 			if (Arrays.equals(newPassword,confirmNewPassword)) {
 				AES aesNew = new AES(newPassword, system_admin_init_vector, system_admin_salt);
-				aesNew.encrypt(aes.decrypt(system_admin_enc)); // re-encrypt the "system admin" string
-				aesNew.encrypt(aes.decrypt(hub_key_enc));	   // and hub key
+				system_admin_enc = aesNew.encrypt(newPassword); // re-encrypt the "system admin" string
+				hub_key_enc = aesNew.encrypt(aes.decrypt(hub_key_enc));	   // and hub key // TODO: possible error here in encrypt
 				writeToDisk(this, "system_startup");
+				return true;
 			}			
 		}
 		return false;		
