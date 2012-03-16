@@ -2,6 +2,8 @@
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Map;
 
 //TODO: check permissions on the server.
@@ -12,8 +14,8 @@ public class ServerSocketHandler {
 	static Message msg = new Message();
 	ClassDB classDB;
 	Socket socket;
-	ObjectOutput oos;
-	ObjectInput ois;
+	ObjectOutputStream oos;
+	ObjectInputStream ois;
 	AES serverAESObject;
 	char[] password;
 	
@@ -56,7 +58,83 @@ public class ServerSocketHandler {
 			e.printStackTrace();
 		}
 		
+		//Check message type
+		if (msg.getType() != Message.MessageType.Hub_AuthServer){
+			return false;
+		}
 		
+		//extract fields
+		byte[] salt = firstMessage.getSalt();
+		byte[] iv = firstMessage.getIv();
+		
+		//Create server aes object
+		serverAESObject = new AES(password, iv, salt);
+		
+		//Zero out password
+		Arrays.fill(password,'0');
+		
+		//null check aes object
+		if (serverAESObject == null){
+			if (DEBUG) System.out.println("clientAESObject creation failed");
+			return false;
+		}
+		
+		//Decrypt the body, cast to ArrayList<Long>
+		byte[] encryptedBody = (byte[]) firstMessage.getBody();
+		ArrayList<Long> body = (ArrayList<Long>)serverAESObject.decryptObject(encryptedBody);
+		if (body==null){
+			if (DEBUG) System.out.println("unable to decrypt msg body");
+			return false;
+		}
+		
+		long hubTimestamp = body.get(0);
+		long hubNonce = body.get(1);
+		
+		boolean allowed = false;
+		
+		//Check timestamp
+		long myTimestamp = Calendar.getInstance().getTimeInMillis();
+		if (((myTimestamp - 300000) <= hubTimestamp) && (hubTimestamp <= (myTimestamp + 300000))){
+			allowed = true;
+		}
+		
+		//Return the authenticated message
+		if (allowed){
+			//Create return message
+			Message returnMsg = new Message();
+			ArrayList<Long> returnBody = new ArrayList<Long>();
+			//set my timestamp
+			returnBody.set(0, Calendar.getInstance().getTimeInMillis());
+			//set the nonce+1
+			returnBody.set(1, hubNonce+1);
+			//set the body
+			returnMsg.setBody(returnBody);
+			
+			//encrypt
+			byte[] returnMessage = serverAESObject.encrypt(returnMsg);
+			
+			//send back success
+			sendEncryptedMessage(returnMessage);
+			
+			//put thread in a state to receive future messages
+			return true;
+		}
+		
+		return false;	
+	}
+	
+	/*
+	 * Method to send an encrypted message to the precreated streams.
+	 */
+	private void sendEncryptedMessage(byte[] msg){
+		try {
+			oos.write(msg);
+			oos.flush();
+			oos.reset();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Sending an encrypted message failed");
+		}
 		
 	}
 	
@@ -87,8 +165,12 @@ public class ServerSocketHandler {
 	}
 	
 	public void run(){
-		boolean listen = true;
-		//servers will run indefinitely
+		boolean listen = false;
+		
+		//wait for first message and authenticate
+		listen = authenticate();
+		
+		//servers will run indefinitely if authenticated
 		while(listen){
 			boolean valid = true;
 			//Read and deserialize Message from Socket

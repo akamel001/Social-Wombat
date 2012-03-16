@@ -17,22 +17,45 @@ class SocketPackage {
 	private static final int TIMEOUT = 5000;
 	private static final int MAX_RETRY = 16;
 	private static final boolean DEBUG = false;
-	private AES serverAESObject;
 
 	/**
 	 * Creates a socket. DOES NOT CONNECT
-	 * @param aesObject TODO
 	 */
-	public SocketPackage(InetAddress addr,int port, AES aesObject){
+	public SocketPackage(InetAddress addr,int port){
 		if (DEBUG) System.out.println("Creating a socket");
 		socket = new Socket();
 		this.port = port;
 		this.addr = addr;
-		this.serverAESObject = aesObject;
 	}
-
-	private AES getServerAESObject(){
-		return serverAESObject;
+	
+	/*
+	 * Get some way identification/name of the socket
+	 */
+	public String getSocketName(){
+		return addr.getHostAddress();
+	}
+	
+	/*
+	 * Used to receive an encrypted servermessage. Only for communication with 
+	 * server because the AES key can be stored in socketPackage because the 
+	 * socketPackage object will reside on the hub.
+	 * Server message will be encrypted. So we must use the AESObject
+	 * stored from beforehand.
+	 * 
+	 * returns null when it can't
+	 */
+	public byte[] receiveEncryptedBytes(){
+		//TODO: TEST!
+		try {
+			//read stream
+			return (byte[])ois.readObject();
+			
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+		return null;
 	}
 	
 	/**
@@ -104,6 +127,31 @@ class SocketPackage {
 
 	}
 	
+	/*
+	 * Assumes a message is encrypted before calling this function
+	 */
+	public void sendEncrypted(byte[] msg){
+		try {
+			oos.writeObject(msg);
+			oos.flush();
+			oos.reset();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("System send failed");
+		}
+	}
+	
+	/*
+	 * Encrypts and send a message (can take a message of type msg)
+	 */
+	public void encryptAndSend(Message msg){
+		
+	}
+	
+	
+	/*
+	 * NOT SURE WHAT THIS IS
+	 */
 	public void send(byte msg){
 		try {
 			dout.write(msg);

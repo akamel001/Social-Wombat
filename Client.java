@@ -40,7 +40,7 @@ public class Client {
 		try {			
 			//setting hub address and connecting
 			hub = InetAddress.getByName(hub_addr);
-			socket = new SocketPackage(hub, HUB_PORT, null);
+			socket = new SocketPackage(hub, HUB_PORT);
 			socket.socketConnect();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();

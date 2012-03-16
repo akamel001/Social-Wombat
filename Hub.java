@@ -3,8 +3,10 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.security.SecureRandom;
 
 //Hub class. Handles communication between data servers and clients
 // Hub does authentication and forwards messages to the servers. 
@@ -169,7 +171,7 @@ class Hub extends Thread {
 		} else {
 			if(DEBUG) System.out.println("Server" + server + " added under server id: " + r);
 			//create new socket to add
-			SocketPackage newSocketPackage = new SocketPackage(server,SERVER_SOCKET, null);
+			SocketPackage newSocketPackage = new SocketPackage(server,SERVER_SOCKET);
 			serverPackages.put(r, newSocketPackage);
 			return r;
 		}
@@ -204,6 +206,7 @@ class Hub extends Thread {
 	 * Populates serverSockets with the socket associated with the appropriate
 	 * server number which is also the index + 1. So serverNum - 1 = index.
 	 * 
+	 * prints out errors, because we can't guarantee that all servers will connect
 	 */
 	public void connectServers() {
 		int numServers = serverList.getLastServer();
@@ -215,36 +218,90 @@ class Hub extends Thread {
 			//Open a connection
 			if (DEBUG) System.out.println("Connecting to server " + i);
 			
-			//Generate the new AES key safely
-			char[] pass = serverList.getServerPass(i, hubAESObject);
-			AES tempAES = new AES(pass);
-			
-			//clear pass
-			Arrays.fill(pass, '0');
-			
 			//Check if pre-existing
 			if (serverPackages.containsKey(i)){
 				//connect
 				SocketPackage tempSocket = serverPackages.get(i);
 				//make sure not already connected
 				if(!tempSocket.isConnected()){
-					tempSocket.socketConnect();
+					authenticatedConnect(tempSocket, serverList.getServerAES(i, hubAESObject));
 				}
 			} else{
 				//add to map and connect (happens at hub start up)
-				SocketPackage newSocketPackage = new SocketPackage(serverList.getAddress(i),SERVER_SOCKET, tempAES);
+				SocketPackage newSocketPackage = 
+						new SocketPackage(serverList.getAddress(i), SERVER_SOCKET);
 				if(!newSocketPackage.isConnected()){
-					newSocketPackage.socketConnect();
+					authenticatedConnect(newSocketPackage, serverList.getServerAES(i, hubAESObject));
 				}
 				serverPackages.put(i, newSocketPackage);
 			}
-
 		}
 	}
 	
 	//////////////////////////////////////////////////////
 	//					SYSTEM ACTIONS					//
 	//////////////////////////////////////////////////////
+	/*
+	 * Handles an authenticated connect and verification of the reply
+	 */
+	private static void authenticatedConnect(SocketPackage socketPack, AES socketAES){
+		//make a network connection
+		socketPack.socketConnect();
+		//send the initial contact
+		
+		//make the message
+		Message initial = new Message();
+		//setters
+		initial.setType(Message.MessageType.Hub_AuthServer);
+		initial.setIv(socketAES.getIv());
+		initial.setSalt(socketAES.getSalt());
+		//create body
+		ArrayList<Long> body = new ArrayList<Long>();
+		//set timestamp
+		body.add(0, Calendar.getInstance().getTimeInMillis());
+		//set nonce
+		long myNonce = new SecureRandom().nextLong();
+		body.add(1,myNonce);
+		
+		//set and encrypt body
+		initial.setBody(socketAES.encrypt(body));
+		
+		//send
+		socketPack.sendEncrypted(socketAES.encrypt(initial));
+		
+		//block and wait for reply, will be type message
+		byte[] eReply = socketPack.receiveEncryptedBytes();
+		
+		//decrypt
+		Message reply = (Message)socketAES.decryptObject(eReply);
+		
+		boolean verified = true;
+		//verify fields
+		long newChecksum = CheckSum.getChecksum(reply);
+		long oldChecksum = reply.getChecksum();
+		if(newChecksum != oldChecksum){
+			verified = false;
+		}
+		//get body fields
+		long serverTimestamp = ((ArrayList<Long>)reply.getBody()).get(0);
+		long serverNonce = ((ArrayList<Long>)reply.getBody()).get(1);
+		
+		//nonce check
+		if ((myNonce+1) != serverNonce){
+			verified = false;
+		}
+		
+		//Check timestamp
+		long myTimestamp = Calendar.getInstance().getTimeInMillis();
+		if (!(((myTimestamp - 300000) <= serverTimestamp) && (serverTimestamp <= (myTimestamp + 300000)))){
+			verified = false;
+		}
+		
+		if(!verified){
+			System.out.println("Connection to socket at ip: " + socketPack.getSocketName() + " failed.");
+		}
+		
+	}
 	
 	/* 
 	 * Reads a given object from the filesystem
