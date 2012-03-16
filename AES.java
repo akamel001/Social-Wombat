@@ -242,8 +242,10 @@ public final class AES {
 	}
 
 	public static void main(String args[]){
-		String pass_1 = new String("HELLO DOLLY");
+		String pass_1 = new String("Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..." +
+"There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain...");
 		String plain_text = ("TEXT");
+		
 		
 		AES aes1 = new AES(pass_1.toCharArray());
 		AES aes2 = new AES(aes1.getSecretKey(),aes1.getIv(),aes1.getSalt());
@@ -260,5 +262,7 @@ public final class AES {
 		m = (Message)aes1.decryptObject(cipher);
 		System.out.println(m.getBody());
 		System.out.println(out);
+	
 	}
+	
 }

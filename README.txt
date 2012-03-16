@@ -1,55 +1,55 @@
-Files and descriptions:
+|/////////////////////////////////////////////////////////////////|
+				     DATA STORAGE CLASSES
+|/////////////////////////////////////////////////////////////////|
+ClassData.java -- Used on the Hub to store permissions for a class
 
-ClassData.java --  ClassData objects store a class' associated server info and user permissions.
+ClassDB.java -- Used on the servers to store classroom content
 
-ClassDB.java -- Class to store and access ClassRoom objects.
+ClassList.java -- Stores a list of ClassData objects on the Hub
 
-ClassList.java -- ClassList is a list of ClassData objects.
+ClassRoom.java -- Stores the contents of an individual classroom on the server
 
-ClassRoom.java -- ClassRoom stores threads and their associated comments.
+Message.java -- Used to encapsulate messages to be sent over TCP
 
-Client.java -- Class containing functions used for the UserInterface to communicate with hub
+Post.java -- Stores the contents of an individual post.
 
-ClientSocketHandler.java -- Socket Handler to communicate with hub 
+ServerList.java -- 
 
-Cookie.java -- Custom serialized data structure stored inside of a message. Used for storing sessions 
+ServerList.java -- 
 
-Hub.java -- Center for communicating between clients and servers. 
+UserList.java -- 
 
-HubSocketHandler.java -- Socket handler class used for the hub
+|/////////////////////////////////////////////////////////////////|
+				     INTERFACE CLASSES
+|/////////////////////////////////////////////////////////////////|
+SysAdminInterface.java -- 
 
-Message.java -- Custom serialized data structure used to transfer packets over sockets
+UserInterface.java -- 
 
-Post.java -- Used to hold a thread and all it's associated comments.
+UserInterfaceHelper.java -- 
 
-Server.java -- Class that listens for connections from the hub and stores user data based on request
 
-ServerList.java -- ServerList holds info and access methods for server info.
+|/////////////////////////////////////////////////////////////////|
+				     SECURITY RELATED
+|/////////////////////////////////////////////////////////////////|
+AES.java -- A class the handles AES encryption and decryption
 
-ServerSocketHandler.java -- Socket handler to communicate with hub
+CheckSum.java -- Used to calculate a checksum for an object
 
-UserInterface.java -- This class is for anything dealing with what the user sees and the work flow 
-of the social network. However, it does not deal with the behind-the-scenes logic for any of the 
-actions, which is done in the client class.
 
-UserList.java -- Holds user ids.
+|/////////////////////////////////////////////////////////////////|
+				     HUB - SERVER - CLIENT
+|/////////////////////////////////////////////////////////////////|
+Client.java -- 
 
-X-------------------------------------------------------------------------------------X
+ClientSocketHandler.java -- 
 
-Instructions:
-	
-	* Installation: 
-		- To install the system download code from CMS
-		- Create a file in the same directory of the downloaded code called 'hub.newuserlist' that contains a list separated by line returns of all users that are allowed to access the system. Users that are not in this file will not be able to log in.
-	* Compiling:
-		- Navigate to the directory of the downloaded repository and type 'make' 
-		  
-	* Running:
-		- To run the system start three separate terminals
-		  Terminal 1: type 'java Hub'
-		  Terminal 2: type 'java Server'
-		  Terminal 3: type 'java UserInterface'
+Hub.java -- 
 
-Tutorial:
+HubSocketHandler.java -- 
 
-	After a user starts the UserInterface class, they will see a console that they can use to navigate the system. Options are given in the top portion of the console while input is accepted at the bottom portion.  
+Server.java -- 
+
+ServerSocketHandler.java -- 
+
+SocketPackage.java -- 

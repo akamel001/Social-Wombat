@@ -1,0 +1,51 @@
+
+				     USER LOG-IN PROTOCOL
+<------------------------------------------------------------------>
+
+User password is stored, encrypted, in the Hub server. User enters 
+her password into the UserInterface. An AES encryption object AES_U
+is created with the User's password P_u and a randomly generated 8-byte 
+salt S. The user then sends that salt along with an initialization 
+vector IV to the hub in the clear, as well as a timestamp T and a 
+randomly generated nonce encrypted with the user's AES encryption 
+object. The Hub then creates its own AES encryption AES_H object using 
+the client's salt and initialization vector. It then attempts to 
+decrypt the user's timestamp and nonce message. If it is successful 
+and if the timestamp is withing 5 minutes of the current time, the 
+Hub then recognizes the user as authenticated. It then returns a 
+message to the user encrypted with the Hub's encryption object 
+containing its own timestamp and the user's nonce plus one. When the 
+user receives this message, it attempts to decrypt it. If it succeeds 
+and (a) the Hub's nonce equals the user's nonce plus one, and (b) 
+the Hub's timestamp is within five minutes of the user's, then the user 
+considers the Hub to be authenticated. he two may then communicate 
+freely.
+
+The protocol works as follows:
+
+	User -> Hub: S,IV,{T_U,N}AES_U
+	
+	Hub -> User: {T_H, N+1}AES_H
+
+<------------------------------------------------------------------>
+				    SYSADMIN LOG-IN PROTOCOL
+<------------------------------------------------------------------>
+
+
+<------------------------------------------------------------------>
+				      ENCRYPTION PROTOCOL
+<------------------------------------------------------------------>
+
+The system uses 128-bit password-based AES encryption with cipher-block 
+chaining and PKCS5 padding. AES keys are generated using passwords 
+combined with 8-byte randomly generated salts.  
+
+
+
+
+
+
+
+
+
+ 
