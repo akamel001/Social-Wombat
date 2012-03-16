@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
@@ -17,7 +18,7 @@ import javax.crypto.SecretKey;
 
 // TODO: black out sensitive variables
 
-public class SystemLogin {
+public class SystemLogin implements Serializable {
 	// This is the hub key encrypted with the system admin password.
 	private byte[] hub_key_enc;
 	private byte[] hub_init_vector;
