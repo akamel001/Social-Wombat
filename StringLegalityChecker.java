@@ -11,7 +11,7 @@ public class StringLegalityChecker {
 																														   // must be at least 8 and at most 25 characters long;
 																										   				   // must contain at least one uppercase letter;
 																										   				   // must contain at least one lowercase letter; 
-																										   				   // must contain at least one numeral;
+																										   				   // must contain at least one number;
 																										   				   // must contain at least one special character.
 																										
 	/**
@@ -19,7 +19,7 @@ public class StringLegalityChecker {
 	 * @param str
 	 * @return true if the username legality requirements are satisfied; false otherwise
 	 */
-	public static boolean checkIfUsernameStringIsLegal(String str){ // TODO: test
+	public static boolean checkIfUsernameStringIsLegal(String str){
 		return (str.matches(sUSERNAME_REQUIREMENTS));
 	}
 
@@ -29,8 +29,33 @@ public class StringLegalityChecker {
 	 * @param str
 	 * @return true if the password legality requirements are satisfied; false otherwise
 	 */
-	public static boolean checkIfPasswordStringIsLegal(String str){ // TODO: test
-		return (str.matches(sPASSWORD_REQUIREMENTS));
+	public static boolean checkIfPasswordStringIsLegal(char [] pw){
+		if (pw.length < 8 || pw.length > 25) { // Check that the password's length is at least 8 and at most 25 characters.
+			return false;
+		}
+		boolean foundUppercase = false;
+		boolean foundLowercase = false;
+		boolean foundNumber = false;
+		boolean foundSpecial = false;
+		for (int i = 0; i < pw.length; i++) {
+			int asciiVal = (int)pw[i];
+			if (asciiVal >= 65 && asciiVal <= 90){ // checks for uppercase
+				foundUppercase = foundUppercase || true;
+			} else if (asciiVal >= 97 && asciiVal <= 122){ // checks for lowercase
+				foundLowercase = foundLowercase || true;
+			} else if (asciiVal >= 48 && asciiVal <= 57){ // checks for number
+				foundNumber = foundNumber || true;
+			} else if (pw[i] == '!' || pw[i] == '@' || pw[i] == '#' || pw[i] == '$' || pw[i] == '%' || pw[i] == '^' || pw[i] == '&' || pw[i] == '*' || pw[i] == '_' || pw[i] == '+' || pw[i] == '-' || pw[i] == '='){ // checks for special character
+				foundSpecial = foundSpecial || true;
+			} else {
+				return false;
+			}
+		}
+		
+		if ((foundUppercase && foundLowercase && foundNumber && foundSpecial) == false) { // Check that the password contains 3 of the four types of characters.
+			return false;
+		}
+		return true;
 	}
 
 }

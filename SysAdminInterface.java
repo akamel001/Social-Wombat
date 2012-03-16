@@ -29,9 +29,9 @@ public class SysAdminInterface {
 	private static final String sSYSTEM_HOME_PAGE_OPTIONS_HUB_NOT_RUNNING = UserInterfaceHelper.addFormattingAlignLeft("1. Start the hub.") +
 															UserInterfaceHelper.addFormattingAlignLeft("2. Log out.");
 	private static final String sSYSTEM_USER_LIST_OPTIONS = UserInterfaceHelper.addFormattingAlignLeft("1. Go back to system home.");
-	private static final String sREGISTRATION_INSTRUCTIONS = UserInterfaceHelper.addFormattingAlignLeft("Specify a username and password when prompted to add a user to the system.");
-	private static final String sADD_SERVER_INSTRUCTIONS = 	UserInterfaceHelper.addFormattingAlignLeft("Specify the name of the server you would like to add when prompted to by the system.");
-	private static final String sCHANGE_PASSWORD_INSTRUCTIONS = UserInterfaceHelper.addFormattingAlignLeft("Specify your username and old/new passwords when prompted to by the system.");
+	private static final String sREGISTRATION_INSTRUCTIONS = UserInterfaceHelper.addFormattingAlignLeft("Specify a username and password in the prompt below.");
+	private static final String sADD_SERVER_INSTRUCTIONS = 	UserInterfaceHelper.addFormattingAlignLeft("Specify the IP address of the server you would like to add below.");
+	private static final String sCHANGE_PASSWORD_INSTRUCTIONS = UserInterfaceHelper.addFormattingAlignLeft("Specify your username and old/new passwords below.");
 	
 	private static final String sHUB_IS_RUNNING = 			UserInterfaceHelper.addFormattingAlignLeft("The hub is running.");
 	private static final String sHUB_IS_NOT_RUNNING = 		UserInterfaceHelper.addFormattingAlignLeft("The hub is not running.");
@@ -209,7 +209,7 @@ public class SysAdminInterface {
 	 */
 	private static void addServerPage(String messages) {
 		displayPage(sADD_SERVER_PAGE, messages, null, null, sADD_SERVER_INSTRUCTIONS);	
-		String serverName = console.readLine("Server Name? ");
+		String serverName = console.readLine("Server IP Address? ");
 		char[] serverPassword = console.readPassword("Password? ");
 		if (hub.addServer(serverName, serverPassword) != -1) {
 			Arrays.fill(serverPassword, '0');
