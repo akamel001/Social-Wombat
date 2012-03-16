@@ -171,17 +171,14 @@ public class HubSocketHandler extends Thread{
 			returnBody.set(0, Calendar.getInstance().getTimeInMillis());
 			//set the nonce+1
 			returnBody.set(1, clientNonce+1);
-			//set the body
-			returnMsg.setBody(returnBody);
 			//set checksum
 			long checksum = returnMsg.generateCheckSum();
 			returnMsg.setChecksum(checksum);
+			//encrypt and set the body 
+			returnMsg.setBody(clientAESObject.encrypt(returnBody));
 			
-			//encrypt
-			byte[] returnMessage = clientAESObject.encrypt(returnMsg);
-			
-			//send
-			sendEncryptedMessage(returnMessage);
+			//send unencrypted message
+			returnMessage(returnMsg);
 			
 			//put thread in a state to receive future messages
 			return true;
@@ -190,7 +187,7 @@ public class HubSocketHandler extends Thread{
 		return false;
 	}
 	
-	/*
+	/**@deprecated
 	 * Deserialize transmission in socket and convert to a message
 	 */
 	private void getMessage(){
@@ -205,7 +202,7 @@ public class HubSocketHandler extends Thread{
 		}
 	}
 	
-	/*
+	/**
 	 * Gets and decrypts a message. Also does checksumming
 	 * Blocking read.
 	 * Will return true if was able to decrypt message and checksum
@@ -242,14 +239,13 @@ public class HubSocketHandler extends Thread{
 		
 	}
 	
-	/*
+	/**
 	 * Method to send an encrypted message to the precreated streams.
 	 */
 	private void sendEncryptedMessage(byte[] msg){
-		int length = msg.length;
 		try {
 			//send the length along first
-			oos.writeInt(length);
+			oos.writeInt(msg.length);
 			oos.write(msg);
 			oos.flush();
 			oos.reset();
@@ -259,8 +255,8 @@ public class HubSocketHandler extends Thread{
 		}
 	}
 	
-	/*
-	 * Send a message back after it's been altered
+	/**
+	 * Send an unencryted message back after it's been altered
 	 */
 	private void returnMessage(Message msg){
 		//Get output stream
@@ -439,7 +435,7 @@ public class HubSocketHandler extends Thread{
 						if((isClassInstructor(personToChange,msg.getClassroom_ID())) && (per == -1)){
 							//return failure
 							if(DEBUG) System.out.println("Denied. Instructor cannot delete self from classroom.");
-							returnMessage(msg);
+							returnAndEncryptMessage(msg);
 							break;
 						} else if(isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
 							//Now changing someone else's

@@ -19,7 +19,7 @@ import javax.crypto.SecretKey;
 // TODO: black out sensitive variables
 
 public class SystemLogin implements Serializable {
-
+	private static final long serialVersionUID = 732364698179994154L;
 	/**
 	 * 
 	 */
@@ -51,7 +51,7 @@ public class SystemLogin implements Serializable {
 				e.printStackTrace();
 			}
 			
-		} 
+		}
 		return null;
 	}
 	

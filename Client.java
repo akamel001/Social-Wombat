@@ -10,6 +10,8 @@ import java.util.Map;
 
 public class Client {
 
+	//TODO Checksum 
+	
 	private static final boolean DEBUG = false;
 	private static final String hub_addr = "127.0.0.1";
 	private static final int HUB_PORT = 4444;

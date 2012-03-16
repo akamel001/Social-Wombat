@@ -46,6 +46,7 @@ public class ServerSocketHandler {
 	private boolean authenticate(){
 		Message firstMessage = null;
 		try {
+			//first message is unencrypted
 			firstMessage = (Message) ois.readObject();
 			// null check
 			if (firstMessage == null){
@@ -87,6 +88,13 @@ public class ServerSocketHandler {
 			return false;
 		}
 		
+		//checksum
+		long oldchecksum = firstMessage.getChecksum();
+		long newchecksum = firstMessage.generateCheckSum();
+		if (oldchecksum != newchecksum){
+			return false;
+		}
+		
 		long hubTimestamp = body.get(0);
 		long hubNonce = body.get(1);
 		
@@ -109,6 +117,9 @@ public class ServerSocketHandler {
 			returnBody.set(1, hubNonce+1);
 			//set the body
 			returnMsg.setBody(returnBody);
+			//set checksum
+			long checksum = returnMsg.generateCheckSum();
+			returnMsg.setChecksum(checksum);
 			
 			//encrypt
 			byte[] returnMessage = serverAESObject.encrypt(returnMsg);
@@ -123,11 +134,14 @@ public class ServerSocketHandler {
 		return false;	
 	}
 	
-	/*
+	/**
 	 * Method to send an encrypted message to the precreated streams.
 	 */
 	private void sendEncryptedMessage(byte[] msg){
 		try {
+			//write length first
+			oos.writeInt(msg.length);
+			//the write the msg
 			oos.write(msg);
 			oos.flush();
 			oos.reset();
@@ -138,7 +152,7 @@ public class ServerSocketHandler {
 		
 	}
 	
-	/*
+	/**@deprecated
 	 * Deserialize transmission in socket and convert to a message
 	 */
 	private void getMessage(){
@@ -150,8 +164,45 @@ public class ServerSocketHandler {
 		}
 	}
 	
-	/*
-	 * Send a message back after it's been altered
+	/**
+	 * Gets and decrypts a message. Also does checksumming
+	 * Blocking read.
+	 * Will return true if was able to decrypt message and checksum
+	 * passes. Will return false otherwise.
+	 */
+	private boolean getAndDecryptMessage(){
+		//length
+		int length = 0;
+		//read the length of the byte [] first
+		try {
+			length = ois.readInt();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+		//set a buffer to correct length
+		byte[] encryptedMsg = new byte[length];
+		//read encrypted message
+		try {
+			ois.readFully(encryptedMsg);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		msg = (Message)serverAESObject.decryptObject(encryptedMsg);
+		
+		//do checksum
+		long oldChecksum = msg.getChecksum();
+		long newChecksum = msg.generateCheckSum();
+		
+		return (oldChecksum == newChecksum);
+		
+		
+	}
+	
+	/**@deprecated
+	 * Send an unencrypted message back after it's been altered
 	 */
 	private void returnMessage(Message msg){
 		//Get output stream
@@ -164,6 +215,30 @@ public class ServerSocketHandler {
 		}	
 	}
 	
+	/**
+	 * Encrypt and return a message. Takes a message and will set the checksum for you.
+	 * 
+	 */
+	private void returnAndEncryptMessage(Message msg){
+		//calculate checksum
+		long thisChecksum = msg.generateCheckSum();
+		msg.setChecksum(thisChecksum);
+		//encrypt message why client aes key
+		byte[] eMsg = serverAESObject.encrypt(msg);
+		//send over wire
+		try {
+			//write in the length first
+			oos.writeInt(eMsg.length);
+			//then write message
+			oos.write(eMsg);
+			oos.flush();
+			oos.reset();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Return Message Failed");
+		}
+	}
+	
 	public void run(){
 		boolean listen = false;
 		
@@ -172,9 +247,9 @@ public class ServerSocketHandler {
 		
 		//servers will run indefinitely if authenticated
 		while(listen){
-			boolean valid = true;
+			boolean valid = false;
 			//Read and deserialize Message from Socket
-			getMessage();
+			valid = getAndDecryptMessage();
 			
 			if (msg == null){
 				System.out.println("Message was null");
@@ -197,7 +272,7 @@ public class ServerSocketHandler {
 							System.out.println(msg.getClassroom_ID() + " added.");
 						}
 						msg.setCode(returnCode);
-						returnMessage(msg);
+						returnAndEncryptMessage(msg);
 						break;
 					/*
 					 * Create post requires Post Name, and Post Body.
@@ -214,7 +289,7 @@ public class ServerSocketHandler {
 						String postBody = (String)post.get(1);
 						returnCode = classDB.addPost(msg.getClassroom_ID(), postName, postBody, serverAESObject);
 						msg.setCode(returnCode);
-						returnMessage(msg);
+						returnAndEncryptMessage(msg);
 						break;
 					/*
 					 * Create client expects postID and comment to be stored as index
@@ -228,7 +303,7 @@ public class ServerSocketHandler {
 						String comment = com.get(1);
 						returnCode = classDB.addComment(msg.getClassroom_ID(), postId, comment, serverAESObject);
 						msg.setCode(returnCode);
-						returnMessage(msg);
+						returnAndEncryptMessage(msg);
 						break;
 					case Client_GoToClassroom:
 						System.out.println(msg.getUserName()+ "wants to enter: " + msg.getClassroom_ID());
@@ -241,13 +316,13 @@ public class ServerSocketHandler {
 							msg.setCode(1);
 							msg.setBody(threadList);
 						}
-						returnMessage(msg);
+						returnAndEncryptMessage(msg);
 						break;
 					case Client_GoToThread:
 						//null check
 						if (msg.getBody() == null) {
 							msg.setCode(-1);
-							returnMessage(msg);
+							returnAndEncryptMessage(msg);
 							break;
 						}
 						//Thread id embedded in body
@@ -263,21 +338,21 @@ public class ServerSocketHandler {
 							msg.setCode(1);
 							msg.setBody(thread);
 						}
-						returnMessage(msg);
+						returnAndEncryptMessage(msg);
 						break;
 					case Client_DeleteClassroom:
 						System.out.println(msg.getUserName()+ "wants to delete: " + msg.getClassroom_ID());
 						returnCode = classDB.removeClassRoom(msg.getClassroom_ID());
 						System.out.println("Return code: " + returnCode);
 						msg.setCode(returnCode);
-						returnMessage(msg);
+						returnAndEncryptMessage(msg);
 						break;
 					case Client_DeleteThread:
 						System.out.println(msg.getUserName()+ "wants to delete a thread.");
 						int p = (Integer)msg.getBody();
 						returnCode = classDB.removePost(msg.getClassroom_ID(), p, serverAESObject);
 						msg.setCode(returnCode);
-						returnMessage(msg);
+						returnAndEncryptMessage(msg);
 						break;
 					/*
 					 * Requires postId and commentID which will be stored in the 
@@ -291,13 +366,13 @@ public class ServerSocketHandler {
 						int commentID = commentParams.get(1);
 						returnCode = classDB.removeComment(msg.getClassroom_ID(), postID, commentID, serverAESObject);
 						msg.setCode(returnCode);
-						returnMessage(msg);
+						returnAndEncryptMessage(msg);
 						break;	
 					default:
 						//For illegal requests
 						msg.setBody("Illegal Request Sent");
 						msg.setCode(-1);
-						returnMessage(msg);
+						returnAndEncryptMessage(msg);
 						break;
 				}
 			}
