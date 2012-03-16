@@ -14,6 +14,7 @@ public class HubTester {
 	/**
 	 * @param args
 	 */
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		
 		//begin
