@@ -73,6 +73,13 @@ public class Client {
 		// Get timestamp message
 		Message response = socket.receive();
 		System.out.println("Received a response");
+		
+		
+		if(response.getChecksum() != response.generateCheckSum()){
+			System.out.println("Checksum miss match!");
+			System.exit(-1);
+		}
+		
 		byte[] encryptedBody = (byte[])response.getBody();
 		
 		ArrayList<Long> return_list = (ArrayList<Long>)aes.decryptObject(encryptedBody);
@@ -95,6 +102,8 @@ public class Client {
 		}
 		else
 			return false;
+
+			
 	}
 	
 	/**
@@ -157,7 +166,10 @@ public class Client {
 		
 		byte[] encMessage = socket.receiveEncrypted();
 		Message response = (Message) aes.decryptObject(encMessage);
-		
+		if(response.getChecksum() != response.generateCheckSum()){
+			System.out.println("Checksum miss match!");
+			System.exit(-1);
+		}
 		return (response.getCode() == 1)? true : false;			
 	}
 
@@ -218,7 +230,10 @@ public class Client {
 		
 		byte[] encMessage = socket.receiveEncrypted();
 		Message response = (Message) aes.decryptObject(encMessage);
-		
+		if(response.getChecksum() != response.generateCheckSum()){
+			System.out.println("Checksum miss match!");
+			System.exit(-1);
+		}
 		return (response.getCode() == 1)? true : false;	
 	}
 
@@ -240,7 +255,10 @@ public class Client {
 
 		byte[] encMessage = socket.receiveEncrypted();
 		Message response = (Message) aes.decryptObject(encMessage);
-		
+		if(response.getChecksum() != response.generateCheckSum()){
+			System.out.println("Checksum miss match!");
+			System.exit(-1);
+		}
 		return (response.getCode() == 1)? true : false;	
 	}
 
@@ -253,7 +271,6 @@ public class Client {
 		if(DEBUG)
 			return true;
 
-//		ClientSocketHandler handler = new ClientSocketHandler();
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(0, userName);
 		list.add(1, "-1");
@@ -269,7 +286,10 @@ public class Client {
 
 		byte[] encMessage = socket.receiveEncrypted();
 		Message response = (Message) aes.decryptObject(encMessage);
-		
+		if(response.getChecksum() != response.generateCheckSum()){
+			System.out.println("Checksum miss match!");
+			System.exit(-1);
+		}
 		return (response.getCode() == 1)? true : false;		
 	}
 
@@ -333,7 +353,10 @@ public class Client {
 
 		byte[] encMessage = socket.receiveEncrypted();
 		Message response = (Message) aes.decryptObject(encMessage);
-
+		if(response.getChecksum() != response.generateCheckSum()){
+			System.out.println("Checksum miss match!");
+			System.exit(-1);
+		}
 		return (Map<Integer, String>) ((response.getCode() == 1)? response.getBody() : null);
 	}
 
@@ -359,7 +382,10 @@ public class Client {
 		byte[] encMessage = socket.receiveEncrypted();
 		Message response = (Message) aes.decryptObject(encMessage);
 		
-
+		if(response.getChecksum() != response.generateCheckSum()){
+			System.out.println("Checksum miss match!");
+			System.exit(-1);
+		}
 		return (response.getCode() == 1)? true : false;		
 	}
 
@@ -421,7 +447,10 @@ public class Client {
 
 		byte[] encMessage = socket.receiveEncrypted();
 		Message response = (Message) aes.decryptObject(encMessage);
-		
+		if(response.getChecksum() != response.generateCheckSum()){
+			System.out.println("Checksum miss match!");
+			System.exit(-1);
+		}
 		return (response.getCode() == 1)? true : false;	
 	}
 
@@ -451,7 +480,10 @@ public class Client {
 
 		byte[] encMessage = socket.receiveEncrypted();
 		Message response = (Message) aes.decryptObject(encMessage);
-		
+		if(response.getChecksum() != response.generateCheckSum()){
+			System.out.println("Checksum miss match!");
+			System.exit(-1);
+		}
 		return (response.getCode() == 1)? true : false;
 	}
 
@@ -474,9 +506,7 @@ public class Client {
 		message.setClassroom_ID(currentClassroomName);
 		message.setType(Message.MessageType.Client_ListClassroomRequests);
 		
-		//** NO CHECKSUM HERE**//
-		//message.setChecksum(message.generateCheckSum());
-		
+		//** NO CHECKSUM HERE**//		
 		socket.sendEncrypted(aes.encrypt(message));
 
 		byte[] encMessage = socket.receiveEncrypted();
@@ -511,7 +541,10 @@ public class Client {
 
 		byte[] encMessage = socket.receiveEncrypted();
 		Message response = (Message) aes.decryptObject(encMessage);
-
+		if(response.getChecksum() != response.generateCheckSum()){
+			System.out.println("Checksum miss match!");
+			System.exit(-1);
+		}
 		return (response.getCode() == 1)? true : false;
 	}
 
@@ -542,7 +575,10 @@ public class Client {
 		byte[] encMessage = socket.receiveEncrypted();
 		Message response = (Message) aes.decryptObject(encMessage);
 
-
+		if(response.getChecksum() != response.generateCheckSum()){
+			System.out.println("Checksum miss match!");
+			System.exit(-1);
+		}
 		return (response.getCode() == 1)? true : false;
 	}
 	
@@ -574,7 +610,10 @@ public class Client {
 		
 		byte[] encMessage = socket.receiveEncrypted();
 		Message response = (Message) aes.decryptObject(encMessage);
-
+		if(response.getChecksum() != response.generateCheckSum()){
+			System.out.println("Checksum miss match!");
+			System.exit(-1);
+		}
 		return (response.getCode() == 1)? true : false;
 	}
 	
@@ -601,7 +640,10 @@ public class Client {
 		
 		byte[] encMessage = socket.receiveEncrypted();
 		Message response = (Message) aes.decryptObject(encMessage);
-
+		if(response.getChecksum() != response.generateCheckSum()){
+			System.out.println("Checksum miss match!");
+			System.exit(-1);
+		}
 		return (response.getCode() == 1)? true : false;
 	}
 	
@@ -648,7 +690,10 @@ public class Client {
 
 		byte[] encMessage = socket.receiveEncrypted();
 		Message response = (Message) aes.decryptObject(encMessage);
-
+		if(response.getChecksum() != response.generateCheckSum()){
+			System.out.println("Checksum miss match!");
+			System.exit(-1);
+		}
 		return (response.getCode() == 1)? true : false;
 	}
 }
