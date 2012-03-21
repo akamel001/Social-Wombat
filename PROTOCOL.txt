@@ -48,7 +48,16 @@ without having to re-encrypt everything in stable storage.
 <------------------------------------------------------------------>
 				    SERVER LOG-IN PROTOCOL
 <------------------------------------------------------------------>
+The server log-in protocol is very similar to the user log-in protocol.
+The Server password is stored and encrypted in the Hub server. An AES 
+encryption object AES_S is created with the Server password S_u and a randomly
+generated 8-byte salt. This salt and an initialization vector is generated from 
+AES_S. The salt and initialization vector is sent from the Hub to the server 
+so that identical AES_S keys can be used to encrypt and decrypt messages.
+Similar to The User Log-In protocol, a nonce and timestamp is sent and checked
+in exactly the same way.
 
+Timeouts are also implemented in the manner.
 
 <------------------------------------------------------------------>
 				      ENCRYPTION PROTOCOL
