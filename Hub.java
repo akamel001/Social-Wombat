@@ -108,9 +108,9 @@ class Hub extends Thread {
 	/*
 	 * Get an arraylist of strings of all the users in userlist
 	 */
-	public ArrayList<String> getUsers(){
-		//TODO: finish
-		return null;
+	public List<String> getUsers(){
+		return userList.getAllUsers(hubAESObject);
+		 
 	}
 	
 	/**
@@ -227,6 +227,7 @@ class Hub extends Thread {
 	/*
 	 * Handles an authenticated connect and verification of the reply
 	 */
+	@SuppressWarnings("unchecked")
 	private static void authenticatedConnect(SocketPackage socketPack, AES socketAES){
 		//make a network connection
 		socketPack.socketConnect();

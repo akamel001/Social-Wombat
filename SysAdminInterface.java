@@ -172,6 +172,9 @@ public class SysAdminInterface {
 		if (userList != null) {
 			content = listToUIString(userList);
 		}
+		else{
+			System.out.println("USER LIST IS NULL!!");
+		}
 		
 		displayPage(sSYSTEM_USER_LIST_PAGE, messages, null, content, sSYSTEM_USER_LIST_OPTIONS);
 		int selection = getValidSelectionFromUser(1);
@@ -251,7 +254,7 @@ public class SysAdminInterface {
 		AES aes = systemLogin.handleSystemLogin(password);
 		if (aes != null) {
 			Arrays.fill(password, '0');
-			return aes;
+			return aes;			//TODO: cd: is this the correct aes to be handed to the hub?
 		}
 		Arrays.fill(password, '0');
 		return null;

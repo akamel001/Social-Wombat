@@ -11,6 +11,7 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 import java.security.spec.KeySpec;
+import java.util.Arrays;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -39,6 +40,10 @@ public final class AES implements Serializable {
     
     private byte[] salt = new byte[8];
     
+    /**
+     * Creates and initializes an AES object with a given pass.
+     * @param password
+     */
 	AES(char[] password){
 		try {		
     		random.nextBytes(salt);
@@ -108,8 +113,8 @@ public final class AES implements Serializable {
 	private void init(byte[] IV, byte[] SALT){
 		try {
 			
-        	iv = IV;
-        	salt = SALT;
+        	iv = Arrays.copyOf(IV, IV.length);
+        	salt = Arrays.copyOf(SALT, SALT.length);
 			dcipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv));
 			ecipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(iv));
 			
@@ -123,16 +128,16 @@ public final class AES implements Serializable {
 	}
 	
 	public byte[] getSalt() {
-		return salt;
+		return Arrays.copyOf(salt, salt.length);
 	}	
 	public byte[] getIv() {
-		return iv;
+		return Arrays.copyOf(iv, iv.length);
 	}
 
 	/**
 	 * 
 	 * @param o
-	 * @return Returns a byte array containing the encrypted Object. Returns null on failure or 
+	 * @return Returns a reference to a byte array containing the encrypted Object. Returns null on failure or 
 	 * if passed a null object.
 	 */
 	public byte[] encrypt(Object o){

@@ -20,7 +20,7 @@ YilokTest.java
 *system_startup*
 YilokTest2.java
 *.goutputstream*
-
+*.sh
 system_startup
 
 system_startup

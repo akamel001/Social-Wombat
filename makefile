@@ -1,7 +1,6 @@
-JC = javac
 .SUFFIXES: .java .class
 .java.class:
-	 $(JC) $*.java
+	javac $<
 
 CLASSES = \
 			ClassDB.java\
@@ -20,10 +19,7 @@ CLASSES = \
 			UserList.java\
 			ClientSocketHandler.java\
 			Post.java\
+			SystemLogin.java\
+			Log.java\
 
-default: classes
-
-classes: $(CLASSES:.java=.class)
-
-clean:
-	 $(RM) *.class
+all: $(CLASSES)

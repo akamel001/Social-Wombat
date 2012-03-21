@@ -64,10 +64,14 @@ public class SystemLogin implements Serializable {
 		AES aes = validateSystemPassword(oldPassword);
 		if (aes != null) {
 			if (Arrays.equals(newPassword,confirmNewPassword)) {
-				AES aesNew = new AES(newPassword, system_admin_init_vector, system_admin_salt);
+				//TODO: cd: new pass, old iv?
+				AES aesNew = new AES(newPassword); //, system_admin_init_vector, system_admin_salt); 
+				system_admin_init_vector = aesNew.getIv();
+				system_admin_salt = aesNew.getSalt();
 				system_admin_enc = aesNew.encrypt(newPassword); // re-encrypt the "system admin" string
 				SecretKey temp = (SecretKey)aes.decryptObject(hub_key_enc);
 				hub_key_enc = aesNew.encrypt(temp);	   // and hub key // TODO: possible error here in encrypt
+				
 				writeToDisk(this, "system_startup");
 				return true;
 			}			
@@ -187,6 +191,11 @@ public class SystemLogin implements Serializable {
 			systemStartup.hub_key_enc = systemAdminAES.encrypt(hubAES.getSecretKey());
 			systemStartup.hub_init_vector = hubAES.getIv();
 			systemStartup.hub_salt = hubAES.getSalt();
+			
+			System.out.println("HUB PASS: " + Arrays.toString(hubPassword));
+			System.out.println("HUB KEY: " + hubAES.getSecretKey());
+			System.out.println("HUB IV: "+ Arrays.toString(systemStartup.hub_init_vector));
+			System.out.println("HUB SALT: " + Arrays.toString(systemStartup.hub_salt));
 			
 			writeToDisk(systemStartup, "system_startup");			
 		} else {
