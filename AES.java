@@ -191,6 +191,8 @@ public final class AES implements Serializable {
 	
 	public byte[] toByteArray (Object obj)
 	{
+		if (obj==null)
+			return null;
 	  byte[] bytes = null;
 	  ByteArrayOutputStream bos = new ByteArrayOutputStream();
 	  try {

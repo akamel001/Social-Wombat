@@ -64,8 +64,8 @@ public class Client {
 		list.add(0, c.getTimeInMillis());
 		list.add(1, nonce);
 		message.setBody(list);
-		message.setChecksum(message.generateCheckSum());
 		message.setBody(aes.encrypt(list));
+		message.setChecksum(message.generateCheckSum());
 		System.out.println("Sending authenticating message...");
 		socket.send(message);
 

@@ -58,19 +58,27 @@ public final class ServerList implements Serializable{
 					return -1;
 				}
 			}
-			ServerData s = new ServerData(nextId);
-			s.setAddress(ip);
-			s.setPort(port);
-			s.setPassword(encrypter.encrypt(pass));
+			ServerData temp_serve_data = new ServerData(nextId);
+			temp_serve_data.setAddress(ip);
+			temp_serve_data.setPort(port);
+			temp_serve_data.setPassword(encrypter.encrypt(pass));
 			AES encryptor = new AES(pass);
 			List<byte[]> out = Collections.synchronizedList(new ArrayList<byte[]>());
 			out.add(0, encryptor.getIv());
 			out.add(1, encryptor.getSalt());
-			s.iv_salt = encryptor.encrypt(out);
+			
+			System.out.println("NEW SERVER IV?SALT:");
+			System.out.println("    " + Arrays.toString(out.get(0)));
+			System.out.println("    " + Arrays.toString(out.get(1)));
+			
+			temp_serve_data.iv_salt = out;
 			// Zero out passed password
 			for(int j=0; j<pass.length; j++)
 				pass[j]='0';
-			serverList.put(nextId, s);
+			serverList.put(nextId, temp_serve_data);
+			System.out.println(serverList.toString());
+			
+			;
 		}
 		int out = nextId;
 		nextId++;
@@ -107,6 +115,10 @@ public final class ServerList implements Serializable{
 			return 1;
 		else 
 			return -1;
+	}
+	
+	public ServerData getServer(Integer i){
+		return serverList.get(i);
 	}
 	
 	/**
@@ -201,11 +213,7 @@ public final class ServerList implements Serializable{
 	@SuppressWarnings("unchecked")
 	public List<byte[]> getIvSalt(int server_id, AES encryptor){
 		ServerData temp_server = serverList.get(server_id);
-		try{
-			return (List<byte[]>)encryptor.decryptObject(temp_server.iv_salt);
-		}catch(ClassCastException e){
-			return null;
-		}
+		return temp_server.iv_salt;
 	}
 	
 	/**
@@ -221,7 +229,7 @@ public final class ServerList implements Serializable{
 		private int port;
 		private byte[] password;
 		private byte[] server_AES;
-		byte[] iv_salt;
+		List<byte[]> iv_salt;
 
 		
 		@SuppressWarnings("unused")
@@ -245,7 +253,7 @@ public final class ServerList implements Serializable{
 		 * Returns the iv, salt list
 		 * @return a List<byte>. [0]=iv, [1]=salt
 		 */
-		public byte[] getIvSalt() {
+		public List<byte[]> getIvSalt() {
 			return iv_salt;
 		}
 

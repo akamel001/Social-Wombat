@@ -16,7 +16,7 @@ class Hub extends Thread {
 	private static int CLIENT_SOCKET = 4444;
 	private static int SERVER_SOCKET = 5050;
 	private static volatile boolean listening = true;
-	private static volatile boolean demo = true;
+	private static volatile boolean demo = false;
 	
 	static ClassList classList;
 	static UserList userList;
@@ -209,6 +209,14 @@ class Hub extends Thread {
 				SocketPackage newSocketPackage = 
 						new SocketPackage(serverList.getAddress(i), SERVER_SOCKET);
 				if(!newSocketPackage.isConnected()){
+					/*--------DEBUG-BEGIN--------------------*/
+					System.out.println("IN SERVER: " + serverList.getServerList().toString());
+					System.out.println("SERVER PASS: " + Arrays.toString(serverList.getServerPass(i, hubAESObject)));
+					List<byte[]> b = serverList.getIvSalt(i, hubAESObject);
+					System.out.println("SERVER IV: " + Arrays.toString(b.get(0)));
+					System.out.println("SERVER SALT: " + Arrays.toString(b.get(1)));
+					/*--------DEBUG-END--------------------*/
+					
 					//regenerate serverAES object
 					//grab pass
 					char[] servPass = serverList.getServerPass(i, hubAESObject);

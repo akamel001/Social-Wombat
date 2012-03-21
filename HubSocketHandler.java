@@ -83,6 +83,7 @@ public class HubSocketHandler extends Thread{
 	@SuppressWarnings("unchecked")
 	private boolean authenticate(){
 		if (DEBUG) System.out.println("Received an authentication request");
+		boolean allowed = false;
 		Message firstMessage = null;
 		try {
 			firstMessage = (Message) ois.readObject();
@@ -91,24 +92,24 @@ public class HubSocketHandler extends Thread{
 				if (DEBUG) System.out.println("First msg received was null");
 				return false;
 			}
+			else
+				msg = firstMessage; // ADDED by cd 3/21/12
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		
 		//Check message type
+		System.out.println("MESSAGE TYPE: " + msg.getType());
 		if (msg.getType() != Message.MessageType.Client_LogIn){
 			return false;
 		}
-		
 		//Checksum
 		long newChecksum = msg.generateCheckSum();
 		long oldChecksum = msg.getChecksum();
 		if (newChecksum != oldChecksum){
 			return false;
 		}
-		
 		//extract fields
 		String usr = firstMessage.getUserName();
 		byte[] salt = firstMessage.getSalt();
@@ -119,14 +120,16 @@ public class HubSocketHandler extends Thread{
 			if (DEBUG) System.out.println("Either username, salt, or iv received in first message was null.");
 			return false;
 		}
-		
 		//check if the user exists
 		//Pull out the password
 		char[] password = userList.getUserPass(usr, hubAESObject);
+		System.out.println("PASSWORD: " + Arrays.toString(password));
 		// check existence of username
 		if (password == null){
 			//send back error code
 			//TODO: send back
+			Message returnMsg = new Message();
+			
 			if(DEBUG) System.out.println("Attempted intrusion by: " + usr);
 			
 			return false;

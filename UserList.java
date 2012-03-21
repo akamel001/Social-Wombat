@@ -20,8 +20,6 @@ public final class UserList implements Serializable{
 
 	private static final long serialVersionUID = 3273339989709185986L;
 	private Map <String, byte[]> user_list; 
-	
-	public static boolean DEBUG = true;
 
 	/**
 	 * Creates a new UserList with an empty Map of Users.
@@ -66,7 +64,11 @@ public final class UserList implements Serializable{
 	 */
 	public char[] getUserPass(String user_name, AES encryptor){
 		// (a) get user
+		if(user_name==null || encryptor==null)
+			return null;
 		User temp_guy = this.getAndDecryptUser(user_name, encryptor);
+		if (temp_guy==null)
+			return null;
 		return temp_guy.password;
 	}
 
@@ -107,36 +109,14 @@ public final class UserList implements Serializable{
 			return -1;
 		}
 		//TODO: parse username and password
-		if(DEBUG)
-		{
-			String test = "SADKJHSADKJHSADKJHSDA";
-			byte[] c = encryptor.encrypt(test);
-			System.out.println("NEW KEY: " + encryptor.getSecretKey());
-			System.out.println("NEW IV: "+ Arrays.toString(encryptor.getIv()));
-			System.out.println("NEW SALT: " + Arrays.toString(encryptor.getSalt()));
-			
-			String test2 = (String)encryptor.decryptObject(c);
-			System.out.println(test2);
-			
-			AES testAES = new AES(encryptor.getSecretKey(),encryptor.getIv(), encryptor.getSalt());
-			System.out.println("NExt KEY: " + testAES.getSecretKey());
-			System.out.println("NExt IV: "+ Arrays.toString(testAES.getIv()));
-			System.out.println("NExt SALT: " + Arrays.toString(testAES.getSalt()));
-			test2 = (String)testAES.decryptObject(c);
-			System.out.println(test2);
-		}
+
 		if (new_id.length()<3 || new_id.length()>30)
 			return -1;
 		
 		synchronized(user_list){
-			System.out.println("HERE?");
 			if (!user_list.containsKey(new_id)){
 				User new_guy = new User(new_id, pass);
 				int out =  this.encryptAndAddUser(new_guy, encryptor);
-				System.out.println("HERE:" + user_list);
-				byte[] b = user_list.get(new_id);
-				User s = (User)encryptor.decryptObject(b);
-				System.out.println("THIS IS THE USER PULLED FROM THE LIST: " + s.name);
 				zeroCharArray(pass);
 				return out;
 			}

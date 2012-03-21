@@ -21,6 +21,9 @@ public class Message implements Serializable{
 		return CheckSum.getChecksum(body);
 	}
 	public enum MessageType {
+		// Hub->Client
+		Login_Denied,
+		
 	    // Client -> Hub only
 		Client_LogIn, 
 	    Client_GetClassEnrollment,

@@ -6,8 +6,8 @@ public class StartServers {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Server s1 = new Server("s1","password".toCharArray());
-		System.out.println("IP of s1: " + s1.getIP());
+		Server s1 = new Server("1","a".toCharArray());
+		System.out.println("IP of 1: " + s1.getIP());
 		s1.start();
 		
 		//We will avoid starting multiple servers on the same ip for 
