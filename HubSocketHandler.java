@@ -83,7 +83,7 @@ public class HubSocketHandler extends Thread{
 	@SuppressWarnings("unchecked")
 	private boolean authenticate(){
 		if (DEBUG) System.out.println("Received an authentication request");
-		boolean allowed = false;
+
 		Message firstMessage = null;
 		try {
 			firstMessage = (Message) ois.readObject();
