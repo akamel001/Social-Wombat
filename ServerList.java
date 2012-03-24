@@ -67,6 +67,7 @@ public final class ServerList implements Serializable{
 			out.add(0, encryptor.getIv());
 			out.add(1, encryptor.getSalt());
 			
+			//TODO: DELETE
 			System.out.println("NEW SERVER IV?SALT:");
 			System.out.println("    " + Arrays.toString(out.get(0)));
 			System.out.println("    " + Arrays.toString(out.get(1)));
@@ -76,9 +77,6 @@ public final class ServerList implements Serializable{
 			for(int j=0; j<pass.length; j++)
 				pass[j]='0';
 			serverList.put(nextId, temp_serve_data);
-			System.out.println(serverList.toString());
-			
-			;
 		}
 		int out = nextId;
 		nextId++;
