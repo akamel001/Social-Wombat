@@ -105,8 +105,22 @@ public class HubSocketHandler extends Thread{
 			return false;
 		}
 		//Checksum
-		long newChecksum = msg.generateCheckSum();
+		if (DEBUG) System.out.println("Checksuming");
+		
+		if (DEBUG) System.out.println("Contents of body: " + msg.getBody());
+		
+		//Decrypt body
+		ArrayList<Long> decryptedBody = (ArrayList<Long>) clientAESObject.decryptObject((byte[])msg.getBody());
+		
+		if (DEBUG) System.out.println("Checksuming");
+		
+		//long newChecksum = msg.generateCheckSum();
+		long newChecksum = CheckSum.getChecksum(decryptedBody);
+		if (DEBUG) System.out.println("New checksum: " + newChecksum);
+		
 		long oldChecksum = msg.getChecksum();
+		if (DEBUG) System.out.println("Old checksum: " + oldChecksum);
+		
 		if (newChecksum != oldChecksum){
 			return false;
 		}
