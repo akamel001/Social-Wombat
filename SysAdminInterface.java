@@ -1,6 +1,9 @@
 import java.io.Console;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * This is the system administrator interface for Social Wombat.
@@ -20,15 +23,16 @@ public class SysAdminInterface {
 	private static final String sSYSTEM_CHANGE_PASSWORD_PAGE = UserInterfaceHelper.addFormattingAlignCenter("SYSTEM PASSWORD CHANGE");
 	private static final String sADD_SERVER_PAGE = 			UserInterfaceHelper.addFormattingAlignCenter("ADD SERVER");
 	
+	private static final String sDEFAULT_HOME_OPTION = UserInterfaceHelper.addFormattingAlignLeft("1. Go back to system home.");
 	private static final String sSYSTEM_HOME_PAGE_OPTIONS_HUB_RUNNING =	UserInterfaceHelper.addFormattingAlignLeft("1. View users enrolled in the system.") +
 															UserInterfaceHelper.addFormattingAlignLeft("2. Register a user in the system.") +
-															UserInterfaceHelper.addFormattingAlignLeft("3. Add a server.") +
-															UserInterfaceHelper.addFormattingAlignLeft("4. Shut down the hub.") +
-															UserInterfaceHelper.addFormattingAlignLeft("5. Change system password.") +
-															UserInterfaceHelper.addFormattingAlignLeft("6. Log out.");	
+															UserInterfaceHelper.addFormattingAlignLeft("3. View servers.") +
+															UserInterfaceHelper.addFormattingAlignLeft("4. Add a server.") +
+															UserInterfaceHelper.addFormattingAlignLeft("5. Shut down the hub.") +
+															UserInterfaceHelper.addFormattingAlignLeft("6. Change system password.") +
+															UserInterfaceHelper.addFormattingAlignLeft("7. Log out.");	
 	private static final String sSYSTEM_HOME_PAGE_OPTIONS_HUB_NOT_RUNNING = UserInterfaceHelper.addFormattingAlignLeft("1. Start the hub.") +
 															UserInterfaceHelper.addFormattingAlignLeft("2. Log out.");
-	private static final String sSYSTEM_USER_LIST_OPTIONS = UserInterfaceHelper.addFormattingAlignLeft("1. Go back to system home.");
 	private static final String sREGISTRATION_INSTRUCTIONS = UserInterfaceHelper.addFormattingAlignLeft("Specify a username and password in the prompt below.");
 	private static final String sADD_SERVER_INSTRUCTIONS = 	UserInterfaceHelper.addFormattingAlignLeft("Specify the IP address of the server you would like to add below.");
 	private static final String sCHANGE_PASSWORD_INSTRUCTIONS = UserInterfaceHelper.addFormattingAlignLeft("Specify your username and old/new passwords below.");
@@ -37,6 +41,7 @@ public class SysAdminInterface {
 	private static final String sHUB_IS_NOT_RUNNING = 		UserInterfaceHelper.addFormattingAlignLeft("The hub is not running.");
 	
 	private static final String cNO_USERS = 				UserInterfaceHelper.addFormattingAlignLeft("There are no users enrolled in the system.");
+	private static final String cNO_SERVERS = 				UserInterfaceHelper.addFormattingAlignLeft("There are no servers in the system.");
 	
 	private static final String eNON_VALID_SELECTION = 		"That is not a valid selection." + UserInterfaceHelper.sNEW_LINE;
 	
@@ -78,10 +83,11 @@ public class SysAdminInterface {
 	 * This is the home page. It displays six options if the hub is running:
 	 * 1. View users enrolled in the system.
 	 * 2. Register a user in the system.
-	 * 3. Add a server.
-	 * 4. Shut down the hub.
-	 * 5. Change system password.
-	 * 6. Log out.
+	 * 3. View servers.
+	 * 4. Add a server.
+	 * 5. Shut down the hub.
+	 * 6. Change system password.
+	 * 7. Log out.
 	 * 
 	 * and two options when the hub is not running:
 	 * 1. Start the hub.
@@ -91,7 +97,7 @@ public class SysAdminInterface {
 	private static void systemHomePage(String messages) {	
 		if (hubIsRunning == true) {
 			displayPage(sHOME_PAGE, messages, sHUB_IS_RUNNING, null, sSYSTEM_HOME_PAGE_OPTIONS_HUB_RUNNING);
-			int selection = getValidSelectionFromUser(6);
+			int selection = getValidSelectionFromUser(7);
 			
 			switch (selection) {
 			// View users enrolled in the system.
@@ -102,12 +108,16 @@ public class SysAdminInterface {
 		    case 2: 
 		    	systemRegistrationPage(null);
 		        break;
-		    // Add a server.
+		     // View servers.
 		    case 3: 
+		    	serverListPage(null);
+		        break;
+		    // Add a server.
+		    case 4: 
 		    	addServerPage(null);
 		        break;
 		     // Shut down the hub.
-		    case 4:
+		    case 5:
 		    	try {
 		    		hub.shutDown();
 		    	} catch (Exception e) {
@@ -117,11 +127,11 @@ public class SysAdminInterface {
 		    	systemHomePage(mSHUT_DOWN_HUB_SUCCESS);
 		        break;
 		    // Change system password.
-		    case 5:
+		    case 6:
 		    	systemChangePasswordPage(null);
 		        break;
 		    // Log out.
-		    case 6:
+		    case 7:
 		    	if (handleSystemLogout()) {
 					systemLoginPage(mLOG_OUT_SUCCESS);
 				} else {
@@ -172,11 +182,8 @@ public class SysAdminInterface {
 		if (userList != null) {
 			content = listToUIString(userList);
 		}
-		else{
-			System.out.println("USER LIST IS NULL!!");
-		}
 		
-		displayPage(sSYSTEM_USER_LIST_PAGE, messages, null, content, sSYSTEM_USER_LIST_OPTIONS);
+		displayPage(sSYSTEM_USER_LIST_PAGE, messages, null, content, sDEFAULT_HOME_OPTION);
 		int selection = getValidSelectionFromUser(1);
 		
 		switch (selection) {
@@ -206,6 +213,31 @@ public class SysAdminInterface {
 		} 
 	}
 	
+	/**
+	 * Displays a list of servers.
+	 * Gives an option to go back to the system home page.
+	 * @param messages
+	 */
+	private static void serverListPage(String messages) {
+		List<String> serverList = getServerList();
+		String content = cNO_SERVERS;		
+		if (serverList != null) {
+			content = listToUIString(serverList);
+		}
+		
+		displayPage(sDEFAULT_HOME_OPTION, messages, null, content, sDEFAULT_HOME_OPTION);
+		int selection = getValidSelectionFromUser(1);
+		
+		switch (selection) {
+		// Go back to system home.
+	    case 1:
+	    	systemHomePage(null);
+	    default:
+	    	console.printf(eGENERAL_ERROR);
+	        break;
+		}
+	}
+
 	/**
 	 * Allows the system admin the add a server by specifying that server's name.
 	 * @param messages
@@ -301,6 +333,10 @@ public class SysAdminInterface {
 	private static List<String> getSystemUserList() {
 		return hub.getUsers();
 	}
+	
+	private static List<String> getServerList() {
+		return mapToList(hub.getServers());
+	}
 
 	////////////////////////////////////////////////
 	//              HELPER FUNCTIONS              //
@@ -371,6 +407,20 @@ public class SysAdminInterface {
 			uiString = uiString.concat(UserInterfaceHelper.addFormattingAlignLeft(uiStringTemp));
 		}		
 		return uiString;		
+	}
+	
+	/**
+	 * Extracts integer keys and string values in a map and 
+	 * puts them into a list of strings.
+	 * @param map
+	 * @return List<String>
+	 */
+	private static List<String> mapToList(Map<Integer, String> map) {
+		List<String> outputList = new ArrayList<String>();
+		for (Entry<Integer, String> entry : map.entrySet()){
+			outputList.add(entry.getKey().toString() + " " + entry.getValue());
+		}
+		return outputList;
 	}
 	
 	////////////////////////////////////////////////
