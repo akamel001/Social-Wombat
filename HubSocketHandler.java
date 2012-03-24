@@ -105,8 +105,22 @@ public class HubSocketHandler extends Thread{
 			return false;
 		}
 		//Checksum
-		long newChecksum = msg.generateCheckSum();
+		if (DEBUG) System.out.println("Checksuming");
+		
+		if (DEBUG) System.out.println("Contents of body: " + msg.getBody().toString());
+		
+		//Decrypt body
+		ArrayList<Long> decryptedBody = (ArrayList<Long>) clientAESObject.decryptObject((byte[])msg.getBody());
+		
+		if (DEBUG) System.out.println("Checksuming");
+		
+		//long newChecksum = msg.generateCheckSum();
+		long newChecksum = CheckSum.getChecksum(decryptedBody);
+		if (DEBUG) System.out.println("New checksum: " + newChecksum);
+		
 		long oldChecksum = msg.getChecksum();
+		if (DEBUG) System.out.println("Old checksum: " + oldChecksum);
+		
 		if (newChecksum != oldChecksum){
 			return false;
 		}
@@ -149,6 +163,7 @@ public class HubSocketHandler extends Thread{
 		
 		//Decrypt the body, cast to ArrayList<Long>
 		byte[] encryptedBody = (byte[]) firstMessage.getBody();
+
 		ArrayList<Long> body = (ArrayList<Long>)clientAESObject.decryptObject(encryptedBody);
 		if (body==null){
 			if (DEBUG) System.out.println("unable to decrypt msg body");
@@ -157,6 +172,9 @@ public class HubSocketHandler extends Thread{
 		
 		long clientTimestamp = body.get(0);
 		long clientNonce = body.get(1);
+		
+		if (DEBUG) System.out.println("Client timestamp: " + clientTimestamp);
+		if (DEBUG) System.out.println("Client nonce: " + clientNonce);
 		
 		boolean allowed = false;
 		

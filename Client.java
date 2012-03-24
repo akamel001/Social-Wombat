@@ -62,10 +62,14 @@ public class Client {
 
 		ArrayList<Long> list = new ArrayList<Long>();
 		list.add(0, c.getTimeInMillis());
+		System.out.println("Seinding time in sec: " + list.get(0));
 		list.add(1, nonce);
+		
 		message.setBody(list);
-		message.setBody(aes.encrypt(list));
 		message.setChecksum(message.generateCheckSum());
+		System.out.println("Checksum: " + message.getChecksum());
+		message.setBody(aes.encrypt(list));
+		System.out.println(message.getBody());
 		System.out.println("Sending authenticating message...");
 		socket.send(message);
 
