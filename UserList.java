@@ -211,7 +211,11 @@ public final class UserList implements Serializable{
 			if (temp_guy==null)
 				return null;
 			
-			// (b) get last login
+			// (b) if first login, return 
+			if(temp_guy.getLastAddress()==null || temp_guy.getLastTimeStamp()==null)
+				return "No previous login.";
+			
+			// (c) get last login
 			SimpleDateFormat sdf = new SimpleDateFormat("MMMMM d, yyyy 'at' HH:mm:ss a, z");
 			String out = "Last login: " +
 				sdf.format(temp_guy.getLastTimeStamp()) +
@@ -357,7 +361,7 @@ public final class UserList implements Serializable{
 			else
 				name = u;
 			password = Arrays.copyOf(p, p.length);
-			last_login_time = new Date();
+			last_login_time = null;
 			last_login_address = null;
 		}
 		

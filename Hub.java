@@ -516,7 +516,6 @@ class Hub extends Thread {
 			System.out.println("Couldn't close");
 		}
 		
-
 		// Write out to disk
 		writeToDisk(classList, classListName);
 		writeToDisk(userList, userListName);
