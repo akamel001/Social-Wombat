@@ -26,7 +26,7 @@ public class Server extends Thread{
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-		System.out.println("New Server created with IP: "+thisIp.getHostAddress());	
+		System.out.println("New Server created with IP: " + thisIp.getHostAddress());	
 		ip = thisIp.getHostAddress();
 	}
 	
@@ -131,7 +131,7 @@ public class Server extends Thread{
 					//hub has directed this message to the correct Server
 					ServerSocketHandler newRequest = new ServerSocketHandler(hub,classDB,password);
 					System.out.println("New socket handler created");
-					//Starts running the new thread
+					//Starts running function
 					newRequest.run(); 
 				} 
 				catch (IOException e) {

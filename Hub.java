@@ -163,7 +163,8 @@ class Hub extends Thread {
 			//create new socket to add
 			SocketPackage newSocketPackage = new SocketPackage(server,SERVER_SOCKET);
 			serverPackages.put(r, newSocketPackage);
-			connectServers();
+			//TODO: change to not automatically add
+			//connectServers();
 			return r;
 		}
 	}
@@ -202,6 +203,7 @@ class Hub extends Thread {
 	public void connectServers() {
 		if (DEBUG) System.out.println("Connecting to the servers");
 		int numServers = serverList.getLastServer();
+		if (DEBUG) System.out.println("Needs to connect with " + numServers + " servers");
 		if (numServers == 0) {
 			System.out.println("There are no servers to connect to. Please add some."); 
 		}
@@ -214,6 +216,9 @@ class Hub extends Thread {
 			if (serverPackages.containsKey(i)){
 				//connect
 				SocketPackage tempSocket = serverPackages.get(i);
+				if (tempSocket.isConnected()) {
+					System.out.println("Server: " + i + " is connected");
+				}
 				//make sure not already connected
 				if(!tempSocket.isConnected()){
 					//regenerate serverAES object
@@ -265,6 +270,7 @@ class Hub extends Thread {
 	private static void authenticatedConnect(SocketPackage socketPack, AES socketAES){
 		//make a network connection
 		socketPack.socketConnect();
+		if(DEBUG) System.out.println("Socket connect successful, now authenticating");
 		//send the initial contact
 		
 		//make the message
@@ -280,18 +286,27 @@ class Hub extends Thread {
 		//set nonce
 		long myNonce = new SecureRandom().nextLong();
 		body.add(1,myNonce);
-		
+		initial.setChecksum(CheckSum.getChecksum(body));
 		//set and encrypt body
 		initial.setBody(socketAES.encrypt(body));
 		
 		//send
-		socketPack.sendEncrypted(socketAES.encrypt(initial));
+		socketPack.send(initial);
 		
+		if(DEBUG) System.out.println("Authentication message sent, waiting for reply...");
+
 		//block and wait for reply, will be type message
-		byte[] eReply = socketPack.receiveEncrypted();
+		Message reply = socketPack.receive();
 		
-		//decrypt
-		Message reply = (Message)socketAES.decryptObject(eReply);
+		if(DEBUG) System.out.println("Authentication reply received.");
+		
+		//decrypt body
+		byte[] encryptedBody = (byte[])reply.getBody();
+		ArrayList<Long> replyBody = (ArrayList<Long>)socketAES.decryptObject(encryptedBody);
+		if (replyBody == null){
+			System.out.println("unable to decrypt msg body");
+		}
+		reply.setBody(replyBody);
 		
 		boolean verified = true;
 		//verify fields
@@ -301,8 +316,8 @@ class Hub extends Thread {
 			verified = false;
 		}
 		//get body fields
-		long serverTimestamp = ((ArrayList<Long>)reply.getBody()).get(0);
-		long serverNonce = ((ArrayList<Long>)reply.getBody()).get(1);
+		long serverTimestamp = replyBody.get(0);
+		long serverNonce = replyBody.get(1);
 		
 		//nonce check
 		if ((myNonce+1) != serverNonce){
@@ -460,8 +475,7 @@ class Hub extends Thread {
 		try {
 			hubSocket = new ServerSocket(CLIENT_SOCKET);
 		} catch (IOException e) {
-			System.out.println("Could not listen on port: " + CLIENT_SOCKET);
-			System.exit(-1);
+			System.out.println("Could not listen on port or port already in use: " + CLIENT_SOCKET);
 		}
 		while(listening){	
 			// Spin until a new message is received and then spawn a 
