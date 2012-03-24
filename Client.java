@@ -78,6 +78,7 @@ public class Client {
 		Message response = socket.receive();
 		System.out.println("Received a response");
 		
+		response.setBody((ArrayList<Long>) aes.decryptObject((byte[]) response.getBody()));
 		
 		if(response.getChecksum() != response.generateCheckSum()){
 			System.out.println("Checksum miss match!\n==> Received checksum: " + response.getChecksum() + "\n==> Generated Checksum" + response.generateCheckSum());

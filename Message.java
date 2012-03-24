@@ -20,6 +20,7 @@ public class Message implements Serializable{
 	public long generateCheckSum(){
 		return CheckSum.getChecksum(body);
 	}
+	
 	public enum MessageType {
 		// Hub->Client
 		Login_Denied,
