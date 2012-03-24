@@ -376,18 +376,18 @@ public class HubSocketHandler extends Thread{
 	public void run(){
 		//takes over to infinitely listen for each user
 		boolean listen = false;
+		boolean valid = true;
 		
-		//Authenticate, if listen is false, the socket is problematic
+		//Authenticate, if listen is false, the socket is problematic, close connections
 		listen = authenticate();
 		
 		//All further communications
-		while (listen){
-			boolean valid = true;
+		while (listen && valid){
+			
 			//Wait, read and deserialize Message from Socket
 			if (DEBUG) System.out.println("getting and decrypting msg");
 			
-			//TODO: changed from valid to listen
-			listen = getAndDecryptMessage();
+			valid = getAndDecryptMessage();
 			
 			if (msg == null){
 				System.out.println("Message was null");
