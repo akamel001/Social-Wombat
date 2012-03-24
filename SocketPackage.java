@@ -45,9 +45,7 @@ class SocketPackage {
 		//attempt to connect with a 5 second timeout
 		for(int i = 1; !socket.isConnected(); i*=2){
 			try {
-				if (socket == null) {
-					socket = new Socket();
-				}
+				socket = new Socket();
 				socket.connect(socketAddr, TIMEOUT);
 			}catch (SocketTimeoutException e){
 				//e.printStackTrace();
