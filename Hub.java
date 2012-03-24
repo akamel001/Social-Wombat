@@ -52,6 +52,12 @@ class Hub extends Thread {
 	//////////////////////////////////////////////////////
 	
 	public void shutDown(){
+		try {
+			hubSocket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		listening = false;
 	}
 	
