@@ -78,13 +78,6 @@ public class Client {
 		Message response = socket.receive();
 		System.out.println("Received a response");
 		
-		response.setBody((ArrayList<Long>) aes.decryptObject((byte[]) response.getBody()));
-		
-		if(response.getChecksum() != response.generateCheckSum()){
-			System.out.println("Checksum miss match!\n==> Received checksum: " + response.getChecksum() + "\n==> Generated Checksum" + response.generateCheckSum());
-			System.exit(-1);
-		}
-		
 		byte[] encryptedBody = (byte[])response.getBody();
 		
 		ArrayList<Long> return_list = (ArrayList<Long>)aes.decryptObject(encryptedBody);
@@ -92,7 +85,17 @@ public class Client {
 		if (return_list==null){
 			if (DEBUG) System.out.println("unable to decrypt msg body");
 			return false;
-		}
+		}else
+			response.setBody(return_list);
+		
+		if(response.getChecksum() != response.generateCheckSum()){
+			System.out.println("Checksum miss match!\n==> Received checksum: " + response.getChecksum() + "\n==> Generated Checksum" + response.generateCheckSum());
+			System.exit(-1);
+		}else
+			System.out.println("Checksum passed!");
+		
+
+		
 		
 		long now =	c.getTimeInMillis();
 		long hub_time = return_list.get(0); 
@@ -102,12 +105,15 @@ public class Client {
 		
 		if( now <= hub_time+300000 && hub_time-300000 <= hub_time && hub_nonce==nonce+1)
 			allowed=true;
+		
 		if(allowed){
+			System.out.println("Authenticated!!");
 			return true;
 		}
-		else
+		else{
+			System.out.println("Failed to Authenticate!!");
 			return false;
-
+		}
 			
 	}
 	
