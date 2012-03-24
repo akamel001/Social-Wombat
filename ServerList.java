@@ -101,7 +101,10 @@ public final class ServerList implements Serializable{
 				}
 			}
 		}
-		return list_out;
+		if (list_out.isEmpty())
+			return null;
+		else
+			return list_out;
 	}
 	/**
 	 * Removes a server from the server list.

@@ -25,7 +25,8 @@ public final class UserList implements Serializable{
 	 * Creates a new UserList with an empty Map of Users.
 	 */
 	public UserList(){
-		user_list = Collections.synchronizedMap(new TreeMap<String, byte[]>());
+		user_list = todo
+		Collections.synchronizedMap(new TreeMap<String, byte[]>());
 	}
 
 	/**
@@ -101,16 +102,21 @@ public final class UserList implements Serializable{
 	 * @param new_id The username for the new user.
 	 * @param pass A char[] containing the user's password -- cannot be length 0. This password will be zeroed out once it is entered!!!!!
 	 * @param encryptor and AES object with which to encrypt the User data.
-	 * @return Returns true if the user was added. Returns false if the user already exists.
+	 * @return Returns true if the user was added. Returns false if (a) the user already exists, (b) the username is invalid, or 
+	 *          (c) the password is invalid.
 	 */
 	public int addUser(String new_id, char[] pass, AES encryptor){
 		// Sanity checks
 		if (new_id==null || pass.length==0){
 			return -1;
 		}
-		//TODO: parse username and password
 
-		if (new_id.length()<3 || new_id.length()>30)
+		// Check if the user name is legal
+		if(!StringLegalityChecker.checkIfUsernameStringIsLegal(new_id))
+			return -1;
+		
+		// Check if the password is legal
+		if(!StringLegalityChecker.checkIfPasswordStringIsLegal(pass))
 			return -1;
 		
 		synchronized(user_list){
@@ -131,11 +137,17 @@ public final class UserList implements Serializable{
 	 * @param user_name The user's id
 	 * @param p A byte array containing the new password 
 	 * @param encryptor An AES object to encrypt the 
-	 * @return
+	 * @return Returns 1 if the password has been changed. Returns -1 if (a) invalid params, (b) new password is invalid,
+	 *                    or (c) User does not exist
 	 */
 	public int changeUserPassword(String user_name, char[] p, AES encryptor){
 		if(user_name==null || p==null || encryptor==null || !user_list.containsKey(user_name))
 			return -1;
+		
+		// Check if the password is legal
+		else if(!StringLegalityChecker.checkIfPasswordStringIsLegal(p))
+			return -1;
+		
 		else{
 			synchronized(user_list){
 				// (a) get user

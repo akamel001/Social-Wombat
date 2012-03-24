@@ -68,6 +68,7 @@ class Hub extends Thread {
 		
 		//Add
 		//TODO: check the output of userlist
+		// UserList now returns -1 if username or pass is invalid -	cd
 		if(userList.addUser(username, password, hubAESObject) != -1){
 			if(DEBUG) System.out.println("User " + username + " added successfully!");
 			return true;
@@ -163,13 +164,13 @@ class Hub extends Thread {
 		}
 	}
 	
-	/*
+	/**
 	 * Get a list of all the servers in serverList
+	 * @return Returns a hashmap of server ids mapped to Strings containing "server_ip, port". Returns
+	 *          null if there are no extant servers. 
 	 */
 	public Map<Integer,String> getServers(){
-		//TODO: finish
-		return null;
-		
+		return serverList.getServerList();
 	}
 	
 	/*
