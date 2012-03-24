@@ -447,7 +447,7 @@ class Hub extends Thread {
 	 */
 	public void run() {
 		// Start Up the Hub
-		
+		listening = true;
 		// Connect to Servers
 		try {
 			if (DEBUG) System.out.println("Connecting to Servers");
