@@ -81,7 +81,7 @@ public class Client {
 		
 		if(response.getChecksum() != response.generateCheckSum()){
 			System.out.println("Checksum miss match!");
-			System.exit(-1);
+			//System.exit(-1);
 		}
 		
 		byte[] encryptedBody = (byte[])response.getBody();
