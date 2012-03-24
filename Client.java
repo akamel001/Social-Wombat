@@ -711,8 +711,8 @@ public class Client {
 	}
 
 	/**
-	 * Gets the last login time for this particular user.
-	 * @return
+	 * Gets the last login info for this particular user.
+	 * @return last login info as a string
 	 */
 	public static String getLastLogin() {
 		// TODO Auto-generated method stub
