@@ -99,31 +99,13 @@ public class HubSocketHandler extends Thread{
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+		
 		//Check message type
 		if (DEBUG) System.out.println("MESSAGE TYPE: " + msg.getType());
 		if (msg.getType() != Message.MessageType.Client_LogIn){
 			return false;
 		}
-		//Checksum
-		if (DEBUG) System.out.println("Checksuming");
 		
-		if (DEBUG) System.out.println("Contents of body: " + msg.getBody().toString());
-		
-		//Decrypt body
-		ArrayList<Long> decryptedBody = (ArrayList<Long>) clientAESObject.decryptObject((byte[])msg.getBody());
-		
-		if (DEBUG) System.out.println("Checksuming");
-		
-		//long newChecksum = msg.generateCheckSum();
-		long newChecksum = CheckSum.getChecksum(decryptedBody);
-		if (DEBUG) System.out.println("New checksum: " + newChecksum);
-		
-		long oldChecksum = msg.getChecksum();
-		if (DEBUG) System.out.println("Old checksum: " + oldChecksum);
-		
-		if (newChecksum != oldChecksum){
-			return false;
-		}
 		//extract fields
 		String usr = firstMessage.getUserName();
 		byte[] salt = firstMessage.getSalt();
@@ -170,6 +152,17 @@ public class HubSocketHandler extends Thread{
 			return false;
 		}
 		
+		//Checksum
+		long newChecksum = CheckSum.getChecksum(body);
+		if (DEBUG) System.out.println("New checksum: " + newChecksum);
+		
+		long oldChecksum = msg.getChecksum();
+		if (DEBUG) System.out.println("Old checksum: " + oldChecksum);
+		
+		if (newChecksum != oldChecksum){
+			return false;
+		}
+		
 		long clientTimestamp = body.get(0);
 		long clientNonce = body.get(1);
 		
@@ -184,6 +177,8 @@ public class HubSocketHandler extends Thread{
 			allowed = true;
 		}
 		
+		if (DEBUG) System.out.println("Client authentication allowed. Sending back appropriate reply");
+		
 		//Return the authenticated message
 		if (allowed){
 			//Create return message
@@ -193,10 +188,15 @@ public class HubSocketHandler extends Thread{
 			returnBody.add(0, Calendar.getInstance().getTimeInMillis());
 			//set the nonce+1
 			returnBody.add(1, clientNonce+1);
+			//set the body 
+			returnMsg.setBody(returnBody);
 			//set checksum
 			long checksum = returnMsg.generateCheckSum();
+			
+			if (DEBUG) System.out.println("Returning checksum: " + checksum);
+			
 			returnMsg.setChecksum(checksum);
-			//encrypt and set the body 
+			//encrypt
 			returnMsg.setBody(clientAESObject.encrypt(returnBody));
 			
 			//send unencrypted message
@@ -231,33 +231,38 @@ public class HubSocketHandler extends Thread{
 	 * passes. Will return false otherwise.
 	 */
 	private boolean getAndDecryptMessage(){
-		//length
-		int length = 0;
-		//read the length of the byte [] first
+		
 		try {
-			length = ois.readInt();
-		} catch (IOException e) {
-			e.printStackTrace();
+			//length
+			int length = 0;
+			//read the length of the byte [] first
+			try {
+				length = ois.readInt();
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}
+			//set a buffer to correct length
+			byte[] encryptedMsg = new byte[length];
+			//read encrypted message
+			try {
+				ois.readFully(encryptedMsg);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}
+			
+			msg = (Message)clientAESObject.decryptObject(encryptedMsg);
+			
+			//do checksum
+			long oldChecksum = msg.getChecksum();
+			long newChecksum = msg.generateCheckSum();
+			
+			return (oldChecksum == newChecksum);
+		} catch (Exception e){
+			System.out.println("Possible socket closure");
 			return false;
 		}
-		//set a buffer to correct length
-		byte[] encryptedMsg = new byte[length];
-		//read encrypted message
-		try {
-			ois.readFully(encryptedMsg);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-		
-		msg = (Message)clientAESObject.decryptObject(encryptedMsg);
-		
-		//do checksum
-		long oldChecksum = msg.getChecksum();
-		long newChecksum = msg.generateCheckSum();
-		
-		return (oldChecksum == newChecksum);
-		
 		
 	}
 	
@@ -372,14 +377,17 @@ public class HubSocketHandler extends Thread{
 		//takes over to infinitely listen for each user
 		boolean listen = false;
 		
-		//Authenticate
+		//Authenticate, if listen is false, the socket is problematic
 		listen = authenticate();
 		
 		//All further communications
 		while (listen){
 			boolean valid = true;
 			//Wait, read and deserialize Message from Socket
-			valid = getAndDecryptMessage();
+			if (DEBUG) System.out.println("getting and decrypting msg");
+			
+			//TODO: changed from valid to listen
+			listen = getAndDecryptMessage();
 			
 			if (msg == null){
 				System.out.println("Message was null");
