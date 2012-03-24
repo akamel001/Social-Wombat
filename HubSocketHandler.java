@@ -149,6 +149,7 @@ public class HubSocketHandler extends Thread{
 		
 		//Decrypt the body, cast to ArrayList<Long>
 		byte[] encryptedBody = (byte[]) firstMessage.getBody();
+
 		ArrayList<Long> body = (ArrayList<Long>)clientAESObject.decryptObject(encryptedBody);
 		if (body==null){
 			if (DEBUG) System.out.println("unable to decrypt msg body");
