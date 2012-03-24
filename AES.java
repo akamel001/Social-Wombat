@@ -170,7 +170,9 @@ public final class AES implements Serializable {
         	e.printStackTrace();
         } catch (IllegalBlockSizeException e) {
         	e.printStackTrace();
-        } 
+        } catch (Exception e){
+			e.printStackTrace();
+		}
         return null;
 	}
 	
