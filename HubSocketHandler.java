@@ -188,10 +188,11 @@ public class HubSocketHandler extends Thread{
 			returnBody.add(0, Calendar.getInstance().getTimeInMillis());
 			//set the nonce+1
 			returnBody.add(1, clientNonce+1);
+			//set the body 
+			returnMsg.setBody(returnBody);
 			//set checksum
-			long checksum = CheckSum.getChecksum(returnBody);
-			returnMsg.setChecksum(checksum);
-			//encrypt and set the body 
+			returnMsg.setChecksum(returnMsg.generateCheckSum());
+			//encrypt
 			returnMsg.setBody(clientAESObject.encrypt(returnBody));
 			
 			//send unencrypted message
@@ -226,33 +227,38 @@ public class HubSocketHandler extends Thread{
 	 * passes. Will return false otherwise.
 	 */
 	private boolean getAndDecryptMessage(){
-		//length
-		int length = 0;
-		//read the length of the byte [] first
+		
 		try {
-			length = ois.readInt();
-		} catch (IOException e) {
-			e.printStackTrace();
+			//length
+			int length = 0;
+			//read the length of the byte [] first
+			try {
+				length = ois.readInt();
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}
+			//set a buffer to correct length
+			byte[] encryptedMsg = new byte[length];
+			//read encrypted message
+			try {
+				ois.readFully(encryptedMsg);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}
+			
+			msg = (Message)clientAESObject.decryptObject(encryptedMsg);
+			
+			//do checksum
+			long oldChecksum = msg.getChecksum();
+			long newChecksum = msg.generateCheckSum();
+			
+			return (oldChecksum == newChecksum);
+		} catch (Exception e){
+			System.out.println("Possible socket closure");
 			return false;
 		}
-		//set a buffer to correct length
-		byte[] encryptedMsg = new byte[length];
-		//read encrypted message
-		try {
-			ois.readFully(encryptedMsg);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-		
-		msg = (Message)clientAESObject.decryptObject(encryptedMsg);
-		
-		//do checksum
-		long oldChecksum = msg.getChecksum();
-		long newChecksum = msg.generateCheckSum();
-		
-		return (oldChecksum == newChecksum);
-		
 		
 	}
 	
@@ -367,7 +373,7 @@ public class HubSocketHandler extends Thread{
 		//takes over to infinitely listen for each user
 		boolean listen = false;
 		
-		//Authenticate
+		//Authenticate, if listen is false, the socket is problematic
 		listen = authenticate();
 		
 		//All further communications
@@ -375,7 +381,9 @@ public class HubSocketHandler extends Thread{
 			boolean valid = true;
 			//Wait, read and deserialize Message from Socket
 			if (DEBUG) System.out.println("getting and decrypting msg");
-			valid = getAndDecryptMessage();
+			
+			//TODO: changed from valid to listen
+			listen = getAndDecryptMessage();
 			
 			if (msg == null){
 				System.out.println("Message was null");
