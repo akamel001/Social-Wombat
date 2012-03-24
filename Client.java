@@ -64,9 +64,10 @@ public class Client {
 		list.add(0, c.getTimeInMillis());
 		System.out.println("Seinding time in sec: " + list.get(0));
 		list.add(1, nonce);
+		
 		message.setBody(list);
 		message.setChecksum(message.generateCheckSum());
-
+		System.out.println("Checksum: " + message.getChecksum());
 		message.setBody(aes.encrypt(list));
 		System.out.println(message.getBody());
 		System.out.println("Sending authenticating message...");
