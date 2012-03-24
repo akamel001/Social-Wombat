@@ -253,7 +253,6 @@ public class HubSocketHandler extends Thread{
 			//read the length of the byte [] first
 			try {
 				length = ois.readInt();
-				if (DEBUG) System.out.println("Lenght of message: " + length);
 			} catch (IOException e) {
 				e.printStackTrace();
 				return false;
@@ -270,12 +269,15 @@ public class HubSocketHandler extends Thread{
 				e.printStackTrace();
 				return false;
 			}
-			if (DEBUG) System.out.println("Fully read message");
+
 			msg = (Message)clientAESObject.decryptObject(encryptedMsg);
 			
 			//do checksum
 			long oldChecksum = msg.getChecksum();
 			long newChecksum = msg.generateCheckSum();
+			
+			if (DEBUG) System.out.println("oldChecksum = " + oldChecksum);
+			if (DEBUG) System.out.println("newChecksum = " + newChecksum);
 			
 			return (oldChecksum == newChecksum);
 		} catch (Exception e){
@@ -370,7 +372,16 @@ public class HubSocketHandler extends Thread{
 		msg.setChecksum(checksum);
 		
 		//encrypt
-		AES aesObj = serverList.getServerAES(serverID, hubAESObject);
+		List<byte[]> ivsalt = serverList.getIvSalt(serverID, hubAESObject);
+		//get iv
+		byte[] iv = ivsalt.get(0);
+		//get salt
+		byte[] salt = ivsalt.get(1);
+		//get pass
+		char[] pass = serverList.getServerPass(serverID, hubAESObject);
+		AES aesObj = new AES(pass,iv,salt);
+		//clear pass
+		Arrays.fill(pass, '0');
 		byte[] eMsg = aesObj.encrypt(msg);
 		
 		//Only one user can be communicating with a server at one time
@@ -409,6 +420,17 @@ public class HubSocketHandler extends Thread{
 			
 			valid = getAndDecryptMessage();
 			
+			if (DEBUG) System.out.println("message decryption attempted, valid: " + valid);
+			
+			/*
+			 * Start debug
+			 */
+			
+			System.out.println("user name is: " + msg.getUserName());
+			/*
+			 * End debug
+			 */
+			
 			if (msg == null){
 				System.out.println("Message was null");
 				valid = false; // Don't waste time on bad transmissions
@@ -422,6 +444,8 @@ public class HubSocketHandler extends Thread{
 				int returnCode = -1;
 				Message reply = null;
 				//Handle the different types of client messages
+				
+				if (DEBUG) System.out.println("Message type is: " + msg.getType());
 				
 				//NOTE: ALL MESSAGES ARE PRESET TO RETURN CODE -1
 				switch(msg.getType()) {	
