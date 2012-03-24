@@ -549,7 +549,9 @@ public class HubSocketHandler extends Thread{
 						returnAndEncryptMessage(msg);
 						break;
 					case Client_GetLastLogin:
-						
+						msg.setBody(lastLogin);
+						msg.setCode(1);
+						returnAndEncryptMessage(msg);
 						break;
 					
 					case Client_DeleteSelf:
