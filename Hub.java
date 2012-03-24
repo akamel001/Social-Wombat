@@ -144,6 +144,7 @@ class Hub extends Thread {
 			//create new socket to add
 			SocketPackage newSocketPackage = new SocketPackage(server,SERVER_SOCKET);
 			serverPackages.put(r, newSocketPackage);
+			connectServers();
 			return r;
 		}
 	}
@@ -180,6 +181,7 @@ class Hub extends Thread {
 	 * prints out errors, because we can't guarantee that all servers will connect
 	 */
 	public void connectServers() {
+		if (DEBUG) System.out.println("Connecting to the servers");
 		int numServers = serverList.getLastServer();
 		if (numServers == 0) {
 			System.out.println("There are no servers to connect to. Please add some."); 

@@ -112,13 +112,13 @@ public class Server extends Thread{
 		}
 		
 		//add shutdown hook
-				Runtime.getRuntime().addShutdownHook(new Thread(){
-					public void run() {
-						// Write out to disk
-						writeToDisk(classDB, classDBName);
-						System.out.println("Data safely written out.");
-					}
-				});
+		Runtime.getRuntime().addShutdownHook(new Thread(){
+			public void run() {
+				// Write out to disk
+				writeToDisk(classDB, classDBName);
+				System.out.println("Data safely written out.");
+			}
+		});
 		
 		// Spin until a new message is received and then spawn a 
 		// ServerSocketHandler thread

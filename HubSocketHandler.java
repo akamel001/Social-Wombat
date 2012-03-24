@@ -238,6 +238,7 @@ public class HubSocketHandler extends Thread{
 			//read the length of the byte [] first
 			try {
 				length = ois.readInt();
+				if (DEBUG) System.out.println("Lenght of message: " + length);
 			} catch (IOException e) {
 				e.printStackTrace();
 				return false;
