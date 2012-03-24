@@ -159,6 +159,7 @@ public class SysAdminInterface {
 			case 1: 
 		    	try {
 			        hub = new Hub(aesHub);
+			        if (aesHub == null) System.out.println("AES OBJECT IN HUB IS NULL!");
 			        //Arrays.fill(aesHub, '0'); // TODO: check this
 			        hub.start();
 		    	} catch (Exception e) {

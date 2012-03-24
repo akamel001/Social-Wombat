@@ -19,7 +19,7 @@ public class ServerSocketHandler {
 	AES serverAESObject;
 	char[] password;
 	
-	private static final boolean DEBUG = false;
+	private static final boolean DEBUG = true;
 
 	/*
 	 * A handler thread that is spawned for each message sent to server
@@ -44,10 +44,13 @@ public class ServerSocketHandler {
 	 * @return true if the hub is authenticated, false otherwise
 	 */
 	private boolean authenticate(){
+		if(DEBUG) System.out.println("Handling first contact");
 		Message firstMessage = null;
 		try {
 			//first message is unencrypted
+			if(DEBUG) System.out.println("Reading ois");
 			firstMessage = (Message) ois.readObject();
+			if(DEBUG) System.out.println("Read in ois");
 			// null check
 			if (firstMessage == null){
 				if (DEBUG) System.out.println("First msg received was null");
@@ -59,14 +62,24 @@ public class ServerSocketHandler {
 			e.printStackTrace();
 		}
 		
+		//set to global
+		msg = firstMessage; 
+		
+		if(DEBUG) System.out.println("Read in Message");
+		
 		//Check message type
 		if (msg.getType() != Message.MessageType.Hub_AuthServer){
+			if(DEBUG) System.out.println("Message type mismatch. Returning.");
+			if(DEBUG) System.out.println("We see a message type sent as: " + msg.getType());
 			return false;
 		}
+		
+		if(DEBUG) System.out.println("Message type is correct");
 		
 		//extract fields
 		byte[] salt = firstMessage.getSalt();
 		byte[] iv = firstMessage.getIv();
+		
 		
 		//Create server aes object
 		serverAESObject = new AES(password, iv, salt);
@@ -77,9 +90,11 @@ public class ServerSocketHandler {
 		//null check aes object
 		if (serverAESObject == null){
 			if (DEBUG) System.out.println("clientAESObject creation failed");
+			if(DEBUG) System.out.println("serverAESObject was null. Returning.");
 			return false;
 		}
 		
+		if(DEBUG) System.out.println("Decrypting checksum and timestamp");
 		//Decrypt the body, cast to ArrayList<Long>
 		byte[] encryptedBody = (byte[]) firstMessage.getBody();
 		ArrayList<Long> body = (ArrayList<Long>)serverAESObject.decryptObject(encryptedBody);
@@ -89,9 +104,17 @@ public class ServerSocketHandler {
 		}
 		
 		//checksum
+		
+		//decrypt body
+		byte[] eBody = (byte[])firstMessage.getBody();
+		@SuppressWarnings("unchecked")
+		ArrayList<Long> firstList = (ArrayList<Long>)serverAESObject.decryptObject(eBody);
+		firstMessage.setBody(firstList);
 		long oldchecksum = firstMessage.getChecksum();
 		long newchecksum = firstMessage.generateCheckSum();
+		if(DEBUG) System.out.println("Checking checksums");
 		if (oldchecksum != newchecksum){
+			if(DEBUG) System.out.println("Checksum mismatch, returning");
 			return false;
 		}
 		
@@ -100,32 +123,38 @@ public class ServerSocketHandler {
 		
 		boolean allowed = false;
 		
+		if(DEBUG) System.out.println("Checking timestamps");
 		//Check timestamp
+		if(DEBUG) System.out.println("Checking timestamp");
 		long myTimestamp = Calendar.getInstance().getTimeInMillis();
 		if (((myTimestamp - 300000) <= hubTimestamp) && (hubTimestamp <= (myTimestamp + 300000))){
 			allowed = true;
 		}
 		
+		if (allowed){
+			if(DEBUG) System.out.println("Authenticated");
+		} else {
+			if(DEBUG) System.out.println("Failed authentication");
+		}
 		//Return the authenticated message
 		if (allowed){
 			//Create return message
 			Message returnMsg = new Message();
 			ArrayList<Long> returnBody = new ArrayList<Long>();
 			//set my timestamp
-			returnBody.set(0, Calendar.getInstance().getTimeInMillis());
+			returnBody.add(0, Calendar.getInstance().getTimeInMillis());
 			//set the nonce+1
-			returnBody.set(1, hubNonce+1);
+			returnBody.add(1, hubNonce+1);
 			//set the body
 			returnMsg.setBody(returnBody);
 			//set checksum
 			long checksum = returnMsg.generateCheckSum();
 			returnMsg.setChecksum(checksum);
+			returnMsg.setBody(serverAESObject.encrypt(returnBody));
 			
-			//encrypt
-			byte[] returnMessage = serverAESObject.encrypt(returnMsg);
-			
+			if(DEBUG) System.out.println("Sending back successful authentication");
 			//send back success
-			sendEncryptedMessage(returnMessage);
+			returnMessage(returnMsg);
 			
 			//put thread in a state to receive future messages
 			return true;
@@ -171,37 +200,42 @@ public class ServerSocketHandler {
 	 * passes. Will return false otherwise.
 	 */
 	private boolean getAndDecryptMessage(){
-		//length
-		int length = 0;
-		//read the length of the byte [] first
 		try {
-			length = ois.readInt();
-		} catch (IOException e) {
+			//length
+			int length = 0;
+			//read the length of the byte [] first
+			try {
+				length = ois.readInt();
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}
+			//set a buffer to correct length
+			byte[] encryptedMsg = new byte[length];
+			//read encrypted message
+			try {
+				ois.readFully(encryptedMsg);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}
+			
+			msg = (Message)serverAESObject.decryptObject(encryptedMsg);
+			
+			//do checksum
+			long oldChecksum = msg.getChecksum();
+			long newChecksum = msg.generateCheckSum();
+			
+			return (oldChecksum == newChecksum);
+		} catch (Exception e){
 			e.printStackTrace();
+			System.out.println("Possible socket closure");
 			return false;
 		}
-		//set a buffer to correct length
-		byte[] encryptedMsg = new byte[length];
-		//read encrypted message
-		try {
-			ois.readFully(encryptedMsg);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-		
-		msg = (Message)serverAESObject.decryptObject(encryptedMsg);
-		
-		//do checksum
-		long oldChecksum = msg.getChecksum();
-		long newChecksum = msg.generateCheckSum();
-		
-		return (oldChecksum == newChecksum);
-		
 		
 	}
 	
-	/**@deprecated
+	/*
 	 * Send an unencrypted message back after it's been altered
 	 */
 	private void returnMessage(Message msg){
@@ -241,13 +275,16 @@ public class ServerSocketHandler {
 	
 	public void run(){
 		boolean listen = false;
-		
+		boolean valid = true;
 		//wait for first message and authenticate
 		listen = authenticate();
-		
+		if (!listen){
+			if(DEBUG) System.out.println("Authentication failure. Exiting.");
+		}
 		//servers will run indefinitely if authenticated
-		while(listen){
-			boolean valid = false;
+		while(listen && valid){
+			if (DEBUG) System.out.println("Listening for further requests...");
+			
 			//Read and deserialize Message from Socket
 			valid = getAndDecryptMessage();
 			
