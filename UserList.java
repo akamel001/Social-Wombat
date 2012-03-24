@@ -25,8 +25,7 @@ public final class UserList implements Serializable{
 	 * Creates a new UserList with an empty Map of Users.
 	 */
 	public UserList(){
-		user_list = todo
-		Collections.synchronizedMap(new TreeMap<String, byte[]>());
+		user_list = Collections.synchronizedMap(new TreeMap<String, byte[]>());
 	}
 
 	/**
