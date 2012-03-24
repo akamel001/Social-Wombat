@@ -712,7 +712,7 @@ public class Client {
 	 * Gets the last login time for this particular user.
 	 * @return
 	 */
-	public static String getLastLoginTime() {
+	public static String getLastLogin() {
 		// TODO Auto-generated method stub
 		return null;
 	}

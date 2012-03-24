@@ -146,7 +146,7 @@ public class UserInterface {
 		
 		if (client.handleLogin(userNameTemp, password)){
 			currentUserName = userNameTemp;
-			homePage(UserInterfaceHelper.addFormattingAlignLeft("Welcome, " + currentUserName + "!") + UserInterfaceHelper.addFormattingAlignLeft("Last log in time:" + Client.getLastLoginTime() + "."));
+			homePage(UserInterfaceHelper.addFormattingAlignLeft("Welcome, " + currentUserName + "!") + UserInterfaceHelper.addFormattingAlignLeft("Last login:" + Client.getLastLogin() + "."));
 		} else {
 			loginPage(eLOG_IN_ERROR);
 		}
