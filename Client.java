@@ -721,10 +721,11 @@ public class Client {
 	 * Gets the last login info for this particular user.
 	 * @return last login info as a string
 	 */
-	public String getLastLogin() {
+	public String getLastLogin(String userName) {
 		
 		Message message = new Message();
 		message.setType(Message.MessageType.Client_GetLastLogin);
+		message.setUserName(userName);
 		message.setBody(0);
 		message.setChecksum(message.generateCheckSum());	
 		socket.sendEncrypted(aes.encrypt(message));
