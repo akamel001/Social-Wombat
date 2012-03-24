@@ -99,31 +99,13 @@ public class HubSocketHandler extends Thread{
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+		
 		//Check message type
 		if (DEBUG) System.out.println("MESSAGE TYPE: " + msg.getType());
 		if (msg.getType() != Message.MessageType.Client_LogIn){
 			return false;
 		}
-		//Checksum
-		if (DEBUG) System.out.println("Checksuming");
 		
-		if (DEBUG) System.out.println("Contents of body: " + msg.getBody().toString());
-		
-		//Decrypt body
-		ArrayList<Long> decryptedBody = (ArrayList<Long>) clientAESObject.decryptObject((byte[])msg.getBody());
-		
-		if (DEBUG) System.out.println("Checksuming");
-		
-		//long newChecksum = msg.generateCheckSum();
-		long newChecksum = CheckSum.getChecksum(decryptedBody);
-		if (DEBUG) System.out.println("New checksum: " + newChecksum);
-		
-		long oldChecksum = msg.getChecksum();
-		if (DEBUG) System.out.println("Old checksum: " + oldChecksum);
-		
-		if (newChecksum != oldChecksum){
-			return false;
-		}
 		//extract fields
 		String usr = firstMessage.getUserName();
 		byte[] salt = firstMessage.getSalt();
@@ -170,6 +152,17 @@ public class HubSocketHandler extends Thread{
 			return false;
 		}
 		
+		//Checksum
+		long newChecksum = CheckSum.getChecksum(body);
+		if (DEBUG) System.out.println("New checksum: " + newChecksum);
+		
+		long oldChecksum = msg.getChecksum();
+		if (DEBUG) System.out.println("Old checksum: " + oldChecksum);
+		
+		if (newChecksum != oldChecksum){
+			return false;
+		}
+		
 		long clientTimestamp = body.get(0);
 		long clientNonce = body.get(1);
 		
@@ -184,6 +177,8 @@ public class HubSocketHandler extends Thread{
 			allowed = true;
 		}
 		
+		if (DEBUG) System.out.println("Client authentication allowed. Sending back appropriate reply");
+		
 		//Return the authenticated message
 		if (allowed){
 			//Create return message
@@ -194,7 +189,7 @@ public class HubSocketHandler extends Thread{
 			//set the nonce+1
 			returnBody.add(1, clientNonce+1);
 			//set checksum
-			long checksum = returnMsg.generateCheckSum();
+			long checksum = CheckSum.getChecksum(returnBody);
 			returnMsg.setChecksum(checksum);
 			//encrypt and set the body 
 			returnMsg.setBody(clientAESObject.encrypt(returnBody));
@@ -379,6 +374,7 @@ public class HubSocketHandler extends Thread{
 		while (listen){
 			boolean valid = true;
 			//Wait, read and deserialize Message from Socket
+			if (DEBUG) System.out.println("getting and decrypting msg");
 			valid = getAndDecryptMessage();
 			
 			if (msg == null){

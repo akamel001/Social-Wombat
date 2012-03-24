@@ -161,10 +161,11 @@ public final class AES implements Serializable {
 	 * @return Returns the decrypted object.
 	 */
 	public Object decryptObject(byte[] o){
-		if (o==null)
+		if (o==null) {
 			return null;
+		}
         try {
-			Object obj = toObject(dcipher.doFinal(o));		
+			Object obj = toObject(dcipher.doFinal(o));	
 			return obj;
         } catch (javax.crypto.BadPaddingException e) {
         	e.printStackTrace();
