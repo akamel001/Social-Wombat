@@ -128,6 +128,7 @@ public class SysAdminInterface {
 		    case 6:
 		    	try {
 		    		hub.shutDown();
+		    		System.out.println("CALL ING SHUTDOWN");
 		    	} catch (Exception e) {
 		    		systemHomePage(eSHUT_DOWN_HUB_ERROR);
 		    	}

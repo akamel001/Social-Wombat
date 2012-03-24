@@ -52,8 +52,10 @@ class Hub extends Thread {
 	//////////////////////////////////////////////////////
 	
 	public void shutDown(){
+		// Close the socket. 
 		try {
 			hubSocket.close();
+			System.out.println("hubSocket closed: " + hubSocket.isClosed());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -480,26 +482,31 @@ class Hub extends Thread {
 		//Create and listen in on a port
 		try {
 			hubSocket = new ServerSocket(CLIENT_SOCKET);
+			hubSocket.setSoTimeout(1000);
 		} catch (IOException e) {
 			System.out.println("Could not listen on port or port already in use: " + CLIENT_SOCKET);
 		}
 		while(listening){	
 			// Spin until a new message is received and then spawn a 
 			// HubSocketHandler thread
-			
 			try {
 				if(DEBUG) System.out.println("Listening");
 				Socket client = hubSocket.accept();
-				//Spawn new ServerSocketHandler thread, we assume that the
-				//hub has directed this message to the correct Server
-				HubSocketHandler newRequest = new HubSocketHandler(client,classList,userList,serverList,serverPackages,hubAESObject);
-				if(DEBUG) System.out.println("Accepted a connection from: "+ client.getInetAddress());
-				//Starts running the new thread
-				newRequest.start(); 
-				
+				// If the hubsocket is closed at this point, it means that shutDown() was called while the socket was
+				// was waiting. In this case, there is no need to continue.
+				if(!hubSocket.isClosed()){
+					//Spawn new ServerSocketHandler thread, we assume that the
+					//hub has directed this message to the correct Server
+					HubSocketHandler newRequest = new HubSocketHandler(client,classList,userList,serverList,serverPackages,hubAESObject);
+					if(DEBUG) System.out.println("Accepted a connection from: "+ client.getInetAddress());
+					//Starts running the new thread
+					newRequest.start(); 
+				}
+			} catch (SocketTimeoutException e){
+				// This is expected, b/c we have set the socket timeout. Do nothing.
 			} catch (IOException e) {
 				System.out.println("Accept failed on port: " + CLIENT_SOCKET);
-			} 
+			}
 		}
 		//Close socket after done listening
 		try {
