@@ -144,7 +144,10 @@ public class Client {
 		message.setUserName(uName);
 		message.setClassroom_ID(classroomName);
 		message.setType(Message.MessageType.Client_CreateClassroom);
-		//**NO CHECKSUM**//
+
+		message.setBody(0);
+		message.setChecksum(message.generateCheckSum());
+		
 		socket.sendEncrypted(aes.encrypt(message));
 		
 		byte[] encMessage = socket.receiveEncrypted();
@@ -205,9 +208,10 @@ public class Client {
 		
 		message.setUserName(userName);
 		message.setType(Message.MessageType.Client_GetUserEnrollment);
-		//**NO CHECKSUM HERE**// no body
+		message.setBody(0);
+		message.setChecksum(message.generateCheckSum());
 		byte[] enc = aes.encrypt(message);
-		System.out.println("Length of message being sent: " + enc.length);
+		System.out.println("Sending message with ");
 		socket.sendEncrypted(enc);
 	
 		byte[] encMessage = socket.receiveEncrypted();
@@ -327,7 +331,8 @@ public class Client {
 		message.setUserName(userName);
 		message.setClassroom_ID(classroomName);
 		message.setType(Message.MessageType.Client_GoToClassroom);
-		//** NO CHECKSUM**// no body
+		message.setBody(0);
+		message.setChecksum(message.generateCheckSum());
 		socket.sendEncrypted(aes.encrypt(message));
 		
 
@@ -424,7 +429,8 @@ public class Client {
 		message.setUserName(userName);
 		message.setClassroom_ID(classroomName);
 		message.setType(Message.MessageType.Client_GetClassEnrollment);
-		//** NO CHECKSUM HERE**// no body...
+		message.setBody(0);
+		message.setChecksum(message.generateCheckSum());
 		socket.sendEncrypted(aes.encrypt(message));
 		
 		byte[] encMessage = socket.receiveEncrypted();
@@ -519,7 +525,8 @@ public class Client {
 		message.setClassroom_ID(currentClassroomName);
 		message.setType(Message.MessageType.Client_ListClassroomRequests);
 		
-		//** NO CHECKSUM HERE**//		
+		message.setBody(0);
+		message.setChecksum(message.generateCheckSum());	
 		socket.sendEncrypted(aes.encrypt(message));
 
 		byte[] encMessage = socket.receiveEncrypted();
