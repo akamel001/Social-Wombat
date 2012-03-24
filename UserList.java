@@ -200,7 +200,7 @@ public final class UserList implements Serializable{
 	 * Returns a String containing the last login info for a User.
 	 * @param user_name The User 
 	 * @param decryptor An AES object
-	 * @return Returns a String of the form "Last login: February 29, 2012 2:09:29 PM EST. From 192.168.1.0"
+	 * @return Returns a String of the form "February 29, 2012 2:09:29 PM EST. From 192.168.1.0"
 	 */
 	public String getLastLogin(String user_name, AES decryptor){
 		if(user_name==null || decryptor==null || !user_list.containsKey(user_name))
@@ -217,7 +217,7 @@ public final class UserList implements Serializable{
 			
 			// (c) get last login
 			SimpleDateFormat sdf = new SimpleDateFormat("MMMMM d, yyyy 'at' HH:mm:ss a, z");
-			String out = "Last login: " +
+			String out = 
 				sdf.format(temp_guy.getLastTimeStamp()) +
 				". From: " +
 				temp_guy.getLastAddress().getHostAddress();
