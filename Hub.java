@@ -44,6 +44,11 @@ class Hub extends Thread {
 			e.printStackTrace();
 			System.out.println("Hub could not be created");
 		}
+		// Initialize Data Structures
+		if (DEBUG) System.out.println("Initializing data");
+		initializeData();
+		if (DEBUG) System.out.println("Done initializing data");
+
 	}
 	
 	
@@ -99,7 +104,8 @@ class Hub extends Thread {
 	 * Check a user exists in the userList
 	 * Replaced the deprecated validate user in user list
 	 */
-	private boolean userExists(String username){
+	//TODO: make private
+	public boolean userExists(String username){
 		char[] pass = userList.getUserPass(username, hubAESObject);
 		if (pass != null){
 			Arrays.fill(pass, '0');
@@ -209,6 +215,7 @@ class Hub extends Thread {
 				SocketPackage newSocketPackage = 
 						new SocketPackage(serverList.getAddress(i), SERVER_SOCKET);
 				if(!newSocketPackage.isConnected()){
+					
 					/*--------DEBUG-BEGIN--------------------*/
 					System.out.println("IN SERVER: " + serverList.getServerList().toString());
 					System.out.println("SERVER PASS: " + Arrays.toString(serverList.getServerPass(i, hubAESObject)));
@@ -401,8 +408,7 @@ class Hub extends Thread {
 	 */
 	public void run() {
 		// Start Up the Hub
-		// Initialize Data Structures
-		initializeData();
+		
 		// Connect to Servers
 		try {
 			if (DEBUG) System.out.println("Connecting to Servers");

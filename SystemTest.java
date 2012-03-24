@@ -10,16 +10,47 @@
  */
 public class SystemTest {
 	//Global aesobject
-	static AES aesObject; 
+	static AES hubAESObject; 
+	static AES clientAESObject;
 	static Hub hub;
+	
+	private static void aesInitialize(){
+		hubAESObject = new AES("password".toCharArray());	//default
+		clientAESObject = new AES("password".toCharArray());	//default
+	}
+	
+	private static void hubInitialize(){
+		hub = new Hub(hubAESObject);
+		hub.start();
+	}
 	
 	private static boolean testAES(){
 		
 		return false;
 	}
 	
-	private static void aesInitialize(){
-		aesObject = new AES("password".toCharArray());	//default
+	/*
+	 * Add a user 'User' with password 'password'
+	 * into the hub and test if they can log in
+	 */
+	private static void setupUser(){
+		System.out.println("Testing adding a user");
+		//add the user
+		if (hub.addUser("User", "password".toCharArray())){
+			System.out.println("User added successfully");
+		} else{
+			System.out.println("User adding failed");
+			if (hub.userExists("User")){
+				System.out.println("User adding failed because they already exist in the system.");
+			}
+			//System.exit(0);
+		}
+		//validate that the user was added
+		System.out.println("Registered users");
+		for (String uname : hub.getUsers()){
+			System.out.print(uname);
+		}
+			
 	}
 	
 	private static boolean testAuthentication(){
@@ -27,11 +58,13 @@ public class SystemTest {
 		return false;
 	}
 	
-	private static void hubInitialize(){
-		hub = new Hub(aesObject);
+	public static void main(String[] args){
+		System.out.println("Initializing AES...");
+		aesInitialize();
+		System.out.println("Initializing Hub...");
+		hubInitialize();
+		
+		setupUser();
 	}
 	
-	public static void main(String[] args){
-		aesInitialize();
-	}
 }
