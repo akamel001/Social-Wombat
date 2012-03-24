@@ -191,7 +191,11 @@ public class HubSocketHandler extends Thread{
 			//set the body 
 			returnMsg.setBody(returnBody);
 			//set checksum
-			returnMsg.setChecksum(returnMsg.generateCheckSum());
+			long checksum = returnMsg.generateCheckSum();
+			
+			if (DEBUG) System.out.println("Returning checksum: " + checksum);
+			
+			returnMsg.setChecksum(checksum);
 			//encrypt
 			returnMsg.setBody(clientAESObject.encrypt(returnBody));
 			
