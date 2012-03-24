@@ -80,7 +80,7 @@ public class Client {
 		
 		
 		if(response.getChecksum() != response.generateCheckSum()){
-			System.out.println("Checksum miss match!");
+			System.out.println("Checksum miss match!\n==> Received checksum: " + response.getChecksum() + "\n==> Generated Checksum" + response.generateCheckSum());
 			System.exit(-1);
 		}
 		
