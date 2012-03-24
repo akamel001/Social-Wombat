@@ -146,7 +146,7 @@ public class UserInterface {
 		
 		if (client.handleLogin(userNameTemp, password)){
 			currentUserName = userNameTemp;
-			homePage(UserInterfaceHelper.addFormattingAlignLeft("Welcome, " + currentUserName + "!"));
+			homePage(UserInterfaceHelper.addFormattingAlignLeft("Welcome, " + currentUserName + "!") + UserInterfaceHelper.addFormattingAlignLeft("Last log in time:" + Client.getLastLoginTime() + "."));
 		} else {
 			loginPage(eLOG_IN_ERROR);
 		}
@@ -847,7 +847,6 @@ public class UserInterface {
 	public static List<String> mapStringKeysToList(Map<String, Integer> map){
 		List<String> outputList = new ArrayList<String>();
 		if (map == null) {
-			//outputList.add("EMPTY");
 			return outputList;
 		}
 		for (String key : map.keySet()){

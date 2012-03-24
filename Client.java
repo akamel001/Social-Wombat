@@ -707,4 +707,13 @@ public class Client {
 		}
 		return (response.getCode() == 1)? true : false;
 	}
+
+	/**
+	 * Gets the last login time for this particular user.
+	 * @return
+	 */
+	public static String getLastLoginTime() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
