@@ -372,7 +372,16 @@ public class HubSocketHandler extends Thread{
 		msg.setChecksum(checksum);
 		
 		//encrypt
-		AES aesObj = serverList.getServerAES(serverID, hubAESObject);
+		List<byte[]> ivsalt = serverList.getIvSalt(serverID, hubAESObject);
+		//get iv
+		byte[] iv = ivsalt.get(0);
+		//get salt
+		byte[] salt = ivsalt.get(1);
+		//get pass
+		char[] pass = serverList.getServerPass(serverID, hubAESObject);
+		AES aesObj = new AES(pass,iv,salt);
+		//clear pass
+		Arrays.fill(pass, '0');
 		byte[] eMsg = aesObj.encrypt(msg);
 		
 		//Only one user can be communicating with a server at one time
