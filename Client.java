@@ -83,7 +83,7 @@ public class Client {
 		ArrayList<Long> return_list = (ArrayList<Long>)aes.decryptObject(encryptedBody);
 		
 		if (return_list==null){
-			if (DEBUG) System.out.println("unable to decrypt msg body");
+			System.out.println("unable to decrypt msg body");
 			return false;
 		}else
 			response.setBody(return_list);
@@ -206,7 +206,9 @@ public class Client {
 		message.setUserName(userName);
 		message.setType(Message.MessageType.Client_GetUserEnrollment);
 		//**NO CHECKSUM HERE**// no body
-		socket.sendEncrypted(aes.encrypt(message));
+		byte[] enc = aes.encrypt(message);
+		System.out.println("Length of message being sent: " + enc.length);
+		socket.sendEncrypted(enc);
 	
 		byte[] encMessage = socket.receiveEncrypted();
 		Message response = (Message) aes.decryptObject(encMessage);
