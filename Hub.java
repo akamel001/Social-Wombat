@@ -1,12 +1,7 @@
 
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.security.SecureRandom;
 
 //Hub class. Handles communication between data servers and clients
@@ -104,8 +99,7 @@ class Hub extends Thread {
 	 * Check a user exists in the userList
 	 * Replaced the deprecated validate user in user list
 	 */
-	//TODO: make private
-	public boolean userExists(String username){
+	private boolean userExists(String username){
 		char[] pass = userList.getUserPass(username, hubAESObject);
 		if (pass != null){
 			Arrays.fill(pass, '0');

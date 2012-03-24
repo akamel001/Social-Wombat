@@ -40,10 +40,7 @@ public class SystemTest {
 			System.out.println("User added successfully");
 		} else{
 			System.out.println("User adding failed");
-			if (hub.userExists("User")){
-				System.out.println("User adding failed because they already exist in the system.");
-			}
-			//System.exit(0);
+			System.exit(0);
 		}
 		//validate that the user was added
 		System.out.println("Registered users");

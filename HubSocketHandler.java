@@ -100,7 +100,7 @@ public class HubSocketHandler extends Thread{
 			e.printStackTrace();
 		}
 		//Check message type
-		System.out.println("MESSAGE TYPE: " + msg.getType());
+		if (DEBUG) System.out.println("MESSAGE TYPE: " + msg.getType());
 		if (msg.getType() != Message.MessageType.Client_LogIn){
 			return false;
 		}
@@ -123,7 +123,7 @@ public class HubSocketHandler extends Thread{
 		//check if the user exists
 		//Pull out the password
 		char[] password = userList.getUserPass(usr, hubAESObject);
-		System.out.println("PASSWORD: " + Arrays.toString(password));
+		if (DEBUG) System.out.println("PASSWORD: " + Arrays.toString(password));
 		// check existence of username
 		if (password == null){
 			//send back error code
@@ -172,9 +172,9 @@ public class HubSocketHandler extends Thread{
 			Message returnMsg = new Message();
 			ArrayList<Long> returnBody = new ArrayList<Long>();
 			//set my timestamp
-			returnBody.set(0, Calendar.getInstance().getTimeInMillis());
+			returnBody.add(0, Calendar.getInstance().getTimeInMillis());
 			//set the nonce+1
-			returnBody.set(1, clientNonce+1);
+			returnBody.add(1, clientNonce+1);
 			//set checksum
 			long checksum = returnMsg.generateCheckSum();
 			returnMsg.setChecksum(checksum);
