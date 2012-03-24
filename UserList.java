@@ -114,10 +114,11 @@ public final class UserList implements Serializable{
 		if(!StringLegalityChecker.checkIfUsernameStringIsLegal(new_id))
 			return -1;
 		
+		/* TODO: might not work correctly
 		// Check if the password is legal
 		if(!StringLegalityChecker.checkIfPasswordStringIsLegal(pass))
 			return -1;
-		
+		*/
 		synchronized(user_list){
 			if (!user_list.containsKey(new_id)){
 				User new_guy = new User(new_id, pass);
