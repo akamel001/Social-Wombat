@@ -88,6 +88,24 @@ static ObjectInputStream ois;
 			e.printStackTrace();
 		}
 		
+		//encrypt a message 
+		Message newMsg = new Message();
+		newMsg.setBody(newArray);
+		//send it
+		byte[] encryptedMsg = newAES.encrypt(newMsg);
+		int l = encryptedMsg.length;
+		System.out.println("length of encrypted message 2: " + l);
+		try {
+			oos.writeInt(l);
+			oos.write(encryptedMsg);
+			oos.flush();
+			oos.reset();
+			System.out.println("Sent over encrypted message 2");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 	}
 

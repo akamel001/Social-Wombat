@@ -134,8 +134,10 @@ class SocketPackage {
 		try {
 			//write an int of the byte[] length first
 			oos.writeInt(msg.length);
+			oos.flush();
+			oos.reset();
 			//write rest of message
-			oos.writeObject(msg);
+			oos.write(msg);
 			oos.flush();
 			oos.reset();
 		} catch (IOException e) {

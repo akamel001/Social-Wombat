@@ -89,7 +89,36 @@ public class HubTester {
 		//decrypt into what should be the array
 		ArrayList<String> readArray3 = (ArrayList<String>)(newAES.decryptObject(eMsg));
 		System.out.println(readArray3.get(0));
+	
+		//decrypt msg
+		System.out.println("3rd read");
+		//get encrypted message
+		int l = 0;
+		//get length
+		try {
+			l = ois.readInt();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
+		byte[] encryptedMsg = new byte[l];
+		
+		try {
+			ois.readFully(encryptedMsg);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		//decrypt into what should be the array
+		Message msg = (Message)(newAES.decryptObject(encryptedMsg));
+		ArrayList<String> readArray4 = (ArrayList<String>)msg.getBody();
+		System.out.println(readArray4.get(0));
+	
 	}
+	
+	
+	
 	
 	
 }

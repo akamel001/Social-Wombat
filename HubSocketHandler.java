@@ -249,6 +249,7 @@ public class HubSocketHandler extends Thread{
 		try {
 			//length
 			int length = 0;
+
 			//read the length of the byte [] first
 			try {
 				length = ois.readInt();
@@ -257,16 +258,19 @@ public class HubSocketHandler extends Thread{
 				e.printStackTrace();
 				return false;
 			}
+			
 			//set a buffer to correct length
 			byte[] encryptedMsg = new byte[length];
 			//read encrypted message
 			try {
-				ois.readFully(encryptedMsg);
+				
+				ois.read(encryptedMsg, 0, length);
+				//ois.readFully(encryptedMsg);
 			} catch (IOException e) {
 				e.printStackTrace();
 				return false;
 			}
-			
+			if (DEBUG) System.out.println("Fully read message");
 			msg = (Message)clientAESObject.decryptObject(encryptedMsg);
 			
 			//do checksum
@@ -275,6 +279,7 @@ public class HubSocketHandler extends Thread{
 			
 			return (oldChecksum == newChecksum);
 		} catch (Exception e){
+			e.printStackTrace();
 			System.out.println("Possible socket closure");
 			return false;
 		}
