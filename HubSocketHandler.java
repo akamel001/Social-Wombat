@@ -179,6 +179,9 @@ public class HubSocketHandler extends Thread{
 		
 		if (DEBUG) System.out.println("Client authentication allowed. Sending back appropriate reply");
 		
+		//TODO: update the last user login: String lastLogin = updateLastLogin(String user, InetAddress ip)
+		//TODO: return lastLogin to the Client
+		
 		//Return the authenticated message
 		if (allowed){
 			//Create return message
@@ -206,6 +209,17 @@ public class HubSocketHandler extends Thread{
 			return true;
 		}
 		
+		// TODO: if user login fails, sleep for .2 to .8 seconds
+		// 
+		/*
+		SecureRandom s = new SecureRandom();
+		int pause = (int)((s.nextDouble()*600)+200);
+		try {
+			Thread.sleep(pause);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		*/
 		return false;
 	}
 	
@@ -523,6 +537,7 @@ public class HubSocketHandler extends Thread{
 						c.setClassName(msg.getClassroom_ID());
 						
 						//Generate some server number
+						//TODO: Use SecureRandom!!!
 						Random r = new Random();
 						int maxServer = serverList.getLastServer();
 						int serverNum = r.nextInt(maxServer) + 1;

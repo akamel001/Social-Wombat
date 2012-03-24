@@ -78,8 +78,27 @@ class Hub extends Thread {
 		}
 	}
 	
-	/*
+	/**
+	 * Returns the last login and then resets it to the current time.
+	 * @param user The user to be updated.
+	 * @param ip The current ip from which the user has logged in.
+	 * @return Returns a String containing the "ip, date" of the last login. 
+	 */
+	public String updateLastLogin(String user, InetAddress ip){
+		// Gets the last login.
+		String out = userList.getLastLogin(user, hubAESObject);
+		
+		//  Updates the last login to the current time and passed ip.
+		userList.updateLastLogin(user, ip, new Date(), hubAESObject);
+		
+		// return the last login
+		return out;
+	}
+	
+	/**
 	 * Remove a user from the userList
+	 * @param username The user to remove
+	 * @return Returns true if the 
 	 */
 	public boolean removeUser(String username){
 		//check user exists

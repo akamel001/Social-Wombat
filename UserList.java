@@ -25,8 +25,7 @@ public final class UserList implements Serializable{
 	 * Creates a new UserList with an empty Map of Users.
 	 */
 	public UserList(){
-		user_list = todo
-		Collections.synchronizedMap(new TreeMap<String, byte[]>());
+		user_list = Collections.synchronizedMap(new TreeMap<String, byte[]>());
 	}
 
 	/**
@@ -238,7 +237,7 @@ public final class UserList implements Serializable{
 	/**
 	 * Removes a user from the userlist.
 	 * @param id The username of the user to be removed.
-	 * @return Returns true if the user was successfully removed. Returns false if the user was not 
+	 * @return Returns 1 if the user was successfully removed. Returns -1 if the user was not 
 	 * present in the user list. 
 	 */
 	public int removeUser(String user_name){
