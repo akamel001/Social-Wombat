@@ -23,14 +23,15 @@ public class SysAdminInterface {
 	private static final String sSYSTEM_CHANGE_PASSWORD_PAGE = UserInterfaceHelper.addFormattingAlignCenter("SYSTEM PASSWORD CHANGE");
 	private static final String sADD_SERVER_PAGE = 			UserInterfaceHelper.addFormattingAlignCenter("ADD SERVER");
 	
-	private static final String sDEFAULT_HOME_OPTION = UserInterfaceHelper.addFormattingAlignLeft("1. Go back to system home.");
+	private static final String sDEFAULT_HOME_OPTION = 		UserInterfaceHelper.addFormattingAlignLeft("1. Go back to system home.");
 	private static final String sSYSTEM_HOME_PAGE_OPTIONS_HUB_RUNNING =	UserInterfaceHelper.addFormattingAlignLeft("1. View users enrolled in the system.") +
 															UserInterfaceHelper.addFormattingAlignLeft("2. Register a user in the system.") +
 															UserInterfaceHelper.addFormattingAlignLeft("3. View servers.") +
 															UserInterfaceHelper.addFormattingAlignLeft("4. Add a server.") +
-															UserInterfaceHelper.addFormattingAlignLeft("5. Shut down the hub.") +
-															UserInterfaceHelper.addFormattingAlignLeft("6. Change system password.") +
-															UserInterfaceHelper.addFormattingAlignLeft("7. Log out.");	
+															UserInterfaceHelper.addFormattingAlignLeft("5. Connect to all servers.") +
+															UserInterfaceHelper.addFormattingAlignLeft("6. Shut down the hub.") +
+															UserInterfaceHelper.addFormattingAlignLeft("7. Change system password.") +
+															UserInterfaceHelper.addFormattingAlignLeft("8. Log out.");	
 	private static final String sSYSTEM_HOME_PAGE_OPTIONS_HUB_NOT_RUNNING = UserInterfaceHelper.addFormattingAlignLeft("1. Start the hub.") +
 															UserInterfaceHelper.addFormattingAlignLeft("2. Log out.");
 	private static final String sREGISTRATION_INSTRUCTIONS = UserInterfaceHelper.addFormattingAlignLeft("Specify a username and password in the prompt below.");
@@ -61,6 +62,7 @@ public class SysAdminInterface {
 	private static final String mSTART_HUB_SUCCESS =		UserInterfaceHelper.addFormattingAlignLeft("You have successfully start up the hub.");
 	private static final String mSHUT_DOWN_HUB_SUCCESS = 	UserInterfaceHelper.addFormattingAlignLeft("You have successfully shut down the hub.");
 	private static final String mADD_SERVER_SUCCESS = 		UserInterfaceHelper.addFormattingAlignLeft("You have successfully added a server.");
+	private static final String mCONNECT_SERVERS_MESSAGE = 	UserInterfaceHelper.addFormattingAlignLeft("Server connection has been attempted.");
 	
 	private static void systemLoginPage(String messages) {
 		displayPage(sLOG_IN, messages, null, null, null);	
@@ -85,9 +87,10 @@ public class SysAdminInterface {
 	 * 2. Register a user in the system.
 	 * 3. View servers.
 	 * 4. Add a server.
-	 * 5. Shut down the hub.
-	 * 6. Change system password.
-	 * 7. Log out.
+	 * 5. Connect to all servers.
+	 * 6. Shut down the hub.
+	 * 7. Change system password.
+	 * 8. Log out.
 	 * 
 	 * and two options when the hub is not running:
 	 * 1. Start the hub.
@@ -116,8 +119,13 @@ public class SysAdminInterface {
 		    case 4: 
 		    	addServerPage(null);
 		        break;
+		    // Connect to all servers.
+		    case 5: 
+		    	hub.connectServers();
+		    	systemHomePage(mCONNECT_SERVERS_MESSAGE);
+		        break;
 		     // Shut down the hub.
-		    case 5:
+		    case 6:
 		    	try {
 		    		hub.shutDown();
 		    	} catch (Exception e) {
@@ -127,11 +135,11 @@ public class SysAdminInterface {
 		    	systemHomePage(mSHUT_DOWN_HUB_SUCCESS);
 		        break;
 		    // Change system password.
-		    case 6:
+		    case 7:
 		    	systemChangePasswordPage(null);
 		        break;
 		    // Log out.
-		    case 7:
+		    case 8:
 		    	if (handleSystemLogout()) {
 					systemLoginPage(mLOG_OUT_SUCCESS);
 				} else {
