@@ -21,7 +21,9 @@ class SocketPackage {
 	 */
 	public SocketPackage(InetAddress addr,int port){
 		if (DEBUG) System.out.println("Creating a socket");
-		socket = new Socket();
+		
+		//TODO: I commented out this line and added it to socketConnect b/c if the connection fails, you need a new socket object.
+		//socket = new Socket();
 		this.port = port;
 		this.addr = addr;
 	}
@@ -42,6 +44,7 @@ class SocketPackage {
 		//attempt to connect with a 5 second timeout
 		for(int i = 1; !socket.isConnected(); i*=2){
 			try {
+				socket = new Socket();
 				socket.connect(socketAddr, TIMEOUT);
 			}catch (SocketTimeoutException e){
 				//e.printStackTrace();
