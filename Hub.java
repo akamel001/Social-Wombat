@@ -473,7 +473,7 @@ class Hub extends Thread {
 			// Spin until a new message is received and then spawn a 
 			// HubSocketHandler thread
 			try {
-				if(DEBUG) System.out.println("Listening");
+				//if(DEBUG) System.out.println("Listening");
 				Socket client = hubSocket.accept();
 				// If the hubsocket is closed at this point, it means that shutDown() was called while the socket was
 				// was waiting. In this case, there is no need to continue.
