@@ -335,7 +335,11 @@ public class SysAdminInterface {
 	}
 	
 	private static List<String> getServerList() {
-		return mapToList(hub.getServers());
+		Map<Integer, String> serverMap = hub.getServers();
+		if (serverMap != null) {
+			return mapToList(serverMap);
+		}
+		return null;
 	}
 
 	////////////////////////////////////////////////
