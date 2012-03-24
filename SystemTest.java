@@ -55,13 +55,24 @@ public class SystemTest {
 		return false;
 	}
 	
+	// immutable object passing test
+	private static int addFive(int i){
+		i = i+5;
+		return i;
+	}
+	
 	public static void main(String[] args){
+		int i = 5;
+		System.out.println(addFive(i));
+		System.out.println(i);
+		/*
 		System.out.println("Initializing AES...");
 		aesInitialize();
 		System.out.println("Initializing Hub...");
 		hubInitialize();
 		
 		setupUser();
+		*/
 	}
 	
 }
