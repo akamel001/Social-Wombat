@@ -107,7 +107,7 @@ public class HubSocketHandler extends Thread{
 		//Checksum
 		if (DEBUG) System.out.println("Checksuming");
 		
-		if (DEBUG) System.out.println("Contents of body: " + msg.getBody());
+		if (DEBUG) System.out.println("Contents of body: " + msg.getBody().toString());
 		
 		//Decrypt body
 		ArrayList<Long> decryptedBody = (ArrayList<Long>) clientAESObject.decryptObject((byte[])msg.getBody());

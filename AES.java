@@ -228,7 +228,9 @@ public final class AES implements Serializable {
 			e.printStackTrace();
 		} catch (BadPaddingException e) {
 			System.out.println("Bad padding Exception. Probably bad IV");
-		} 
+		} catch (Exception e){
+			e.printStackTrace();
+		}
         return null;
 	}
 }
