@@ -704,7 +704,7 @@ public class Client {
 		byte[] encMessage = socket.receiveEncrypted();
 		Message response = (Message) aes.decryptObject(encMessage);
 		if(response.getChecksum() != response.generateCheckSum()){
-			System.out.println("Checksum miss match!");
+			System.out.println("Checksum mismatch!");
 			System.exit(-1);
 		}
 		return (response.getCode() == 1)? true : false;
