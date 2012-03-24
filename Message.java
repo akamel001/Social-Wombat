@@ -35,6 +35,7 @@ public class Message implements Serializable{
 	    Client_ListClassroomRequests,
 	    Client_CloseSocket,
 	    Client_ChangePassword,
+	    Client_GetLastLogin,
 	    
 	    // Client -> Hub -> Server
 	    Client_CreateClassroom,

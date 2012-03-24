@@ -721,8 +721,22 @@ public class Client {
 	 * Gets the last login info for this particular user.
 	 * @return last login info as a string
 	 */
-	public static String getLastLogin() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getLastLogin() {
+		
+		Message message = new Message();
+		message.setType(Message.MessageType.Client_GetLastLogin);
+		message.setBody(0);
+		message.setChecksum(message.generateCheckSum());	
+		socket.sendEncrypted(aes.encrypt(message));
+		
+		byte[] encMessage = socket.receiveEncrypted();
+		Message response = (Message) aes.decryptObject(encMessage);
+		if(response.getChecksum() != response.generateCheckSum()){
+			System.out.println("Checksum mismatch!");
+			System.exit(-1);
+		}
+		String lastLogin = (String) response.getBody();
+		
+		return lastLogin;
 	}
 }

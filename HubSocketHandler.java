@@ -19,6 +19,7 @@ public class HubSocketHandler extends Thread{
 	ObjectOutputStream oos;
 	ObjectInputStream ois;
 	HashMap<Integer,SocketPackage> serverPackages;
+	String lastLogin;
 
 	/*
 	 * A handler thread that is spawned for each message sent to a socket.
@@ -179,8 +180,8 @@ public class HubSocketHandler extends Thread{
 		
 		if (DEBUG) System.out.println("Client authentication allowed. Sending back appropriate reply");
 		
-		//TODO: update the last user login: String lastLogin = updateLastLogin(String user, InetAddress ip)
-		//TODO: return lastLogin to the Client
+		//Update the login
+		lastLogin = updateLastLogin(usr,socket.getInetAddress());
 		
 		//Return the authenticated message
 		if (allowed){
@@ -221,6 +222,23 @@ public class HubSocketHandler extends Thread{
 		}
 		*/
 		return false;
+	}
+	
+	/**
+	 * Returns the last login and then resets it to the current time.
+	 * @param user The user to be updated.
+	 * @param ip The current ip from which the user has logged in.
+	 * @return Returns a String containing the "ip, date" of the last login. 
+	 */
+	public String updateLastLogin(String user, InetAddress ip){
+		// Gets the last login.
+		String out = userList.getLastLogin(user, hubAESObject);
+		
+		//  Updates the last login to the current time and passed ip.
+		userList.updateLastLogin(user, ip, new Date(), hubAESObject);
+		
+		// return the last login
+		return out;
 	}
 	
 	/**@deprecated
@@ -530,6 +548,12 @@ public class HubSocketHandler extends Thread{
 						}
 						returnAndEncryptMessage(msg);
 						break;
+					case Client_GetLastLogin:
+						msg.setBody(lastLogin);
+						msg.setCode(1);
+						returnAndEncryptMessage(msg);
+						break;
+					
 					case Client_DeleteSelf:
 						String u = msg.getUserName();
 						if(userList.removeUser(u)==1){
