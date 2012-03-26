@@ -115,7 +115,7 @@ public final class UserList implements Serializable{
 		if(!StringLegalityChecker.checkIfUsernameStringIsLegal(new_id))
 			return -1;
 		
-		/* TODO: might not work correctly
+		/* TODO: DELETE COMMENTS!!!
 		// Check if the password is legal
 		if(!StringLegalityChecker.checkIfPasswordStringIsLegal(pass))
 			return -1;

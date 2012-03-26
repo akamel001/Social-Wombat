@@ -43,8 +43,14 @@ public final class ServerList implements Serializable{
 	 * @return Returns the server id or -1 if the ip/port combination already exists in the list.
 	 */
 	public int addServer(InetAddress ip, int port, char[] pass, AES encrypter){
-		if(ip==null || port<0 || port>49150 || encrypter==null)
+		if(ip==null || port<0 || port>49150 || pass==null || encrypter==null)
 			return -1;
+		
+		/* TODO: DELETE COMMENTS!!!
+		// Check if the password is legal
+		if(!StringLegalityChecker.checkIfPasswordStringIsLegal(pass))
+			return -1;
+		*/
 		
 		// check to see if ip/port combo exists
 		// if it does, disallow
