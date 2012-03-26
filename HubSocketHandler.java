@@ -482,10 +482,20 @@ public class HubSocketHandler extends Thread{
 			
 			//Wait, read and deserialize Message from Socket
 			if (DEBUG) System.out.println("Waiting for next msg");
-			
 			valid = getAndDecryptMessage();
-			
 			if (DEBUG) System.out.println("message decryption attempted, valid: " + valid);
+			
+			//check if hub is running
+			if (!listening){
+				//hub is shutdown
+				Message shutdownMsg = new Message();
+				shutdownMsg.setCode(-1);
+				returnAndEncryptMessage(shutdownMsg);
+				//prevent looping
+				listen = false;
+				valid = false;
+				return;
+			}
 			
 			//check that the user is still the same 
 			if (!currentUser.contains(msg.getUserName())){
@@ -510,15 +520,7 @@ public class HubSocketHandler extends Thread{
 				valid = false;
 			}
 			if (valid){
-				//check if hub is running
-				if (!listening){
-					//hub is shutdown
-					Message shutdownMsg = new Message();
-					shutdownMsg.setCode(-1);
-					returnAndEncryptMessage(shutdownMsg);
-					return;
-				}
-				
+								
 				// Preset to failure
 				msg.setCode(-1);
 				int returnCode = -1;
