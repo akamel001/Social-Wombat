@@ -157,11 +157,6 @@ public class HubSocketHandler extends Thread{
 		//null check aes object
 		if (clientAESObject == null){
 			if (DEBUG) System.out.println("clientAESObject creation failed");
-			//return an invalid login occured
-			Message returnMsg = new Message();
-			returnMsg.setType(Message.MessageType.Client_LogIn);
-			returnMsg.setCode(-1);
-			returnMessage(returnMsg);
 			return false;
 		}
 		
@@ -171,6 +166,11 @@ public class HubSocketHandler extends Thread{
 		ArrayList<Long> body = (ArrayList<Long>)clientAESObject.decryptObject(encryptedBody);
 		if (body==null){
 			if (DEBUG) System.out.println("unable to decrypt msg body or invalid authentications");
+			//return an invalid login occured
+			Message returnMsg = new Message();
+			returnMsg.setType(Message.MessageType.Client_LogIn);
+			returnMsg.setCode(-1);
+			returnMessage(returnMsg);
 			return false;
 		}
 		
