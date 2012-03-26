@@ -151,6 +151,7 @@ public final class UserList implements Serializable{
 		else{
 			synchronized(user_list){
 				// (a) get user
+				System.out.println("USER's NEW PASS1: " + Arrays.toString(p));
 				User temp_guy = this.getAndDecryptUser(user_name, encryptor);
 				if (temp_guy==null)
 					return -1;
@@ -160,7 +161,7 @@ public final class UserList implements Serializable{
 				
 				// (c) reenter user into user list;
 				this.encryptAndAddUser(temp_guy, encryptor);
-				temp_guy.zeroUser();
+				temp_guy.zeroUser();	
 			}
 			return 1;
 		}
@@ -388,9 +389,6 @@ public final class UserList implements Serializable{
 			
 			// Create and fill a new pass.
 			password = Arrays.copyOf(p, p.length);
-			
-			// Zero out the old pass.
-			Arrays.fill(password, '0');
 		}
 
 		/**
