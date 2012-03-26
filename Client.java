@@ -85,7 +85,9 @@ public final class Client {
 		
 		// Get timestamp message
 		Message response = socket.receive();
-		System.out.println("Received a response");
+		if(DEBUG_OUTPUT) System.out.println("Received a response");
+		
+		if(response.getCode() == -1) return false;
 		
 		byte[] encryptedBody = (byte[])response.getBody();
 		
