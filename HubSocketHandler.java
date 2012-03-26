@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 public class HubSocketHandler extends Thread{
 	//private static int CLIENT_SOCKET = 4444;
@@ -675,8 +674,7 @@ public class HubSocketHandler extends Thread{
 						c.setClassName(msg.getClassroom_ID());
 						
 						//Generate some server number
-						//TODO: Use SecureRandom!!!
-						Random r = new Random();
+						SecureRandom r = new SecureRandom();
 						int maxServer = serverList.getLastServer();
 						int serverNum = r.nextInt(maxServer) + 1;
 						
