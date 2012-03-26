@@ -466,337 +466,356 @@ public class HubSocketHandler extends Thread{
 	 * server messages. Authentication responses to clients accept no response.
 	 */
 	public void run(){
-		//takes over to infinitely listen for each user
-		boolean listen = false;
-		boolean valid = true;
-		
-		//Authenticate, if listen is false, the socket is problematic, close connections
-		//loop to allow continuous authentication
-		while(!listen){
-			listen = authenticate();
-		}
-		//All further communications
-		while (listen && valid){
+		try {
+			//takes over to infinitely listen for each user
+			boolean listen = false;
+			boolean valid = true;
 			
-			//Wait, read and deserialize Message from Socket
-			if (DEBUG) System.out.println("Waiting for next msg");
-			valid = getAndDecryptMessage();
-			if (DEBUG) System.out.println("message decryption attempted, valid: " + valid);
-			
-			//check if hub is running
-			if (!Hub.listening){
-				if (DEBUG) System.out.println("Hub was shutdown, closing this corresponding spawned thread.");
-				//hub is shutdown
-				Message shutdownMsg = new Message();
-				shutdownMsg.setType(Message.MessageType.Hub_Shutdown);
-				shutdownMsg.setCode(-1);
-				returnAndEncryptMessage(shutdownMsg);
-				listen = false;
-				valid = false;
-				//need to remove user since we don't reach end of thread now
-				currentUsers.remove(currentUser);
-				return;
+			//Authenticate, if listen is false, the socket is problematic, close connections
+			//loop to allow continuous authentication
+			while(!listen){
+				listen = authenticate();
 			}
-			
-			//check that the user is still the same 
-			if (!currentUser.contains(msg.getUserName())){
-				if (DEBUG) System.out.println("Mismatch in the authenticated user and current user");
-				valid = false;
-			}
-			
-			if (DEBUG) System.out.println("user name is: " + msg.getUserName());
-			
-			if (msg == null){
-				System.out.println("Message was null");
-				valid = false; // Don't waste time on bad transmissions
-			} else if (msg.getUserName() == null){
-				System.out.println("Session key was null");
-				valid = false;
-			}
-			if (valid){
-								
-				// Preset to failure
-				msg.setCode(-1);
-				int returnCode = -1;
-				Message reply = null;
-				//Handle the different types of client messages
+			//All further communications
+			while (listen && valid){
+				//for future logins
+				while(!listen){
+					listen = authenticate();
+				}
 				
-				if (DEBUG) System.out.println("Message type is: " + msg.getType());
+				//Wait, read and deserialize Message from Socket
+				if (DEBUG) System.out.println("Waiting for next msg");
+				valid = getAndDecryptMessage();
+				if (DEBUG) System.out.println("message decryption attempted, valid: " + valid);
 				
-				//NOTE: ALL MESSAGES ARE PRESET TO RETURN CODE -1
-				switch(msg.getType()) {	
+				//check if hub is running
+				if (!Hub.listening){
+					if (DEBUG) System.out.println("Hub was shutdown, closing this corresponding spawned thread.");
+					//hub is shutdown
+					Message shutdownMsg = new Message();
+					shutdownMsg.setType(Message.MessageType.Hub_Shutdown);
+					shutdownMsg.setCode(-1);
+					returnAndEncryptMessage(shutdownMsg);
+					listen = false;
+					valid = false;
+					//need to remove user since we don't reach end of thread now
+					currentUsers.remove(currentUser);
+					return;
+				}
 				
-					// Client -> Hub
+				//check that the user is still the same 
+				if (!currentUser.contains(msg.getUserName())){
+					if (DEBUG) System.out.println("Mismatch in the authenticated user and current user");
+					valid = false;
+				}
+				
+				if (DEBUG) System.out.println("user name is: " + msg.getUserName());
+				
+				if (msg == null){
+					System.out.println("Message was null");
+					valid = false; // Don't waste time on bad transmissions
+				} else if (msg.getUserName() == null){
+					System.out.println("Session key was null");
+					valid = false;
+				}
+				if (valid){
+									
+					// Preset to failure
+					msg.setCode(-1);
+					int returnCode = -1;
+					Message reply = null;
+					//Handle the different types of client messages
 					
-					case Client_ChangePassword:
-						//body: ArrayList<char[]> 
-						boolean allowed = true;
-						ArrayList<char[]> body = (ArrayList<char[]>) msg.getBody();
-						//[0] = oldpass, [1] new pass, [2] confirm new pass, [3] tempusername
-						
-						//check temp username matches provided username
-						if (!Arrays.equals(body.get(3),msg.getUserName().toCharArray())){
-							allowed = false;
-						}
-						//check username matches our currentUsername
-						if (!currentUser.equals(msg.getUserName())){
-							allowed = false;
-						}
-						//lookup pass
-						char[] oldPass = userList.getUserPass(msg.getUserName(), hubAESObject);
-						//check oldpass matches with lookup pass
-						if(!Arrays.equals(oldPass, body.get(0))){
-							allowed = false;
-						}
-						//clear oldpass
-						Arrays.fill(oldPass, '0');
-						Arrays.fill(body.get(0), '0');
-						//check newpass arrays.equals confirm new pass
-						if(!Arrays.equals(body.get(1), body.get(2))){
-							allowed = false;
-						}
-						//if all success, then change pass
-						if (allowed){
-							if (DEBUG) System.out.println("Client change password allowed, changing...");
-							int ret = userList.changeUserPassword(currentUser, body.get(1), hubAESObject);
-							if(ret==1){
-								//successful system change
-								if (DEBUG) System.out.println("userList password changed");
-							} else{
-								//not successful
-								if (DEBUG) System.out.println("userList password not changed");
+					if (DEBUG) System.out.println("Message type is: " + msg.getType());
+					
+					//NOTE: ALL MESSAGES ARE PRESET TO RETURN CODE -1
+					switch(msg.getType()) {	
+					
+						// Client -> Hub
+						case Client_Logout:
+							//need to reset to authenticate
+							listen = false;
+							valid = true;
+							//remove user
+							currentUsers.remove(currentUser);
+							msg = new Message();
+							msg.setCode(1);
+							msg.setType(Message.MessageType.Client_Logout);
+							returnAndEncryptMessage(msg);
+					
+						case Client_ChangePassword:
+							//body: ArrayList<char[]> 
+							boolean allowed = true;
+							ArrayList<char[]> body = (ArrayList<char[]>) msg.getBody();
+							//[0] = oldpass, [1] new pass, [2] confirm new pass, [3] tempusername
+							
+							//check temp username matches provided username
+							if (!Arrays.equals(body.get(3),msg.getUserName().toCharArray())){
 								allowed = false;
 							}
-						} 
-						//clear new passwords
-						Arrays.fill(body.get(1), '0');
-						Arrays.fill(body.get(2),'0');
-						//reset msg
-						msg = new Message();
-						if (allowed){
-							msg.setCode(1);
-						} else {
-							if (DEBUG) System.out.println("Client change password wasn't allowed.");
-							msg.setCode(-1);
-						}
-						//return
-						returnAndEncryptMessage(msg);
-						break;
-				
-					// Returns in body all users in a classroom
-					case Client_GetClassEnrollment:
-						//check permissions
-						if(isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
-							//String = User, Integer = Permission
-							Map<String, Integer> classEnroll = classList.getClassEnrolled(msg.getClassroom_ID(), hubAESObject);
-							if (classEnroll != null){				
-								msg.setCode(1);
-								msg.setBody(classEnroll);
-							} 
-						} 
-						returnAndEncryptMessage(msg);
-						break;
-					// Return in body a list of the classes that a client is enrolled in
-					case Client_GetUserEnrollment:
-						String usr = msg.getUserName();
-						if(DEBUG) System.out.println(usr + " wants to see all their class enrollments");
-						Map<String, Integer> userEnroll = classList.getUserEnrollment(usr, hubAESObject);
-						if (userEnroll != null){
-							msg.setCode(1);
-							msg.setBody(userEnroll);
-						} 
-						returnAndEncryptMessage(msg);
-						break;
-					case Client_ListClassroomRequests:
-						//check permissions
-						if(isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
-							//gets list of users
-							List<String> requests = classList.getClassPending(msg.getClassroom_ID(), hubAESObject);
-							if (requests != null){
-								msg.setCode(1);
-								msg.setBody(requests);
+							//check username matches our currentUsername
+							if (!currentUser.equals(msg.getUserName())){
+								allowed = false;
 							}
-						}
-						returnAndEncryptMessage(msg);
-						break;
-					// Change the permissions for another user, special case for student
-					// Store user to be changed and the permissions as an arraylist
-					// [0] = username, [1] = permissions
-					case Client_SetPermissions:
-						if(DEBUG) System.out.println(msg.getUserName() + " setting permissions");
-						@SuppressWarnings("unchecked")
-						ArrayList<String> a= (ArrayList<String>) msg.getBody();
-						// Person
-						String personToChange = a.get(0);
-						// Permission to set for Person
-						int per = Integer.parseInt(a.get(1));
-	
-						//Special case, instructor cannot be deleted
-						if((isClassInstructor(personToChange,msg.getClassroom_ID())) && (per == -1)){
-							//return failure
-							if(DEBUG) System.out.println("Denied. Instructor cannot delete self from classroom.");
+							//lookup pass
+							char[] oldPass = userList.getUserPass(msg.getUserName(), hubAESObject);
+							//check oldpass matches with lookup pass
+							if(!Arrays.equals(oldPass, body.get(0))){
+								allowed = false;
+							}
+							//clear oldpass
+							Arrays.fill(oldPass, '0');
+							Arrays.fill(body.get(0), '0');
+							//check newpass arrays.equals confirm new pass
+							if(!Arrays.equals(body.get(1), body.get(2))){
+								allowed = false;
+							}
+							//if all success, then change pass
+							if (allowed){
+								if (DEBUG) System.out.println("Client change password allowed, changing...");
+								int ret = userList.changeUserPassword(currentUser, body.get(1), hubAESObject);
+								if(ret==1){
+									//successful system change
+									if (DEBUG) System.out.println("userList password changed");
+								} else{
+									//not successful
+									if (DEBUG) System.out.println("userList password not changed");
+									allowed = false;
+								}
+							} 
+							//clear new passwords
+							Arrays.fill(body.get(1), '0');
+							Arrays.fill(body.get(2),'0');
+							//reset msg
+							msg = new Message();
+							if (allowed){
+								msg.setCode(1);
+							} else {
+								if (DEBUG) System.out.println("Client change password wasn't allowed.");
+								msg.setCode(-1);
+							}
+							//return
 							returnAndEncryptMessage(msg);
 							break;
-						} else if(isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
-							//Now changing someone else's
-							// Server's return code
-							if(DEBUG) System.out.println("Setting " + personToChange + "'s permissions to: " + per);
-							returnCode = classList.setUserPermissions(personToChange, msg.getClassroom_ID(), per, hubAESObject);
-							// Reply
-							msg.setCode(returnCode);
-						} else if (isClassStudent(msg.getUserName(),msg.getClassroom_ID())){
-							//Students can only delete themselves
-							//Check student requestor matches up with requestee
-							if (msg.getUserName().equals(personToChange)){
+					
+						// Returns in body all users in a classroom
+						case Client_GetClassEnrollment:
+							//check permissions
+							if(isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
+								//String = User, Integer = Permission
+								Map<String, Integer> classEnroll = classList.getClassEnrolled(msg.getClassroom_ID(), hubAESObject);
+								if (classEnroll != null){				
+									msg.setCode(1);
+									msg.setBody(classEnroll);
+								} 
+							} 
+							returnAndEncryptMessage(msg);
+							break;
+						// Return in body a list of the classes that a client is enrolled in
+						case Client_GetUserEnrollment:
+							String usr = msg.getUserName();
+							if(DEBUG) System.out.println(usr + " wants to see all their class enrollments");
+							Map<String, Integer> userEnroll = classList.getUserEnrollment(usr, hubAESObject);
+							if (userEnroll != null){
+								msg.setCode(1);
+								msg.setBody(userEnroll);
+							} 
+							returnAndEncryptMessage(msg);
+							break;
+						case Client_ListClassroomRequests:
+							//check permissions
+							if(isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
+								//gets list of users
+								List<String> requests = classList.getClassPending(msg.getClassroom_ID(), hubAESObject);
+								if (requests != null){
+									msg.setCode(1);
+									msg.setBody(requests);
+								}
+							}
+							returnAndEncryptMessage(msg);
+							break;
+						// Change the permissions for another user, special case for student
+						// Store user to be changed and the permissions as an arraylist
+						// [0] = username, [1] = permissions
+						case Client_SetPermissions:
+							if(DEBUG) System.out.println(msg.getUserName() + " setting permissions");
+							@SuppressWarnings("unchecked")
+							ArrayList<String> a= (ArrayList<String>) msg.getBody();
+							// Person
+							String personToChange = a.get(0);
+							// Permission to set for Person
+							int per = Integer.parseInt(a.get(1));
+		
+							//Special case, instructor cannot be deleted
+							if((isClassInstructor(personToChange,msg.getClassroom_ID())) && (per == -1)){
+								//return failure
+								if(DEBUG) System.out.println("Denied. Instructor cannot delete self from classroom.");
+								returnAndEncryptMessage(msg);
+								break;
+							} else if(isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
+								//Now changing someone else's
 								// Server's return code
+								if(DEBUG) System.out.println("Setting " + personToChange + "'s permissions to: " + per);
 								returnCode = classList.setUserPermissions(personToChange, msg.getClassroom_ID(), per, hubAESObject);
 								// Reply
 								msg.setCode(returnCode);
+							} else if (isClassStudent(msg.getUserName(),msg.getClassroom_ID())){
+								//Students can only delete themselves
+								//Check student requestor matches up with requestee
+								if (msg.getUserName().equals(personToChange)){
+									// Server's return code
+									returnCode = classList.setUserPermissions(personToChange, msg.getClassroom_ID(), per, hubAESObject);
+									// Reply
+									msg.setCode(returnCode);
+								}
 							}
-						}
-						returnAndEncryptMessage(msg);
-						break;
-					case Client_GetLastLogin:
-						msg.setBody(lastLogin);
-						msg.setCode(1);
-						returnAndEncryptMessage(msg);
-						break;
-					
-					case Client_DeleteSelf:
-						String u = msg.getUserName();
-						if(userList.removeUser(u)==1){
-							//success
-							//TODO: remove the users from classList and if prof, remove serverlist
+							returnAndEncryptMessage(msg);
+							break;
+						case Client_GetLastLogin:
+							msg.setBody(lastLogin);
 							msg.setCode(1);
-						} else{
-							//fail
-							msg.setCode(-1);
-						}
-						returnAndEncryptMessage(msg);
-						break;
-					// Request to be added to a class
-					case Client_RequestEnrollment:
-						//check, cannot be already in class
-						String requestName = msg.getUserName();
-						if(DEBUG) System.out.println(requestName + " requested to be added to classroom: " + msg.getClassroom_ID());
-						if(!isInClassroom(requestName,msg.getClassroom_ID())){
-							// 0 for pending enrollment, -1 for dijoining
-							int p = (Integer)msg.getBody();
-							if(DEBUG) System.out.println("adding into classroom...");
-							returnCode = classList.setUserPermissions(requestName, msg.getClassroom_ID(), p, hubAESObject);
-							if(DEBUG) System.out.println("return code is: " + returnCode);
-							msg.setCode(returnCode);
-						}
-						returnAndEncryptMessage(msg);
-						break;
-						
-					// Client -> Hub -> Server
-					// NOTE: ANYTHING SENT IN THIS PATHWAY REQUIRES THE 
-					// CLASSROOM_ID TO BE SET IN THE MESSAGE ALREADY!!!!!
-					case Client_CreateClassroom:
-						//Add that classroom id to a server
-						ClassData c = new ClassData(msg.getUserName());
-						c.setClassName(msg.getClassroom_ID());
-						
-						//Generate some server number
-						SecureRandom r = new SecureRandom();
-						int maxServer = serverList.getLastServer();
-						int serverNum = r.nextInt(maxServer) + 1;
-						
-						c.setClassServer(serverNum, SERVER_SOCKET);
-						classList.addClass(c, hubAESObject);
-						
-						reply = forwardToServer(msg);
-						returnAndEncryptMessage(reply);
-						break;
-					/*
-					 * Create post requires Post Name, and Post Body.
-					 * Since only a msg body is available for storage of both,
-					 * they will be stored as a 2 element arraylist with 
-					 * Array[0] = Post_Name
-					 * Array[1] = Post_body 	
-					 */
-					case Client_CreateThread:
-						if (isInClassroom(msg.getUserName(),msg.getClassroom_ID())){
-							reply = forwardToServer(msg);
-							returnAndEncryptMessage(reply);
-						} else {
 							returnAndEncryptMessage(msg);
-						}
-						break;
-					case Client_CreateComment:
-						if (isInClassroom(msg.getUserName(),msg.getClassroom_ID())){
-							reply = forwardToServer(msg);
-							returnAndEncryptMessage(reply);
-						} else {
-							returnAndEncryptMessage(msg);
-						}
-						break;
-					case Client_GoToClassroom:
-						if (isInClassroom(msg.getUserName(),msg.getClassroom_ID())){
-							reply = forwardToServer(msg);
-							returnAndEncryptMessage(reply);
-						} else {
-							returnAndEncryptMessage(msg);
-						}
-						break;
-					case Client_GoToThread:
-						if (isInClassroom(msg.getUserName(),msg.getClassroom_ID())){
-							reply = forwardToServer(msg);
-							returnAndEncryptMessage(reply);
-						} else {
-							returnAndEncryptMessage(msg);
-						}
-						break;
-					case Client_DeleteClassroom:
-						if (isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
-							reply = forwardToServer(msg);
-							//Check that the reply code is affirmative
-							if(reply.getCode() == 1){
-								classList.removeClass(reply.getClassroom_ID());
+							break;
+						
+						case Client_DeleteSelf:
+							String u = msg.getUserName();
+							if(userList.removeUser(u)==1){
+								//success
+								//TODO: remove the users from classList and if prof, remove serverlist
+								msg.setCode(1);
+							} else{
+								//fail
+								msg.setCode(-1);
 							}
-							returnAndEncryptMessage(reply);
-						} else {
 							returnAndEncryptMessage(msg);
-						}
-						break;
-					case Client_DeleteThread:
-						if (isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
+							break;
+						// Request to be added to a class
+						case Client_RequestEnrollment:
+							//check, cannot be already in class
+							String requestName = msg.getUserName();
+							if(DEBUG) System.out.println(requestName + " requested to be added to classroom: " + msg.getClassroom_ID());
+							if(!isInClassroom(requestName,msg.getClassroom_ID())){
+								// 0 for pending enrollment, -1 for dijoining
+								int p = (Integer)msg.getBody();
+								if(DEBUG) System.out.println("adding into classroom...");
+								returnCode = classList.setUserPermissions(requestName, msg.getClassroom_ID(), p, hubAESObject);
+								if(DEBUG) System.out.println("return code is: " + returnCode);
+								msg.setCode(returnCode);
+							}
+							returnAndEncryptMessage(msg);
+							break;
+							
+						// Client -> Hub -> Server
+						// NOTE: ANYTHING SENT IN THIS PATHWAY REQUIRES THE 
+						// CLASSROOM_ID TO BE SET IN THE MESSAGE ALREADY!!!!!
+						case Client_CreateClassroom:
+							//Add that classroom id to a server
+							ClassData c = new ClassData(msg.getUserName());
+							c.setClassName(msg.getClassroom_ID());
+							
+							//Generate some server number
+							SecureRandom r = new SecureRandom();
+							int maxServer = serverList.getLastServer();
+							int serverNum = r.nextInt(maxServer) + 1;
+							
+							c.setClassServer(serverNum, SERVER_SOCKET);
+							classList.addClass(c, hubAESObject);
+							
 							reply = forwardToServer(msg);
 							returnAndEncryptMessage(reply);
-						} else {
+							break;
+						/*
+						 * Create post requires Post Name, and Post Body.
+						 * Since only a msg body is available for storage of both,
+						 * they will be stored as a 2 element arraylist with 
+						 * Array[0] = Post_Name
+						 * Array[1] = Post_body 	
+						 */
+						case Client_CreateThread:
+							if (isInClassroom(msg.getUserName(),msg.getClassroom_ID())){
+								reply = forwardToServer(msg);
+								returnAndEncryptMessage(reply);
+							} else {
+								returnAndEncryptMessage(msg);
+							}
+							break;
+						case Client_CreateComment:
+							if (isInClassroom(msg.getUserName(),msg.getClassroom_ID())){
+								reply = forwardToServer(msg);
+								returnAndEncryptMessage(reply);
+							} else {
+								returnAndEncryptMessage(msg);
+							}
+							break;
+						case Client_GoToClassroom:
+							if (isInClassroom(msg.getUserName(),msg.getClassroom_ID())){
+								reply = forwardToServer(msg);
+								returnAndEncryptMessage(reply);
+							} else {
+								returnAndEncryptMessage(msg);
+							}
+							break;
+						case Client_GoToThread:
+							if (isInClassroom(msg.getUserName(),msg.getClassroom_ID())){
+								reply = forwardToServer(msg);
+								returnAndEncryptMessage(reply);
+							} else {
+								returnAndEncryptMessage(msg);
+							}
+							break;
+						case Client_DeleteClassroom:
+							if (isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
+								reply = forwardToServer(msg);
+								//Check that the reply code is affirmative
+								if(reply.getCode() == 1){
+									classList.removeClass(reply.getClassroom_ID());
+								}
+								returnAndEncryptMessage(reply);
+							} else {
+								returnAndEncryptMessage(msg);
+							}
+							break;
+						case Client_DeleteThread:
+							if (isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
+								reply = forwardToServer(msg);
+								returnAndEncryptMessage(reply);
+							} else {
+								returnAndEncryptMessage(msg);
+							}
+							break;
+						case Client_DeleteComment:
+							if (isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
+								reply = forwardToServer(msg);
+								returnAndEncryptMessage(reply);
+							} else {
+								returnAndEncryptMessage(msg);
+							}
+							break;	
+						case Client_CloseSocket:
+							listen = false;
+							// Close everything
+							try {
+								oos.close();
+								ois.close();
+								socket.close();
+							} catch (IOException e) {
+								e.printStackTrace();
+								System.out.println("Couldn't close");
+							}
+							break;
+						default:
+							msg.setBody("Request denied.");
+							msg.setCode(-1);
 							returnAndEncryptMessage(msg);
-						}
-						break;
-					case Client_DeleteComment:
-						if (isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
-							reply = forwardToServer(msg);
-							returnAndEncryptMessage(reply);
-						} else {
-							returnAndEncryptMessage(msg);
-						}
-						break;	
-					case Client_CloseSocket:
-						listen = false;
-						// Close everything
-						try {
-							oos.close();
-							ois.close();
-							socket.close();
-						} catch (IOException e) {
-							e.printStackTrace();
-							System.out.println("Couldn't close");
-						}
-						break;
-					default:
-						msg.setBody("Request denied.");
-						msg.setCode(-1);
-						returnAndEncryptMessage(msg);
-						break;
+							break;
+					}
 				}
 			}
+		} catch (Exception e){
+			//gracefully remove user
+			if (DEBUG) System.out.println("Connection with User broken");
+			currentUsers.remove(currentUser);
 		}
-
 		if(DEBUG) System.out.println("Connected users: \n===> " + currentUsers.toString());
 		//If the thread exits, then it means that the user is no longer logged in
 		if (DEBUG) System.out.println(currentUser + " session has ended, removing them from current user map.");
