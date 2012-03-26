@@ -494,8 +494,50 @@ public class HubSocketHandler extends Thread{
 					// Client -> Hub
 					
 					case Client_ChangePassword:
-						//TODO: do
+						//body: ArrayList<char[]> 
+						boolean allowed = true;
+						ArrayList<char[]> body = (ArrayList<char[]>) msg.getBody();
+						//[0] = oldpass, [1] new pass, [2] confirm new pass, [3] tempusername
 						
+						//check temp username matches provided username
+						if (!Arrays.equals(body.get(3),msg.getUserName().toCharArray())){
+							allowed = false;
+						}
+						//check username matches our currentUsername
+						if (!currentUser.equals(msg.getUserName())){
+							allowed = false;
+						}
+						//lookup pass
+						char[] oldPass = userList.getUserPass(msg.getUserName(), hubAESObject);
+						//check oldpass matches with lookup pass
+						if(!Arrays.equals(oldPass, body.get(0))){
+							allowed = false;
+						}
+						//clear oldpass
+						Arrays.fill(oldPass, '0');
+						Arrays.fill(body.get(0), '0');
+						//check newpass arrays.equals confirm new pass
+						if(!Arrays.equals(body.get(1), body.get(2))){
+							allowed = false;
+						}
+						//if all success, then change pass
+						if (allowed){
+							if (DEBUG) System.out.println("Client change password allowed, changing...");
+							userList.changeUserPassword(currentUser, body.get(1), hubAESObject);
+						} 
+						//clear new passwords
+						Arrays.fill(body.get(1), '0');
+						Arrays.fill(body.get(2),'0');
+						//reset msg
+						msg = new Message();
+						if (allowed){
+							msg.setCode(1);
+						} else {
+							if (DEBUG) System.out.println("Client change password wasn't allowed.");
+							msg.setCode(-1);
+						}
+						//return
+						returnAndEncryptMessage(msg);
 						break;
 				
 					// Returns in body all users in a classroom
