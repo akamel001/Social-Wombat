@@ -23,6 +23,9 @@ class Hub extends Thread {
 	
 	static HashMap<Integer,SocketPackage> serverPackages = new HashMap<Integer,SocketPackage>();
 	
+	//stores current users that are logged in to disallow multiple instances of the same user
+	static volatile HashMap<String,Integer> currentUsers = new HashMap<String,Integer>(); 
+	
 	static ServerSocket hubSocket = null;
 	String hubIP = null;
 	
@@ -302,6 +305,7 @@ class Hub extends Thread {
 		long newChecksum = CheckSum.getChecksum(reply);
 		long oldChecksum = reply.getChecksum();
 		if(newChecksum != oldChecksum){
+			if(DEBUG) System.out.print("HUB: checksums don't match."); // TODO: when connecting to a server, the connection seems overall successful, however, the checksums don't match
 			verified = false;
 		}
 		//get body fields
@@ -310,12 +314,14 @@ class Hub extends Thread {
 		
 		//nonce check
 		if ((myNonce+1) != serverNonce){
+			if(DEBUG) System.out.print("HUB: nonce test failed.");
 			verified = false;
 		}
 		
 		//Check timestamp
 		long myTimestamp = Calendar.getInstance().getTimeInMillis();
 		if (!(((myTimestamp - 300000) <= serverTimestamp) && (serverTimestamp <= (myTimestamp + 300000)))){
+			if(DEBUG) System.out.print("HUB: timestamp test failed.");
 			verified = false;
 		}
 		
@@ -478,7 +484,7 @@ class Hub extends Thread {
 				if(!hubSocket.isClosed()){
 					//Spawn new ServerSocketHandler thread, we assume that the
 					//hub has directed this message to the correct Server
-					HubSocketHandler newRequest = new HubSocketHandler(client,classList,userList,serverList,serverPackages,hubAESObject);
+					HubSocketHandler newRequest = new HubSocketHandler(client,classList,userList,serverList,serverPackages,hubAESObject,currentUsers);
 					if(DEBUG) System.out.println("Accepted a connection from: "+ client.getInetAddress());
 					//Starts running the new thread
 					newRequest.start(); 
