@@ -55,9 +55,7 @@ class Hub extends Thread {
 		// Close the socket. 
 		try {
 			hubSocket.close();
-			System.out.println("hubSocket closed: " + hubSocket.isClosed());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		listening = false;
@@ -487,8 +485,10 @@ class Hub extends Thread {
 				}
 			} catch (SocketTimeoutException e){
 				// This is expected, b/c we have set the socket timeout. Do nothing.
-			} catch (IOException e) {
-				System.out.println("Accept failed on port: " + CLIENT_SOCKET);
+			} catch (SocketException e){
+				// This is expected, b/c we have closed the socket while it was still in accept(). Do nothing.
+			}catch (IOException e) {
+				System.out.println("Accept failed on port: " + CLIENT_SOCKET + " : " + e.toString());
 			}
 		}
 		//Close socket after done listening

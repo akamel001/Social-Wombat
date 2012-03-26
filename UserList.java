@@ -34,7 +34,8 @@ public final class UserList implements Serializable{
 	 * @param pass The password to be checked. Zero out with Arrays.fill(pass, '0') when no longer needed.
 	 * @param encryptor
 	 * @return True if the user password combo exist.
-	 */	public boolean validateUser(String user_name, char[] pass, AES encryptor){
+	 */	@SuppressWarnings("unused")
+	private boolean validateUser(String user_name, char[] pass, AES encryptor){
 		if (user_name==null){
 			return false;
 		}
@@ -73,7 +74,7 @@ public final class UserList implements Serializable{
 	}
 
 	/**
-	 *  @deprecated I must have been drunk when I wrote this -- cd.
+	 *  @deprecated 
 	 * Shows whether a username is contained in the userlist.
 	 * @param userId The user name to be searched
 	 * @return Returns true if the username is present in the user list, false otherwise.
@@ -123,7 +124,7 @@ public final class UserList implements Serializable{
 			if (!user_list.containsKey(new_id)){
 				User new_guy = new User(new_id, pass);
 				int out =  this.encryptAndAddUser(new_guy, encryptor);
-				zeroCharArray(pass);
+				Arrays.fill(pass, '0');
 				return out;
 			}
 			else{
@@ -255,18 +256,6 @@ public final class UserList implements Serializable{
 			
 			return -1;
 	}
-
-	/**
-	 * Zeros out the passed char array
-	 * @param c
-	 */
-	public static void zeroCharArray(char[] c){
-		if (c.length>0){
-			for(int i=0; i<c.length; i++)
-				c[i]='0';
-		}
-			
-	}
 	
 	/**
 	 * Adds a user to the user list <\br>
@@ -361,6 +350,7 @@ public final class UserList implements Serializable{
 			else
 				name = u;
 			password = Arrays.copyOf(p, p.length);
+			Arrays.fill(p, '0');
 			last_login_time = null;
 			last_login_address = null;
 		}
@@ -391,11 +381,11 @@ public final class UserList implements Serializable{
 			if (p==null)
 				return;
 			
-			// Zero out the old pass.
-			Arrays.fill(password, '0');
-			
 			// Create and fill a new pass.
 			password = Arrays.copyOf(p, p.length);
+			
+			// Zero out the old pass.
+			Arrays.fill(password, '0');
 		}
 
 		/**
