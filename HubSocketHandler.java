@@ -465,8 +465,10 @@ public class HubSocketHandler extends Thread{
 		boolean valid = true;
 		
 		//Authenticate, if listen is false, the socket is problematic, close connections
-		listen = authenticate();
-		
+		//loop to allow continuous authentication
+		while(!listen){
+			listen = authenticate();
+		}
 		//All further communications
 		while (listen && valid){
 			
