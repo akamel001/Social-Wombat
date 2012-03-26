@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * @author chris
  *
  */
-public class ClassList implements Serializable{
+public final class ClassList implements Serializable{
 
 	private static final long serialVersionUID = 8630970578639764636L;
 	private Map<String, byte[]> classList;

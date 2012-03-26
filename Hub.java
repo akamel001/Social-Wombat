@@ -500,7 +500,7 @@ class Hub extends Thread {
 				}
 			} catch (SocketTimeoutException e){
 				// This is expected, b/c we have set the socket timeout. Do nothing.
-			} catch (SocketException e){
+			} catch (SocketException e){			
 				// This is expected, b/c we have closed the socket while it was still in accept(). Do nothing.
 			}catch (IOException e) {
 				System.out.println("Accept failed on port: " + CLIENT_SOCKET + " : " + e.toString());
