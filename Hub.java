@@ -24,7 +24,7 @@ class Hub extends Thread {
 	static HashMap<Integer,SocketPackage> serverPackages = new HashMap<Integer,SocketPackage>();
 	
 	//stores current users that are logged in to disallow multiple instances of the same user
-	static HashMap<String,Integer> currentUsers = new HashMap<String,Integer>(); 
+	static volatile HashMap<String,Integer> currentUsers = new HashMap<String,Integer>(); 
 	
 	static ServerSocket hubSocket = null;
 	String hubIP = null;
