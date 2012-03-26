@@ -506,6 +506,7 @@ class Hub extends Thread {
 				System.out.println("Accept failed on port: " + CLIENT_SOCKET + " : " + e.toString());
 			}
 		}
+		
 		//Close socket after done listening
 		try {
 			hubSocket.close();
