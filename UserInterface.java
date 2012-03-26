@@ -216,8 +216,15 @@ public class UserInterface {
 	 * @param messages 
 	 */
 	private static void changePasswordPage(String messages) {
-		String info = UserInterfaceHelper.addFormattingAlignLeft("Logged in as " + currentUserName + ".");		
-		displayPage(sCHANGE_PASSWORD_PAGE, messages, info, null, sCHANGE_PASSWORD_INSTRUCTIONS);
+		String info = UserInterfaceHelper.addFormattingAlignLeft("Logged in as " + currentUserName + ".");
+		String content = UserInterfaceHelper.addFormattingAlignLeft("Password requirements:") +
+						UserInterfaceHelper.addFormattingAlignLeft("* may only contain alphanumerics and the special characters @#$%%^&+=") + 
+						UserInterfaceHelper.addFormattingAlignLeft("* must be at least 8 and at most 25 characters long") +
+						UserInterfaceHelper.addFormattingAlignLeft("* must contain at least one uppercase letter") +
+						UserInterfaceHelper.addFormattingAlignLeft("* must contain at least one lowercase letter") + 
+						UserInterfaceHelper.addFormattingAlignLeft("* must contain at least one number") +
+						UserInterfaceHelper.addFormattingAlignLeft("* must contain at least one special character."); // informs the user of the password requirements 
+		displayPage(sCHANGE_PASSWORD_PAGE, messages, info, content, sCHANGE_PASSWORD_INSTRUCTIONS);
 		
 		String userNameTemp = console.readLine("User Name? ");
     	char[] oldPassword = console.readPassword("Old Password? ");
