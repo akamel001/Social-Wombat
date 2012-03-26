@@ -11,6 +11,7 @@ import java.util.Map;
 public class Client {
 
 	//TODO Checksum 
+	// TODO: check that any inputs are not empty/null.
 	
 	private static final boolean DEBUG = false;
 	private static final String hub_addr = "127.0.0.1";
