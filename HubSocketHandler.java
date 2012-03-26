@@ -33,11 +33,12 @@ public class HubSocketHandler extends Thread{
 	String lastLogin;
 	HashMap<String,Integer> currentUsers;
 	String currentUser;
+	volatile boolean listening;
 
 	/*
 	 * A handler thread that is spawned for each message sent to a socket.
 	 */
-	public HubSocketHandler(Socket socket, ClassList classList, UserList userList, ServerList serverList, HashMap<Integer,SocketPackage> serverPackages, AES hubAESObject, HashMap<String,Integer> currentUsers){
+	public HubSocketHandler(Socket socket, ClassList classList, UserList userList, ServerList serverList, HashMap<Integer,SocketPackage> serverPackages, AES hubAESObject, HashMap<String,Integer> currentUsers,boolean listening){
 		this.socket = socket;
 		this.classList = classList;
 		this.userList = userList;
@@ -45,6 +46,7 @@ public class HubSocketHandler extends Thread{
 		this.serverPackages = serverPackages;
 		this.hubAESObject = hubAESObject;	// to be used for communciation with servers
 		this.currentUsers = currentUsers;
+		this.listening = listening;
 		// Create datastreams
 		try {
 			oos = new ObjectOutputStream(socket.getOutputStream());
@@ -508,6 +510,15 @@ public class HubSocketHandler extends Thread{
 				valid = false;
 			}
 			if (valid){
+				//check if hub is running
+				if (!listening){
+					//hub is shutdown
+					Message shutdownMsg = new Message();
+					shutdownMsg.setCode(-1);
+					returnAndEncryptMessage(shutdownMsg);
+					return;
+				}
+				
 				// Preset to failure
 				msg.setCode(-1);
 				int returnCode = -1;
