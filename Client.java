@@ -134,8 +134,24 @@ public final class Client {
 	 * @return
 	 */
 	public boolean handleLogout(String currentUserName) {
-		// TODO Close active socket connection and streams
-		return true;
+
+		if(DEBUG)
+			return true;
+
+		Message message = new Message();
+		message.setUserName(currentUserName);
+
+		message.setType(Message.MessageType.Client_Logout);
+
+		message.setBody(0);
+		message.setChecksum(message.generateCheckSum());
+		
+		socket.sendEncrypted(aes.encrypt(message));
+		byte[] encMessage = socket.receiveEncrypted();
+		
+		Message response = (Message) aes.decryptObject(encMessage);
+		
+		return (response.getCode() == 1)? true : false;	
 	}
 	
 	/**

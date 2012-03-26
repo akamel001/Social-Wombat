@@ -146,8 +146,9 @@ class SocketPackage {
 			oos.flush();
 			oos.reset();
 		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("System send failed");
+			//e.printStackTrace();
+			System.out.println("System send encrypted failed");
+			System.exit(-1);
 		}
 	}
 	
