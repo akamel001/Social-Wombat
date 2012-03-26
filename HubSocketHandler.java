@@ -140,9 +140,10 @@ public class HubSocketHandler extends Thread{
 		// check existence of username
 		if (password == null){
 			//send back error code
-			//TODO: send back
 			Message returnMsg = new Message();
-			
+			returnMsg.setType(Message.MessageType.Client_LogIn);
+			returnMsg.setCode(-1);
+			returnMessage(returnMsg);
 			if(DEBUG) System.out.println("Attempted intrusion by: " + usr);
 			
 			return false;
