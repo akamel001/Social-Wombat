@@ -20,8 +20,9 @@ public class SysAdminInterface {
 	private static final String sHOME_PAGE = 				UserInterfaceHelper.addFormattingAlignCenter("SYSTEM HOME"); 
 	private static final String sSYSTEM_USER_LIST_PAGE = 	UserInterfaceHelper.addFormattingAlignCenter("SYSTEM USER LIST");
 	private static final String sSYSTEM_REGISTRATION_PAGE = UserInterfaceHelper.addFormattingAlignCenter("SYSTEM REGISTRATION");
-	private static final String sSYSTEM_CHANGE_PASSWORD_PAGE = UserInterfaceHelper.addFormattingAlignCenter("SYSTEM PASSWORD CHANGE");
+	private static final String sSERVER_LIST_PAGE = 		UserInterfaceHelper.addFormattingAlignCenter("SERVER LIST");
 	private static final String sADD_SERVER_PAGE = 			UserInterfaceHelper.addFormattingAlignCenter("ADD SERVER");
+	private static final String sSYSTEM_CHANGE_PASSWORD_PAGE = UserInterfaceHelper.addFormattingAlignCenter("SYSTEM PASSWORD CHANGE");
 	
 	private static final String sDEFAULT_HOME_OPTION = 		UserInterfaceHelper.addFormattingAlignLeft("1. Go back to system home.");
 	private static final String sSYSTEM_HOME_PAGE_OPTIONS_HUB_RUNNING =	UserInterfaceHelper.addFormattingAlignLeft("1. View users enrolled in the system.") +
@@ -235,7 +236,7 @@ public class SysAdminInterface {
 			content = listToUIString(serverList);
 		}
 		
-		displayPage(sDEFAULT_HOME_OPTION, messages, null, content, sDEFAULT_HOME_OPTION);
+		displayPage(sSERVER_LIST_PAGE, messages, null, content, sDEFAULT_HOME_OPTION);
 		int selection = getValidSelectionFromUser(1);
 		
 		switch (selection) {
