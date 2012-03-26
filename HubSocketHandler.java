@@ -462,7 +462,7 @@ public class HubSocketHandler extends Thread{
 		while (listen && valid){
 			
 			//Wait, read and deserialize Message from Socket
-			if (DEBUG) System.out.println("getting and decrypting msg");
+			if (DEBUG) System.out.println("Waiting for next msg");
 			
 			valid = getAndDecryptMessage();
 			
@@ -534,7 +534,15 @@ public class HubSocketHandler extends Thread{
 						//if all success, then change pass
 						if (allowed){
 							if (DEBUG) System.out.println("Client change password allowed, changing...");
-							userList.changeUserPassword(currentUser, body.get(1), hubAESObject);
+							int ret = userList.changeUserPassword(currentUser, body.get(1), hubAESObject);
+							if(ret==1){
+								//successful system change
+								if (DEBUG) System.out.println("userList password changed");
+							} else{
+								//not successful
+								if (DEBUG) System.out.println("userList password not changed");
+								allowed = false;
+							}
 						} 
 						//clear new passwords
 						Arrays.fill(body.get(1), '0');
