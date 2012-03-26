@@ -65,7 +65,7 @@ public class Client {
 
 		ArrayList<Long> list = new ArrayList<Long>();
 		list.add(0, c.getTimeInMillis());
-		System.out.println("Seinding time in sec: " + list.get(0));
+		if(DEBUG) System.out.println("Seinding time in sec: " + list.get(0));
 		list.add(1, nonce);
 		
 		message.setBody(list);

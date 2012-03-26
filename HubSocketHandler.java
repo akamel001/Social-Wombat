@@ -1,4 +1,5 @@
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -108,6 +109,8 @@ public class HubSocketHandler extends Thread{
 			}
 			else
 				msg = firstMessage; // ADDED by cd 3/21/12
+		} catch (EOFException e){
+			System.out.println("Unable to read from socket. Socket possibly closed.");
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
@@ -298,6 +301,10 @@ public class HubSocketHandler extends Thread{
 			//read the length of the byte [] first
 			try {
 				length = ois.readInt();
+				
+			} catch (EOFException e){
+				System.out.println("Unable to read from socket. Socket possibly closed.");
+				return false;
 			} catch (IOException e) {
 				e.printStackTrace();
 				return false;
@@ -310,6 +317,9 @@ public class HubSocketHandler extends Thread{
 				
 				ois.read(encryptedMsg, 0, length);
 				//ois.readFully(encryptedMsg);
+			} catch (EOFException e){
+				System.out.println("Unable to read from socket. Socket possibly closed.");
+				return false;
 			} catch (IOException e) {
 				e.printStackTrace();
 				return false;
