@@ -21,6 +21,7 @@ YilokTest.java
 YilokTest2.java
 *.goutputstream*
 *.sh
+.metadata*
 system_startup
 
 system_startup
