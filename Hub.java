@@ -292,21 +292,30 @@ class Hub extends Thread {
 		
 		if(DEBUG) System.out.println("Authentication reply received.");
 		
+		//null check
+		if (reply==null){
+			if(DEBUG) System.out.println("Authentication reply was null, stopping authenitcated connect with " + socketPack.getSocketName());
+			return;
+		}
+		
 		//decrypt body
 		byte[] encryptedBody = (byte[])reply.getBody();
 		ArrayList<Long> replyBody = (ArrayList<Long>)socketAES.decryptObject(encryptedBody);
 		if (replyBody == null){
 			System.out.println("unable to decrypt msg body");
 		}
+		//reset the body to the decrypted body
 		reply.setBody(replyBody);
-		
+		if (DEBUG) System.out.println("reply body checksum: " + CheckSum.getChecksum(replyBody));
 		boolean verified = true;
 		//verify fields
 		long newChecksum = CheckSum.getChecksum(reply);
 		long oldChecksum = reply.getChecksum();
 		
 		if(newChecksum != oldChecksum){
-			if(DEBUG) System.out.print("HUB: checksums don't match."); // TODO: when connecting to a server, the connection seems overall successful, however, the checksums don't match
+			if(DEBUG) System.out.println("HUB: checksums don't match."); // TODO: when connecting to a server, the connection seems overall successful, however, the checksums don't match
+			if(DEBUG) System.out.println("New checksum: " + newChecksum);
+			if(DEBUG) System.out.println("Old checksum: " + oldChecksum);
 			verified = false;
 		}
 		//get body fields

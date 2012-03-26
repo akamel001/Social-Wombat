@@ -149,6 +149,7 @@ public class ServerSocketHandler {
 			returnMsg.setBody(returnBody);
 			//set checksum
 			long checksum = returnMsg.generateCheckSum();
+			if(DEBUG) System.out.println("Generated checksum is: " + checksum);
 			returnMsg.setChecksum(checksum);
 			returnMsg.setBody(serverAESObject.encrypt(returnBody));
 			

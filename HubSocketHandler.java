@@ -165,7 +165,7 @@ public class HubSocketHandler extends Thread{
 
 		ArrayList<Long> body = (ArrayList<Long>)clientAESObject.decryptObject(encryptedBody);
 		if (body==null){
-			if (DEBUG) System.out.println("unable to decrypt msg body");
+			if (DEBUG) System.out.println("unable to decrypt msg body or invalid authentications");
 			return false;
 		}
 		
