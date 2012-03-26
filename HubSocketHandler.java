@@ -183,15 +183,19 @@ public class HubSocketHandler extends Thread{
 		
 		if (DEBUG) System.out.println("Client authentication allowed. Sending back appropriate reply");
 		
+		currentUser = firstMessage.getUserName();
+		
 		//check if the user is already logged in
 		if (currentUsers.containsKey(firstMessage.getUserName())){
 			if (DEBUG) System.out.println("User is already logged in");
 			return false;
 		}
+		
 		// add the users to the current list
 		currentUsers.put(firstMessage.getUserName(), 1);
-		currentUser = firstMessage.getUserName();
 		
+
+		if(DEBUG) System.out.println("Set CurrentUser: " + currentUser);
 		//Update the login
 		lastLogin = updateLastLogin(usr,socket.getInetAddress());
 		
@@ -454,7 +458,7 @@ public class HubSocketHandler extends Thread{
 			if (DEBUG) System.out.println("message decryption attempted, valid: " + valid);
 			
 			//check that the user is still the same 
-			if (currentUser != msg.getUserName()){
+			if (!currentUser.contains(msg.getUserName())){
 				if (DEBUG) System.out.println("Mismatch in the authenticated user and current user");
 				valid = false;
 			}
@@ -707,10 +711,12 @@ public class HubSocketHandler extends Thread{
 						break;
 				}
 			}
-			//If the thread exits, then it means that the user is no longer logged in
-			if (DEBUG) System.out.println(currentUser + " session has ended, removing them from current user map.");
-			currentUsers.remove(currentUser);
 		}
+
+		if(DEBUG) System.out.println("Connected users: \n===> " + currentUsers.toString());
+		//If the thread exits, then it means that the user is no longer logged in
+		if (DEBUG) System.out.println(currentUser + " session has ended, removing them from current user map.");
+		currentUsers.remove(currentUser);
 	}
 } 
 	
