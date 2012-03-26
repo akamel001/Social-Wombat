@@ -134,7 +134,7 @@ public final class Client {
 	 * @return
 	 */
 	public boolean handleLogout(String currentUserName) {
-
+		// TODO Close active socket connection and streams
 		return true;
 	}
 	

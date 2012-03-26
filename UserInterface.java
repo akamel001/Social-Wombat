@@ -197,7 +197,6 @@ public class UserInterface {
 	        break;
 	    // Log out.
 	    case 5:
-	    	
 	    	if (client.handleLogout(currentUserName)){
 	    		currentUserName = null;
 				loginPage(mLOG_OUT_SUCCESS);
