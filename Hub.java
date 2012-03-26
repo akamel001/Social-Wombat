@@ -528,6 +528,6 @@ class Hub extends Thread {
 		writeToDisk(serverList, serverListName);
 		
 		if (DEBUG) System.out.println("Hub shut down.");
-		if (DEBUG) System.out.println("listening volatile variable should be false " + listening);
+		if (DEBUG) System.out.println("listening volatile variable should be false, it is currently: " + listening);
 	}
 }

@@ -488,11 +488,12 @@ public class HubSocketHandler extends Thread{
 				if (DEBUG) System.out.println("Hub was shutdown, closing this corresponding spawned thread.");
 				//hub is shutdown
 				Message shutdownMsg = new Message();
+				shutdownMsg.setType(Message.MessageType.Hub_Shutdown);
 				shutdownMsg.setCode(-1);
 				returnAndEncryptMessage(shutdownMsg);
 				listen = false;
 				valid = false;
-				//need to remove user since we dont' reach end of thread now
+				//need to remove user since we don't reach end of thread now
 				currentUsers.remove(currentUser);
 				return;
 			}
@@ -503,14 +504,7 @@ public class HubSocketHandler extends Thread{
 				valid = false;
 			}
 			
-			/*
-			 * Start debug
-			 */
-			
 			if (DEBUG) System.out.println("user name is: " + msg.getUserName());
-			/*
-			 * End debug
-			 */
 			
 			if (msg == null){
 				System.out.println("Message was null");
