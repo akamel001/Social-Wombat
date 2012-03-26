@@ -72,8 +72,14 @@ public class UserInterfaceHelper {
 	public static String addFormattingAlignLeft(String string) {
 		String formattedString = "| ";
 		formattedString = formattedString.concat(string);
-		for (int i = 0; i < iWINDOWWIDTH - string.length() - 1; i++){
-			formattedString = formattedString.concat(" ");
+		if (string.contains("%%")) { // this relies on the fact that the percent symbol is used only once within a line
+			for (int i = 0; i < iWINDOWWIDTH - string.length(); i++){
+				formattedString = formattedString.concat(" ");
+			}
+		} else {
+			for (int i = 0; i < iWINDOWWIDTH - string.length() - 1; i++){
+				formattedString = formattedString.concat(" ");
+			}
 		}
 		formattedString = formattedString.concat("|" + sNEW_LINE);
 		return formattedString;

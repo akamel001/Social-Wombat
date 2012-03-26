@@ -168,7 +168,9 @@ public final class AES implements Serializable {
 			Object obj = toObject(dcipher.doFinal(o));	
 			return obj;
         } catch (javax.crypto.BadPaddingException e) {
-        	e.printStackTrace();
+        	//e.printStackTrace();
+			System.out.println("Bad padding Exception. Probably bad IV");
+			return null;
         } catch (IllegalBlockSizeException e) {
         	e.printStackTrace();
         } catch (Exception e){

@@ -1,4 +1,5 @@
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -108,6 +109,8 @@ public class HubSocketHandler extends Thread{
 			}
 			else
 				msg = firstMessage; // ADDED by cd 3/21/12
+		} catch (EOFException e){
+			System.out.println("Unable to read from socket. Socket possibly closed.");
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
@@ -137,9 +140,10 @@ public class HubSocketHandler extends Thread{
 		// check existence of username
 		if (password == null){
 			//send back error code
-			//TODO: send back
 			Message returnMsg = new Message();
-			
+			returnMsg.setType(Message.MessageType.Client_LogIn);
+			returnMsg.setCode(-1);
+			returnMessage(returnMsg);
 			if(DEBUG) System.out.println("Attempted intrusion by: " + usr);
 			
 			return false;
@@ -162,7 +166,12 @@ public class HubSocketHandler extends Thread{
 
 		ArrayList<Long> body = (ArrayList<Long>)clientAESObject.decryptObject(encryptedBody);
 		if (body==null){
-			if (DEBUG) System.out.println("unable to decrypt msg body");
+			if (DEBUG) System.out.println("unable to decrypt msg body or invalid authentications");
+			//return an invalid login occured
+			Message returnMsg = new Message();
+			returnMsg.setType(Message.MessageType.Client_LogIn);
+			returnMsg.setCode(-1);
+			returnMessage(returnMsg);
 			return false;
 		}
 		
@@ -298,6 +307,10 @@ public class HubSocketHandler extends Thread{
 			//read the length of the byte [] first
 			try {
 				length = ois.readInt();
+				
+			} catch (EOFException e){
+				System.out.println("Unable to read from socket. Socket possibly closed.");
+				return false;
 			} catch (IOException e) {
 				e.printStackTrace();
 				return false;
@@ -310,6 +323,9 @@ public class HubSocketHandler extends Thread{
 				
 				ois.read(encryptedMsg, 0, length);
 				//ois.readFully(encryptedMsg);
+			} catch (EOFException e){
+				System.out.println("Unable to read from socket. Socket possibly closed.");
+				return false;
 			} catch (IOException e) {
 				e.printStackTrace();
 				return false;
@@ -455,8 +471,10 @@ public class HubSocketHandler extends Thread{
 		boolean valid = true;
 		
 		//Authenticate, if listen is false, the socket is problematic, close connections
-		listen = authenticate();
-		
+		//loop to allow continuous authentication
+		while(!listen){
+			listen = authenticate();
+		}
 		//All further communications
 		while (listen && valid){
 			
