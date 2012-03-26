@@ -1,7 +1,17 @@
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class HubSocketHandler extends Thread{
 	//private static int CLIENT_SOCKET = 4444;
@@ -227,9 +237,9 @@ public class HubSocketHandler extends Thread{
 			return true;
 		}
 		
+		
 		// TODO: if user login fails, sleep for .2 to .8 seconds
-		// 
-		/*
+		
 		SecureRandom s = new SecureRandom();
 		int pause = (int)((s.nextDouble()*600)+200);
 		try {
@@ -237,7 +247,7 @@ public class HubSocketHandler extends Thread{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		*/
+		
 		return false;
 	}
 	
@@ -451,7 +461,7 @@ public class HubSocketHandler extends Thread{
 		while (listen && valid){
 			
 			//Wait, read and deserialize Message from Socket
-			if (DEBUG) System.out.println("getting and decrypting msg");
+			if (DEBUG) System.out.println("Waiting for next msg");
 			
 			valid = getAndDecryptMessage();
 			
@@ -494,8 +504,58 @@ public class HubSocketHandler extends Thread{
 					// Client -> Hub
 					
 					case Client_ChangePassword:
-						//TODO: do
+						//body: ArrayList<char[]> 
+						boolean allowed = true;
+						ArrayList<char[]> body = (ArrayList<char[]>) msg.getBody();
+						//[0] = oldpass, [1] new pass, [2] confirm new pass, [3] tempusername
 						
+						//check temp username matches provided username
+						if (!Arrays.equals(body.get(3),msg.getUserName().toCharArray())){
+							allowed = false;
+						}
+						//check username matches our currentUsername
+						if (!currentUser.equals(msg.getUserName())){
+							allowed = false;
+						}
+						//lookup pass
+						char[] oldPass = userList.getUserPass(msg.getUserName(), hubAESObject);
+						//check oldpass matches with lookup pass
+						if(!Arrays.equals(oldPass, body.get(0))){
+							allowed = false;
+						}
+						//clear oldpass
+						Arrays.fill(oldPass, '0');
+						Arrays.fill(body.get(0), '0');
+						//check newpass arrays.equals confirm new pass
+						if(!Arrays.equals(body.get(1), body.get(2))){
+							allowed = false;
+						}
+						//if all success, then change pass
+						if (allowed){
+							if (DEBUG) System.out.println("Client change password allowed, changing...");
+							int ret = userList.changeUserPassword(currentUser, body.get(1), hubAESObject);
+							if(ret==1){
+								//successful system change
+								if (DEBUG) System.out.println("userList password changed");
+							} else{
+								//not successful
+								if (DEBUG) System.out.println("userList password not changed");
+								allowed = false;
+							}
+						} 
+						//clear new passwords
+						Arrays.fill(body.get(1), '0');
+						Arrays.fill(body.get(2),'0');
+						//reset msg
+						msg = new Message();
+						if (allowed){
+							msg.setCode(1);
+						} else {
+							if (DEBUG) System.out.println("Client change password wasn't allowed.");
+							msg.setCode(-1);
+						}
+						//return
+						returnAndEncryptMessage(msg);
 						break;
 				
 					// Returns in body all users in a classroom
@@ -614,8 +674,7 @@ public class HubSocketHandler extends Thread{
 						c.setClassName(msg.getClassroom_ID());
 						
 						//Generate some server number
-						//TODO: Use SecureRandom!!!
-						Random r = new Random();
+						SecureRandom r = new SecureRandom();
 						int maxServer = serverList.getLastServer();
 						int serverNum = r.nextInt(maxServer) + 1;
 						

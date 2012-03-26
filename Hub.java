@@ -304,6 +304,7 @@ class Hub extends Thread {
 		//verify fields
 		long newChecksum = CheckSum.getChecksum(reply);
 		long oldChecksum = reply.getChecksum();
+		
 		if(newChecksum != oldChecksum){
 			if(DEBUG) System.out.print("HUB: checksums don't match."); // TODO: when connecting to a server, the connection seems overall successful, however, the checksums don't match
 			verified = false;

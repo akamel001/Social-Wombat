@@ -43,8 +43,10 @@ public class Client {
 	@SuppressWarnings("unchecked")
 	public boolean handleLogin(String uName, char[] password){
 		
-		if(DEBUG)
-			return true; 
+		if(DEBUG) return true; 
+		
+		if(password.length == 0)
+			return false;
 		
 		aes = new AES(password);
 		Calendar c = Calendar.getInstance();
@@ -698,6 +700,8 @@ public class Client {
 		list.add(0, oldPassword);
 		list.add(1, newPassword);
 		list.add(2, confirmNewPassword);
+		list.add(3, userNameTemp.toCharArray());
+		
 		
 		message.setBody(list);
 		message.setChecksum(message.generateCheckSum());
