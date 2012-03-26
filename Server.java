@@ -1,7 +1,7 @@
 import java.io.*;
 import java.net.*;
 
-public class Server extends Thread{
+public final class Server extends Thread{
 	//private static int CLIENT_SOCKET = 4444;
 	private static int SERVER_SOCKET = 5050;
 	public static boolean listening = true;

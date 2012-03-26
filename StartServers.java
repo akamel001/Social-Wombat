@@ -1,5 +1,5 @@
 
-public class StartServers {
+public final class StartServers {
 
 	/**
 	 * Pretends to be a sys admin to start up multiple servers

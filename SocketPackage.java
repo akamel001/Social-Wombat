@@ -6,7 +6,7 @@ import java.io.*;
  * methods to send & flush, other setup/tear down methods
  */
 
-class SocketPackage {
+public final class SocketPackage {
 	private Socket socket = null;
 	private int port;
 	private InetAddress addr;

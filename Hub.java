@@ -6,7 +6,7 @@ import java.security.SecureRandom;
 
 //Hub class. Handles communication between data servers and clients
 // Hub does authentication and forwards messages to the servers. 
-class Hub extends Thread {
+public final class Hub extends Thread {
 	
 	private static int CLIENT_SOCKET = 4444;
 	private static int SERVER_SOCKET = 5050;

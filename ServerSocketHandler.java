@@ -6,9 +6,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Map;
 
-//TODO: check permissions on the server.
-
-public class ServerSocketHandler {
+final class ServerSocketHandler {
 	//private static int SERVER_SOCKET = 5050;
 	
 	static Message msg = new Message();
