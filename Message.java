@@ -59,7 +59,8 @@ public class Message implements Serializable{
 	    Client_DeleteComment,	//also known as remove comment
 
 	    // Hub -> Server
-	    Hub_AuthServer
+	    Hub_AuthServer,
+	    Hub_Shutdown
 	}
 
 //	public Message(){
