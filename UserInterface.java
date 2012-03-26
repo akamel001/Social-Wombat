@@ -14,7 +14,7 @@ import java.util.TreeMap;
  * the client class.
  * 
  */
-public class UserInterface {
+public final class UserInterface {
 	
 	static Console console;
 	static Client client;

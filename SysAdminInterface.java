@@ -9,7 +9,7 @@ import java.util.Map.Entry;
  * This is the system administrator interface for Social Wombat.
  * 
  */
-public class SysAdminInterface {
+public final class SysAdminInterface {
 	
 	static Console console;
 	static Hub hub;

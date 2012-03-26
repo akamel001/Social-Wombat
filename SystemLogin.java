@@ -18,7 +18,7 @@ import javax.crypto.SecretKey;
 
 // TODO: black out sensitive variables
 
-public class SystemLogin implements Serializable {
+public final class SystemLogin implements Serializable {
 	private static final long serialVersionUID = 732364698179994154L;
 	// This is the hub key encrypted with the system admin password.
 	private byte[] hub_key_enc;

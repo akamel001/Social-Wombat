@@ -29,7 +29,7 @@ public class StringLegalityChecker {
 	 * @param str
 	 * @return true if the password legality requirements are satisfied; false otherwise
 	 */
-	public static boolean checkIfPasswordStringIsLegal(char [] pw){
+	public final static boolean checkIfPasswordStringIsLegal(char [] pw){
 		if (pw.length < 8 || pw.length > 25) { // Check that the password's length is at least 8 and at most 25 characters.
 			return false;
 		}
