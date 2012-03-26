@@ -100,7 +100,7 @@ public class SysAdminInterface {
 	private static void systemHomePage(String messages) {	
 		if (hubIsRunning == true) {
 			displayPage(sHOME_PAGE, messages, sHUB_IS_RUNNING, null, sSYSTEM_HOME_PAGE_OPTIONS_HUB_RUNNING);
-			int selection = getValidSelectionFromUser(7);
+			int selection = getValidSelectionFromUser(8);
 			
 			switch (selection) {
 			// View users enrolled in the system.
