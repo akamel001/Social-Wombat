@@ -212,7 +212,17 @@ public class SysAdminInterface {
 	 * @param messages
 	 */
 	private static void systemRegistrationPage(String messages) {
-		displayPage(sSYSTEM_REGISTRATION_PAGE, messages, null, null, sREGISTRATION_INSTRUCTIONS);	
+		String content = UserInterfaceHelper.addFormattingAlignLeft("Username requirements:") +			
+				UserInterfaceHelper.addFormattingAlignLeft("* may only contain alphanumerics and underscore characters") +
+				UserInterfaceHelper.addFormattingAlignLeft("* must be at least 3 and at most 30 characters long") +
+				UserInterfaceHelper.addFormattingAlignLeft("Password requirements:") +
+				UserInterfaceHelper.addFormattingAlignLeft("* may only contain alphanumerics and the special characters !@#$%%^&*-=_+") + 
+				UserInterfaceHelper.addFormattingAlignLeft("* must be at least 8 and at most 25 characters long") +
+				UserInterfaceHelper.addFormattingAlignLeft("* must contain at least one uppercase letter") +
+				UserInterfaceHelper.addFormattingAlignLeft("* must contain at least one lowercase letter") + 
+				UserInterfaceHelper.addFormattingAlignLeft("* must contain at least one number") +
+				UserInterfaceHelper.addFormattingAlignLeft("* must contain at least one special character."); // informs the system admin of the password requirements
+		displayPage(sSYSTEM_REGISTRATION_PAGE, messages, null, content, sREGISTRATION_INSTRUCTIONS);	
 		String userNameTemp = console.readLine("User Name? ");
 		char[] password = console.readPassword("Password? ");
 		
@@ -271,7 +281,14 @@ public class SysAdminInterface {
 	 * @param messages
 	 */
 	private static void systemChangePasswordPage(String messages) {
-		displayPage(sSYSTEM_CHANGE_PASSWORD_PAGE, messages, null, null, sCHANGE_PASSWORD_INSTRUCTIONS);	
+		String content = UserInterfaceHelper.addFormattingAlignLeft("Password requirements:") +
+				UserInterfaceHelper.addFormattingAlignLeft("* may only contain alphanumerics and the special characters !@#$%%^&*-=_+") + 
+				UserInterfaceHelper.addFormattingAlignLeft("* must be at least 8 and at most 25 characters long") +
+				UserInterfaceHelper.addFormattingAlignLeft("* must contain at least one uppercase letter") +
+				UserInterfaceHelper.addFormattingAlignLeft("* must contain at least one lowercase letter") + 
+				UserInterfaceHelper.addFormattingAlignLeft("* must contain at least one number") +
+				UserInterfaceHelper.addFormattingAlignLeft("* must contain at least one special character."); // informs the system admin of the password requirements
+		displayPage(sSYSTEM_CHANGE_PASSWORD_PAGE, messages, null, content, sCHANGE_PASSWORD_INSTRUCTIONS);	
 		char[] oldPassword = console.readPassword("Old Password? ");
     	char[] newPassword = console.readPassword("New Password? ");    	
     	char[] confirmNewPassword = console.readPassword("Confirm New Password? ");

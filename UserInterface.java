@@ -218,7 +218,7 @@ public class UserInterface {
 	private static void changePasswordPage(String messages) {
 		String info = UserInterfaceHelper.addFormattingAlignLeft("Logged in as " + currentUserName + ".");
 		String content = UserInterfaceHelper.addFormattingAlignLeft("Password requirements:") +
-						UserInterfaceHelper.addFormattingAlignLeft("* may only contain alphanumerics and the special characters @#$%%^&+=") + 
+						UserInterfaceHelper.addFormattingAlignLeft("* may only contain alphanumerics and the special characters !@#$%%^&*-=_+") + 
 						UserInterfaceHelper.addFormattingAlignLeft("* must be at least 8 and at most 25 characters long") +
 						UserInterfaceHelper.addFormattingAlignLeft("* must contain at least one uppercase letter") +
 						UserInterfaceHelper.addFormattingAlignLeft("* must contain at least one lowercase letter") + 
