@@ -157,6 +157,11 @@ public class HubSocketHandler extends Thread{
 		//null check aes object
 		if (clientAESObject == null){
 			if (DEBUG) System.out.println("clientAESObject creation failed");
+			//return an invalid login occured
+			Message returnMsg = new Message();
+			returnMsg.setType(Message.MessageType.Client_LogIn);
+			returnMsg.setCode(-1);
+			returnMessage(returnMsg);
 			return false;
 		}
 		

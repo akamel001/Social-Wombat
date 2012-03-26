@@ -306,10 +306,9 @@ class Hub extends Thread {
 		}
 		//reset the body to the decrypted body
 		reply.setBody(replyBody);
-		if (DEBUG) System.out.println("reply body checksum: " + CheckSum.getChecksum(replyBody));
 		boolean verified = true;
 		//verify fields
-		long newChecksum = CheckSum.getChecksum(reply);
+		long newChecksum = reply.generateCheckSum();
 		long oldChecksum = reply.getChecksum();
 		
 		if(newChecksum != oldChecksum){
