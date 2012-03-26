@@ -50,7 +50,7 @@ public final class ServerList implements Serializable{
 		// Check if the password is legal
 		if(!StringLegalityChecker.checkIfPasswordStringIsLegal(pass))
 			return -1;
-		*/
+		*/	
 		
 		// check to see if ip/port combo exists
 		// if it does, disallow

@@ -31,11 +31,14 @@ public final class ClassDB implements Serializable{
 	 * @return Returns 1 if the class was added, -1 if it already exists.
 	 */
 	public int addClassRoom(String class_name, AES encryptor){
+		// sanity check
+		if (class_name==null || encryptor==null)
+			return -1;
+		
 		synchronized(classRoomList){
-			if (class_name==null || classRoomList.containsKey(class_name))
+			if(classRoomList.containsKey(class_name))
 				return -1;
 			else{
-				
 				// Create new class with given name
 				ClassRoom class_in = new ClassRoom(class_name, nextClass++);
 				
@@ -68,6 +71,7 @@ public final class ClassDB implements Serializable{
 	 * @return Returns 1 if the post was added, -1 if it was not.
 	 */
 	public int addPost(String class_name, String post_title, String post_body, AES encryptor){
+		
 		// Sanity checks
 		if (class_name==null || post_title==null || post_body==null || encryptor==null)
 			return -1;
@@ -222,7 +226,7 @@ public final class ClassDB implements Serializable{
 	 * @return Returns 1 if any classes have been deleted.
 	 */
 	public int deleteClasses(List<String> toBeDeleted){
-		if (toBeDeleted.isEmpty())
+		if (toBeDeleted.isEmpty() || toBeDeleted==null)
 			return -1;
 		else{
 			Iterator<String> i = toBeDeleted.iterator(); 

@@ -107,7 +107,7 @@ public final class UserList implements Serializable{
 	 */
 	public int addUser(String new_id, char[] pass, AES encryptor){
 		// Sanity checks
-		if (new_id==null || pass.length==0){
+		if (new_id==null || pass==null || encryptor==null){
 			return -1;
 		}
 
@@ -115,11 +115,10 @@ public final class UserList implements Serializable{
 		if(!StringLegalityChecker.checkIfUsernameStringIsLegal(new_id))
 			return -1;
 		
-		/* TODO: DELETE COMMENTS!!!
 		// Check if the password is legal
 		if(!StringLegalityChecker.checkIfPasswordStringIsLegal(pass))
 			return -1;
-		*/
+
 		synchronized(user_list){
 			if (!user_list.containsKey(new_id)){
 				User new_guy = new User(new_id, pass);
@@ -142,7 +141,7 @@ public final class UserList implements Serializable{
 	 *                    or (c) User does not exist
 	 */
 	public int changeUserPassword(String user_name, char[] p, AES encryptor){
-		if(user_name==null || p==null || encryptor==null || !user_list.containsKey(user_name))
+		if(user_name==null || p==null || encryptor==null)
 			return -1;
 		
 		// Check if the password is legal
@@ -236,7 +235,10 @@ public final class UserList implements Serializable{
 	 *  with the returned User to zero out the user's password!!!!
 	 */
 	public User getUser(String user_name, AES decryptor){
-		return this.getAndDecryptUser(user_name, decryptor);
+		if (user_name==null || decryptor==null || !user_list.containsKey(user_name))
+			return null;
+		else
+			return this.getAndDecryptUser(user_name, decryptor);
 	}
 	
 
@@ -249,12 +251,11 @@ public final class UserList implements Serializable{
 	public int removeUser(String user_name){
 		if (user_name==null)
 			return -1;
-		if (user_list.remove(user_name)!=null){
-			return 1;
+		if (user_list.remove(user_name)==null){
+			return -1;
 		}
 		else
-			
-			return -1;
+			return 1;
 	}
 	
 	/**
@@ -283,7 +284,7 @@ public final class UserList implements Serializable{
 	 * @return User on success, null on failure
 	 */
 	private User getAndDecryptUser(String user_name, AES encryptor){
-		if( user_name==null || encryptor==null)
+		if(user_name==null || encryptor==null || !user_list.containsKey(user_name))
 			return null;
 		try{
 			byte[] cipher = user_list.get(user_name);
@@ -299,6 +300,10 @@ public final class UserList implements Serializable{
 	 * @return Returns a list with every user
 	 */
 	public List<String> getAllUsers(AES encryptor){
+		// Sanity checks
+		if (encryptor==null)
+			return null;
+		
 		List<String> list_out = Collections.synchronizedList(new ArrayList<String>());
 		Set<String> s = user_list.keySet();
 		synchronized(user_list) {

@@ -32,11 +32,11 @@ public final class ClassRoom implements Serializable{
 	 * @param i The identifier for the class.
 	 */
 	protected ClassRoom(String n, int i){
+		if (n==null)
+			n = "Generic class name " + i; // Should be caught at ClassDB
 		if (n.length()>maxNameLength)
 			n = n.substring(0, maxNameLength-1);
 		name = n;
-		if (n.length()==0)
-			n = "[no class title]"; // Should be caught at ClassDB
 		idNum = i;
 		postList = Collections.synchronizedMap(new TreeMap<Integer, Post>());
 	}
@@ -112,16 +112,6 @@ public final class ClassRoom implements Serializable{
 		}
 		return out;
 	}
-	
-	/*
-	  Returns the post list for a class.
-	  @return Returns a map (Integer,String) containing all the posts for the class.
-	 
-	 DEPRECATED
-	protected Map<Integer, Post> getClassRoom(){
-		return postList;
-	}
-	*/
 
 	/**
 	 * Returns a thread.
@@ -136,6 +126,7 @@ public final class ClassRoom implements Serializable{
 		else
 			return p.getThread();
 	}
+	
 	/**
 	 * Returns a list of the titles of all the threads in a class.
 	 * @return Returns a list of Integers mapped to Strings w
@@ -171,45 +162,5 @@ public final class ClassRoom implements Serializable{
 	 */
 	protected String getName(){
 		return name;
-	}
-	
-	@Override public String toString(){
-		return getThreadList().toString();
-	}
-	
-	public static void main(String [ ] args){
-		ClassRoom c = new ClassRoom("Classname_adsf", 1);
-		
-		// TEST 1: add a comment to a non existent post
-		if (c.addComment(1, "THIS SHOULD FAIL")==-1)
-			System.out.println("TEST 1 passed");
-		else
-			System.out.println("TEST 1 failed");
-		
-		// Add posts
-		c.addNewPost("Post 1 Title", "Lorum ipsum, etc,ect");
-		c.addNewPost("Post 2 Title", "Lorum ipsum, etc,ect");
-		System.out.println(c.toString());
-		
-		// Add comments
-		// TEST 2: add a comment to a non existent post
-		if (c.addComment(-1, "THIS SHOULD FAIL")==-1)
-			System.out.println("TEST 2 passed");
-		else
-			System.out.println("TEST 2 failed");
-		
-		c.addComment(1, "this is a comment for post 1");
-		c.addComment(1, "this yadda yadda yadda post 1");
-		System.out.println(c.getThread(1).toString());
-		c.removeComment(1, 3);
-		// TEST 1: add a comment to a non existent post
-		if (c.removeComment(1,3)==-1)
-			System.out.println("TEST 3 passed");
-		else
-			System.out.println("TEST 3 failed");
-		
-		System.out.println(c.getThread(1).toString());
-		System.out.println(c.toString());
-		
 	}
 }

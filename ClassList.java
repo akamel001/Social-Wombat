@@ -35,6 +35,8 @@ public class ClassList implements Serializable{
 	 * @return 1 on success, -1 on failure
 	 */
 	protected int addClass(ClassData class_data, AES encryptor){
+		if(class_data==null || encryptor==null)
+			return -1;
 		return encryptAndAddClass(class_data, encryptor);
 	}
 
@@ -196,6 +198,10 @@ public class ClassList implements Serializable{
 	 * student, 2 indicates a TA, 3 indicates an instructor.
 	 */
 	protected Map<String, Integer> getUserEnrollment(String userName, AES encryptor){
+		// Sanity check
+		if(userName==null || encryptor==null)
+			return null;
+		
 		Map<String, Integer> out = Collections.synchronizedMap(new TreeMap<String, Integer>());
 		boolean found = false;
 		Set<String> s = classList.keySet();
@@ -272,6 +278,10 @@ public class ClassList implements Serializable{
 	 * @return Returns a List<String> containing all of the classes in which the user is in an instructor.
 	 */
 	public List<String> deleteUser(String userName, AES encryptor){
+		//sanity check
+		if(userName==null || encryptor==null)
+			return null;
+		
 		List<String> classesToBeDeleted = Collections.synchronizedList(new ArrayList<String>());
 		Set<String> s = classList.keySet();
 		synchronized(classList) {  
@@ -341,6 +351,10 @@ public class ClassList implements Serializable{
 	 * @return The ClassData on success, null on failure
 	 */
 	private ClassData getAndDecryptClass(String class_name, AES encryptor){
+		// sanity check
+		if (class_name==null || encryptor==null)
+			return null;
+
 		byte[] cipher = classList.get(class_name);
 		if (cipher==null)
 			return null;
