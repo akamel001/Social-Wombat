@@ -1,7 +1,18 @@
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 public class HubSocketHandler extends Thread{
 	//private static int CLIENT_SOCKET = 4444;
@@ -227,9 +238,9 @@ public class HubSocketHandler extends Thread{
 			return true;
 		}
 		
+		
 		// TODO: if user login fails, sleep for .2 to .8 seconds
-		// 
-		/*
+		
 		SecureRandom s = new SecureRandom();
 		int pause = (int)((s.nextDouble()*600)+200);
 		try {
@@ -237,7 +248,7 @@ public class HubSocketHandler extends Thread{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		*/
+		
 		return false;
 	}
 	
