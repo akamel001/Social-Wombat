@@ -501,8 +501,7 @@ class Hub extends Thread {
 									serverList,
 									serverPackages,
 									hubAESObject,
-									currentUsers,
-									listening);
+									currentUsers);
 					if(DEBUG) System.out.println("Accepted a connection from: "+ client.getInetAddress());
 					//Starts running the new thread
 					newRequest.start(); 
