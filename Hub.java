@@ -10,7 +10,7 @@ class Hub extends Thread {
 	
 	private static int CLIENT_SOCKET = 4444;
 	private static int SERVER_SOCKET = 5050;
-	private static volatile boolean listening = true;
+	static volatile boolean listening = true;
 	private static volatile boolean demo = false;
 	
 	static ClassList classList;
@@ -514,7 +514,6 @@ class Hub extends Thread {
 				System.out.println("Accept failed on port: " + CLIENT_SOCKET + " : " + e.toString());
 			}
 		}
-		
 		//Close socket after done listening
 		try {
 			hubSocket.close();

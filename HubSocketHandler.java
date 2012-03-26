@@ -483,6 +483,20 @@ public class HubSocketHandler extends Thread{
 			valid = getAndDecryptMessage();
 			if (DEBUG) System.out.println("message decryption attempted, valid: " + valid);
 			
+			//check if hub is running
+			if (!Hub.listening){
+				if (DEBUG) System.out.println("Hub was shutdown, closing this corresponding spawned thread.");
+				//hub is shutdown
+				Message shutdownMsg = new Message();
+				shutdownMsg.setCode(-1);
+				returnAndEncryptMessage(shutdownMsg);
+				listen = false;
+				valid = false;
+				//need to remove user since we dont' reach end of thread now
+				currentUsers.remove(currentUser);
+				return;
+			}
+			
 			//check that the user is still the same 
 			if (!currentUser.contains(msg.getUserName())){
 				if (DEBUG) System.out.println("Mismatch in the authenticated user and current user");
