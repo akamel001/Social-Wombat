@@ -107,8 +107,9 @@ class SocketPackage {
 			oos.flush();
 			oos.reset();
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			System.out.println("System send failed");
+			System.exit(-1);
 		}
 
 	}
@@ -121,7 +122,7 @@ class SocketPackage {
 		try {
 			msg = (Message) ois.readObject();
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			System.out.println("Could not receive object");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
