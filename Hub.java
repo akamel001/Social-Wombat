@@ -10,7 +10,7 @@ class Hub extends Thread {
 	
 	private static int CLIENT_SOCKET = 4444;
 	private static int SERVER_SOCKET = 5050;
-	private static volatile boolean listening = true;
+	static volatile boolean listening = true;
 	private static volatile boolean demo = false;
 	
 	static ClassList classList;
@@ -493,7 +493,15 @@ class Hub extends Thread {
 				if(!hubSocket.isClosed()){
 					//Spawn new ServerSocketHandler thread, we assume that the
 					//hub has directed this message to the correct Server
-					HubSocketHandler newRequest = new HubSocketHandler(client,classList,userList,serverList,serverPackages,hubAESObject,currentUsers,listening);
+					HubSocketHandler newRequest = 
+							new HubSocketHandler(
+									client,
+									classList,
+									userList,
+									serverList,
+									serverPackages,
+									hubAESObject,
+									currentUsers);
 					if(DEBUG) System.out.println("Accepted a connection from: "+ client.getInetAddress());
 					//Starts running the new thread
 					newRequest.start(); 
@@ -506,7 +514,6 @@ class Hub extends Thread {
 				System.out.println("Accept failed on port: " + CLIENT_SOCKET + " : " + e.toString());
 			}
 		}
-		
 		//Close socket after done listening
 		try {
 			hubSocket.close();
@@ -521,6 +528,6 @@ class Hub extends Thread {
 		writeToDisk(serverList, serverListName);
 		
 		if (DEBUG) System.out.println("Hub shut down.");
-		if (DEBUG) System.out.println("listening volatile variable should be false " + listening);
+		if (DEBUG) System.out.println("listening volatile variable should be false, it is currently: " + listening);
 	}
 }

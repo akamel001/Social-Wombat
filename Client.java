@@ -134,7 +134,7 @@ public final class Client {
 	 * @return
 	 */
 	public boolean handleLogout(String currentUserName) {
-
+		// TODO Close active socket connection and streams
 		return true;
 	}
 	
@@ -160,8 +160,8 @@ public final class Client {
 		message.setChecksum(message.generateCheckSum());
 		
 		socket.sendEncrypted(aes.encrypt(message));
-		
 		byte[] encMessage = socket.receiveEncrypted();
+		
 		Message response = (Message) aes.decryptObject(encMessage);
 		
 		return (response.getCode() == 1)? true : false;	
@@ -227,6 +227,12 @@ public final class Client {
 	
 		byte[] encMessage = socket.receiveEncrypted();
 		Message response = (Message) aes.decryptObject(encMessage);
+		
+		//TODO Inform Julia of response that the hub is not responding and needs to be handled
+		if(response.getType() == Message.MessageType.Hub_Shutdown){
+			System.out.println("The hub is shut down, exiting for now.");
+			System.exit(-1);
+		}
 		
 		return (Map<String, Integer>) ((response.getCode() == 1)? response.getBody() : null);	
 	}
@@ -625,7 +631,6 @@ public final class Client {
 
 		if(DEBUG)
 			return true;
-
 
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		list.add(0, threadID);

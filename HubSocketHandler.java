@@ -33,12 +33,11 @@ public class HubSocketHandler extends Thread{
 	String lastLogin;
 	HashMap<String,Integer> currentUsers;
 	String currentUser;
-	volatile boolean listening;
 
 	/*
 	 * A handler thread that is spawned for each message sent to a socket.
 	 */
-	public HubSocketHandler(Socket socket, ClassList classList, UserList userList, ServerList serverList, HashMap<Integer,SocketPackage> serverPackages, AES hubAESObject, HashMap<String,Integer> currentUsers,boolean listening){
+	public HubSocketHandler(Socket socket, ClassList classList, UserList userList, ServerList serverList, HashMap<Integer,SocketPackage> serverPackages, AES hubAESObject, HashMap<String,Integer> currentUsers){
 		this.socket = socket;
 		this.classList = classList;
 		this.userList = userList;
@@ -46,7 +45,6 @@ public class HubSocketHandler extends Thread{
 		this.serverPackages = serverPackages;
 		this.hubAESObject = hubAESObject;	// to be used for communciation with servers
 		this.currentUsers = currentUsers;
-		this.listening = listening;
 		// Create datastreams
 		try {
 			oos = new ObjectOutputStream(socket.getOutputStream());
@@ -482,10 +480,23 @@ public class HubSocketHandler extends Thread{
 			
 			//Wait, read and deserialize Message from Socket
 			if (DEBUG) System.out.println("Waiting for next msg");
-			
 			valid = getAndDecryptMessage();
-			
 			if (DEBUG) System.out.println("message decryption attempted, valid: " + valid);
+			
+			//check if hub is running
+			if (!Hub.listening){
+				if (DEBUG) System.out.println("Hub was shutdown, closing this corresponding spawned thread.");
+				//hub is shutdown
+				Message shutdownMsg = new Message();
+				shutdownMsg.setType(Message.MessageType.Hub_Shutdown);
+				shutdownMsg.setCode(-1);
+				returnAndEncryptMessage(shutdownMsg);
+				listen = false;
+				valid = false;
+				//need to remove user since we don't reach end of thread now
+				currentUsers.remove(currentUser);
+				return;
+			}
 			
 			//check that the user is still the same 
 			if (!currentUser.contains(msg.getUserName())){
@@ -493,14 +504,7 @@ public class HubSocketHandler extends Thread{
 				valid = false;
 			}
 			
-			/*
-			 * Start debug
-			 */
-			
 			if (DEBUG) System.out.println("user name is: " + msg.getUserName());
-			/*
-			 * End debug
-			 */
 			
 			if (msg == null){
 				System.out.println("Message was null");
@@ -510,15 +514,7 @@ public class HubSocketHandler extends Thread{
 				valid = false;
 			}
 			if (valid){
-				//check if hub is running
-				if (!listening){
-					//hub is shutdown
-					Message shutdownMsg = new Message();
-					shutdownMsg.setCode(-1);
-					returnAndEncryptMessage(shutdownMsg);
-					return;
-				}
-				
+								
 				// Preset to failure
 				msg.setCode(-1);
 				int returnCode = -1;
