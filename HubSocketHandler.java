@@ -470,6 +470,7 @@ public class HubSocketHandler extends Thread{
 			//takes over to infinitely listen for each user
 			boolean listen = false;
 			boolean valid = true;
+			boolean relogin = false;
 			
 			//Authenticate, if listen is false, the socket is problematic, close connections
 			//loop to allow continuous authentication
@@ -477,9 +478,10 @@ public class HubSocketHandler extends Thread{
 				listen = authenticate();
 			}
 			//All further communications
-			while (listen && valid){
+			while ((listen && valid) || relogin){
 				//for future logins
 				while(!listen){
+					relogin = false;
 					listen = authenticate();
 				}
 				
@@ -536,13 +538,14 @@ public class HubSocketHandler extends Thread{
 							//need to reset to authenticate
 							listen = false;
 							valid = true;
+							relogin = true;
 							//remove user
 							currentUsers.remove(currentUser);
 							msg = new Message();
 							msg.setCode(1);
 							msg.setType(Message.MessageType.Client_Logout);
 							returnAndEncryptMessage(msg);
-					
+							break;
 						case Client_ChangePassword:
 							//body: ArrayList<char[]> 
 							boolean allowed = true;
