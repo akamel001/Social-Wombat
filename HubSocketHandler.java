@@ -719,7 +719,22 @@ final class HubSocketHandler extends Thread{
 							//Generate some server number
 							SecureRandom r = new SecureRandom();
 							int maxServer = serverList.getLastServer();
+							if (DEBUG) System.out.println("Servers available: " + maxServer);
+							//If no servers are available, fail
+							if (maxServer == 0){
+								System.out.println("No servers are available, or " +
+										"they have not been connected yet. Please " +
+										"connect them to process the user requests.");
+								Message failReply = new Message();
+								failReply.setCode(-1);
+								failReply.setType(Message.MessageType.Client_CreateClassroom);
+								returnAndEncryptMessage(failReply);
+								break;
+							}
 							int serverNum = r.nextInt(maxServer) + 1;
+							if (DEBUG) System.out.println("Storing new classroom in server: " + serverNum 
+									+ " out of: " + maxServer + " servers.");
+							
 							
 							c.setClassServer(serverNum, SERVER_SOCKET);
 							classList.addClass(c, hubAESObject);
@@ -815,8 +830,9 @@ final class HubSocketHandler extends Thread{
 				}
 			}
 		} catch (Exception e){
+			e.printStackTrace();
 			//gracefully remove user
-			if (DEBUG) System.out.println("Connection with User broken");
+			if (DEBUG) System.out.println("Connection with: " + currentUser + " broken");
 			currentUsers.remove(currentUser);
 		}
 		if(DEBUG) System.out.println("Connected users: \n===> " + currentUsers.toString());
