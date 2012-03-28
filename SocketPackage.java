@@ -49,7 +49,16 @@ public final class SocketPackage {
 				socket.connect(socketAddr, TIMEOUT);
 			}catch (SocketTimeoutException e){
 				//e.printStackTrace();
-				System.out.println("Connection has timed out.");
+				System.out.println("Socket timeout exception, retrying in " + (long)(2000*Math.log(i))/1000 + " seconds.");
+				try {
+					Thread.sleep((long) (2000*Math.log(i)));
+					continue;
+				} catch (InterruptedException e1) {
+					System.out.println("Another thread interupted me while sleeping.");
+					e1.printStackTrace();
+					System.exit(-1);
+				}
+				
 			} catch (ConnectException e) {
 				System.out.println("Connection was refused, retrying in " + (long)(2000*Math.log(i))/1000 + " seconds.");
 				try {
