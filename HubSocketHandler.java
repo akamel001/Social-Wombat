@@ -50,8 +50,9 @@ final class HubSocketHandler extends Thread{
 			oos = new ObjectOutputStream(socket.getOutputStream());
 			ois = new ObjectInputStream(socket.getInputStream());
 		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Could not create input and output streams");
+			//e.printStackTrace();
+			//System.out.println("Could not create input and output streams");
+			//Exceptions will throw if junk is sent to the port
 		}
 	}
 	
@@ -314,6 +315,9 @@ final class HubSocketHandler extends Thread{
 			} catch (IOException e) {
 				e.printStackTrace();
 				return false;
+			} catch (Exception e){
+				if (DEBUG) System.out.println("Invalid message received");
+				return false;
 			}
 			
 			//set a buffer to correct length
@@ -475,50 +479,64 @@ final class HubSocketHandler extends Thread{
 			//Authenticate, if listen is false, the socket is problematic, close connections
 			//loop to allow continuous authentication
 			while(!listen){
-				listen = authenticate();
+				try {
+					listen = authenticate();
+				} catch (Exception e){
+					//Handles junk injections to our port
+					if (DEBUG) System.out.println("Junk seen on port, killing that particular thread.");
+					return;
+				}
 			}
 			//All further communications
 			while ((listen && valid) || relogin){
 				//for future logins
 				while(!listen){
 					relogin = false;
-					listen = authenticate();
+					try {
+						listen = authenticate();
+					} catch (Exception e){
+						//Handles junk injections to our port
+						if (DEBUG) System.out.println("Junk seen on port, killing that particular thread.");
+						return;
+					}
 				}
 				
 				//Wait, read and deserialize Message from Socket
 				if (DEBUG) System.out.println("Waiting for next msg");
+				//possibility of bad message here
 				valid = getAndDecryptMessage();
 				if (DEBUG) System.out.println("message decryption attempted, valid: " + valid);
-				
-				//check if hub is running
-				if (!Hub.listening){
-					if (DEBUG) System.out.println("Hub was shutdown, closing this corresponding spawned thread.");
-					//hub is shutdown
-					Message shutdownMsg = new Message();
-					shutdownMsg.setType(Message.MessageType.Hub_Shutdown);
-					shutdownMsg.setCode(-1);
-					returnAndEncryptMessage(shutdownMsg);
-					listen = false;
-					valid = false;
-					//need to remove user since we don't reach end of thread now
-					currentUsers.remove(currentUser);
-					return;
-				}
-				
-				//check that the user is still the same 
-				if (!currentUser.contains(msg.getUserName())){
-					if (DEBUG) System.out.println("Mismatch in the authenticated user and current user");
-					valid = false;
-				}
-				
-				if (DEBUG) System.out.println("user name is: " + msg.getUserName());
-				
-				if (msg == null){
-					System.out.println("Message was null");
-					valid = false; // Don't waste time on bad transmissions
-				} else if (msg.getUserName() == null){
-					System.out.println("Session key was null");
-					valid = false;
+				if (valid) {
+					//check if hub is running
+					if (!Hub.listening){
+						if (DEBUG) System.out.println("Hub was shutdown, closing this corresponding spawned thread.");
+						//hub is shutdown
+						Message shutdownMsg = new Message();
+						shutdownMsg.setType(Message.MessageType.Hub_Shutdown);
+						shutdownMsg.setCode(-1);
+						returnAndEncryptMessage(shutdownMsg);
+						listen = false;
+						valid = false;
+						//need to remove user since we don't reach end of thread now
+						currentUsers.remove(currentUser);
+						return;
+					}
+					
+					//check that the user is still the same 
+					if (!currentUser.contains(msg.getUserName())){
+						if (DEBUG) System.out.println("Mismatch in the authenticated user and current user");
+						valid = false;
+					}
+					
+					if (DEBUG) System.out.println("user name is: " + msg.getUserName());
+					
+					if (msg == null){
+						System.out.println("Message was null");
+						valid = false; // Don't waste time on bad transmissions
+					} else if (msg.getUserName() == null){
+						System.out.println("Session key was null");
+						valid = false;
+					}
 				}
 				if (valid){
 									

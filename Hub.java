@@ -224,6 +224,7 @@ public final class Hub extends Thread {
 					Arrays.fill(servPass, '0');
 					if (authenticatedConnect(tempSocket, servAES)){
 						//add to connected servers
+						if (DEBUG) System.out.println("Server: " + i + " connected successfully.");
 						numConnected++;
 					} else {
 						if(DEBUG) System.out.println("Server: " + i + " failed to connect at address: " + tempSocket.getSocketName());
@@ -253,6 +254,7 @@ public final class Hub extends Thread {
 					Arrays.fill(servPass, '0');
 					if (authenticatedConnect(newSocketPackage, servAES)){
 						//add to connected servers
+						if (DEBUG) System.out.println("Server: " + i + " connected successfully.");
 						numConnected++;
 					} else {
 						if(DEBUG) System.out.println("Server: " + i + " failed to connect at address: " + newSocketPackage.getSocketName());
@@ -501,20 +503,24 @@ public final class Hub extends Thread {
 				// If the hubsocket is closed at this point, it means that shutDown() was called while the socket was
 				// was waiting. In this case, there is no need to continue.
 				if(!hubSocket.isClosed()){
-					//Spawn new ServerSocketHandler thread, we assume that the
-					//hub has directed this message to the correct Server
-					HubSocketHandler newRequest = 
-							new HubSocketHandler(
-									client,
-									classList,
-									userList,
-									serverList,
-									serverPackages,
-									hubAESObject,
-									currentUsers);
-					if(DEBUG) System.out.println("Accepted a connection from: "+ client.getInetAddress());
-					//Starts running the new thread
-					newRequest.start(); 
+					//Handle spam
+					try {
+						//Spawn new ServerSocketHandler thread
+						HubSocketHandler newRequest = 
+								new HubSocketHandler(
+										client,
+										classList,
+										userList,
+										serverList,
+										serverPackages,
+										hubAESObject,
+										currentUsers);
+						if(DEBUG) System.out.println("Accepted a connection from: "+ client.getInetAddress());
+						//Starts running the new thread
+						newRequest.start(); 
+					} catch (Exception e){
+						if (DEBUG) System.out.println("Bad message received, ignoring");
+					}
 				}
 			} catch (SocketTimeoutException e){
 				// This is expected, b/c we have set the socket timeout. Do nothing.

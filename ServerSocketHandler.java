@@ -31,8 +31,10 @@ final class ServerSocketHandler {
 			oos = new ObjectOutputStream(this.socket.getOutputStream());
 			ois = new ObjectInputStream(this.socket.getInputStream());
 		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Could not create input and output streams");
+			//e.printStackTrace();
+			//System.out.println("Could not create input and output streams");
+			//Random junk will cause an exception here, so we will just ignore it
+			if (DEBUG) System.out.println("Possibility of random bytes was received at the port, ignoring.");
 		}
 	}
 	
@@ -54,10 +56,10 @@ final class ServerSocketHandler {
 				if (DEBUG) System.out.println("First msg received was null");
 				return false;
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+		} catch (Exception e){
+			//to handle garbate bytes
+			if (DEBUG) System.out.println("reading ois failure, possibly garbate bytes sent to port.");
+			return false;
 		}
 		
 		//set to global
@@ -211,6 +213,8 @@ final class ServerSocketHandler {
 			} catch (IOException e) {
 				e.printStackTrace();
 				return false;
+			} catch (Exception e){
+				if (DEBUG) System.out.println("Bad message sent. Ignoring.");
 			}
 			//set a buffer to correct length
 			byte[] encryptedMsg = new byte[length];
@@ -278,10 +282,10 @@ final class ServerSocketHandler {
 	public void run(){
 		boolean listen = false;
 		boolean valid = true;
-		//wait for first message and authenticate
-		listen = authenticate();
+		
 		if (!listen){
-			if(DEBUG) System.out.println("Authentication failure. Exiting.");
+			//wait for first message and authenticate
+			listen = authenticate();
 		}
 		//servers will run indefinitely if authenticated
 		while(listen && valid){

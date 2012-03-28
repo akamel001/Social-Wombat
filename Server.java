@@ -11,6 +11,8 @@ public final class Server extends Thread{
 	private static char[] password;
 	private static String ip;
 	
+	private static final boolean DEBUG = true;
+	
 	//default, is reset in constructor
 	static String classDBName = "server.classDB";	
 
@@ -138,8 +140,8 @@ public final class Server extends Thread{
 					System.out.println("Accept failed on port: " + SERVER_SOCKET);
 				}
 			} catch (Exception e){
-				e.printStackTrace();
-				System.out.println("Encountered exception. See above. Server will continue running.");
+				//e.printStackTrace();
+				if (DEBUG) System.out.println("Encountered exception. Server will continue running.");
 			}
 		}
 		//Close socket
