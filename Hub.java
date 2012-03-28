@@ -192,7 +192,7 @@ public final class Hub extends Thread {
 	 * 
 	 * prints out errors, because we can't guarantee that all servers will connect
 	 */
-	public void connectServers() {
+	public int connectServers() {
 		if (DEBUG) System.out.println("Connecting to the servers");
 		int numServers = serverList.getLastServer();
 		if (DEBUG) System.out.println("Needs to connect with " + numServers + " servers");
@@ -200,6 +200,7 @@ public final class Hub extends Thread {
 			System.out.println("There are no servers to connect to. Please add some."); 
 		}
 		// start up a connection with all of the servers
+		int numConnected = 0;
 		for (int i = 1;i<=numServers;i++){
 			//Open a connection
 			if (DEBUG) System.out.println("Connecting to server " + i);
@@ -221,7 +222,12 @@ public final class Hub extends Thread {
 					AES servAES = new AES(servPass,serveIvSalt.get(0),serveIvSalt.get(1));
 					//zero out password
 					Arrays.fill(servPass, '0');
-					authenticatedConnect(tempSocket, servAES);
+					if (authenticatedConnect(tempSocket, servAES)){
+						//add to connected servers
+						numConnected++;
+					} else {
+						if(DEBUG) System.out.println("Server: " + i + " failed to connect at address: " + tempSocket.getSocketName());
+					}
 				}
 			} else{
 				//add to map and connect (happens at hub start up)
@@ -245,11 +251,17 @@ public final class Hub extends Thread {
 					AES servAES = new AES(servPass,serveIvSalt.get(0),serveIvSalt.get(1));
 					//zero out password
 					Arrays.fill(servPass, '0');
-					authenticatedConnect(newSocketPackage, servAES);
+					if (authenticatedConnect(newSocketPackage, servAES)){
+						//add to connected servers
+						numConnected++;
+					} else {
+						if(DEBUG) System.out.println("Server: " + i + " failed to connect at address: " + newSocketPackage.getSocketName());
+					}
 				}
 				serverPackages.put(i, newSocketPackage);
 			}
 		}
+		return numConnected;
 	}
 	
 	//////////////////////////////////////////////////////
@@ -259,7 +271,7 @@ public final class Hub extends Thread {
 	 * Handles an authenticated connect and verification of the reply
 	 */
 	@SuppressWarnings("unchecked")
-	private static void authenticatedConnect(SocketPackage socketPack, AES socketAES){
+	private static boolean authenticatedConnect(SocketPackage socketPack, AES socketAES){
 		//make a network connection
 		socketPack.socketConnect();
 		if(DEBUG) System.out.println("Socket connect successful, now authenticating");
@@ -295,7 +307,7 @@ public final class Hub extends Thread {
 		//null check
 		if (reply==null){
 			if(DEBUG) System.out.println("Authentication reply was null, stopping authenitcated connect with " + socketPack.getSocketName());
-			return;
+			return false;
 		}
 		
 		//decrypt body
@@ -306,7 +318,6 @@ public final class Hub extends Thread {
 		}
 		//reset the body to the decrypted body
 		reply.setBody(replyBody);
-		boolean verified = true;
 		//verify fields
 		long newChecksum = reply.generateCheckSum();
 		long oldChecksum = reply.getChecksum();
@@ -315,7 +326,7 @@ public final class Hub extends Thread {
 			if(DEBUG) System.out.println("HUB: checksums don't match."); // TODO: when connecting to a server, the connection seems overall successful, however, the checksums don't match
 			if(DEBUG) System.out.println("New checksum: " + newChecksum);
 			if(DEBUG) System.out.println("Old checksum: " + oldChecksum);
-			verified = false;
+			return false;
 		}
 		//get body fields
 		long serverTimestamp = replyBody.get(0);
@@ -324,19 +335,18 @@ public final class Hub extends Thread {
 		//nonce check
 		if ((myNonce+1) != serverNonce){
 			if(DEBUG) System.out.print("HUB: nonce test failed.");
-			verified = false;
+			return false;
 		}
 		
 		//Check timestamp
 		long myTimestamp = Calendar.getInstance().getTimeInMillis();
 		if (!(((myTimestamp - 300000) <= serverTimestamp) && (serverTimestamp <= (myTimestamp + 300000)))){
 			if(DEBUG) System.out.print("HUB: timestamp test failed.");
-			verified = false;
+			return false;
 		}
 		
-		if(!verified){
-			System.out.println("Connection to socket at ip: " + socketPack.getSocketName() + " failed.");
-		}
+		//everything passes
+		return true;
 		
 	}
 	
