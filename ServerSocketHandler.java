@@ -205,6 +205,9 @@ final class ServerSocketHandler {
 			//read the length of the byte [] first
 			try {
 				length = ois.readInt();
+			} catch(EOFException e){
+				System.out.println("Attempting to read from a closed socket.");
+				return false;
 			} catch (IOException e) {
 				e.printStackTrace();
 				return false;

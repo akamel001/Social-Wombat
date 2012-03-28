@@ -309,7 +309,7 @@ final class HubSocketHandler extends Thread{
 				length = ois.readInt();
 				
 			} catch (EOFException e){
-				System.out.println("Unable to read from socket. Socket possibly closed.");
+				System.out.println("Attempting to read from a closed socket.");
 				return false;
 			} catch (IOException e) {
 				e.printStackTrace();
