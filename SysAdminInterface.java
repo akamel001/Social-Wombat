@@ -123,7 +123,7 @@ public final class SysAdminInterface {
 		    // Connect to all servers.
 		    case 5: 
 		    	int connectedServers = hub.connectServers();
-		    	systemHomePage(mCONNECT_SERVERS_MESSAGE + connectedServers);
+		    	systemHomePage(mCONNECT_SERVERS_MESSAGE);
 		        break;
 		     // Shut down the hub.
 		    case 6:
