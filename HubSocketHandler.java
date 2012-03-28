@@ -549,6 +549,7 @@ final class HubSocketHandler extends Thread{
 						case Client_ChangePassword:
 							//body: ArrayList<char[]> 
 							boolean allowed = true;
+							@SuppressWarnings("unchecked")
 							ArrayList<char[]> body = (ArrayList<char[]>) msg.getBody();
 							//[0] = oldpass, [1] new pass, [2] confirm new pass, [3] tempusername
 							
