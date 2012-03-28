@@ -94,7 +94,7 @@ public final class SocketPackage {
 			}
 
 			if(!socket.isConnected() && i == MAX_RETRY){
-				System.out.println("Reached maximum retries, exiting client");
+				System.out.println("Reached maximum retries, exiting.");
 				System.exit(-1);
 			}
 		}
