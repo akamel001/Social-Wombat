@@ -17,7 +17,7 @@ final class ServerSocketHandler {
 	AES serverAESObject;
 	char[] password;
 	
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 
 	/*
 	 * A handler thread that is spawned for each message sent to server

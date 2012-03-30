@@ -11,7 +11,7 @@ public final class Server extends Thread{
 	private static char[] password;
 	private static String ip;
 	
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 	
 	//default, is reset in constructor
 	static String classDBName = "server.classDB";	

@@ -29,7 +29,7 @@ public final class Hub extends Thread {
 	static ServerSocket hubSocket = null;
 	String hubIP = null;
 	
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 	
 	public Hub(AES aesObject){
 		this.hubAESObject = aesObject;
