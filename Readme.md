@@ -1,3 +1,23 @@
+##INSTRUCTION
+
+Navigate to the Social-Wombat direcotry and compile the source code 
+
+    $ javac *.java
+    
+Simulating startup of a server 
+
+    $ java StartServers
+
+Starting the system admin interface
+
+    $ java SysAdminInterface
+`default startup password for a System Administrator is "system admin". They are encouranged to change it.`
+
+* The system administrator can now add servers by ip, from what was given by StartServers and they can also enroll users by username and a password.  
+
+* Run 'java UserInterface' and follow the directions on the screen.
+
+
 ###DATA STORAGE CLASSES  
 
  
@@ -57,26 +77,6 @@ through sockets.
 
 * *StartServers.java* - Simulation class to act as the system admin starting up a remote server.
 
-
-
-##INSTRUCTIONS
-
-Navigate to the Social-Wombat direcotry and compile the source code 
-
-    $ javac *.java
-    
-Simulating startup of a server 
-
-    $ java StartServers
-
-Starting the system admin interface
-
-    $ java SysAdminInterface
-`default startup password for a System Administrator is "system admin". They are encouranged to change it.`
-
-* The system administrator can now add servers by ip, from what was given by StartServers and they can also enroll users by username and a password.  
-
-* Run 'java UserInterface' and follow the directions on the screen.
 
 [ClassData.java]: 
 https://github.com/plumppapaya/Social-Wombat/blob/Push/ClassData.java
