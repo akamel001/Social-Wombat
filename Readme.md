@@ -72,7 +72,7 @@ Simulating startup of a server
 Starting the system admin interface
 
     $ java SysAdminInterface
-> **`default startup password for a System Administrator is "system admin". They are encouranged to change it.`**
+`default startup password for a System Administrator is "system admin". They are encouranged to change it.`
 
 * The system administrator can now add servers by ip, from what was given by StartServers and they can also enroll users by username and a password.  
 
