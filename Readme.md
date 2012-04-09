@@ -11,7 +11,7 @@ Simulating startup of a server
 Starting the system admin interface
 
     $ java SysAdminInterface
-`default startup password for a System Administrator is "system admin". They are encouranged to change it.`
+`default startup password for a System Administrator is "**system admin**". They are encouranged to change it.`
 
 *After the system administrator logs in he can start the hub by selecting to do so from the interface. Once the hub has been started, servers can be added by ip which is obtained from StartServers. The administrator can also enroll users by username and a password.*  
 
