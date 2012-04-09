@@ -1,6 +1,6 @@
 ##INSTRUCTION
 
-Navigate to the Social-Wombat direcotry and compile the source code 
+Navigate to the Social-Wombat directory and compile the source code 
 
     $ javac *.java
     
@@ -15,7 +15,7 @@ Starting the system admin interface
 
 *After the system administrator logs in he can start the hub by selecting to do so from the interface. Once the hub has been started, servers can be added by ip which is obtained from StartServers. The administrator can also enroll users by username and a password.*  
 
-Starting a client and loging in 
+Starting a client and logging in 
 
 
     $ java UserInterface
@@ -62,7 +62,7 @@ for the SystemUserInterface.
 
 ###CLIENT - HUB - SERVER CLASSES 
 
-* [Client.java] - Background functions class, does communciation with hub.
+* [Client.java] - Background functions class, does communication with hub.
 
 * [Hub.java] - Starts up data structures, initiates secure connections with the 
 servers, and handles connections from clients initially and then passes that off
