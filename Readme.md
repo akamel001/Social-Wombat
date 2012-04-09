@@ -13,7 +13,7 @@ Starting the system admin interface
     $ java SysAdminInterface
 `default startup password for a System Administrator is "system admin". They are encouranged to change it.`
 
-* After the system administrator logs in he can start the hub by selecting to do so from the interface. Once the hub has been started, servers can be added by ip which is obtained from StartServers. The administrator can also enroll users by username and a password.  
+After the system administrator logs in he can start the hub by selecting to do so from the interface. Once the hub has been started, servers can be added by ip which is obtained from StartServers. The administrator can also enroll users by username and a password.  
 
 Starting a client and loging in 
 
@@ -62,24 +62,21 @@ for the SystemUserInterface.
 
 ###CLIENT - HUB - SERVER CLASSES 
 
-* *Client.java* - Background functions class, does communciation with hub.
+* [Client.java] - Background functions class, does communciation with hub.
 
-* *Hub.java* - Starts up data structures, initiates secure connections with the 
+* [Hub.java] - Starts up data structures, initiates secure connections with the 
 servers, and handles connections from clients initially and then passes that off
 to HubSocketHandler.
 
-* *HubSocketHandler.java* - Handles authentication of clients and all future communications on that opened secure socket. Forwards messages from a client that are intended for a server.
+* [HubSocketHandler.java] - Handles authentication of clients and all future communications on that opened secure socket. Forwards messages from a client that are intended for a server.
 
-* *Server.java* - Handles requests from a Hub.
+* [Server.java] - Handles requests from a Hub.
 
-* *ServerSocketHandler.java* - Helper class to handle requests from a Hub.
+* [ServerSocketHandler.java] - Helper class to handle requests from a Hub.
 
-* *SocketPackage.java* - Packaging class to make it easier to send encrypted messages
+* [SocketPackage.java] - Packaging class to make it easier to send encrypted messages
 through sockets.
 
-* *StartServers.java* - Simulation class to act as the system admin starting up a remote server.
+* [StartServers.java] - Simulation class to act as the system admin starting up a remote server.
 
-
-[ClassData.java]: 
-https://github.com/plumppapaya/Social-Wombat/blob/Push/ClassData.java
 
