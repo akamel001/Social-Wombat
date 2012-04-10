@@ -1,10 +1,6 @@
 
 .DS_Store
 
-.classpath
-
-.project
-
 bin/*.classDB
 
 bin/*.userlist
