@@ -4,3 +4,13 @@
 .classpath
 
 .project
+
+bin/*.classDB
+
+bin/*.userlist
+
+bin/hub.serverlist
+
+bin/hub.classlist
+
+bin/system_startup
