@@ -1,10 +1,12 @@
 #!/bin/bash
 
-rm *.classlist
+rm ../bin/*.classlist
 echo Removing Class List
-rm *.userlist
+rm ../bin/*.classDB
+echo Removing Class DB file
+rm ../bin/*.userlist
 echo Removing User List
-rm *.serverlist
+rm ../bin/*.serverlist
 echo Removing Server List
-rm system_startup
+rm ../bin/system_startup
 echo Removing System Startup

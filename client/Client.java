@@ -194,7 +194,7 @@ public final class Client {
 	 * @return boolean corresponding to classroom creation status
 	 */
 	public boolean createClassroom(String classroomName, String uName) {
-		Message reply = SendAndReceiveEncrypted(uName, classroomName, 0, Message.MessageType.Client_CreateClassroom);;
+		Message reply = SendAndReceiveEncrypted(uName, classroomName, 0, Message.MessageType.Client_CreateClassroom);
 		return (reply.getCode() == 1 || (DEBUG))? true : false;	 
 	}
 
@@ -208,6 +208,7 @@ public final class Client {
 	 */
 	public boolean requestToJoinClassroom(String classroomRequestName, String requesterUserName) {
 		Message reply = SendAndReceiveEncrypted(requesterUserName, classroomRequestName, 0, Message.MessageType.Client_RequestEnrollment);	
+		
 		return (reply.getCode() == 1 || (DEBUG))? true : false;	 
 	}
 
