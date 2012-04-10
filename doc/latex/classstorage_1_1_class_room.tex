@@ -1,0 +1,201 @@
+\hypertarget{classstorage_1_1_class_room}{
+\section{storage.\-Class\-Room \-Class \-Reference}
+\label{classstorage_1_1_class_room}\index{storage.\-Class\-Room@{storage.\-Class\-Room}}
+}
+
+
+\-Inherits \-Serializable.
+
+\subsection*{\-Protected \-Member \-Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classstorage_1_1_class_room_a599d3658872f638a0e35429dc8695814}{\-Class\-Room} (\-String n, int i)
+\item 
+int \hyperlink{classstorage_1_1_class_room_ac9d8525146e0d289ee6f5c2dcbb3d1d1}{add\-New\-Post} (\-String post\-Title, \-String post\-Body)
+\item 
+int \hyperlink{classstorage_1_1_class_room_ae7005fd8146a347c4a32540026d921bd}{remove\-Post} (int p)
+\item 
+int \hyperlink{classstorage_1_1_class_room_aaa3bc49b0c9bc6919409c6566cce2e07}{add\-Comment} (int post\-Id, \-String comment)
+\item 
+int \hyperlink{classstorage_1_1_class_room_a4cd6824f0528a55f136f780beade6e3e}{remove\-Comment} (int post\-Id, int comment\-Id)
+\item 
+\-Map$<$ \-Integer, \-String $>$ \hyperlink{classstorage_1_1_class_room_acaeeb104e3f5e72b7f3fb91f9c9ee90a}{get\-Thread} (int thread\-Id)
+\item 
+\-Map$<$ \-Integer, \-String $>$ \hyperlink{classstorage_1_1_class_room_af1a0af72dd37f80e5699750354f9e95b}{get\-Thread\-List} ()
+\item 
+int \hyperlink{classstorage_1_1_class_room_a43896a347f4b74eaf414e269d0b801cb}{get\-Id} ()
+\item 
+\-String \hyperlink{classstorage_1_1_class_room_ab590bc6bc8007c84759321f34857ea40}{get\-Name} ()
+\end{DoxyCompactItemize}
+\subsection*{\-Static \-Package \-Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classstorage_1_1_class_room_ae2943fe0f2eac7388b0b83b6b3a9245a}{
+static final long {\bfseries serial\-Version\-U\-I\-D} = 2158685748414139162\-L}
+\label{classstorage_1_1_class_room_ae2943fe0f2eac7388b0b83b6b3a9245a}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{\-Detailed \-Description}
+\hyperlink{classstorage_1_1_class_room}{\-Class\-Room} stores threads and their associated comments. \begin{DoxyAuthor}{\-Author}
+chris d 
+\end{DoxyAuthor}
+
+
+\subsection{\-Constructor \& \-Destructor \-Documentation}
+\hypertarget{classstorage_1_1_class_room_a599d3658872f638a0e35429dc8695814}{
+\index{storage\-::\-Class\-Room@{storage\-::\-Class\-Room}!\-Class\-Room@{\-Class\-Room}}
+\index{\-Class\-Room@{\-Class\-Room}!storage::ClassRoom@{storage\-::\-Class\-Room}}
+\subsubsection[{\-Class\-Room}]{\setlength{\rightskip}{0pt plus 5cm}storage.\-Class\-Room.\-Class\-Room (
+\begin{DoxyParamCaption}
+\item[{\-String}]{n, }
+\item[{int}]{i}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classstorage_1_1_class_room_a599d3658872f638a0e35429dc8695814}
+\-Creates a new classroom with the given name. 
+\begin{DoxyParams}{\-Parameters}
+{\em n} & \-The name of the new class \\
+\hline
+{\em i} & \-The identifier for the class. \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{\-Member \-Function \-Documentation}
+\hypertarget{classstorage_1_1_class_room_aaa3bc49b0c9bc6919409c6566cce2e07}{
+\index{storage\-::\-Class\-Room@{storage\-::\-Class\-Room}!add\-Comment@{add\-Comment}}
+\index{add\-Comment@{add\-Comment}!storage::ClassRoom@{storage\-::\-Class\-Room}}
+\subsubsection[{add\-Comment}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Class\-Room.\-add\-Comment (
+\begin{DoxyParamCaption}
+\item[{int}]{post\-Id, }
+\item[{\-String}]{comment}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classstorage_1_1_class_room_aaa3bc49b0c9bc6919409c6566cce2e07}
+\-Adds a comment to a post. 
+\begin{DoxyParams}{\-Parameters}
+{\em post\-Id} & \-The id number of the post to which the comment will be added. \\
+\hline
+{\em comment} & \-The comment to be added. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns 1 on success, -\/1 otherwise. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_class_room_ac9d8525146e0d289ee6f5c2dcbb3d1d1}{
+\index{storage\-::\-Class\-Room@{storage\-::\-Class\-Room}!add\-New\-Post@{add\-New\-Post}}
+\index{add\-New\-Post@{add\-New\-Post}!storage::ClassRoom@{storage\-::\-Class\-Room}}
+\subsubsection[{add\-New\-Post}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Class\-Room.\-add\-New\-Post (
+\begin{DoxyParamCaption}
+\item[{\-String}]{post\-Title, }
+\item[{\-String}]{post\-Body}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classstorage_1_1_class_room_ac9d8525146e0d289ee6f5c2dcbb3d1d1}
+\-Creates a new post and adds it to the post list. 
+\begin{DoxyParams}{\-Parameters}
+{\em post\-Title} & \-The title of the post. \-The length must be 1$<$=t$<$=\hyperlink{classstorage_1_1_post_aca0ef12aa167eb825a44deac4601aeac}{\-Post.\-max\-Title\-Length}. \\
+\hline
+{\em post\-Body} & \-The body of the post. \-The length must be 1$<$=b$<$=\-Post.\-max\-Body\-Length. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_class_room_a43896a347f4b74eaf414e269d0b801cb}{
+\index{storage\-::\-Class\-Room@{storage\-::\-Class\-Room}!get\-Id@{get\-Id}}
+\index{get\-Id@{get\-Id}!storage::ClassRoom@{storage\-::\-Class\-Room}}
+\subsubsection[{get\-Id}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Class\-Room.\-get\-Id (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classstorage_1_1_class_room_a43896a347f4b74eaf414e269d0b801cb}
+\-Returns the id number of the class. \begin{DoxyReturn}{\-Returns}
+\-Returns the value of the id\-Num field. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_class_room_ab590bc6bc8007c84759321f34857ea40}{
+\index{storage\-::\-Class\-Room@{storage\-::\-Class\-Room}!get\-Name@{get\-Name}}
+\index{get\-Name@{get\-Name}!storage::ClassRoom@{storage\-::\-Class\-Room}}
+\subsubsection[{get\-Name}]{\setlength{\rightskip}{0pt plus 5cm}\-String storage.\-Class\-Room.\-get\-Name (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classstorage_1_1_class_room_ab590bc6bc8007c84759321f34857ea40}
+returns the name of the class. \begin{DoxyReturn}{\-Returns}
+
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_class_room_acaeeb104e3f5e72b7f3fb91f9c9ee90a}{
+\index{storage\-::\-Class\-Room@{storage\-::\-Class\-Room}!get\-Thread@{get\-Thread}}
+\index{get\-Thread@{get\-Thread}!storage::ClassRoom@{storage\-::\-Class\-Room}}
+\subsubsection[{get\-Thread}]{\setlength{\rightskip}{0pt plus 5cm}\-Map$<$\-Integer, \-String$>$ storage.\-Class\-Room.\-get\-Thread (
+\begin{DoxyParamCaption}
+\item[{int}]{thread\-Id}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classstorage_1_1_class_room_acaeeb104e3f5e72b7f3fb91f9c9ee90a}
+\-Returns a thread. 
+\begin{DoxyParams}{\-Parameters}
+{\em \-The} & id of the thread to be returned. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns a map with an \-Integer key and a \-String value. \-The \-Integer is the id of the comment, the \-String is the content. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_class_room_af1a0af72dd37f80e5699750354f9e95b}{
+\index{storage\-::\-Class\-Room@{storage\-::\-Class\-Room}!get\-Thread\-List@{get\-Thread\-List}}
+\index{get\-Thread\-List@{get\-Thread\-List}!storage::ClassRoom@{storage\-::\-Class\-Room}}
+\subsubsection[{get\-Thread\-List}]{\setlength{\rightskip}{0pt plus 5cm}\-Map$<$\-Integer, \-String$>$ storage.\-Class\-Room.\-get\-Thread\-List (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classstorage_1_1_class_room_af1a0af72dd37f80e5699750354f9e95b}
+\-Returns a list of the titles of all the threads in a class. \begin{DoxyReturn}{\-Returns}
+\-Returns a list of \-Integers mapped to \-Strings w here the \-Integer is the post id and the \-String is the thread title. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_class_room_a4cd6824f0528a55f136f780beade6e3e}{
+\index{storage\-::\-Class\-Room@{storage\-::\-Class\-Room}!remove\-Comment@{remove\-Comment}}
+\index{remove\-Comment@{remove\-Comment}!storage::ClassRoom@{storage\-::\-Class\-Room}}
+\subsubsection[{remove\-Comment}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Class\-Room.\-remove\-Comment (
+\begin{DoxyParamCaption}
+\item[{int}]{post\-Id, }
+\item[{int}]{comment\-Id}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classstorage_1_1_class_room_a4cd6824f0528a55f136f780beade6e3e}
+\-Removes a comment from a post. 
+\begin{DoxyParams}{\-Parameters}
+{\em post\-Id} & \-The id number of the post to which to add a comment. \\
+\hline
+{\em comment\-Id} & \-The id number of the comment to be removed. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns 1 if the comment is removed, -\/1 if the comment was not in the post. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_class_room_ae7005fd8146a347c4a32540026d921bd}{
+\index{storage\-::\-Class\-Room@{storage\-::\-Class\-Room}!remove\-Post@{remove\-Post}}
+\index{remove\-Post@{remove\-Post}!storage::ClassRoom@{storage\-::\-Class\-Room}}
+\subsubsection[{remove\-Post}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Class\-Room.\-remove\-Post (
+\begin{DoxyParamCaption}
+\item[{int}]{p}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classstorage_1_1_class_room_ae7005fd8146a347c4a32540026d921bd}
+\-Removes a post from the post and all its comments from the post list. 
+\begin{DoxyParams}{\-Parameters}
+{\em p} & \-The id of the post to be removed. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns 1 if the post was successfully removed, -\/1 otherwise. 
+\end{DoxyReturn}
+
+
+\-The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+storage/\-Class\-Room.\-java\end{DoxyCompactItemize}

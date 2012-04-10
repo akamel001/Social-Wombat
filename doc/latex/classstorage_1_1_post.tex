@@ -1,0 +1,164 @@
+\hypertarget{classstorage_1_1_post}{
+\section{storage.\-Post \-Class \-Reference}
+\label{classstorage_1_1_post}\index{storage.\-Post@{storage.\-Post}}
+}
+
+
+\-Inherits \-Serializable.
+
+\subsection*{\-Public \-Member \-Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classstorage_1_1_post_a7cacb0c4ad2421ddccbcc59793fea0d9}{\-Post} (\-String t, \-String b, int i)
+\item 
+int \hyperlink{classstorage_1_1_post_ace61808c9f6998448d28991a482aea61}{add\-Comment} (\-String c)
+\item 
+int \hyperlink{classstorage_1_1_post_ad6dcf2b63858bb3af32c0c1b1e3e8481}{remove\-Comment} (int i)
+\item 
+\-Map$<$ \-Integer, \-String $>$ \hyperlink{classstorage_1_1_post_a01fb48cbf13e05284e0d4565dc7f5b54}{get\-Thread} ()
+\item 
+int \hyperlink{classstorage_1_1_post_a5ea10a40d723299e944222c5d7f001a8}{get\-Id} ()
+\item 
+\hypertarget{classstorage_1_1_post_a0fc0eb441352e185ab77e9ed02ecece4}{
+\-String {\bfseries to\-String} ()}
+\label{classstorage_1_1_post_a0fc0eb441352e185ab77e9ed02ecece4}
+
+\end{DoxyCompactItemize}
+\subsection*{\-Protected \-Member \-Functions}
+\begin{DoxyCompactItemize}
+\item 
+\-String \hyperlink{classstorage_1_1_post_a4d5aa6367e3ee812dba819591e9374d2}{get\-Title} ()
+\end{DoxyCompactItemize}
+\subsection*{\-Static \-Protected \-Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static final int \hyperlink{classstorage_1_1_post_aca0ef12aa167eb825a44deac4601aeac}{max\-Title\-Length} = 60
+\item 
+static final int \hyperlink{classstorage_1_1_post_ae1acd6948113e41abaac3746752316cd}{max\-Comment\-Length} = 2000
+\end{DoxyCompactItemize}
+
+
+\subsection{\-Detailed \-Description}
+\-Used to hold a thread and all it's associated comments.\par
+ \par
+ \-The thread consists of a map that maps \-Integers to \-Strings. \-The first two entries are the post title (mapped to 1), and the post body (mapped to 2). \-Comments are mapped starting from 3 on.
+
+\begin{DoxyAuthor}{\-Author}
+chris d 
+\end{DoxyAuthor}
+
+
+\subsection{\-Constructor \& \-Destructor \-Documentation}
+\hypertarget{classstorage_1_1_post_a7cacb0c4ad2421ddccbcc59793fea0d9}{
+\index{storage\-::\-Post@{storage\-::\-Post}!\-Post@{\-Post}}
+\index{\-Post@{\-Post}!storage::Post@{storage\-::\-Post}}
+\subsubsection[{\-Post}]{\setlength{\rightskip}{0pt plus 5cm}storage.\-Post.\-Post (
+\begin{DoxyParamCaption}
+\item[{\-String}]{t, }
+\item[{\-String}]{b, }
+\item[{int}]{i}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_post_a7cacb0c4ad2421ddccbcc59793fea0d9}
+\-Create a new post with the given title and body for the first post. 
+\begin{DoxyParams}{\-Parameters}
+{\em t} & \hyperlink{classstorage_1_1_post}{\-Post} title; max length is max\-Title\-Length \\
+\hline
+{\em b} & \hyperlink{classstorage_1_1_post}{\-Post} body; max length is max\-Comment\-Length \\
+\hline
+{\em i} & \-The id for the post (unique for it's class) \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{\-Member \-Function \-Documentation}
+\hypertarget{classstorage_1_1_post_ace61808c9f6998448d28991a482aea61}{
+\index{storage\-::\-Post@{storage\-::\-Post}!add\-Comment@{add\-Comment}}
+\index{add\-Comment@{add\-Comment}!storage::Post@{storage\-::\-Post}}
+\subsubsection[{add\-Comment}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Post.\-add\-Comment (
+\begin{DoxyParamCaption}
+\item[{\-String}]{c}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_post_ace61808c9f6998448d28991a482aea61}
+\-Adds a comment to the post. 
+\begin{DoxyParams}{\-Parameters}
+{\em c} & \-Strings of length 0 are ignored; strings linger than max\-Comment\-Length are truncated. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns 1 if comment is added, -\/1 otherwise. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_post_a5ea10a40d723299e944222c5d7f001a8}{
+\index{storage\-::\-Post@{storage\-::\-Post}!get\-Id@{get\-Id}}
+\index{get\-Id@{get\-Id}!storage::Post@{storage\-::\-Post}}
+\subsubsection[{get\-Id}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Post.\-get\-Id (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_post_a5ea10a40d723299e944222c5d7f001a8}
+\-Returns the post's id. \begin{DoxyReturn}{\-Returns}
+
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_post_a01fb48cbf13e05284e0d4565dc7f5b54}{
+\index{storage\-::\-Post@{storage\-::\-Post}!get\-Thread@{get\-Thread}}
+\index{get\-Thread@{get\-Thread}!storage::Post@{storage\-::\-Post}}
+\subsubsection[{get\-Thread}]{\setlength{\rightskip}{0pt plus 5cm}\-Map$<$\-Integer, \-String$>$ storage.\-Post.\-get\-Thread (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_post_a01fb48cbf13e05284e0d4565dc7f5b54}
+\-Returns the entire post as a \-Map(\-Integer,\-Strings). \par
+ \-N\-O\-T\-E\-: \-Map(0) contains the title of the post. \-Map(1)1 contains the body. \-Values greater than 1 are comments. \begin{DoxyReturn}{\-Returns}
+\-Returns a \-Map(\-Integer, String) containing the post. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_post_a4d5aa6367e3ee812dba819591e9374d2}{
+\index{storage\-::\-Post@{storage\-::\-Post}!get\-Title@{get\-Title}}
+\index{get\-Title@{get\-Title}!storage::Post@{storage\-::\-Post}}
+\subsubsection[{get\-Title}]{\setlength{\rightskip}{0pt plus 5cm}\-String storage.\-Post.\-get\-Title (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classstorage_1_1_post_a4d5aa6367e3ee812dba819591e9374d2}
+\-Returns the title of the post. \begin{DoxyReturn}{\-Returns}
+\-A \-String containing the title of the post. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_post_ad6dcf2b63858bb3af32c0c1b1e3e8481}{
+\index{storage\-::\-Post@{storage\-::\-Post}!remove\-Comment@{remove\-Comment}}
+\index{remove\-Comment@{remove\-Comment}!storage::Post@{storage\-::\-Post}}
+\subsubsection[{remove\-Comment}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Post.\-remove\-Comment (
+\begin{DoxyParamCaption}
+\item[{int}]{i}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_post_ad6dcf2b63858bb3af32c0c1b1e3e8481}
+\-Removes a comment from the post.\par
+ \-N\-O\-T\-E\-: you cannot remove the title of a post (index 0), or the post's body (index 1). 
+\begin{DoxyParams}{\-Parameters}
+{\em i} & \-The index of the comment. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns 1 if the comment was removed, -\/1 if it did not exist in the post. 
+\end{DoxyReturn}
+
+
+\subsection{\-Member \-Data \-Documentation}
+\hypertarget{classstorage_1_1_post_ae1acd6948113e41abaac3746752316cd}{
+\index{storage\-::\-Post@{storage\-::\-Post}!max\-Comment\-Length@{max\-Comment\-Length}}
+\index{max\-Comment\-Length@{max\-Comment\-Length}!storage::Post@{storage\-::\-Post}}
+\subsubsection[{max\-Comment\-Length}]{\setlength{\rightskip}{0pt plus 5cm}final int {\bf storage.\-Post.\-max\-Comment\-Length} = 2000\hspace{0.3cm}{\ttfamily  \mbox{[}static, protected\mbox{]}}}}
+\label{classstorage_1_1_post_ae1acd6948113e41abaac3746752316cd}
+\-Max length for a comment. \hypertarget{classstorage_1_1_post_aca0ef12aa167eb825a44deac4601aeac}{
+\index{storage\-::\-Post@{storage\-::\-Post}!max\-Title\-Length@{max\-Title\-Length}}
+\index{max\-Title\-Length@{max\-Title\-Length}!storage::Post@{storage\-::\-Post}}
+\subsubsection[{max\-Title\-Length}]{\setlength{\rightskip}{0pt plus 5cm}final int {\bf storage.\-Post.\-max\-Title\-Length} = 60\hspace{0.3cm}{\ttfamily  \mbox{[}static, protected\mbox{]}}}}
+\label{classstorage_1_1_post_aca0ef12aa167eb825a44deac4601aeac}
+\-Max length for a post title. 
+
+\-The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+storage/\-Post.\-java\end{DoxyCompactItemize}

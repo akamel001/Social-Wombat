@@ -1,0 +1,72 @@
+\hypertarget{classutil_1_1_string_legality_checker}{
+\section{util.\-String\-Legality\-Checker \-Class \-Reference}
+\label{classutil_1_1_string_legality_checker}\index{util.\-String\-Legality\-Checker@{util.\-String\-Legality\-Checker}}
+}
+\subsection*{\-Static \-Public \-Member \-Functions}
+\begin{DoxyCompactItemize}
+\item 
+static boolean \hyperlink{classutil_1_1_string_legality_checker_a2824b130908ce87b71054f1c98d414ac}{check\-If\-Username\-String\-Is\-Legal} (\-String str)
+\item 
+static final boolean \hyperlink{classutil_1_1_string_legality_checker_a7f4b55ff68c3c926a78428edc2d3e831}{check\-If\-Password\-String\-Is\-Legal} (char\mbox{[}$\,$\mbox{]} pw)
+\end{DoxyCompactItemize}
+\subsection*{\-Static \-Package \-Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classutil_1_1_string_legality_checker_a754cb8a19cf59cb8dfd34b66b2cfcc67}{
+static \-String {\bfseries s\-U\-S\-E\-R\-N\-A\-M\-E\-\_\-\-R\-E\-Q\-U\-I\-R\-E\-M\-E\-N\-T\-S} = \char`\"{}\mbox{[}a-\/z\-A-\/\-Z0-\/9\-\_\-\mbox{]}\{3,30\}\char`\"{}}
+\label{classutil_1_1_string_legality_checker_a754cb8a19cf59cb8dfd34b66b2cfcc67}
+
+\item 
+\hypertarget{classutil_1_1_string_legality_checker_a448d694efe19f738cd7e8b3142e029be}{
+static \-String {\bfseries s\-P\-A\-S\-S\-W\-O\-R\-D\-\_\-\-R\-E\-Q\-U\-I\-R\-E\-M\-E\-N\-T\-S} = \char`\"{}((?=.$\ast$\mbox{[}0-\/9\mbox{]})(?=.$\ast$\mbox{[}a-\/z\mbox{]})(?=.$\ast$\mbox{[}\-A-\/\-Z\mbox{]})(?=.$\ast$\mbox{[}!@\#\$\%$^\wedge$\&+=\mbox{]})\mbox{[}0-\/9a-\/z\-A-\/\-Z@\#\$\%$^\wedge$\&+=\mbox{]}\{8,25\})\char`\"{}}
+\label{classutil_1_1_string_legality_checker_a448d694efe19f738cd7e8b3142e029be}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{\-Detailed \-Description}
+\-A class for checking username and password string legality. \begin{DoxyAuthor}{\-Author}
+\-Julia 
+\end{DoxyAuthor}
+
+
+\subsection{\-Member \-Function \-Documentation}
+\hypertarget{classutil_1_1_string_legality_checker_a7f4b55ff68c3c926a78428edc2d3e831}{
+\index{util\-::\-String\-Legality\-Checker@{util\-::\-String\-Legality\-Checker}!check\-If\-Password\-String\-Is\-Legal@{check\-If\-Password\-String\-Is\-Legal}}
+\index{check\-If\-Password\-String\-Is\-Legal@{check\-If\-Password\-String\-Is\-Legal}!util::StringLegalityChecker@{util\-::\-String\-Legality\-Checker}}
+\subsubsection[{check\-If\-Password\-String\-Is\-Legal}]{\setlength{\rightskip}{0pt plus 5cm}static final boolean util.\-String\-Legality\-Checker.\-check\-If\-Password\-String\-Is\-Legal (
+\begin{DoxyParamCaption}
+\item[{char\mbox{[}$\,$\mbox{]}}]{pw}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}static\mbox{]}}}}
+\label{classutil_1_1_string_legality_checker_a7f4b55ff68c3c926a78428edc2d3e831}
+\-Checks that a given string is a legal password string. 
+\begin{DoxyParams}{\-Parameters}
+{\em str} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+true if the password legality requirements are satisfied; false otherwise 
+\end{DoxyReturn}
+\hypertarget{classutil_1_1_string_legality_checker_a2824b130908ce87b71054f1c98d414ac}{
+\index{util\-::\-String\-Legality\-Checker@{util\-::\-String\-Legality\-Checker}!check\-If\-Username\-String\-Is\-Legal@{check\-If\-Username\-String\-Is\-Legal}}
+\index{check\-If\-Username\-String\-Is\-Legal@{check\-If\-Username\-String\-Is\-Legal}!util::StringLegalityChecker@{util\-::\-String\-Legality\-Checker}}
+\subsubsection[{check\-If\-Username\-String\-Is\-Legal}]{\setlength{\rightskip}{0pt plus 5cm}static boolean util.\-String\-Legality\-Checker.\-check\-If\-Username\-String\-Is\-Legal (
+\begin{DoxyParamCaption}
+\item[{\-String}]{str}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}static\mbox{]}}}}
+\label{classutil_1_1_string_legality_checker_a2824b130908ce87b71054f1c98d414ac}
+\-Checks that a given string is a legal username string. 
+\begin{DoxyParams}{\-Parameters}
+{\em str} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+true if the username legality requirements are satisfied; false otherwise 
+\end{DoxyReturn}
+
+
+\-The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+util/\-String\-Legality\-Checker.\-java\end{DoxyCompactItemize}

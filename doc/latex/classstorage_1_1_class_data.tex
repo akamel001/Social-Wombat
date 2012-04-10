@@ -1,0 +1,249 @@
+\hypertarget{classstorage_1_1_class_data}{
+\section{storage.\-Class\-Data \-Class \-Reference}
+\label{classstorage_1_1_class_data}\index{storage.\-Class\-Data@{storage.\-Class\-Data}}
+}
+
+
+\-Inherits \-Serializable.
+
+\subsection*{\-Public \-Member \-Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classstorage_1_1_class_data_abe9330d81fe75ab6def9c0d859da3977}{\-Class\-Data} (\-String inst)
+\item 
+int \hyperlink{classstorage_1_1_class_data_a5d2f11d8822f7bfaea66ffb4edb2348d}{set\-Class\-Name} (\-String n)
+\item 
+\-String \hyperlink{classstorage_1_1_class_data_aa7bbd6db37a430c6d91e61474c9bcfae}{get\-Class\-Name} ()
+\item 
+int \hyperlink{classstorage_1_1_class_data_a58435f26060509a99ae40a8fc680a4f0}{get\-Class\-Id} ()
+\item 
+int \hyperlink{classstorage_1_1_class_data_a1d55e9e5dc3323070f522db8847b459a}{get\-Class\-Server} ()
+\item 
+int \hyperlink{classstorage_1_1_class_data_aef871e28cb00ac9c34d2ec1378d9fa52}{get\-Class\-Port} ()
+\item 
+boolean \hyperlink{classstorage_1_1_class_data_a50def72f073abddeb123f39a4a7882b7}{is\-Instructor} (\-String user\-Name)
+\item 
+int \hyperlink{classstorage_1_1_class_data_a0ce5ea5c6a2608bdb337fa8750476ce3}{set\-Class\-Server} (int server\-Ip, int port\-Num)
+\item 
+int \hyperlink{classstorage_1_1_class_data_ac8adea15624f5ec9ef5c4062e27d3885}{set\-Class\-Id} (int i)
+\item 
+int \hyperlink{classstorage_1_1_class_data_afbba8de8c504df71baab327caadddb39}{remove\-User} (\-String id)
+\item 
+int \hyperlink{classstorage_1_1_class_data_a215e351a6f1186a029073a6e80b265d3}{get\-Permissions} (\-String user)
+\item 
+int \hyperlink{classstorage_1_1_class_data_ad8265988291d576c10288c29907bb172}{set\-Permission} (\-String id, int p)
+\end{DoxyCompactItemize}
+\subsection*{\-Protected \-Member \-Functions}
+\begin{DoxyCompactItemize}
+\item 
+\-String \hyperlink{classstorage_1_1_class_data_acefb318900ac9a8030b55b17a49508b5}{get\-Instructor} ()
+\item 
+\-List$<$ \-String $>$ \hyperlink{classstorage_1_1_class_data_a0e11cc1b63a7e227c2829c4506dfe0cb}{get\-Pending\-Users} ()
+\item 
+\-Map$<$ \-String, \-Integer $>$ \hyperlink{classstorage_1_1_class_data_a5616cdb63cafe663e1afafa8f307226b}{get\-Enrolled\-Users} ()
+\item 
+\-Map$<$ \-String, \-Integer $>$ \hyperlink{classstorage_1_1_class_data_a2864af602e0d5d6005f2f222063b5408}{get\-All\-Users} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{\-Detailed \-Description}
+\hyperlink{classstorage_1_1_class_data}{\-Class\-Data} objects store a class' associated server info and user permissions. (\hyperlink{classstorage_1_1_class_data}{\-Class\-Data} objects do \-N\-O\-T contain any posts, threads or other content.) \begin{DoxyAuthor}{\-Author}
+chris 
+\end{DoxyAuthor}
+
+
+\subsection{\-Constructor \& \-Destructor \-Documentation}
+\hypertarget{classstorage_1_1_class_data_abe9330d81fe75ab6def9c0d859da3977}{
+\index{storage\-::\-Class\-Data@{storage\-::\-Class\-Data}!\-Class\-Data@{\-Class\-Data}}
+\index{\-Class\-Data@{\-Class\-Data}!storage::ClassData@{storage\-::\-Class\-Data}}
+\subsubsection[{\-Class\-Data}]{\setlength{\rightskip}{0pt plus 5cm}storage.\-Class\-Data.\-Class\-Data (
+\begin{DoxyParamCaption}
+\item[{\-String}]{inst}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_class_data_abe9330d81fe75ab6def9c0d859da3977}
+\-Creates a class with the passed user as instructor 
+
+\subsection{\-Member \-Function \-Documentation}
+\hypertarget{classstorage_1_1_class_data_a2864af602e0d5d6005f2f222063b5408}{
+\index{storage\-::\-Class\-Data@{storage\-::\-Class\-Data}!get\-All\-Users@{get\-All\-Users}}
+\index{get\-All\-Users@{get\-All\-Users}!storage::ClassData@{storage\-::\-Class\-Data}}
+\subsubsection[{get\-All\-Users}]{\setlength{\rightskip}{0pt plus 5cm}\-Map$<$\-String, \-Integer$>$ storage.\-Class\-Data.\-get\-All\-Users (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classstorage_1_1_class_data_a2864af602e0d5d6005f2f222063b5408}
+\-Returns a \-Map containing all of the users in the class, including pending users, with permissions. \begin{DoxyReturn}{\-Returns}
+\-Returns a \-Map of \-Strings to \-Integers. \-The \-Strings are the names of the users. \-The \-Integers represent their permissions with respect to the classroom. \-A value of ) indicates pending enrollment, 1 indicates a student, and 2 indicates a \-T\-A. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_class_data_a58435f26060509a99ae40a8fc680a4f0}{
+\index{storage\-::\-Class\-Data@{storage\-::\-Class\-Data}!get\-Class\-Id@{get\-Class\-Id}}
+\index{get\-Class\-Id@{get\-Class\-Id}!storage::ClassData@{storage\-::\-Class\-Data}}
+\subsubsection[{get\-Class\-Id}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Class\-Data.\-get\-Class\-Id (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_class_data_a58435f26060509a99ae40a8fc680a4f0}
+\-Returns the \hyperlink{classstorage_1_1_class_room}{\-Class\-Room} id \hypertarget{classstorage_1_1_class_data_aa7bbd6db37a430c6d91e61474c9bcfae}{
+\index{storage\-::\-Class\-Data@{storage\-::\-Class\-Data}!get\-Class\-Name@{get\-Class\-Name}}
+\index{get\-Class\-Name@{get\-Class\-Name}!storage::ClassData@{storage\-::\-Class\-Data}}
+\subsubsection[{get\-Class\-Name}]{\setlength{\rightskip}{0pt plus 5cm}\-String storage.\-Class\-Data.\-get\-Class\-Name (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_class_data_aa7bbd6db37a430c6d91e61474c9bcfae}
+\-Returns the \hyperlink{classstorage_1_1_class_room}{\-Class\-Room} name \hypertarget{classstorage_1_1_class_data_aef871e28cb00ac9c34d2ec1378d9fa52}{
+\index{storage\-::\-Class\-Data@{storage\-::\-Class\-Data}!get\-Class\-Port@{get\-Class\-Port}}
+\index{get\-Class\-Port@{get\-Class\-Port}!storage::ClassData@{storage\-::\-Class\-Data}}
+\subsubsection[{get\-Class\-Port}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Class\-Data.\-get\-Class\-Port (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_class_data_aef871e28cb00ac9c34d2ec1378d9fa52}
+\-Returns the \hyperlink{classstorage_1_1_class_room}{\-Class\-Room} port \hypertarget{classstorage_1_1_class_data_a1d55e9e5dc3323070f522db8847b459a}{
+\index{storage\-::\-Class\-Data@{storage\-::\-Class\-Data}!get\-Class\-Server@{get\-Class\-Server}}
+\index{get\-Class\-Server@{get\-Class\-Server}!storage::ClassData@{storage\-::\-Class\-Data}}
+\subsubsection[{get\-Class\-Server}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Class\-Data.\-get\-Class\-Server (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_class_data_a1d55e9e5dc3323070f522db8847b459a}
+\-Returns the \hyperlink{classstorage_1_1_class_room}{\-Class\-Room} server \hypertarget{classstorage_1_1_class_data_a5616cdb63cafe663e1afafa8f307226b}{
+\index{storage\-::\-Class\-Data@{storage\-::\-Class\-Data}!get\-Enrolled\-Users@{get\-Enrolled\-Users}}
+\index{get\-Enrolled\-Users@{get\-Enrolled\-Users}!storage::ClassData@{storage\-::\-Class\-Data}}
+\subsubsection[{get\-Enrolled\-Users}]{\setlength{\rightskip}{0pt plus 5cm}\-Map$<$\-String, \-Integer$>$ storage.\-Class\-Data.\-get\-Enrolled\-Users (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classstorage_1_1_class_data_a5616cdb63cafe663e1afafa8f307226b}
+\-Returns a map containing all users enrolled in a class. \begin{DoxyReturn}{\-Returns}
+\-Returns a \-Map of \-Strings to \-Integers. \-The \-Strings are the names of the users. \-The \-Integers represent their permissions with respect to the classroom. \-A value of 1 indicates a student, 2 indicates a \-T\-A. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_class_data_acefb318900ac9a8030b55b17a49508b5}{
+\index{storage\-::\-Class\-Data@{storage\-::\-Class\-Data}!get\-Instructor@{get\-Instructor}}
+\index{get\-Instructor@{get\-Instructor}!storage::ClassData@{storage\-::\-Class\-Data}}
+\subsubsection[{get\-Instructor}]{\setlength{\rightskip}{0pt plus 5cm}\-String storage.\-Class\-Data.\-get\-Instructor (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classstorage_1_1_class_data_acefb318900ac9a8030b55b17a49508b5}
+\-Returns the instructor for the class. \begin{DoxyReturn}{\-Returns}
+the value of the instructor {\itshape field\/} 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_class_data_a0e11cc1b63a7e227c2829c4506dfe0cb}{
+\index{storage\-::\-Class\-Data@{storage\-::\-Class\-Data}!get\-Pending\-Users@{get\-Pending\-Users}}
+\index{get\-Pending\-Users@{get\-Pending\-Users}!storage::ClassData@{storage\-::\-Class\-Data}}
+\subsubsection[{get\-Pending\-Users}]{\setlength{\rightskip}{0pt plus 5cm}\-List$<$\-String$>$ storage.\-Class\-Data.\-get\-Pending\-Users (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classstorage_1_1_class_data_a0e11cc1b63a7e227c2829c4506dfe0cb}
+\-Returns the names of all users with enrollment pending. \begin{DoxyReturn}{\-Returns}
+\-Returns a list of strings representing the usernames of every user in the class with permissions==0. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_class_data_a215e351a6f1186a029073a6e80b265d3}{
+\index{storage\-::\-Class\-Data@{storage\-::\-Class\-Data}!get\-Permissions@{get\-Permissions}}
+\index{get\-Permissions@{get\-Permissions}!storage::ClassData@{storage\-::\-Class\-Data}}
+\subsubsection[{get\-Permissions}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Class\-Data.\-get\-Permissions (
+\begin{DoxyParamCaption}
+\item[{\-String}]{user}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_class_data_a215e351a6f1186a029073a6e80b265d3}
+\-Returns the permissions for the passed user. 
+\begin{DoxyParams}{\-Parameters}
+{\em user} & \-The username to be checked. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns the permissions (0-\/3) for the user. \-Returns -\/1 if user is not present. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_class_data_a50def72f073abddeb123f39a4a7882b7}{
+\index{storage\-::\-Class\-Data@{storage\-::\-Class\-Data}!is\-Instructor@{is\-Instructor}}
+\index{is\-Instructor@{is\-Instructor}!storage::ClassData@{storage\-::\-Class\-Data}}
+\subsubsection[{is\-Instructor}]{\setlength{\rightskip}{0pt plus 5cm}boolean storage.\-Class\-Data.\-is\-Instructor (
+\begin{DoxyParamCaption}
+\item[{\-String}]{user\-Name}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_class_data_a50def72f073abddeb123f39a4a7882b7}
+\-Returns true if the passed string is the instructor's name \hypertarget{classstorage_1_1_class_data_afbba8de8c504df71baab327caadddb39}{
+\index{storage\-::\-Class\-Data@{storage\-::\-Class\-Data}!remove\-User@{remove\-User}}
+\index{remove\-User@{remove\-User}!storage::ClassData@{storage\-::\-Class\-Data}}
+\subsubsection[{remove\-User}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Class\-Data.\-remove\-User (
+\begin{DoxyParamCaption}
+\item[{\-String}]{id}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_class_data_afbba8de8c504df71baab327caadddb39}
+\-Removes a user from the class list. 
+\begin{DoxyParams}{\-Parameters}
+{\em id} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_class_data_ac8adea15624f5ec9ef5c4062e27d3885}{
+\index{storage\-::\-Class\-Data@{storage\-::\-Class\-Data}!set\-Class\-Id@{set\-Class\-Id}}
+\index{set\-Class\-Id@{set\-Class\-Id}!storage::ClassData@{storage\-::\-Class\-Data}}
+\subsubsection[{set\-Class\-Id}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Class\-Data.\-set\-Class\-Id (
+\begin{DoxyParamCaption}
+\item[{int}]{i}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_class_data_ac8adea15624f5ec9ef5c4062e27d3885}
+\-Sets the id for the class. \hypertarget{classstorage_1_1_class_data_a5d2f11d8822f7bfaea66ffb4edb2348d}{
+\index{storage\-::\-Class\-Data@{storage\-::\-Class\-Data}!set\-Class\-Name@{set\-Class\-Name}}
+\index{set\-Class\-Name@{set\-Class\-Name}!storage::ClassData@{storage\-::\-Class\-Data}}
+\subsubsection[{set\-Class\-Name}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Class\-Data.\-set\-Class\-Name (
+\begin{DoxyParamCaption}
+\item[{\-String}]{n}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_class_data_a5d2f11d8822f7bfaea66ffb4edb2348d}
+\-Sets the name of the class. \hypertarget{classstorage_1_1_class_data_a0ce5ea5c6a2608bdb337fa8750476ce3}{
+\index{storage\-::\-Class\-Data@{storage\-::\-Class\-Data}!set\-Class\-Server@{set\-Class\-Server}}
+\index{set\-Class\-Server@{set\-Class\-Server}!storage::ClassData@{storage\-::\-Class\-Data}}
+\subsubsection[{set\-Class\-Server}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Class\-Data.\-set\-Class\-Server (
+\begin{DoxyParamCaption}
+\item[{int}]{server\-Ip, }
+\item[{int}]{port\-Num}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_class_data_a0ce5ea5c6a2608bdb337fa8750476ce3}
+\-Sets the server for the class. \hypertarget{classstorage_1_1_class_data_ad8265988291d576c10288c29907bb172}{
+\index{storage\-::\-Class\-Data@{storage\-::\-Class\-Data}!set\-Permission@{set\-Permission}}
+\index{set\-Permission@{set\-Permission}!storage::ClassData@{storage\-::\-Class\-Data}}
+\subsubsection[{set\-Permission}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Class\-Data.\-set\-Permission (
+\begin{DoxyParamCaption}
+\item[{\-String}]{id, }
+\item[{int}]{p}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_class_data_ad8265988291d576c10288c29907bb172}
+\-Sets permissions for a user.\par
+ \-N\-O\-T\-E\-: \-Passing a permission of -\/1 removes the student from the class. \-N\-O\-T\-E\-: \-Passing a permission of 0 with an id that does not exist will add that id to the list. 
+\begin{DoxyParams}{\-Parameters}
+{\em id} & \-The id of the user to be changed. \\
+\hline
+{\em p} & \-The value to which the permissions will be changed. \-Value must be -\/1$<$=p$<$=2\par
+ -\/1\-: removes user from list{\bfseries  }\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+{\bfseries  \-Returns -\/1 if id is out of range or p is null. }
+\end{DoxyReturn}
+
+
+\-The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+storage/\-Class\-Data.\-java\end{DoxyCompactItemize}

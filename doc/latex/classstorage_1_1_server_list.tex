@@ -1,0 +1,224 @@
+\hypertarget{classstorage_1_1_server_list}{
+\section{storage.\-Server\-List \-Class \-Reference}
+\label{classstorage_1_1_server_list}\index{storage.\-Server\-List@{storage.\-Server\-List}}
+}
+
+
+\-Inherits \-Serializable.
+
+\subsection*{\-Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classstorage_1_1_server_list_1_1_server_data}{\-Server\-Data}
+\end{DoxyCompactItemize}
+\subsection*{\-Public \-Member \-Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classstorage_1_1_server_list_a9c4149e053b28b2430ae1fdcdc035d2b}{\-Server\-List} ()
+\item 
+int \hyperlink{classstorage_1_1_server_list_a1e137bec7ebcddf53a37e344d239563a}{add\-Server} (\-Inet\-Address ip, int port, char\mbox{[}$\,$\mbox{]} pass, \hyperlink{classsecurity_1_1_a_e_s}{\-A\-E\-S} encrypter)
+\item 
+\-Map$<$ \-Integer, \-String $>$ \hyperlink{classstorage_1_1_server_list_a179500fe2ef0804625699a82c7716ab0}{get\-Server\-List} ()
+\item 
+int \hyperlink{classstorage_1_1_server_list_abf9871c317e9f2f467d0acef06740007}{remove\-Server} (int s)
+\item 
+\hypertarget{classstorage_1_1_server_list_ae2175087fe0a86ad0010832de6c57e8d}{
+\hyperlink{classstorage_1_1_server_list_1_1_server_data}{\-Server\-Data} {\bfseries get\-Server} (\-Integer i)}
+\label{classstorage_1_1_server_list_ae2175087fe0a86ad0010832de6c57e8d}
+
+\item 
+\-Inet\-Address \hyperlink{classstorage_1_1_server_list_a6771878ea6a19ff71c936f1233602e3c}{get\-Address} (int s)
+\item 
+int \hyperlink{classstorage_1_1_server_list_a3d52877c0a72151efd20d7bc8b2be9fe}{get\-Port} (int s)
+\item 
+int \hyperlink{classstorage_1_1_server_list_a94e4fb4dea6474c9a242b730f3123240}{get\-Last\-Server} ()
+\item 
+boolean \hyperlink{classstorage_1_1_server_list_a8769af3910b709dd60efdaa43c1459cc}{validate\-Server} (int server\-\_\-id, char\mbox{[}$\,$\mbox{]} pass, \hyperlink{classsecurity_1_1_a_e_s}{\-A\-E\-S} encryptor)
+\item 
+char\mbox{[}$\,$\mbox{]} \hyperlink{classstorage_1_1_server_list_aad1d9eb243eeec18b8d564aab811f31d}{get\-Server\-Pass} (int server\-\_\-id, \hyperlink{classsecurity_1_1_a_e_s}{\-A\-E\-S} encryptor)
+\item 
+\hypertarget{classstorage_1_1_server_list_aef92106f14d8bba16812d82ed536f614}{
+\hyperlink{classsecurity_1_1_a_e_s}{\-A\-E\-S} {\bfseries get\-Server\-A\-E\-S} (int server\-\_\-id, \hyperlink{classsecurity_1_1_a_e_s}{\-A\-E\-S} encryptor)}
+\label{classstorage_1_1_server_list_aef92106f14d8bba16812d82ed536f614}
+
+\item 
+\hypertarget{classstorage_1_1_server_list_a1c56cd0abbf75a96dcb6265695156093}{
+\-List$<$ byte\mbox{[}$\,$\mbox{]}$>$ {\bfseries get\-Iv\-Salt} (int server\-\_\-id, \hyperlink{classsecurity_1_1_a_e_s}{\-A\-E\-S} encryptor)}
+\label{classstorage_1_1_server_list_a1c56cd0abbf75a96dcb6265695156093}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{\-Detailed \-Description}
+\hyperlink{classstorage_1_1_server_list}{\-Server\-List} holds info and access methods for server info.
+
+\begin{DoxyAuthor}{\-Author}
+chris d 
+\end{DoxyAuthor}
+
+
+\subsection{\-Constructor \& \-Destructor \-Documentation}
+\hypertarget{classstorage_1_1_server_list_a9c4149e053b28b2430ae1fdcdc035d2b}{
+\index{storage\-::\-Server\-List@{storage\-::\-Server\-List}!\-Server\-List@{\-Server\-List}}
+\index{\-Server\-List@{\-Server\-List}!storage::ServerList@{storage\-::\-Server\-List}}
+\subsubsection[{\-Server\-List}]{\setlength{\rightskip}{0pt plus 5cm}storage.\-Server\-List.\-Server\-List (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_server_list_a9c4149e053b28b2430ae1fdcdc035d2b}
+\-Creates a list of servers. \-First server created has an id of 1. 
+
+\subsection{\-Member \-Function \-Documentation}
+\hypertarget{classstorage_1_1_server_list_a1e137bec7ebcddf53a37e344d239563a}{
+\index{storage\-::\-Server\-List@{storage\-::\-Server\-List}!add\-Server@{add\-Server}}
+\index{add\-Server@{add\-Server}!storage::ServerList@{storage\-::\-Server\-List}}
+\subsubsection[{add\-Server}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Server\-List.\-add\-Server (
+\begin{DoxyParamCaption}
+\item[{\-Inet\-Address}]{ip, }
+\item[{int}]{port, }
+\item[{char\mbox{[}$\,$\mbox{]}}]{pass, }
+\item[{{\bf \-A\-E\-S}}]{encrypter}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_server_list_a1e137bec7ebcddf53a37e344d239563a}
+\-Adds a new server to the server list.\par
+ \par
+ \-Creates a new server object with the passed ip address and port. \-The server id is automatically created.\par
+ \-N\-O\-T\-E\-: two ports cannot have both the same ip and port. 
+\begin{DoxyParams}{\-Parameters}
+{\em ip} & \-The ip address of the server. \\
+\hline
+{\em port} & \-The port number of the server. \\
+\hline
+{\em pass} & \-The password for the server. \-N\-O\-T\-E\-: the passed char\mbox{[}\mbox{]} is zeroed out as soon as the password is set! \-It cannot be used again!!!! \\
+\hline
+{\em encrypter} & \-An \-A\-E\-S object used to encrypt the password. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns the server id or -\/1 if the ip/port combination already exists in the list. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_server_list_a6771878ea6a19ff71c936f1233602e3c}{
+\index{storage\-::\-Server\-List@{storage\-::\-Server\-List}!get\-Address@{get\-Address}}
+\index{get\-Address@{get\-Address}!storage::ServerList@{storage\-::\-Server\-List}}
+\subsubsection[{get\-Address}]{\setlength{\rightskip}{0pt plus 5cm}\-Inet\-Address storage.\-Server\-List.\-get\-Address (
+\begin{DoxyParamCaption}
+\item[{int}]{s}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_server_list_a6771878ea6a19ff71c936f1233602e3c}
+\-Returns the ip address for a server. 
+\begin{DoxyParams}{\-Parameters}
+{\em s} & \-The id of the server whose ip is to be found. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns and \-Inet\-Address of the server. \-Returns null if the server is not in the server list. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_server_list_a94e4fb4dea6474c9a242b730f3123240}{
+\index{storage\-::\-Server\-List@{storage\-::\-Server\-List}!get\-Last\-Server@{get\-Last\-Server}}
+\index{get\-Last\-Server@{get\-Last\-Server}!storage::ServerList@{storage\-::\-Server\-List}}
+\subsubsection[{get\-Last\-Server}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Server\-List.\-get\-Last\-Server (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_server_list_a94e4fb4dea6474c9a242b730f3123240}
+\-Gives the index of the last server created \begin{DoxyReturn}{\-Returns}
+
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_server_list_a3d52877c0a72151efd20d7bc8b2be9fe}{
+\index{storage\-::\-Server\-List@{storage\-::\-Server\-List}!get\-Port@{get\-Port}}
+\index{get\-Port@{get\-Port}!storage::ServerList@{storage\-::\-Server\-List}}
+\subsubsection[{get\-Port}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Server\-List.\-get\-Port (
+\begin{DoxyParamCaption}
+\item[{int}]{s}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_server_list_a3d52877c0a72151efd20d7bc8b2be9fe}
+\-Returns the port number for a server. 
+\begin{DoxyParams}{\-Parameters}
+{\em s} & \-The id of the server whose port is to be found. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns the port number of the server. \-Returns -\/1 if the server is not in the server list. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_server_list_a179500fe2ef0804625699a82c7716ab0}{
+\index{storage\-::\-Server\-List@{storage\-::\-Server\-List}!get\-Server\-List@{get\-Server\-List}}
+\index{get\-Server\-List@{get\-Server\-List}!storage::ServerList@{storage\-::\-Server\-List}}
+\subsubsection[{get\-Server\-List}]{\setlength{\rightskip}{0pt plus 5cm}\-Map$<$\-Integer, \-String$>$ storage.\-Server\-List.\-get\-Server\-List (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_server_list_a179500fe2ef0804625699a82c7716ab0}
+\-Returns a map of server ids mapped to strings containing the ip\-:port \begin{DoxyReturn}{\-Returns}
+\-Returns a list of ints mapped to ips 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_server_list_aad1d9eb243eeec18b8d564aab811f31d}{
+\index{storage\-::\-Server\-List@{storage\-::\-Server\-List}!get\-Server\-Pass@{get\-Server\-Pass}}
+\index{get\-Server\-Pass@{get\-Server\-Pass}!storage::ServerList@{storage\-::\-Server\-List}}
+\subsubsection[{get\-Server\-Pass}]{\setlength{\rightskip}{0pt plus 5cm}char \mbox{[}$\,$\mbox{]} storage.\-Server\-List.\-get\-Server\-Pass (
+\begin{DoxyParamCaption}
+\item[{int}]{server\-\_\-id, }
+\item[{{\bf \-A\-E\-S}}]{encryptor}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_server_list_aad1d9eb243eeec18b8d564aab811f31d}
+\-Gets the server's password 
+\begin{DoxyParams}{\-Parameters}
+{\em server\-\_\-id} & \\
+\hline
+{\em encryptor} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-A char\mbox{[}\mbox{]} containing the server's password. \-N\-O\-T\-E\-: \-M\-U\-S\-T \-B\-E \-Z\-E\-R\-O\-E\-D. \-Use \-Arrays.\-fill(pass, '0'). 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_server_list_abf9871c317e9f2f467d0acef06740007}{
+\index{storage\-::\-Server\-List@{storage\-::\-Server\-List}!remove\-Server@{remove\-Server}}
+\index{remove\-Server@{remove\-Server}!storage::ServerList@{storage\-::\-Server\-List}}
+\subsubsection[{remove\-Server}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Server\-List.\-remove\-Server (
+\begin{DoxyParamCaption}
+\item[{int}]{s}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_server_list_abf9871c317e9f2f467d0acef06740007}
+\-Removes a server from the server list. 
+\begin{DoxyParams}{\-Parameters}
+{\em s} & \-The id of the server to be removed. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+1 if a server with that id exists, -\/1 otherwise. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_server_list_a8769af3910b709dd60efdaa43c1459cc}{
+\index{storage\-::\-Server\-List@{storage\-::\-Server\-List}!validate\-Server@{validate\-Server}}
+\index{validate\-Server@{validate\-Server}!storage::ServerList@{storage\-::\-Server\-List}}
+\subsubsection[{validate\-Server}]{\setlength{\rightskip}{0pt plus 5cm}boolean storage.\-Server\-List.\-validate\-Server (
+\begin{DoxyParamCaption}
+\item[{int}]{server\-\_\-id, }
+\item[{char\mbox{[}$\,$\mbox{]}}]{pass, }
+\item[{{\bf \-A\-E\-S}}]{encryptor}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_server_list_a8769af3910b709dd60efdaa43c1459cc}
+\-Validates a server pass combo 
+\begin{DoxyParams}{\-Parameters}
+{\em server\-\_\-id} & \-The server id \\
+\hline
+{\em pass} & \-The server pass. \-N\-O\-T\-E\-: must be zeroed after use!! \-Use \-Arrays.\-fill(pass, '0') \\
+\hline
+{\em encryptor} & \-The \-A\-E\-S object to decrypt the server password \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns true is the server\-\_\-id pass is a valid combo. 
+\end{DoxyReturn}
+
+
+\-The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+storage/\-Server\-List.\-java\end{DoxyCompactItemize}

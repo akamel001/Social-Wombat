@@ -1,0 +1,505 @@
+\hypertarget{classclient_1_1_client}{
+\section{client.\-Client \-Class \-Reference}
+\label{classclient_1_1_client}\index{client.\-Client@{client.\-Client}}
+}
+\subsection*{\-Public \-Member \-Functions}
+\begin{DoxyCompactItemize}
+\item 
+boolean \hyperlink{classclient_1_1_client_ab39ffb797bfb6d99acf9eafc00c92bf8}{handle\-Login} (\-String u\-Name, char\mbox{[}$\,$\mbox{]} password)
+\item 
+\hyperlink{classstorage_1_1_message}{\-Message} \hyperlink{classclient_1_1_client_ac3aaba7fa6bba443db93590a357839d7}{\-Send\-And\-Receive\-Encrypted} (\-String user\-Name, \-String classroom\-Name, \-Object body, \-Message.\-Message\-Type m\-Type)
+\item 
+boolean \hyperlink{classclient_1_1_client_a0912a3d76ad777e48ffd24cdf6915757}{handle\-Logout} (\-String current\-User\-Name)
+\item 
+boolean \hyperlink{classclient_1_1_client_a8e34949fba6d37a57673776101ef3afe}{create\-Classroom} (\-String classroom\-Name, \-String u\-Name)
+\item 
+boolean \hyperlink{classclient_1_1_client_a2cbe1d0d394754db74305a623f2b9c98}{request\-To\-Join\-Classroom} (\-String classroom\-Request\-Name, \-String requester\-User\-Name)
+\item 
+\-Map$<$ \-String, \-Integer $>$ \hyperlink{classclient_1_1_client_a6db5b0635155ac32595526988455ed5a}{get\-Classroom\-Map\-For\-User} (\-String user\-Name)
+\item 
+boolean \hyperlink{classclient_1_1_client_aed505644ad018b883ede73d71e63dfd6}{create\-Thread} (\-String thread\-Name, \-String post\-Content, \-String current\-User\-Name, \-String classroom\-Name)
+\item 
+boolean \hyperlink{classclient_1_1_client_a29b39ba8090e63d3d67e994664cbccf6}{delete\-Classroom} (\-String classroom\-Name, \-String user\-Name)
+\item 
+boolean \hyperlink{classclient_1_1_client_adfa2846dd8aaeaf541e8ca9ef59670dc}{disjoin\-Classroom} (\-String classroom\-Name, \-String user\-Name)
+\item 
+\-Map$<$ \-Integer, \-String $>$ \hyperlink{classclient_1_1_client_a9457f8a445e5fa927700fe329560ee30}{get\-Thread\-Map\-For\-Classroom} (\-String classroom\-Name, \-String user\-Name)
+\item 
+\-Map$<$ \-Integer, \-String $>$ \hyperlink{classclient_1_1_client_a5c842770f1783756f15aeeae77671e10}{get\-Thread\-Given\-I\-D} (\-Integer thread\-I\-D, \-String classroom\-Name, \-String user\-Name)
+\item 
+\hypertarget{classclient_1_1_client_a9fc69a48eb8b0cea3a7fbc432a85ee8b}{
+boolean {\bfseries create\-Comment} (\-String comment\-Content, int thread\-I\-D, \-String classroom\-Name, \-String user\-Name)}
+\label{classclient_1_1_client_a9fc69a48eb8b0cea3a7fbc432a85ee8b}
+
+\item 
+\-Map$<$ \-String, \-Integer $>$ \hyperlink{classclient_1_1_client_a0637497f7ff5b09707224c621de977a0}{get\-Member\-Map\-For\-Classroom} (\-String classroom\-Name, \-String user\-Name)
+\item 
+boolean \hyperlink{classclient_1_1_client_a48d14df9205a77881a1b16e69ec85147}{remove\-Member} (\-String member\-Name, \-String classroom\-Name, \-String user\-Name)
+\item 
+boolean \hyperlink{classclient_1_1_client_a572f537598d1cec179b6d04be55b771b}{change\-Status} (\-String current\-Member\-Name, int current\-Member\-Perm, \-String user\-Name, \-String classroom\-Name)
+\item 
+\-List$<$ \-String $>$ \hyperlink{classclient_1_1_client_a82f76a20765200eb5a24e8dc3f8f4785}{get\-Request\-List\-For\-Classroom} (\-String current\-Classroom\-Name, \-String user\-Name)
+\item 
+boolean \hyperlink{classclient_1_1_client_a549eafdc02ef7fee64578e4994b580d5}{confirm\-As\-Member\-Of\-Classroom} (\-String pending\-Member, \-String classroom\-Name, \-String user\-Name)
+\item 
+boolean \hyperlink{classclient_1_1_client_af95c82c41a0c4d2b39111968467d3e9a}{deny\-Membership\-To\-Classroom} (\-String pending\-Member, \-String classroom\-Name, \-String user\-Name)
+\item 
+boolean \hyperlink{classclient_1_1_client_a40f331ef632564650106aedf89dd1029}{delete\-Comment} (\-Integer comment\-I\-D, \-Integer thread\-I\-D, \-String user\-Name, \-String classroom\-Name)
+\item 
+boolean \hyperlink{classclient_1_1_client_af6703c4d873557e34237a18a31bd4418}{delete\-Thread} (\-Integer thread\-I\-D, \-String user\-Name, \-String classroom\-Name)
+\item 
+boolean \hyperlink{classclient_1_1_client_a8f3f23677da021925724d8ac477bab8b}{change\-Password} (char\mbox{[}$\,$\mbox{]} old\-Password, char\mbox{[}$\,$\mbox{]} new\-Password, char\mbox{[}$\,$\mbox{]} confirm\-New\-Password, \-String user\-Name\-Temp, \-String current\-User\-Name)
+\item 
+\-String \hyperlink{classclient_1_1_client_aeaf46933d992b53d534b3596872fd162}{get\-Last\-Login} (\-String user\-Name)
+\end{DoxyCompactItemize}
+
+
+\subsection{\-Member \-Function \-Documentation}
+\hypertarget{classclient_1_1_client_a8f3f23677da021925724d8ac477bab8b}{
+\index{client\-::\-Client@{client\-::\-Client}!change\-Password@{change\-Password}}
+\index{change\-Password@{change\-Password}!client::Client@{client\-::\-Client}}
+\subsubsection[{change\-Password}]{\setlength{\rightskip}{0pt plus 5cm}boolean client.\-Client.\-change\-Password (
+\begin{DoxyParamCaption}
+\item[{char\mbox{[}$\,$\mbox{]}}]{old\-Password, }
+\item[{char\mbox{[}$\,$\mbox{]}}]{new\-Password, }
+\item[{char\mbox{[}$\,$\mbox{]}}]{confirm\-New\-Password, }
+\item[{\-String}]{user\-Name\-Temp, }
+\item[{\-String}]{current\-User\-Name}
+\end{DoxyParamCaption}
+)}}
+\label{classclient_1_1_client_a8f3f23677da021925724d8ac477bab8b}
+\-This a method for changing a user's password. \-Before changing a password, it must\-: verify that user\-Name\-Temp matches current\-User\-Name; verify that old\-Password matches current\-User\-Name's password; check that new\-Password1 matches new\-Password2. \-This method deals with passwords and care must be taken to leave no trace of any passwords, new or old. 
+\begin{DoxyParams}{\-Parameters}
+{\em old\-Password} & $<$-\/ this is current\-User\-Name's initial password \\
+\hline
+{\em new\-Password} & $<$-\/ this is the desired password for current\-User\-Name \\
+\hline
+{\em confirm\-New\-Password} & $<$-\/ again, this is the desired password for current\-User\-Name (we ask for it again to minimize the effects of user typos) \\
+\hline
+{\em user\-Name\-Temp} & $<$-\/ this is the supplied name of the current user; it must match current\-User\-Name for a password change \\
+\hline
+{\em current\-User\-Name} & $<$-\/ this is the name of the current user \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+
+\end{DoxyReturn}
+\hypertarget{classclient_1_1_client_a572f537598d1cec179b6d04be55b771b}{
+\index{client\-::\-Client@{client\-::\-Client}!change\-Status@{change\-Status}}
+\index{change\-Status@{change\-Status}!client::Client@{client\-::\-Client}}
+\subsubsection[{change\-Status}]{\setlength{\rightskip}{0pt plus 5cm}boolean client.\-Client.\-change\-Status (
+\begin{DoxyParamCaption}
+\item[{\-String}]{current\-Member\-Name, }
+\item[{int}]{current\-Member\-Perm, }
+\item[{\-String}]{user\-Name, }
+\item[{\-String}]{classroom\-Name}
+\end{DoxyParamCaption}
+)}}
+\label{classclient_1_1_client_a572f537598d1cec179b6d04be55b771b}
+\-Toggles the status of a member 
+\begin{DoxyParams}{\-Parameters}
+{\em current\-Member\-Name} & \\
+\hline
+{\em user\-Name} & \\
+\hline
+{\em classroom\-Name} & \\
+\hline
+\end{DoxyParams}
+\hypertarget{classclient_1_1_client_a549eafdc02ef7fee64578e4994b580d5}{
+\index{client\-::\-Client@{client\-::\-Client}!confirm\-As\-Member\-Of\-Classroom@{confirm\-As\-Member\-Of\-Classroom}}
+\index{confirm\-As\-Member\-Of\-Classroom@{confirm\-As\-Member\-Of\-Classroom}!client::Client@{client\-::\-Client}}
+\subsubsection[{confirm\-As\-Member\-Of\-Classroom}]{\setlength{\rightskip}{0pt plus 5cm}boolean client.\-Client.\-confirm\-As\-Member\-Of\-Classroom (
+\begin{DoxyParamCaption}
+\item[{\-String}]{pending\-Member, }
+\item[{\-String}]{classroom\-Name, }
+\item[{\-String}]{user\-Name}
+\end{DoxyParamCaption}
+)}}
+\label{classclient_1_1_client_a549eafdc02ef7fee64578e4994b580d5}
+\-Confirms and approve a member of a classroom 
+\begin{DoxyParams}{\-Parameters}
+{\em pending\-Member} & \\
+\hline
+{\em classroom\-Name} & \\
+\hline
+{\em user\-Name} & \\
+\hline
+\end{DoxyParams}
+\hypertarget{classclient_1_1_client_a8e34949fba6d37a57673776101ef3afe}{
+\index{client\-::\-Client@{client\-::\-Client}!create\-Classroom@{create\-Classroom}}
+\index{create\-Classroom@{create\-Classroom}!client::Client@{client\-::\-Client}}
+\subsubsection[{create\-Classroom}]{\setlength{\rightskip}{0pt plus 5cm}boolean client.\-Client.\-create\-Classroom (
+\begin{DoxyParamCaption}
+\item[{\-String}]{classroom\-Name, }
+\item[{\-String}]{u\-Name}
+\end{DoxyParamCaption}
+)}}
+\label{classclient_1_1_client_a8e34949fba6d37a57673776101ef3afe}
+\-This method is used to create a classroom. \-It takes in a classroom name and returns true if the classroom can be created, and false otherwise. 
+\begin{DoxyParams}{\-Parameters}
+{\em classroom\-Name} & \\
+\hline
+{\em u\-Name} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+boolean corresponding to classroom creation status 
+\end{DoxyReturn}
+\hypertarget{classclient_1_1_client_aed505644ad018b883ede73d71e63dfd6}{
+\index{client\-::\-Client@{client\-::\-Client}!create\-Thread@{create\-Thread}}
+\index{create\-Thread@{create\-Thread}!client::Client@{client\-::\-Client}}
+\subsubsection[{create\-Thread}]{\setlength{\rightskip}{0pt plus 5cm}boolean client.\-Client.\-create\-Thread (
+\begin{DoxyParamCaption}
+\item[{\-String}]{thread\-Name, }
+\item[{\-String}]{post\-Content, }
+\item[{\-String}]{current\-User\-Name, }
+\item[{\-String}]{classroom\-Name}
+\end{DoxyParamCaption}
+)}}
+\label{classclient_1_1_client_aed505644ad018b883ede73d71e63dfd6}
+\-This method creates a new thread with thread\-Name and post\-Content. 
+\begin{DoxyParams}{\-Parameters}
+{\em thread\-Name} & \\
+\hline
+{\em post\-Content} & \\
+\hline
+{\em current\-User\-Name} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+
+\end{DoxyReturn}
+\hypertarget{classclient_1_1_client_a29b39ba8090e63d3d67e994664cbccf6}{
+\index{client\-::\-Client@{client\-::\-Client}!delete\-Classroom@{delete\-Classroom}}
+\index{delete\-Classroom@{delete\-Classroom}!client::Client@{client\-::\-Client}}
+\subsubsection[{delete\-Classroom}]{\setlength{\rightskip}{0pt plus 5cm}boolean client.\-Client.\-delete\-Classroom (
+\begin{DoxyParamCaption}
+\item[{\-String}]{classroom\-Name, }
+\item[{\-String}]{user\-Name}
+\end{DoxyParamCaption}
+)}}
+\label{classclient_1_1_client_a29b39ba8090e63d3d67e994664cbccf6}
+\-Deletes a classroom from server 
+\begin{DoxyParams}{\-Parameters}
+{\em classroom\-Name} & \\
+\hline
+{\em user\-Name} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+
+\end{DoxyReturn}
+\hypertarget{classclient_1_1_client_a40f331ef632564650106aedf89dd1029}{
+\index{client\-::\-Client@{client\-::\-Client}!delete\-Comment@{delete\-Comment}}
+\index{delete\-Comment@{delete\-Comment}!client::Client@{client\-::\-Client}}
+\subsubsection[{delete\-Comment}]{\setlength{\rightskip}{0pt plus 5cm}boolean client.\-Client.\-delete\-Comment (
+\begin{DoxyParamCaption}
+\item[{\-Integer}]{comment\-I\-D, }
+\item[{\-Integer}]{thread\-I\-D, }
+\item[{\-String}]{user\-Name, }
+\item[{\-String}]{classroom\-Name}
+\end{DoxyParamCaption}
+)}}
+\label{classclient_1_1_client_a40f331ef632564650106aedf89dd1029}
+\-Deletes a comment. 
+\begin{DoxyParams}{\-Parameters}
+{\em comment\-I\-D} & \\
+\hline
+{\em current\-Thread\-I\-D} & \\
+\hline
+{\em current\-User\-Name} & \\
+\hline
+{\em current\-Classroom\-Name} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+
+\end{DoxyReturn}
+\hypertarget{classclient_1_1_client_af6703c4d873557e34237a18a31bd4418}{
+\index{client\-::\-Client@{client\-::\-Client}!delete\-Thread@{delete\-Thread}}
+\index{delete\-Thread@{delete\-Thread}!client::Client@{client\-::\-Client}}
+\subsubsection[{delete\-Thread}]{\setlength{\rightskip}{0pt plus 5cm}boolean client.\-Client.\-delete\-Thread (
+\begin{DoxyParamCaption}
+\item[{\-Integer}]{thread\-I\-D, }
+\item[{\-String}]{user\-Name, }
+\item[{\-String}]{classroom\-Name}
+\end{DoxyParamCaption}
+)}}
+\label{classclient_1_1_client_af6703c4d873557e34237a18a31bd4418}
+\-Deletes a thread. 
+\begin{DoxyParams}{\-Parameters}
+{\em current\-Thread\-I\-D} & \\
+\hline
+{\em current\-User\-Name} & \\
+\hline
+{\em current\-Classroom\-Name} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+
+\end{DoxyReturn}
+\hypertarget{classclient_1_1_client_af95c82c41a0c4d2b39111968467d3e9a}{
+\index{client\-::\-Client@{client\-::\-Client}!deny\-Membership\-To\-Classroom@{deny\-Membership\-To\-Classroom}}
+\index{deny\-Membership\-To\-Classroom@{deny\-Membership\-To\-Classroom}!client::Client@{client\-::\-Client}}
+\subsubsection[{deny\-Membership\-To\-Classroom}]{\setlength{\rightskip}{0pt plus 5cm}boolean client.\-Client.\-deny\-Membership\-To\-Classroom (
+\begin{DoxyParamCaption}
+\item[{\-String}]{pending\-Member, }
+\item[{\-String}]{classroom\-Name, }
+\item[{\-String}]{user\-Name}
+\end{DoxyParamCaption}
+)}}
+\label{classclient_1_1_client_af95c82c41a0c4d2b39111968467d3e9a}
+\-Revokes membership to a classroom 
+\begin{DoxyParams}{\-Parameters}
+{\em pending\-Member} & \\
+\hline
+{\em classroom\-Name} & \\
+\hline
+{\em user\-Name} & \\
+\hline
+\end{DoxyParams}
+\hypertarget{classclient_1_1_client_adfa2846dd8aaeaf541e8ca9ef59670dc}{
+\index{client\-::\-Client@{client\-::\-Client}!disjoin\-Classroom@{disjoin\-Classroom}}
+\index{disjoin\-Classroom@{disjoin\-Classroom}!client::Client@{client\-::\-Client}}
+\subsubsection[{disjoin\-Classroom}]{\setlength{\rightskip}{0pt plus 5cm}boolean client.\-Client.\-disjoin\-Classroom (
+\begin{DoxyParamCaption}
+\item[{\-String}]{classroom\-Name, }
+\item[{\-String}]{user\-Name}
+\end{DoxyParamCaption}
+)}}
+\label{classclient_1_1_client_adfa2846dd8aaeaf541e8ca9ef59670dc}
+\-Create message type to handle this request appropriately 
+\begin{DoxyParams}{\-Parameters}
+{\em classroom\-Name} & \\
+\hline
+{\em user\-Name} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+
+\end{DoxyReturn}
+\hypertarget{classclient_1_1_client_a6db5b0635155ac32595526988455ed5a}{
+\index{client\-::\-Client@{client\-::\-Client}!get\-Classroom\-Map\-For\-User@{get\-Classroom\-Map\-For\-User}}
+\index{get\-Classroom\-Map\-For\-User@{get\-Classroom\-Map\-For\-User}!client::Client@{client\-::\-Client}}
+\subsubsection[{get\-Classroom\-Map\-For\-User}]{\setlength{\rightskip}{0pt plus 5cm}\-Map$<$\-String, \-Integer$>$ client.\-Client.\-get\-Classroom\-Map\-For\-User (
+\begin{DoxyParamCaption}
+\item[{\-String}]{user\-Name}
+\end{DoxyParamCaption}
+)}}
+\label{classclient_1_1_client_a6db5b0635155ac32595526988455ed5a}
+\-This method is used to get a list of classrooms for a particular member. \-It takes in a user name and returns the list of classrooms of which the user is a member. 
+\begin{DoxyParams}{\-Parameters}
+{\em user\-Name} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Map of classroom\-Name -\/$>$ permissions 
+\end{DoxyReturn}
+\hypertarget{classclient_1_1_client_aeaf46933d992b53d534b3596872fd162}{
+\index{client\-::\-Client@{client\-::\-Client}!get\-Last\-Login@{get\-Last\-Login}}
+\index{get\-Last\-Login@{get\-Last\-Login}!client::Client@{client\-::\-Client}}
+\subsubsection[{get\-Last\-Login}]{\setlength{\rightskip}{0pt plus 5cm}\-String client.\-Client.\-get\-Last\-Login (
+\begin{DoxyParamCaption}
+\item[{\-String}]{user\-Name}
+\end{DoxyParamCaption}
+)}}
+\label{classclient_1_1_client_aeaf46933d992b53d534b3596872fd162}
+\-Gets the last login info for this particular user. 
+\begin{DoxyParams}{\-Parameters}
+{\em user\-Name} & \-User name \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+last login info as a string 
+\end{DoxyReturn}
+\hypertarget{classclient_1_1_client_a0637497f7ff5b09707224c621de977a0}{
+\index{client\-::\-Client@{client\-::\-Client}!get\-Member\-Map\-For\-Classroom@{get\-Member\-Map\-For\-Classroom}}
+\index{get\-Member\-Map\-For\-Classroom@{get\-Member\-Map\-For\-Classroom}!client::Client@{client\-::\-Client}}
+\subsubsection[{get\-Member\-Map\-For\-Classroom}]{\setlength{\rightskip}{0pt plus 5cm}\-Map$<$\-String, \-Integer$>$ client.\-Client.\-get\-Member\-Map\-For\-Classroom (
+\begin{DoxyParamCaption}
+\item[{\-String}]{classroom\-Name, }
+\item[{\-String}]{user\-Name}
+\end{DoxyParamCaption}
+)}}
+\label{classclient_1_1_client_a0637497f7ff5b09707224c621de977a0}
+\-Gets a membership map that maps the member name to their permission 
+\begin{DoxyParams}{\-Parameters}
+{\em classroom\-Name} & \\
+\hline
+{\em user\-Name} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Map of \-Names -\/$>$ \-Permissions 
+\end{DoxyReturn}
+\hypertarget{classclient_1_1_client_a82f76a20765200eb5a24e8dc3f8f4785}{
+\index{client\-::\-Client@{client\-::\-Client}!get\-Request\-List\-For\-Classroom@{get\-Request\-List\-For\-Classroom}}
+\index{get\-Request\-List\-For\-Classroom@{get\-Request\-List\-For\-Classroom}!client::Client@{client\-::\-Client}}
+\subsubsection[{get\-Request\-List\-For\-Classroom}]{\setlength{\rightskip}{0pt plus 5cm}\-List$<$\-String$>$ client.\-Client.\-get\-Request\-List\-For\-Classroom (
+\begin{DoxyParamCaption}
+\item[{\-String}]{current\-Classroom\-Name, }
+\item[{\-String}]{user\-Name}
+\end{DoxyParamCaption}
+)}}
+\label{classclient_1_1_client_a82f76a20765200eb5a24e8dc3f8f4785}
+\-Requests a list of all user names that have made a requests to join a classroom 
+\begin{DoxyParams}{\-Parameters}
+{\em current\-Classroom\-Name} & \\
+\hline
+{\em user\-Name} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-List of all user names that have made requests to join a classroom 
+\end{DoxyReturn}
+\hypertarget{classclient_1_1_client_a5c842770f1783756f15aeeae77671e10}{
+\index{client\-::\-Client@{client\-::\-Client}!get\-Thread\-Given\-I\-D@{get\-Thread\-Given\-I\-D}}
+\index{get\-Thread\-Given\-I\-D@{get\-Thread\-Given\-I\-D}!client::Client@{client\-::\-Client}}
+\subsubsection[{get\-Thread\-Given\-I\-D}]{\setlength{\rightskip}{0pt plus 5cm}\-Map$<$\-Integer, \-String$>$ client.\-Client.\-get\-Thread\-Given\-I\-D (
+\begin{DoxyParamCaption}
+\item[{\-Integer}]{thread\-I\-D, }
+\item[{\-String}]{classroom\-Name, }
+\item[{\-String}]{user\-Name}
+\end{DoxyParamCaption}
+)}}
+\label{classclient_1_1_client_a5c842770f1783756f15aeeae77671e10}
+\-This function returns the contents of a single thread given its \-I\-D. 
+\begin{DoxyParams}{\-Parameters}
+{\em thread\-I\-D} & \\
+\hline
+{\em classroom\-Name} & \\
+\hline
+{\em user\-Name} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Map of \-Thread\-Topic/\-Post/\-Comment \-I\-Ds -\/$>$ \-Content 
+\end{DoxyReturn}
+\hypertarget{classclient_1_1_client_a9457f8a445e5fa927700fe329560ee30}{
+\index{client\-::\-Client@{client\-::\-Client}!get\-Thread\-Map\-For\-Classroom@{get\-Thread\-Map\-For\-Classroom}}
+\index{get\-Thread\-Map\-For\-Classroom@{get\-Thread\-Map\-For\-Classroom}!client::Client@{client\-::\-Client}}
+\subsubsection[{get\-Thread\-Map\-For\-Classroom}]{\setlength{\rightskip}{0pt plus 5cm}\-Map$<$\-Integer, \-String$>$ client.\-Client.\-get\-Thread\-Map\-For\-Classroom (
+\begin{DoxyParamCaption}
+\item[{\-String}]{classroom\-Name, }
+\item[{\-String}]{user\-Name}
+\end{DoxyParamCaption}
+)}}
+\label{classclient_1_1_client_a9457f8a445e5fa927700fe329560ee30}
+\-Requests from server a thread map mapping from thread id to thread name 
+\begin{DoxyParams}{\-Parameters}
+{\em classroom\-Name} & \\
+\hline
+{\em user\-Name} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Map of \-Thread \-I\-D -\/$>$ \-Thread \-Name 
+\end{DoxyReturn}
+\hypertarget{classclient_1_1_client_ab39ffb797bfb6d99acf9eafc00c92bf8}{
+\index{client\-::\-Client@{client\-::\-Client}!handle\-Login@{handle\-Login}}
+\index{handle\-Login@{handle\-Login}!client::Client@{client\-::\-Client}}
+\subsubsection[{handle\-Login}]{\setlength{\rightskip}{0pt plus 5cm}boolean client.\-Client.\-handle\-Login (
+\begin{DoxyParamCaption}
+\item[{\-String}]{u\-Name, }
+\item[{char\mbox{[}$\,$\mbox{]}}]{password}
+\end{DoxyParamCaption}
+)}}
+\label{classclient_1_1_client_ab39ffb797bfb6d99acf9eafc00c92bf8}
+\-A function that preforms the authentication protocal described in our documentation 
+\begin{DoxyParams}{\-Parameters}
+{\em u\-Name} & \\
+\hline
+{\em password} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+
+\end{DoxyReturn}
+\hypertarget{classclient_1_1_client_a0912a3d76ad777e48ffd24cdf6915757}{
+\index{client\-::\-Client@{client\-::\-Client}!handle\-Logout@{handle\-Logout}}
+\index{handle\-Logout@{handle\-Logout}!client::Client@{client\-::\-Client}}
+\subsubsection[{handle\-Logout}]{\setlength{\rightskip}{0pt plus 5cm}boolean client.\-Client.\-handle\-Logout (
+\begin{DoxyParamCaption}
+\item[{\-String}]{current\-User\-Name}
+\end{DoxyParamCaption}
+)}}
+\label{classclient_1_1_client_a0912a3d76ad777e48ffd24cdf6915757}
+\-This methods logs out a user corresponding to current\-User\-Name. 
+\begin{DoxyParams}{\-Parameters}
+{\em current\-User\-Name} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+
+\end{DoxyReturn}
+\hypertarget{classclient_1_1_client_a48d14df9205a77881a1b16e69ec85147}{
+\index{client\-::\-Client@{client\-::\-Client}!remove\-Member@{remove\-Member}}
+\index{remove\-Member@{remove\-Member}!client::Client@{client\-::\-Client}}
+\subsubsection[{remove\-Member}]{\setlength{\rightskip}{0pt plus 5cm}boolean client.\-Client.\-remove\-Member (
+\begin{DoxyParamCaption}
+\item[{\-String}]{member\-Name, }
+\item[{\-String}]{classroom\-Name, }
+\item[{\-String}]{user\-Name}
+\end{DoxyParamCaption}
+)}}
+\label{classclient_1_1_client_a48d14df9205a77881a1b16e69ec85147}
+\-Removes a member from a classroom 
+\begin{DoxyParams}{\-Parameters}
+{\em member\-Name} & \\
+\hline
+{\em classroom\-Name} & \\
+\hline
+{\em user\-Name} & \\
+\hline
+\end{DoxyParams}
+\hypertarget{classclient_1_1_client_a2cbe1d0d394754db74305a623f2b9c98}{
+\index{client\-::\-Client@{client\-::\-Client}!request\-To\-Join\-Classroom@{request\-To\-Join\-Classroom}}
+\index{request\-To\-Join\-Classroom@{request\-To\-Join\-Classroom}!client::Client@{client\-::\-Client}}
+\subsubsection[{request\-To\-Join\-Classroom}]{\setlength{\rightskip}{0pt plus 5cm}boolean client.\-Client.\-request\-To\-Join\-Classroom (
+\begin{DoxyParamCaption}
+\item[{\-String}]{classroom\-Request\-Name, }
+\item[{\-String}]{requester\-User\-Name}
+\end{DoxyParamCaption}
+)}}
+\label{classclient_1_1_client_a2cbe1d0d394754db74305a623f2b9c98}
+\-This method is used in requesting to join a classroom. \-It takes in a classroom request name and returns true if the classroom can be requested, and false otherwise. 
+\begin{DoxyParams}{\-Parameters}
+{\em classroom\-Request\-Name} & \\
+\hline
+{\em requester\-User\-Name} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+boolean corresponding to whether the classroom can be requested 
+\end{DoxyReturn}
+\hypertarget{classclient_1_1_client_ac3aaba7fa6bba443db93590a357839d7}{
+\index{client\-::\-Client@{client\-::\-Client}!\-Send\-And\-Receive\-Encrypted@{\-Send\-And\-Receive\-Encrypted}}
+\index{\-Send\-And\-Receive\-Encrypted@{\-Send\-And\-Receive\-Encrypted}!client::Client@{client\-::\-Client}}
+\subsubsection[{\-Send\-And\-Receive\-Encrypted}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-Message} client.\-Client.\-Send\-And\-Receive\-Encrypted (
+\begin{DoxyParamCaption}
+\item[{\-String}]{user\-Name, }
+\item[{\-String}]{classroom\-Name, }
+\item[{\-Object}]{body, }
+\item[{\-Message.\-Message\-Type}]{m\-Type}
+\end{DoxyParamCaption}
+)}}
+\label{classclient_1_1_client_ac3aaba7fa6bba443db93590a357839d7}
+\-A function to send secure and encrypted messages to the hub 
+\begin{DoxyParams}{\-Parameters}
+{\em user\-Name} & \\
+\hline
+{\em classroom\-Name} & \\
+\hline
+{\em body} & \\
+\hline
+{\em m\-Type} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+
+\end{DoxyReturn}
+
+
+\-The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+client/\-Client.\-java\end{DoxyCompactItemize}

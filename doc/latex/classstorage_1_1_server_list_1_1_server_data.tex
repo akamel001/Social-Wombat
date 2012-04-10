@@ -1,0 +1,183 @@
+\hypertarget{classstorage_1_1_server_list_1_1_server_data}{
+\section{storage.\-Server\-List.\-Server\-Data \-Class \-Reference}
+\label{classstorage_1_1_server_list_1_1_server_data}\index{storage.\-Server\-List.\-Server\-Data@{storage.\-Server\-List.\-Server\-Data}}
+}
+
+
+\-Inherits \-Serializable.
+
+\subsection*{\-Public \-Member \-Functions}
+\begin{DoxyCompactItemize}
+\item 
+\-List$<$ byte\mbox{[}$\,$\mbox{]}$>$ \hyperlink{classstorage_1_1_server_list_1_1_server_data_a64da3ad03ae5bbc8d578730b199977f5}{get\-Iv\-Salt} ()
+\end{DoxyCompactItemize}
+\subsection*{\-Protected \-Member \-Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classstorage_1_1_server_list_1_1_server_data_aa5212e236c0b8624f15bc2c4bfed79a8}{\-Server\-Data} (int i)
+\item 
+int \hyperlink{classstorage_1_1_server_list_1_1_server_data_af02fef9b39073181c0a95402cde2c0aa}{get\-Id} ()
+\item 
+\-Inet\-Address \hyperlink{classstorage_1_1_server_list_1_1_server_data_a0fdb0c32ffd493afdd972426318eb4f8}{get\-Address} ()
+\item 
+int \hyperlink{classstorage_1_1_server_list_1_1_server_data_a0d545ec51b1ebaa1120bb0ca131049a7}{set\-Address} (\-Inet\-Address i)
+\item 
+int \hyperlink{classstorage_1_1_server_list_1_1_server_data_a24f282f4f9fa46b513e02dc6de98ed5e}{get\-Port} ()
+\item 
+int \hyperlink{classstorage_1_1_server_list_1_1_server_data_a64d011f6e3dfeaa6c692df4dfb2e9691}{set\-Port} (int p)
+\item 
+int \hyperlink{classstorage_1_1_server_list_1_1_server_data_a226702f161358acc3accb4a4cb08ee6b}{set\-Password} (byte\mbox{[}$\,$\mbox{]} p)
+\end{DoxyCompactItemize}
+\subsection*{\-Package \-Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classstorage_1_1_server_list_1_1_server_data_a394b9a051190b85e3e397669079ace6e}{
+\-List$<$ byte\mbox{[}$\,$\mbox{]}$>$ {\bfseries iv\-\_\-salt}}
+\label{classstorage_1_1_server_list_1_1_server_data_a394b9a051190b85e3e397669079ace6e}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{\-Detailed \-Description}
+\-Server class holds the info for a single server. \begin{DoxyAuthor}{\-Author}
+chris \-The only part of this class that is encrypted is the password. 
+\end{DoxyAuthor}
+
+
+\subsection{\-Constructor \& \-Destructor \-Documentation}
+\hypertarget{classstorage_1_1_server_list_1_1_server_data_aa5212e236c0b8624f15bc2c4bfed79a8}{
+\index{storage\-::\-Server\-List\-::\-Server\-Data@{storage\-::\-Server\-List\-::\-Server\-Data}!\-Server\-Data@{\-Server\-Data}}
+\index{\-Server\-Data@{\-Server\-Data}!storage::ServerList::ServerData@{storage\-::\-Server\-List\-::\-Server\-Data}}
+\subsubsection[{\-Server\-Data}]{\setlength{\rightskip}{0pt plus 5cm}storage.\-Server\-List.\-Server\-Data.\-Server\-Data (
+\begin{DoxyParamCaption}
+\item[{int}]{i}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classstorage_1_1_server_list_1_1_server_data_aa5212e236c0b8624f15bc2c4bfed79a8}
+\-Creates a \hyperlink{classstorage_1_1_server_list}{\-Server\-List} object with default values.\par
+ \par
+ \-Default values\-:\par
+ id = -\/1\par
+ ip = null\par
+ port = -\/1\par
+ 
+
+\subsection{\-Member \-Function \-Documentation}
+\hypertarget{classstorage_1_1_server_list_1_1_server_data_a0fdb0c32ffd493afdd972426318eb4f8}{
+\index{storage\-::\-Server\-List\-::\-Server\-Data@{storage\-::\-Server\-List\-::\-Server\-Data}!get\-Address@{get\-Address}}
+\index{get\-Address@{get\-Address}!storage::ServerList::ServerData@{storage\-::\-Server\-List\-::\-Server\-Data}}
+\subsubsection[{get\-Address}]{\setlength{\rightskip}{0pt plus 5cm}\-Inet\-Address storage.\-Server\-List.\-Server\-Data.\-get\-Address (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classstorage_1_1_server_list_1_1_server_data_a0fdb0c32ffd493afdd972426318eb4f8}
+\-Returns the ip address of the server.
+
+\begin{DoxyReturn}{\-Returns}
+
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_server_list_1_1_server_data_af02fef9b39073181c0a95402cde2c0aa}{
+\index{storage\-::\-Server\-List\-::\-Server\-Data@{storage\-::\-Server\-List\-::\-Server\-Data}!get\-Id@{get\-Id}}
+\index{get\-Id@{get\-Id}!storage::ServerList::ServerData@{storage\-::\-Server\-List\-::\-Server\-Data}}
+\subsubsection[{get\-Id}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Server\-List.\-Server\-Data.\-get\-Id (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classstorage_1_1_server_list_1_1_server_data_af02fef9b39073181c0a95402cde2c0aa}
+\-Sets the 
+\begin{DoxyParams}{\-Parameters}
+{\em encrypted\-\_\-\-A\-E\-S} & \-Returns the server id\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_server_list_1_1_server_data_a64da3ad03ae5bbc8d578730b199977f5}{
+\index{storage\-::\-Server\-List\-::\-Server\-Data@{storage\-::\-Server\-List\-::\-Server\-Data}!get\-Iv\-Salt@{get\-Iv\-Salt}}
+\index{get\-Iv\-Salt@{get\-Iv\-Salt}!storage::ServerList::ServerData@{storage\-::\-Server\-List\-::\-Server\-Data}}
+\subsubsection[{get\-Iv\-Salt}]{\setlength{\rightskip}{0pt plus 5cm}\-List$<$byte\mbox{[}$\,$\mbox{]}$>$ storage.\-Server\-List.\-Server\-Data.\-get\-Iv\-Salt (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_server_list_1_1_server_data_a64da3ad03ae5bbc8d578730b199977f5}
+\-Returns the iv, salt list \begin{DoxyReturn}{\-Returns}
+a \-List$<$byte$>$. \mbox{[}0\mbox{]}=iv, \mbox{[}1\mbox{]}=salt 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_server_list_1_1_server_data_a24f282f4f9fa46b513e02dc6de98ed5e}{
+\index{storage\-::\-Server\-List\-::\-Server\-Data@{storage\-::\-Server\-List\-::\-Server\-Data}!get\-Port@{get\-Port}}
+\index{get\-Port@{get\-Port}!storage::ServerList::ServerData@{storage\-::\-Server\-List\-::\-Server\-Data}}
+\subsubsection[{get\-Port}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Server\-List.\-Server\-Data.\-get\-Port (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classstorage_1_1_server_list_1_1_server_data_a24f282f4f9fa46b513e02dc6de98ed5e}
+\-Returns the port number for the server.
+
+\begin{DoxyReturn}{\-Returns}
+
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_server_list_1_1_server_data_a0d545ec51b1ebaa1120bb0ca131049a7}{
+\index{storage\-::\-Server\-List\-::\-Server\-Data@{storage\-::\-Server\-List\-::\-Server\-Data}!set\-Address@{set\-Address}}
+\index{set\-Address@{set\-Address}!storage::ServerList::ServerData@{storage\-::\-Server\-List\-::\-Server\-Data}}
+\subsubsection[{set\-Address}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Server\-List.\-Server\-Data.\-set\-Address (
+\begin{DoxyParamCaption}
+\item[{\-Inet\-Address}]{i}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classstorage_1_1_server_list_1_1_server_data_a0d545ec51b1ebaa1120bb0ca131049a7}
+\-Sets the server's ip to the passed address.\par
+ \par
+ \-I\-P \-C\-A\-N \-O\-N\-L\-Y \-B\-E \-S\-E\-T \-O\-N\-C\-E! \-If the ip has already been set, it cannot be reset.\par
+ 
+\begin{DoxyParams}{\-Parameters}
+{\em i} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns -\/1 if passed value is null, 1 on success. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_server_list_1_1_server_data_a226702f161358acc3accb4a4cb08ee6b}{
+\index{storage\-::\-Server\-List\-::\-Server\-Data@{storage\-::\-Server\-List\-::\-Server\-Data}!set\-Password@{set\-Password}}
+\index{set\-Password@{set\-Password}!storage::ServerList::ServerData@{storage\-::\-Server\-List\-::\-Server\-Data}}
+\subsubsection[{set\-Password}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Server\-List.\-Server\-Data.\-set\-Password (
+\begin{DoxyParamCaption}
+\item[{byte\mbox{[}$\,$\mbox{]}}]{p}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classstorage_1_1_server_list_1_1_server_data_a226702f161358acc3accb4a4cb08ee6b}
+\-Sets the password for the server.  \-N\-O\-T\-E\-: this function zeros out the passed array. 
+\begin{DoxyParams}{\-Parameters}
+{\em p} & \-The new encrypted password. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns 1 on success, which, hopefully, is always. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_server_list_1_1_server_data_a64d011f6e3dfeaa6c692df4dfb2e9691}{
+\index{storage\-::\-Server\-List\-::\-Server\-Data@{storage\-::\-Server\-List\-::\-Server\-Data}!set\-Port@{set\-Port}}
+\index{set\-Port@{set\-Port}!storage::ServerList::ServerData@{storage\-::\-Server\-List\-::\-Server\-Data}}
+\subsubsection[{set\-Port}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Server\-List.\-Server\-Data.\-set\-Port (
+\begin{DoxyParamCaption}
+\item[{int}]{p}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classstorage_1_1_server_list_1_1_server_data_a64d011f6e3dfeaa6c692df4dfb2e9691}
+\-Sets the port to the passed int\par
+ \par
+ \-P\-O\-R\-T \-C\-A\-N \-O\-N\-L\-Y \-B\-E \-S\-E\-T \-O\-N\-C\-E! \-If the port has already been set, it cannot be reset. 
+\begin{DoxyParams}{\-Parameters}
+{\em p} & \-Must be 0$>$=p$<$=49151 \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+
+\end{DoxyReturn}
+
+
+\-The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+storage/\-Server\-List.\-java\end{DoxyCompactItemize}

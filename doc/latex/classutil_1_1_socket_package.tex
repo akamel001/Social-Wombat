@@ -1,0 +1,112 @@
+\hypertarget{classutil_1_1_socket_package}{
+\section{util.\-Socket\-Package \-Class \-Reference}
+\label{classutil_1_1_socket_package}\index{util.\-Socket\-Package@{util.\-Socket\-Package}}
+}
+\subsection*{\-Public \-Member \-Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classutil_1_1_socket_package_a2b57aef045817996aa41173d18d310d0}{\-Socket\-Package} (\-Inet\-Address addr, int port)
+\item 
+\hypertarget{classutil_1_1_socket_package_a11fbf1fa46cbb85f0e60f1127e767520}{
+\-String {\bfseries get\-Socket\-Name} ()}
+\label{classutil_1_1_socket_package_a11fbf1fa46cbb85f0e60f1127e767520}
+
+\item 
+void \hyperlink{classutil_1_1_socket_package_a0a5918c1e6b5b977941e89eea2a1ab4c}{socket\-Connect} ()
+\item 
+boolean \hyperlink{classutil_1_1_socket_package_a822900a5ad51d15d5a4b13dfa9243de7}{is\-Connected} ()
+\item 
+void \hyperlink{classutil_1_1_socket_package_a2716eaeec4325d54180844cd94e77b38}{send} (\hyperlink{classstorage_1_1_message}{\-Message} msg)
+\item 
+\hyperlink{classstorage_1_1_message}{\-Message} \hyperlink{classutil_1_1_socket_package_a2ab17a2eda4e53fec4c08f733fa56d54}{receive} ()
+\item 
+void \hyperlink{classutil_1_1_socket_package_a13ec202e418ffb5920b793e0f393e1b9}{send\-Encrypted} (byte\mbox{[}$\,$\mbox{]} msg)
+\item 
+byte\mbox{[}$\,$\mbox{]} \hyperlink{classutil_1_1_socket_package_a748e1f04fbd883e9b43f9dfa4d56ef64}{receive\-Encrypted} ()
+\item 
+\hypertarget{classutil_1_1_socket_package_a663b0a426ab352f1ad2b8a4900375b1d}{
+void {\bfseries close} ()}
+\label{classutil_1_1_socket_package_a663b0a426ab352f1ad2b8a4900375b1d}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{\-Detailed \-Description}
+\-A custom class to hold a socket, it's input stream, it's output stream, methods to send \& flush, other setup/tear down methods 
+
+\subsection{\-Constructor \& \-Destructor \-Documentation}
+\hypertarget{classutil_1_1_socket_package_a2b57aef045817996aa41173d18d310d0}{
+\index{util\-::\-Socket\-Package@{util\-::\-Socket\-Package}!\-Socket\-Package@{\-Socket\-Package}}
+\index{\-Socket\-Package@{\-Socket\-Package}!util::SocketPackage@{util\-::\-Socket\-Package}}
+\subsubsection[{\-Socket\-Package}]{\setlength{\rightskip}{0pt plus 5cm}util.\-Socket\-Package.\-Socket\-Package (
+\begin{DoxyParamCaption}
+\item[{\-Inet\-Address}]{addr, }
+\item[{int}]{port}
+\end{DoxyParamCaption}
+)}}
+\label{classutil_1_1_socket_package_a2b57aef045817996aa41173d18d310d0}
+\-Creates a socket. \-D\-O\-E\-S \-N\-O\-T \-C\-O\-N\-N\-E\-C\-T 
+
+\subsection{\-Member \-Function \-Documentation}
+\hypertarget{classutil_1_1_socket_package_a822900a5ad51d15d5a4b13dfa9243de7}{
+\index{util\-::\-Socket\-Package@{util\-::\-Socket\-Package}!is\-Connected@{is\-Connected}}
+\index{is\-Connected@{is\-Connected}!util::SocketPackage@{util\-::\-Socket\-Package}}
+\subsubsection[{is\-Connected}]{\setlength{\rightskip}{0pt plus 5cm}boolean util.\-Socket\-Package.\-is\-Connected (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classutil_1_1_socket_package_a822900a5ad51d15d5a4b13dfa9243de7}
+\-Checks if a socket package is connected \hypertarget{classutil_1_1_socket_package_a2ab17a2eda4e53fec4c08f733fa56d54}{
+\index{util\-::\-Socket\-Package@{util\-::\-Socket\-Package}!receive@{receive}}
+\index{receive@{receive}!util::SocketPackage@{util\-::\-Socket\-Package}}
+\subsubsection[{receive}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-Message} util.\-Socket\-Package.\-receive (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classutil_1_1_socket_package_a2ab17a2eda4e53fec4c08f733fa56d54}
+\-Receive an unencrypted message \hypertarget{classutil_1_1_socket_package_a748e1f04fbd883e9b43f9dfa4d56ef64}{
+\index{util\-::\-Socket\-Package@{util\-::\-Socket\-Package}!receive\-Encrypted@{receive\-Encrypted}}
+\index{receive\-Encrypted@{receive\-Encrypted}!util::SocketPackage@{util\-::\-Socket\-Package}}
+\subsubsection[{receive\-Encrypted}]{\setlength{\rightskip}{0pt plus 5cm}byte \mbox{[}$\,$\mbox{]} util.\-Socket\-Package.\-receive\-Encrypted (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classutil_1_1_socket_package_a748e1f04fbd883e9b43f9dfa4d56ef64}
+\-Receives an encrypted message but looks in the header for the length of the byte to read. \begin{DoxyReturn}{\-Returns}
+
+\end{DoxyReturn}
+\hypertarget{classutil_1_1_socket_package_a2716eaeec4325d54180844cd94e77b38}{
+\index{util\-::\-Socket\-Package@{util\-::\-Socket\-Package}!send@{send}}
+\index{send@{send}!util::SocketPackage@{util\-::\-Socket\-Package}}
+\subsubsection[{send}]{\setlength{\rightskip}{0pt plus 5cm}void util.\-Socket\-Package.\-send (
+\begin{DoxyParamCaption}
+\item[{{\bf \-Message}}]{msg}
+\end{DoxyParamCaption}
+)}}
+\label{classutil_1_1_socket_package_a2716eaeec4325d54180844cd94e77b38}
+\-Send an unencrypted message with flushing \hypertarget{classutil_1_1_socket_package_a13ec202e418ffb5920b793e0f393e1b9}{
+\index{util\-::\-Socket\-Package@{util\-::\-Socket\-Package}!send\-Encrypted@{send\-Encrypted}}
+\index{send\-Encrypted@{send\-Encrypted}!util::SocketPackage@{util\-::\-Socket\-Package}}
+\subsubsection[{send\-Encrypted}]{\setlength{\rightskip}{0pt plus 5cm}void util.\-Socket\-Package.\-send\-Encrypted (
+\begin{DoxyParamCaption}
+\item[{byte\mbox{[}$\,$\mbox{]}}]{msg}
+\end{DoxyParamCaption}
+)}}
+\label{classutil_1_1_socket_package_a13ec202e418ffb5920b793e0f393e1b9}
+\-Sends an encrypted (byte\mbox{[}\mbox{]}) message \hypertarget{classutil_1_1_socket_package_a0a5918c1e6b5b977941e89eea2a1ab4c}{
+\index{util\-::\-Socket\-Package@{util\-::\-Socket\-Package}!socket\-Connect@{socket\-Connect}}
+\index{socket\-Connect@{socket\-Connect}!util::SocketPackage@{util\-::\-Socket\-Package}}
+\subsubsection[{socket\-Connect}]{\setlength{\rightskip}{0pt plus 5cm}void util.\-Socket\-Package.\-socket\-Connect (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classutil_1_1_socket_package_a0a5918c1e6b5b977941e89eea2a1ab4c}
+\-Connects the socket to the input inetaddress. \-Also creates the output and input streams 
+
+\-The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+util/\-Socket\-Package.\-java\end{DoxyCompactItemize}

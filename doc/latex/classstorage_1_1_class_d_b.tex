@@ -1,0 +1,251 @@
+\hypertarget{classstorage_1_1_class_d_b}{
+\section{storage.\-Class\-D\-B \-Class \-Reference}
+\label{classstorage_1_1_class_d_b}\index{storage.\-Class\-D\-B@{storage.\-Class\-D\-B}}
+}
+
+
+\-Inherits \-Serializable.
+
+\subsection*{\-Public \-Member \-Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classstorage_1_1_class_d_b_a6bd30a3543e30d0b0559bdcb034bdb66}{\-Class\-D\-B} ()
+\item 
+int \hyperlink{classstorage_1_1_class_d_b_ade4b805280c72b4735382c43c872935d}{add\-Class\-Room} (\-String class\-\_\-name, \hyperlink{classsecurity_1_1_a_e_s}{\-A\-E\-S} encryptor)
+\item 
+int \hyperlink{classstorage_1_1_class_d_b_aa8098e7b23b6fb674c525d0955033562}{remove\-Class\-Room} (\-String class\-\_\-name)
+\item 
+int \hyperlink{classstorage_1_1_class_d_b_ac3e2bd24a0f27b264cecbcbe9f6b3987}{add\-Post} (\-String class\-\_\-name, \-String post\-\_\-title, \-String post\-\_\-body, \hyperlink{classsecurity_1_1_a_e_s}{\-A\-E\-S} encryptor)
+\item 
+int \hyperlink{classstorage_1_1_class_d_b_a1d3f447ee1f61bd281edef4810354013}{remove\-Post} (\-String class\-\_\-name, int post\-\_\-id, \hyperlink{classsecurity_1_1_a_e_s}{\-A\-E\-S} encryptor)
+\item 
+int \hyperlink{classstorage_1_1_class_d_b_aa67f0e51c36f201f8d4de98a9cc01029}{add\-Comment} (\-String class\-\_\-name, int post\-\_\-id, \-String comment, \hyperlink{classsecurity_1_1_a_e_s}{\-A\-E\-S} encryptor)
+\item 
+int \hyperlink{classstorage_1_1_class_d_b_a55b3b73d1053ee23677e4d7f611820fb}{remove\-Comment} (\-String class\-\_\-name, int post\-\_\-id, int comment\-\_\-id, \hyperlink{classsecurity_1_1_a_e_s}{\-A\-E\-S} encryptor)
+\item 
+\-Map$<$ \-Integer, \-String $>$ \hyperlink{classstorage_1_1_class_d_b_a069572699f79cc68dd25e1ec2642bf82}{get\-Thread\-List} (\-String class\-\_\-name, \hyperlink{classsecurity_1_1_a_e_s}{\-A\-E\-S} encryptor)
+\item 
+\-Map$<$ \-Integer, \-String $>$ \hyperlink{classstorage_1_1_class_d_b_ad4248040de442fc758502d0fafab0558}{get\-Thread} (\-String class\-\_\-name, int thread\-\_\-id, \hyperlink{classsecurity_1_1_a_e_s}{\-A\-E\-S} encryptor)
+\item 
+int \hyperlink{classstorage_1_1_class_d_b_a28e36f79be33939891a3775676c954b6}{delete\-Classes} (\-List$<$ \-String $>$ to\-Be\-Deleted)
+\end{DoxyCompactItemize}
+
+
+\subsection{\-Detailed \-Description}
+\-Class to store and access \hyperlink{classstorage_1_1_class_room}{\-Class\-Room} objects. \begin{DoxyAuthor}{\-Author}
+chris d 
+\end{DoxyAuthor}
+
+
+\subsection{\-Constructor \& \-Destructor \-Documentation}
+\hypertarget{classstorage_1_1_class_d_b_a6bd30a3543e30d0b0559bdcb034bdb66}{
+\index{storage\-::\-Class\-D\-B@{storage\-::\-Class\-D\-B}!\-Class\-D\-B@{\-Class\-D\-B}}
+\index{\-Class\-D\-B@{\-Class\-D\-B}!storage::ClassDB@{storage\-::\-Class\-D\-B}}
+\subsubsection[{\-Class\-D\-B}]{\setlength{\rightskip}{0pt plus 5cm}storage.\-Class\-D\-B.\-Class\-D\-B (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_class_d_b_a6bd30a3543e30d0b0559bdcb034bdb66}
+\hyperlink{classstorage_1_1_class_d_b}{\-Class\-D\-B} holds a list of \hyperlink{classstorage_1_1_class_room}{\-Class\-Room} objects. 
+
+\subsection{\-Member \-Function \-Documentation}
+\hypertarget{classstorage_1_1_class_d_b_ade4b805280c72b4735382c43c872935d}{
+\index{storage\-::\-Class\-D\-B@{storage\-::\-Class\-D\-B}!add\-Class\-Room@{add\-Class\-Room}}
+\index{add\-Class\-Room@{add\-Class\-Room}!storage::ClassDB@{storage\-::\-Class\-D\-B}}
+\subsubsection[{add\-Class\-Room}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Class\-D\-B.\-add\-Class\-Room (
+\begin{DoxyParamCaption}
+\item[{\-String}]{class\-\_\-name, }
+\item[{{\bf \-A\-E\-S}}]{encryptor}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_class_d_b_ade4b805280c72b4735382c43c872935d}
+\-Adds a classroom to the \-D\-B. 
+\begin{DoxyParams}{\-Parameters}
+{\em n} & \-The name of the new classroom -\/-\/ must be unique! \\
+\hline
+{\em encryptor} & \-The \-A\-E\-S object used to encrypt the classroom \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns 1 if the class was added, -\/1 if it already exists. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_class_d_b_aa67f0e51c36f201f8d4de98a9cc01029}{
+\index{storage\-::\-Class\-D\-B@{storage\-::\-Class\-D\-B}!add\-Comment@{add\-Comment}}
+\index{add\-Comment@{add\-Comment}!storage::ClassDB@{storage\-::\-Class\-D\-B}}
+\subsubsection[{add\-Comment}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Class\-D\-B.\-add\-Comment (
+\begin{DoxyParamCaption}
+\item[{\-String}]{class\-\_\-name, }
+\item[{int}]{post\-\_\-id, }
+\item[{\-String}]{comment, }
+\item[{{\bf \-A\-E\-S}}]{encryptor}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_class_d_b_aa67f0e51c36f201f8d4de98a9cc01029}
+\-Adds s comment to a post in a classroom 
+\begin{DoxyParams}{\-Parameters}
+{\em class\-\_\-name} & \-The name of the classroom that contains the post. \\
+\hline
+{\em post\-\_\-id} & \-The name of the post to which to add the comment. \\
+\hline
+{\em comment} & \-The comment to be added. \\
+\hline
+{\em encryptor} & \-The \-A\-E\-S object to be encrypted. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns 1 if the comment had been added, -\/1 otherwise. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_class_d_b_ac3e2bd24a0f27b264cecbcbe9f6b3987}{
+\index{storage\-::\-Class\-D\-B@{storage\-::\-Class\-D\-B}!add\-Post@{add\-Post}}
+\index{add\-Post@{add\-Post}!storage::ClassDB@{storage\-::\-Class\-D\-B}}
+\subsubsection[{add\-Post}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Class\-D\-B.\-add\-Post (
+\begin{DoxyParamCaption}
+\item[{\-String}]{class\-\_\-name, }
+\item[{\-String}]{post\-\_\-title, }
+\item[{\-String}]{post\-\_\-body, }
+\item[{{\bf \-A\-E\-S}}]{encryptor}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_class_d_b_ac3e2bd24a0f27b264cecbcbe9f6b3987}
+\-Adds a post to a classroom. 
+\begin{DoxyParams}{\-Parameters}
+{\em class\-Name} & \-The class\-Name to which the post is to be added. \\
+\hline
+{\em post\-Title} & \-The title of the post to be added. \\
+\hline
+{\em post\-\_\-body} & \-The body of the post to be added. \\
+\hline
+{\em encryptor} & \-The \-A\-E\-S object used to encrypt the classroom \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns 1 if the post was added, -\/1 if it was not. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_class_d_b_a28e36f79be33939891a3775676c954b6}{
+\index{storage\-::\-Class\-D\-B@{storage\-::\-Class\-D\-B}!delete\-Classes@{delete\-Classes}}
+\index{delete\-Classes@{delete\-Classes}!storage::ClassDB@{storage\-::\-Class\-D\-B}}
+\subsubsection[{delete\-Classes}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Class\-D\-B.\-delete\-Classes (
+\begin{DoxyParamCaption}
+\item[{\-List$<$ \-String $>$}]{to\-Be\-Deleted}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_class_d_b_a28e36f79be33939891a3775676c954b6}
+\-Deletes every class in a list. 
+\begin{DoxyParams}{\-Parameters}
+{\em to\-Be\-Deleted} & \-A \-List$<$\-String$>$ of classes to be deleted. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns 1 if any classes have been deleted. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_class_d_b_ad4248040de442fc758502d0fafab0558}{
+\index{storage\-::\-Class\-D\-B@{storage\-::\-Class\-D\-B}!get\-Thread@{get\-Thread}}
+\index{get\-Thread@{get\-Thread}!storage::ClassDB@{storage\-::\-Class\-D\-B}}
+\subsubsection[{get\-Thread}]{\setlength{\rightskip}{0pt plus 5cm}\-Map$<$\-Integer, \-String$>$ storage.\-Class\-D\-B.\-get\-Thread (
+\begin{DoxyParamCaption}
+\item[{\-String}]{class\-\_\-name, }
+\item[{int}]{thread\-\_\-id, }
+\item[{{\bf \-A\-E\-S}}]{encryptor}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_class_d_b_ad4248040de442fc758502d0fafab0558}
+\-Returns the entire thread from a specific class\-Room. 
+\begin{DoxyParams}{\-Parameters}
+{\em class\-Name} & \-The name of the class containing the thread. \\
+\hline
+{\em thread\-Id} & \-The id number of the thread to be returned \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns a map containing \-Integer keys mapped to \-Strings. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_class_d_b_a069572699f79cc68dd25e1ec2642bf82}{
+\index{storage\-::\-Class\-D\-B@{storage\-::\-Class\-D\-B}!get\-Thread\-List@{get\-Thread\-List}}
+\index{get\-Thread\-List@{get\-Thread\-List}!storage::ClassDB@{storage\-::\-Class\-D\-B}}
+\subsubsection[{get\-Thread\-List}]{\setlength{\rightskip}{0pt plus 5cm}\-Map$<$\-Integer, \-String$>$ storage.\-Class\-D\-B.\-get\-Thread\-List (
+\begin{DoxyParamCaption}
+\item[{\-String}]{class\-\_\-name, }
+\item[{{\bf \-A\-E\-S}}]{encryptor}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_class_d_b_a069572699f79cc68dd25e1ec2642bf82}
+\-Returns a list of all the threads in a class. 
+\begin{DoxyParams}{\-Parameters}
+{\em \-The} & name of the classroom which contains the threads. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns a list of \-Integers mapped to \-Strings where the \-Integer is the post id and the \-String is the post title. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_class_d_b_aa8098e7b23b6fb674c525d0955033562}{
+\index{storage\-::\-Class\-D\-B@{storage\-::\-Class\-D\-B}!remove\-Class\-Room@{remove\-Class\-Room}}
+\index{remove\-Class\-Room@{remove\-Class\-Room}!storage::ClassDB@{storage\-::\-Class\-D\-B}}
+\subsubsection[{remove\-Class\-Room}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Class\-D\-B.\-remove\-Class\-Room (
+\begin{DoxyParamCaption}
+\item[{\-String}]{class\-\_\-name}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_class_d_b_aa8098e7b23b6fb674c525d0955033562}
+\-Removes a class from the \-D\-B. 
+\begin{DoxyParams}{\-Parameters}
+{\em c} & \-The name of the class. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns 1 if the class was removed, -\/1 if the class did not exist. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_class_d_b_a55b3b73d1053ee23677e4d7f611820fb}{
+\index{storage\-::\-Class\-D\-B@{storage\-::\-Class\-D\-B}!remove\-Comment@{remove\-Comment}}
+\index{remove\-Comment@{remove\-Comment}!storage::ClassDB@{storage\-::\-Class\-D\-B}}
+\subsubsection[{remove\-Comment}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Class\-D\-B.\-remove\-Comment (
+\begin{DoxyParamCaption}
+\item[{\-String}]{class\-\_\-name, }
+\item[{int}]{post\-\_\-id, }
+\item[{int}]{comment\-\_\-id, }
+\item[{{\bf \-A\-E\-S}}]{encryptor}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_class_d_b_a55b3b73d1053ee23677e4d7f611820fb}
+\-Removes a comment from a post in a classroom. 
+\begin{DoxyParams}{\-Parameters}
+{\em class\-\_\-name} & \-The name of the classroom which contains the post. \\
+\hline
+{\em post\-\_\-id} & \-The id number of the post which contains the comment. \\
+\hline
+{\em comment\-\_\-id} & \-The id number of the comment which is to be removed. \\
+\hline
+{\em encryptor} & \-The \-A\-E\-S object to be encrypted. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns 1 if the comment is removed, -\/1 if the id did not exist in the post. 
+\end{DoxyReturn}
+\hypertarget{classstorage_1_1_class_d_b_a1d3f447ee1f61bd281edef4810354013}{
+\index{storage\-::\-Class\-D\-B@{storage\-::\-Class\-D\-B}!remove\-Post@{remove\-Post}}
+\index{remove\-Post@{remove\-Post}!storage::ClassDB@{storage\-::\-Class\-D\-B}}
+\subsubsection[{remove\-Post}]{\setlength{\rightskip}{0pt plus 5cm}int storage.\-Class\-D\-B.\-remove\-Post (
+\begin{DoxyParamCaption}
+\item[{\-String}]{class\-\_\-name, }
+\item[{int}]{post\-\_\-id, }
+\item[{{\bf \-A\-E\-S}}]{encryptor}
+\end{DoxyParamCaption}
+)}}
+\label{classstorage_1_1_class_d_b_a1d3f447ee1f61bd281edef4810354013}
+\-Removes a post from a class. 
+\begin{DoxyParams}{\-Parameters}
+{\em class\-\_\-name} & \-The name of the class that removes the post. \\
+\hline
+{\em post\-\_\-id} & \-The name of the post to be removed. \\
+\hline
+{\em encryptor} & \-The \-A\-E\-S object to be encrypted. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns 1 if the post was removed, -\/1 if was not contained in the classroom or on error. 
+\end{DoxyReturn}
+
+
+\-The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+storage/\-Class\-D\-B.\-java\end{DoxyCompactItemize}

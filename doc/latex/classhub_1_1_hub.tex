@@ -1,0 +1,187 @@
+\hypertarget{classhub_1_1_hub}{
+\section{hub.\-Hub \-Class \-Reference}
+\label{classhub_1_1_hub}\index{hub.\-Hub@{hub.\-Hub}}
+}
+\subsection*{\-Public \-Member \-Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classhub_1_1_hub_a67d72eec37fce8e6009b9596681e0339}{
+{\bfseries \-Hub} (\hyperlink{classsecurity_1_1_a_e_s}{\-A\-E\-S} aes\-Object)}
+\label{classhub_1_1_hub_a67d72eec37fce8e6009b9596681e0339}
+
+\item 
+\hypertarget{classhub_1_1_hub_a6c9ff2050ce79ded47178782cd31a024}{
+void {\bfseries shut\-Down} ()}
+\label{classhub_1_1_hub_a6c9ff2050ce79ded47178782cd31a024}
+
+\item 
+\hypertarget{classhub_1_1_hub_a026f24f6853b5758ef0d0d1503fd1ede}{
+boolean {\bfseries add\-User} (\-String username, char\mbox{[}$\,$\mbox{]} password)}
+\label{classhub_1_1_hub_a026f24f6853b5758ef0d0d1503fd1ede}
+
+\item 
+boolean \hyperlink{classhub_1_1_hub_aed40797f9126b304044b9a39140a72d2}{remove\-User} (\-String username)
+\item 
+\hypertarget{classhub_1_1_hub_a7e4feced4bdc0707e4e72d3ea200c040}{
+\-List$<$ \-String $>$ {\bfseries get\-Users} ()}
+\label{classhub_1_1_hub_a7e4feced4bdc0707e4e72d3ea200c040}
+
+\item 
+int \hyperlink{classhub_1_1_hub_afe7de14a910f249e0c720d8c12c6afbc}{add\-Server} (\-String server\-I\-P, char\mbox{[}$\,$\mbox{]} password)
+\item 
+boolean \hyperlink{classhub_1_1_hub_a19396f2761a541a5f01e91a89fc1ed9a}{remove\-Server} (int server\-I\-D)
+\item 
+\-Map$<$ \-Integer, \-String $>$ \hyperlink{classhub_1_1_hub_abb4bffbccc15975a44606e672accc19a}{get\-Servers} ()
+\item 
+\hypertarget{classhub_1_1_hub_a459061ec18f81545652d9110c733a4a0}{
+int {\bfseries connect\-Servers} ()}
+\label{classhub_1_1_hub_a459061ec18f81545652d9110c733a4a0}
+
+\item 
+\hypertarget{classhub_1_1_hub_aa5db9de0922bdf2d5057c7441979f957}{
+void {\bfseries run} ()}
+\label{classhub_1_1_hub_aa5db9de0922bdf2d5057c7441979f957}
+
+\end{DoxyCompactItemize}
+\subsection*{\-Package \-Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classhub_1_1_hub_ab7a2e46be733450e3089efb7092c952b}{
+\hyperlink{classsecurity_1_1_a_e_s}{\-A\-E\-S} {\bfseries hub\-A\-E\-S\-Object}}
+\label{classhub_1_1_hub_ab7a2e46be733450e3089efb7092c952b}
+
+\item 
+\hypertarget{classhub_1_1_hub_afc93c8d0d8b9a6f1b13b4bee16728c5b}{
+\-String {\bfseries hub\-I\-P} = null}
+\label{classhub_1_1_hub_afc93c8d0d8b9a6f1b13b4bee16728c5b}
+
+\end{DoxyCompactItemize}
+\subsection*{\-Static \-Package \-Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classhub_1_1_hub_a4f1b2f3b552c682fa98ea7f6aeed60bf}{
+static volatile boolean {\bfseries listening} = true}
+\label{classhub_1_1_hub_a4f1b2f3b552c682fa98ea7f6aeed60bf}
+
+\item 
+\hypertarget{classhub_1_1_hub_ae26e213fc8836aa9ca73065353f44d19}{
+static \hyperlink{classstorage_1_1_class_list}{\-Class\-List} {\bfseries class\-List}}
+\label{classhub_1_1_hub_ae26e213fc8836aa9ca73065353f44d19}
+
+\item 
+\hypertarget{classhub_1_1_hub_a7be0d4faafad9baf23269a8ae65fab73}{
+static \hyperlink{classstorage_1_1_user_list}{\-User\-List} {\bfseries user\-List}}
+\label{classhub_1_1_hub_a7be0d4faafad9baf23269a8ae65fab73}
+
+\item 
+\hypertarget{classhub_1_1_hub_a09ff3c88e01526ef21829b2becc806af}{
+static \hyperlink{classstorage_1_1_server_list}{\-Server\-List} {\bfseries server\-List}}
+\label{classhub_1_1_hub_a09ff3c88e01526ef21829b2becc806af}
+
+\item 
+\hypertarget{classhub_1_1_hub_a4fbed8def3441e40a0309631d2e97b34}{
+static \-String {\bfseries class\-List\-Name} = \char`\"{}hub.\-classlist\char`\"{}}
+\label{classhub_1_1_hub_a4fbed8def3441e40a0309631d2e97b34}
+
+\item 
+\hypertarget{classhub_1_1_hub_abff595879ac632ef94012daed5340ac2}{
+static \-String {\bfseries user\-List\-Name} = \char`\"{}hub.\-userlist\char`\"{}}
+\label{classhub_1_1_hub_abff595879ac632ef94012daed5340ac2}
+
+\item 
+\hypertarget{classhub_1_1_hub_aa44f7c1feabe446eaedcb027855477dd}{
+static \-String {\bfseries server\-List\-Name} = \char`\"{}hub.\-serverlist\char`\"{}}
+\label{classhub_1_1_hub_aa44f7c1feabe446eaedcb027855477dd}
+
+\item 
+\hypertarget{classhub_1_1_hub_ab72643e75a88daa8b238cd61075900b7}{
+static \-Hash\-Map$<$ \-Integer, \*
+\hyperlink{classutil_1_1_socket_package}{\-Socket\-Package} $>$ {\bfseries server\-Packages} = new \-Hash\-Map$<$\-Integer,\hyperlink{classutil_1_1_socket_package}{\-Socket\-Package}$>$()}
+\label{classhub_1_1_hub_ab72643e75a88daa8b238cd61075900b7}
+
+\item 
+\hypertarget{classhub_1_1_hub_abc11106aefedb31bf22a0a826cf95099}{
+static volatile \-Hash\-Map\*
+$<$ \-String, \-Integer $>$ {\bfseries current\-Users} = new \-Hash\-Map$<$\-String,\-Integer$>$()}
+\label{classhub_1_1_hub_abc11106aefedb31bf22a0a826cf95099}
+
+\item 
+\hypertarget{classhub_1_1_hub_ab206f3d9739bea67ec1ba0ae29bce8c3}{
+static \-Server\-Socket {\bfseries hub\-Socket} = null}
+\label{classhub_1_1_hub_ab206f3d9739bea67ec1ba0ae29bce8c3}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{\-Member \-Function \-Documentation}
+\hypertarget{classhub_1_1_hub_afe7de14a910f249e0c720d8c12c6afbc}{
+\index{hub\-::\-Hub@{hub\-::\-Hub}!add\-Server@{add\-Server}}
+\index{add\-Server@{add\-Server}!hub::Hub@{hub\-::\-Hub}}
+\subsubsection[{add\-Server}]{\setlength{\rightskip}{0pt plus 5cm}int hub.\-Hub.\-add\-Server (
+\begin{DoxyParamCaption}
+\item[{\-String}]{server\-I\-P, }
+\item[{char\mbox{[}$\,$\mbox{]}}]{password}
+\end{DoxyParamCaption}
+)}}
+\label{classhub_1_1_hub_afe7de14a910f249e0c720d8c12c6afbc}
+\-Add a server to the server\-List. \-Doesn't activate it. \-Returns the server id 
+\begin{DoxyParams}{\-Parameters}
+{\em server\-I\-P} & \\
+\hline
+{\em password} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+
+\end{DoxyReturn}
+\hypertarget{classhub_1_1_hub_abb4bffbccc15975a44606e672accc19a}{
+\index{hub\-::\-Hub@{hub\-::\-Hub}!get\-Servers@{get\-Servers}}
+\index{get\-Servers@{get\-Servers}!hub::Hub@{hub\-::\-Hub}}
+\subsubsection[{get\-Servers}]{\setlength{\rightskip}{0pt plus 5cm}\-Map$<$\-Integer,\-String$>$ hub.\-Hub.\-get\-Servers (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classhub_1_1_hub_abb4bffbccc15975a44606e672accc19a}
+\-Get a list of all the servers in server\-List \begin{DoxyReturn}{\-Returns}
+\-Returns a hashmap of server ids mapped to \-Strings containing \char`\"{}server\-\_\-ip, port\char`\"{}. \-Returns null if there are no extant servers. 
+\end{DoxyReturn}
+\hypertarget{classhub_1_1_hub_a19396f2761a541a5f01e91a89fc1ed9a}{
+\index{hub\-::\-Hub@{hub\-::\-Hub}!remove\-Server@{remove\-Server}}
+\index{remove\-Server@{remove\-Server}!hub::Hub@{hub\-::\-Hub}}
+\subsubsection[{remove\-Server}]{\setlength{\rightskip}{0pt plus 5cm}boolean hub.\-Hub.\-remove\-Server (
+\begin{DoxyParamCaption}
+\item[{int}]{server\-I\-D}
+\end{DoxyParamCaption}
+)}}
+\label{classhub_1_1_hub_a19396f2761a541a5f01e91a89fc1ed9a}
+\-Remove a server from the server\-List 
+\begin{DoxyParams}{\-Parameters}
+{\em server\-I\-D} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+
+\end{DoxyReturn}
+\hypertarget{classhub_1_1_hub_aed40797f9126b304044b9a39140a72d2}{
+\index{hub\-::\-Hub@{hub\-::\-Hub}!remove\-User@{remove\-User}}
+\index{remove\-User@{remove\-User}!hub::Hub@{hub\-::\-Hub}}
+\subsubsection[{remove\-User}]{\setlength{\rightskip}{0pt plus 5cm}boolean hub.\-Hub.\-remove\-User (
+\begin{DoxyParamCaption}
+\item[{\-String}]{username}
+\end{DoxyParamCaption}
+)}}
+\label{classhub_1_1_hub_aed40797f9126b304044b9a39140a72d2}
+\-Remove a user from the user\-List 
+\begin{DoxyParams}{\-Parameters}
+{\em username} & \-The user to remove \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns true if the 
+\end{DoxyReturn}
+
+
+\-The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+hub/\-Hub.\-java\end{DoxyCompactItemize}

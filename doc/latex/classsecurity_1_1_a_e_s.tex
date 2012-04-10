@@ -1,0 +1,141 @@
+\hypertarget{classsecurity_1_1_a_e_s}{
+\section{security.\-A\-E\-S \-Class \-Reference}
+\label{classsecurity_1_1_a_e_s}\index{security.\-A\-E\-S@{security.\-A\-E\-S}}
+}
+
+
+\-Inherits \-Serializable.
+
+\subsection*{\-Public \-Member \-Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classsecurity_1_1_a_e_s_af9b77a489f9dce9983f8c47e7639bc7e}{\-A\-E\-S} (char\mbox{[}$\,$\mbox{]} password)
+\item 
+\hypertarget{classsecurity_1_1_a_e_s_a391e29172f32a6276abc13b865aebf34}{
+{\bfseries \-A\-E\-S} (char\mbox{[}$\,$\mbox{]} password, byte\mbox{[}$\,$\mbox{]} iv, byte\mbox{[}$\,$\mbox{]} salt)}
+\label{classsecurity_1_1_a_e_s_a391e29172f32a6276abc13b865aebf34}
+
+\item 
+\hypertarget{classsecurity_1_1_a_e_s_a791ce9f3e39ce1594ca7b8da59d00a64}{
+{\bfseries \-A\-E\-S} (\-Secret\-Key s\-\_\-k, byte\mbox{[}$\,$\mbox{]} iv, byte\mbox{[}$\,$\mbox{]} salt)}
+\label{classsecurity_1_1_a_e_s_a791ce9f3e39ce1594ca7b8da59d00a64}
+
+\item 
+\hypertarget{classsecurity_1_1_a_e_s_a0cb5565c55858f26c83f19078de3f318}{
+\-Secret\-Key {\bfseries get\-Secret\-Key} ()}
+\label{classsecurity_1_1_a_e_s_a0cb5565c55858f26c83f19078de3f318}
+
+\item 
+\hypertarget{classsecurity_1_1_a_e_s_ac2dba28588f0a2daec9248468ee704ec}{
+byte\mbox{[}$\,$\mbox{]} {\bfseries get\-Salt} ()}
+\label{classsecurity_1_1_a_e_s_ac2dba28588f0a2daec9248468ee704ec}
+
+\item 
+\hypertarget{classsecurity_1_1_a_e_s_a35817b279daac3d1be5d8de937d7cdba}{
+byte\mbox{[}$\,$\mbox{]} {\bfseries get\-Iv} ()}
+\label{classsecurity_1_1_a_e_s_a35817b279daac3d1be5d8de937d7cdba}
+
+\item 
+byte\mbox{[}$\,$\mbox{]} \hyperlink{classsecurity_1_1_a_e_s_a8d8ffab5f79011a2c66d2eb4b7800b4d}{encrypt} (\-Object o)
+\item 
+\-Object \hyperlink{classsecurity_1_1_a_e_s_ae6fd6a4ba186cb1234d7845ded747ff9}{decrypt\-Object} (byte\mbox{[}$\,$\mbox{]} o)
+\item 
+\hypertarget{classsecurity_1_1_a_e_s_a1e6633d286929d0d7d339c6dcac44ed1}{
+\-Object {\bfseries to\-Object} (byte\mbox{[}$\,$\mbox{]} bytes)}
+\label{classsecurity_1_1_a_e_s_a1e6633d286929d0d7d339c6dcac44ed1}
+
+\item 
+\hypertarget{classsecurity_1_1_a_e_s_ae6b97ac3b4b3ef929dfebf1cb9c2249c}{
+byte\mbox{[}$\,$\mbox{]} {\bfseries to\-Byte\-Array} (\-Object obj)}
+\label{classsecurity_1_1_a_e_s_ae6b97ac3b4b3ef929dfebf1cb9c2249c}
+
+\item 
+byte\mbox{[}$\,$\mbox{]} \hyperlink{classsecurity_1_1_a_e_s_afc85a3c37057c1d97c71db034dae204e}{decrypt} (byte\mbox{[}$\,$\mbox{]} message)
+\end{DoxyCompactItemize}
+\subsection*{\-Public \-Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classsecurity_1_1_a_e_s_a1b133dcc1023929ab8b4e955150be2e0}{
+int {\bfseries num\-Iterations} = 1024}
+\label{classsecurity_1_1_a_e_s_a1b133dcc1023929ab8b4e955150be2e0}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{\-Detailed \-Description}
+\-This is the class used for \hyperlink{classsecurity_1_1_a_e_s}{\-A\-E\-S} encryption and decryption. 
+
+\subsection{\-Constructor \& \-Destructor \-Documentation}
+\hypertarget{classsecurity_1_1_a_e_s_af9b77a489f9dce9983f8c47e7639bc7e}{
+\index{security\-::\-A\-E\-S@{security\-::\-A\-E\-S}!\-A\-E\-S@{\-A\-E\-S}}
+\index{\-A\-E\-S@{\-A\-E\-S}!security::AES@{security\-::\-A\-E\-S}}
+\subsubsection[{\-A\-E\-S}]{\setlength{\rightskip}{0pt plus 5cm}security.\-A\-E\-S.\-A\-E\-S (
+\begin{DoxyParamCaption}
+\item[{char\mbox{[}$\,$\mbox{]}}]{password}
+\end{DoxyParamCaption}
+)}}
+\label{classsecurity_1_1_a_e_s_af9b77a489f9dce9983f8c47e7639bc7e}
+\-Creates and initializes an \hyperlink{classsecurity_1_1_a_e_s}{\-A\-E\-S} object with a given pass. 
+\begin{DoxyParams}{\-Parameters}
+{\em password} & \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{\-Member \-Function \-Documentation}
+\hypertarget{classsecurity_1_1_a_e_s_afc85a3c37057c1d97c71db034dae204e}{
+\index{security\-::\-A\-E\-S@{security\-::\-A\-E\-S}!decrypt@{decrypt}}
+\index{decrypt@{decrypt}!security::AES@{security\-::\-A\-E\-S}}
+\subsubsection[{decrypt}]{\setlength{\rightskip}{0pt plus 5cm}byte \mbox{[}$\,$\mbox{]} security.\-A\-E\-S.\-decrypt (
+\begin{DoxyParamCaption}
+\item[{byte\mbox{[}$\,$\mbox{]}}]{message}
+\end{DoxyParamCaption}
+)}}
+\label{classsecurity_1_1_a_e_s_afc85a3c37057c1d97c71db034dae204e}
+\-Decrypts an encrypted message and returns the decrypted version of the message. 
+\begin{DoxyParams}{\-Parameters}
+{\em message} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns the decrypted byte\mbox{[}\mbox{]}. \-Returns null on error or if passed byte array equals null. 
+\end{DoxyReturn}
+\hypertarget{classsecurity_1_1_a_e_s_ae6fd6a4ba186cb1234d7845ded747ff9}{
+\index{security\-::\-A\-E\-S@{security\-::\-A\-E\-S}!decrypt\-Object@{decrypt\-Object}}
+\index{decrypt\-Object@{decrypt\-Object}!security::AES@{security\-::\-A\-E\-S}}
+\subsubsection[{decrypt\-Object}]{\setlength{\rightskip}{0pt plus 5cm}\-Object security.\-A\-E\-S.\-decrypt\-Object (
+\begin{DoxyParamCaption}
+\item[{byte\mbox{[}$\,$\mbox{]}}]{o}
+\end{DoxyParamCaption}
+)}}
+\label{classsecurity_1_1_a_e_s_ae6fd6a4ba186cb1234d7845ded747ff9}
+\-Decrypts a byte\mbox{[}\mbox{]} into an object. $<${\bfseries } $>$ \-N\-O\-T\-E\-: \-Strings must be cast with \char`\"{}new String decrypt\-Object()\char`\"{} \-N\-O\-T \char`\"{}(\-String)\char`\"{} 
+\begin{DoxyParams}{\-Parameters}
+{\em o} & the byte\mbox{[}\mbox{]} to be decrypted \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns the decrypted object. 
+\end{DoxyReturn}
+\hypertarget{classsecurity_1_1_a_e_s_a8d8ffab5f79011a2c66d2eb4b7800b4d}{
+\index{security\-::\-A\-E\-S@{security\-::\-A\-E\-S}!encrypt@{encrypt}}
+\index{encrypt@{encrypt}!security::AES@{security\-::\-A\-E\-S}}
+\subsubsection[{encrypt}]{\setlength{\rightskip}{0pt plus 5cm}byte \mbox{[}$\,$\mbox{]} security.\-A\-E\-S.\-encrypt (
+\begin{DoxyParamCaption}
+\item[{\-Object}]{o}
+\end{DoxyParamCaption}
+)}}
+\label{classsecurity_1_1_a_e_s_a8d8ffab5f79011a2c66d2eb4b7800b4d}
+
+\begin{DoxyParams}{\-Parameters}
+{\em o} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{\-Returns}
+\-Returns a reference to a byte array containing the encrypted \-Object. \-Returns null on failure or if passed a null object. 
+\end{DoxyReturn}
+
+
+\-The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+security/\-A\-E\-S.\-java\end{DoxyCompactItemize}
