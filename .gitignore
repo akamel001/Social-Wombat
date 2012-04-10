@@ -9,7 +9,6 @@
 .class
 *.orig
 *.serverlist
-bin
 javadoc
 hub.classlist
 hub.newuserlist
@@ -22,6 +21,4 @@ YilokTest2.java
 *.goutputstream*
 *.sh
 .metadata*
-system_startup
-
 system_startup
