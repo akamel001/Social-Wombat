@@ -69,11 +69,11 @@ public final class Message implements Serializable{
 		return classroom_id; 
 	}
 	
-	public long getNaunce() {
+	public long getNonce() {
 		return nonce;
 	}
 
-	public void setNaunce(long naunce) {
+	public void setNonce(long naunce) {
 		this.nonce = naunce;
 	}
 

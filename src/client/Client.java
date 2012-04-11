@@ -154,13 +154,18 @@ public final class Client {
 		
 		message.setChecksum(message.generateCheckSum());
 		
-		//TODO add a message param for naunce and check naunce+1 on response message 
-		
+		//TODO add a message param for naunce and check naunce+1 on response message 	
 		socket.sendEncrypted(aes.encrypt(message));
 		
 		byte[] encMessage = socket.receiveEncrypted();
 		
 		Message response = (Message) aes.decryptObject(encMessage);
+		
+		if(response.getNonce() != nonce+1){
+			//bad nonce message is possible replay!
+		}else{
+			//set my nonce to hub nonce
+		}
 		
 		//TODO Inform Julia of response that the hub is not responding and needs to be handled
 		if(response.getType() == Message.MessageType.Hub_Shutdown){
