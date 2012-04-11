@@ -13,7 +13,7 @@ public final class Message implements Serializable{
 	private Object body;
 	private MessageType type;
 	private long checksum;
-	private long naunce;
+	private long nonce;
 	private byte[] salt;
 	private byte[] iv;
 	
@@ -70,11 +70,11 @@ public final class Message implements Serializable{
 	}
 	
 	public long getNaunce() {
-		return naunce;
+		return nonce;
 	}
 
 	public void setNaunce(long naunce) {
-		this.naunce = naunce;
+		this.nonce = naunce;
 	}
 
 	public long generateCheckSum(){
