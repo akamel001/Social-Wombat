@@ -46,6 +46,7 @@ final class HubSocketHandler extends Thread{
 	String lastLogin;
 	HashMap<String,Integer> currentUsers;
 	String currentUser;
+	long currentNonce;
 
 	/*
 	 * A handler thread that is spawned for each message sent to a socket.
