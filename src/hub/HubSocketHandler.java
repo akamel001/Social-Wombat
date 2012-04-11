@@ -46,7 +46,7 @@ final class HubSocketHandler extends Thread{
 	String lastLogin;
 	HashMap<String,Integer> currentUsers;
 	String currentUser;
-	long currentNonce;
+	Long currentNonce = null;
 
 	/*
 	 * A handler thread that is spawned for each message sent to a socket.
@@ -204,9 +204,6 @@ final class HubSocketHandler extends Thread{
 		long clientTimestamp = body.get(0);
 		long clientNonce = body.get(1);
 		
-		//set current Nonce
-		currentNonce = clientNonce;
-		
 		if (DEBUG) System.out.println("Client timestamp: " + clientTimestamp);
 		if (DEBUG) System.out.println("Client nonce: " + clientNonce);
 		
@@ -245,7 +242,8 @@ final class HubSocketHandler extends Thread{
 			//set my timestamp
 			returnBody.add(0, Calendar.getInstance().getTimeInMillis());
 			//set the nonce+1
-			returnBody.add(1, clientNonce+1);
+			currentNonce = clientNonce+1;
+			returnBody.add(1, clientNonce++);
 			//set the body 
 			returnMsg.setBody(returnBody);
 			//set checksum
@@ -354,6 +352,14 @@ final class HubSocketHandler extends Thread{
 
 			msg = (Message)clientAESObject.decryptObject(encryptedMsg);
 			
+			//do nonce check
+			long newNonce = msg.getNonce();
+			if (DEBUG) System.out.println("oldNonce: " + newNonce);
+			if (newNonce != currentNonce+1){
+				if (DEBUG) System.out.println("Expected nonce mismatch");
+				return false;
+			}
+			
 			//do checksum
 			long oldChecksum = msg.getChecksum();
 			long newChecksum = msg.generateCheckSum();
@@ -375,6 +381,9 @@ final class HubSocketHandler extends Thread{
 	 */
 	private void sendEncryptedMessage(byte[] msg){
 		try {
+			
+			//TODO: add nonce in here
+			
 			//send the length along first
 			oos.writeInt(msg.length);
 			oos.write(msg);
