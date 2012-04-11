@@ -114,8 +114,10 @@ public final class Client {
 		
 		boolean allowed = false;
 		
-		if( now <= hub_time+300000 && hub_time-300000 <= now && hub_nonce==nonce+1)
+		if( now <= hub_time+300000 && hub_time-300000 <= now && hub_nonce==nonce+1){
 			allowed=true;
+			nonce = hub_nonce;
+		}
 		
 		if(allowed){
 			if(DEBUG_OUTPUT) System.out.println("Authenticated!!");
@@ -146,15 +148,12 @@ public final class Client {
 		message.setUserName(userName);
 		message.setType(mType);
 		message.setClassroom_ID(classroomName);
-		
-		if(body instanceof Integer)
-			message.setBody((Integer) body);
-		else
-			message.setBody(body);
+		message.setBody(body);
+		message.setNonce(nonce);
 		
 		message.setChecksum(message.generateCheckSum());
 		
-		//TODO add a message param for naunce and check naunce+1 on response message 	
+		//TODO add a message param for nonce and check nonce+1 on response message 	
 		socket.sendEncrypted(aes.encrypt(message));
 		
 		byte[] encMessage = socket.receiveEncrypted();
@@ -162,10 +161,10 @@ public final class Client {
 		Message response = (Message) aes.decryptObject(encMessage);
 		
 		if(response.getNonce() != nonce+1){
-			//bad nonce message is possible replay!
-		}else{
-			//set my nonce to hub nonce
-		}
+			System.out.println("Received a bad nonce! System exiting");
+			System.exit(-1);
+		}else //Nonce is good continue
+			nonce = response.getNonce();
 		
 		//TODO Inform Julia of response that the hub is not responding and needs to be handled
 		if(response.getType() == Message.MessageType.Hub_Shutdown){
@@ -173,7 +172,6 @@ public final class Client {
 			System.exit(-1);
 		}
 		
-		//TODO handle bad checksum!!
 		if(response.getChecksum() != response.generateCheckSum())
 			System.out.println("Checksum miss match!");
 		
