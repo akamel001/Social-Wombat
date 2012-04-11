@@ -13,6 +13,7 @@ public final class Message implements Serializable{
 	private Object body;
 	private MessageType type;
 	private long checksum;
+	private long naunce;
 
 	private byte[] salt;
 	private byte[] iv;
@@ -79,7 +80,14 @@ public final class Message implements Serializable{
 	public String getClassroom_ID() {
 		return classroom_id; 
 	}
+	
+	public long getNaunce() {
+		return naunce;
+	}
 
+	public void setNaunce(long naunce) {
+		this.naunce = naunce;
+	}
 	public void setClassroom_ID(String classroom_id) {
 		this.classroom_id = classroom_id;
 	}
