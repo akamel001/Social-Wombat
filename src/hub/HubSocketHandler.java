@@ -204,6 +204,9 @@ final class HubSocketHandler extends Thread{
 		long clientTimestamp = body.get(0);
 		long clientNonce = body.get(1);
 		
+		//set current Nonce
+		currentNonce = clientNonce;
+		
 		if (DEBUG) System.out.println("Client timestamp: " + clientTimestamp);
 		if (DEBUG) System.out.println("Client nonce: " + clientNonce);
 		

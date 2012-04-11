@@ -2,7 +2,7 @@ bin/*
 
 .DS_Store
 
-bin/*.classDB
+bin/*classDB
 
 bin/*.userlist
 
@@ -12,22 +12,3 @@ bin/hub.classlist
 
 bin/system_startup
 
-bin/hub/HubSocketHandler.class
-
-bin/hub/SystemLogin.class
-
-bin/storage/Message$MessageType.class
-
-bin/storage/Message.class
-
-bin/storage/ServerList$ServerData.class
-
-bin/storage/ServerList.class
-
-bin/storage/UserList$User.class
-
-bin/storage/UserList.class
-
-bin/storage/Message$MessageType.class
-
-bin/storage/ServerList$ServerData.class
