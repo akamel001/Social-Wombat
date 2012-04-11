@@ -13,17 +13,14 @@ public final class Message implements Serializable{
 	private Object body;
 	private MessageType type;
 	private long checksum;
-
+	private long naunce;
 	private byte[] salt;
 	private byte[] iv;
 	
 	private String userName;
 	private int code;
 	private String classroom_id;
-	
-	public long generateCheckSum(){
-		return CheckSum.getChecksum(body);
-	}
+
 	
 	public enum MessageType {
 		// Hub->Client
@@ -68,18 +65,21 @@ public final class Message implements Serializable{
 	    Hub_Shutdown
 	}
 
-//	public Message(){
-//		this.cookie = new Cookie("");
-//	}
-
-	/* This is neccessary for message forwarding because the client doesn't
-	 * know which server its message should be sent to. So the Hub does the job 
-	 * of mapping the classroom to an appropriate server!
-	 */
 	public String getClassroom_ID() {
 		return classroom_id; 
 	}
+	
+	public long getNaunce() {
+		return naunce;
+	}
 
+	public void setNaunce(long naunce) {
+		this.naunce = naunce;
+	}
+
+	public long generateCheckSum(){
+		return CheckSum.getChecksum(body);
+	}
 	public void setClassroom_ID(String classroom_id) {
 		this.classroom_id = classroom_id;
 	}
