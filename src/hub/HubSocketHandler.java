@@ -456,7 +456,12 @@ final class HubSocketHandler extends Thread{
 		if(DEBUG) System.out.println("Message forwarded to: " + getServer(msg));
 		int serverID = getServer(msg);
 		forwardSocketPackage = serverPackages.get(serverID);
-
+		
+		Long forwardNonce = forwardSocketPackage.getNonce();
+		msg.setNonce(forwardNonce+1);
+		forwardSocketPackage.setNonce(forwardNonce+1);
+		
+		
 		//Set checksum
 		long checksum = msg.generateCheckSum();
 		msg.setChecksum(checksum);
@@ -486,8 +491,33 @@ final class HubSocketHandler extends Thread{
 		//decrypt
 		reply = (Message)aesObj.decryptObject(eReply);
 		
+		//check nonce
+		if(DEBUG){
+			System.out.println("Server sent nonce: " + reply.getNonce()
+					+ " expected nonce: " + (forwardSocketPackage.getNonce()+1));
+		}
+		if (reply.getNonce() != forwardSocketPackage.getNonce()+1){
+			return null;
+		}
+		//set new nonce
+		forwardSocketPackage.setNonce(reply.getNonce());
+		
 		return reply;
 	}
+	
+	/* Nonce check fail reply message
+	 * occurs when server to hub nonce mismatches, so a null msg returns
+	 * So we must send a reply to client so they don't hang.
+	 */
+	private void returnMismatchedNonce(Message msg){
+		//if nonce mismatch
+		System.out.println("Nonce connection to server compromised");
+		Message failReply = new Message();
+		failReply.setCode(-1);
+		failReply.setType(msg.getType());
+		returnAndEncryptMessage(failReply);
+	}
+	
 	
 	/*
 	 * When waiting for a message, only a message from a client is expected.
@@ -784,6 +814,12 @@ final class HubSocketHandler extends Thread{
 							classList.addClass(c, hubAESObject);
 							
 							reply = forwardToServer(msg);
+							//if nonce mismatch
+							if (reply == null){
+								System.out.println("Nonce connection to server compromised");
+								returnMismatchedNonce(msg);
+								break;
+							}
 							returnAndEncryptMessage(reply);
 							break;
 						/*
@@ -796,6 +832,12 @@ final class HubSocketHandler extends Thread{
 						case Client_CreateThread:
 							if (isInClassroom(msg.getUserName(),msg.getClassroom_ID())){
 								reply = forwardToServer(msg);
+								//if nonce mismatch
+								if (reply == null){
+									System.out.println("Nonce connection to server compromised");
+									returnMismatchedNonce(msg);
+									break;
+								}
 								returnAndEncryptMessage(reply);
 							} else {
 								returnAndEncryptMessage(msg);
@@ -804,6 +846,12 @@ final class HubSocketHandler extends Thread{
 						case Client_CreateComment:
 							if (isInClassroom(msg.getUserName(),msg.getClassroom_ID())){
 								reply = forwardToServer(msg);
+								//if nonce mismatch
+								if (reply == null){
+									System.out.println("Nonce connection to server compromised");
+									returnMismatchedNonce(msg);
+									break;
+								}
 								returnAndEncryptMessage(reply);
 							} else {
 								returnAndEncryptMessage(msg);
@@ -812,6 +860,12 @@ final class HubSocketHandler extends Thread{
 						case Client_GoToClassroom:
 							if (isInClassroom(msg.getUserName(),msg.getClassroom_ID())){
 								reply = forwardToServer(msg);
+								//if nonce mismatch
+								if (reply == null){
+									System.out.println("Nonce connection to server compromised");
+									returnMismatchedNonce(msg);
+									break;
+								}
 								returnAndEncryptMessage(reply);
 							} else {
 								returnAndEncryptMessage(msg);
@@ -820,6 +874,12 @@ final class HubSocketHandler extends Thread{
 						case Client_GoToThread:
 							if (isInClassroom(msg.getUserName(),msg.getClassroom_ID())){
 								reply = forwardToServer(msg);
+								//if nonce mismatch
+								if (reply == null){
+									System.out.println("Nonce connection to server compromised");
+									returnMismatchedNonce(msg);
+									break;
+								}
 								returnAndEncryptMessage(reply);
 							} else {
 								returnAndEncryptMessage(msg);
@@ -828,6 +888,12 @@ final class HubSocketHandler extends Thread{
 						case Client_DeleteClassroom:
 							if (isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
 								reply = forwardToServer(msg);
+								//if nonce mismatch
+								if (reply == null){
+									System.out.println("Nonce connection to server compromised");
+									returnMismatchedNonce(msg);
+									break;
+								}
 								//Check that the reply code is affirmative
 								if(reply.getCode() == 1){
 									classList.removeClass(reply.getClassroom_ID());
@@ -840,6 +906,12 @@ final class HubSocketHandler extends Thread{
 						case Client_DeleteThread:
 							if (isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
 								reply = forwardToServer(msg);
+								//if nonce mismatch
+								if (reply == null){
+									System.out.println("Nonce connection to server compromised");
+									returnMismatchedNonce(msg);
+									break;
+								}
 								returnAndEncryptMessage(reply);
 							} else {
 								returnAndEncryptMessage(msg);
@@ -848,6 +920,12 @@ final class HubSocketHandler extends Thread{
 						case Client_DeleteComment:
 							if (isClassTAorInstructor(msg.getUserName(),msg.getClassroom_ID())){
 								reply = forwardToServer(msg);
+								//if nonce mismatch
+								if (reply == null){
+									System.out.println("Nonce connection to server compromised");
+									returnMismatchedNonce(msg);
+									break;
+								}
 								returnAndEncryptMessage(reply);
 							} else {
 								returnAndEncryptMessage(msg);

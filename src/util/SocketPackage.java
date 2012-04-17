@@ -27,6 +27,7 @@ public final class SocketPackage {
 	private static final int TIMEOUT = 5000;
 	private static final int MAX_RETRY = 16;
 	private static final boolean DEBUG = false;
+	private Long currentNonce = null;
 
 	/**
 	 * Creates a socket. DOES NOT CONNECT
@@ -46,6 +47,14 @@ public final class SocketPackage {
 	 */
 	public String getSocketName(){
 		return addr.getHostAddress();
+	}
+	
+	public Long getNonce(){
+		return currentNonce;
+	}
+	
+	public void setNonce(Long n){
+		currentNonce = n;
 	}
 	
 	/**

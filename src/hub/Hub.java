@@ -375,6 +375,9 @@ public final class Hub extends Thread {
 		}
 		
 		//everything passes
+		
+		//store nonce
+		socketPack.setNonce(serverNonce);
 		return true;
 		
 	}

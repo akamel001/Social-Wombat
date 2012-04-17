@@ -155,6 +155,7 @@ final class ServerSocketHandler {
 			returnBody.add(0, Calendar.getInstance().getTimeInMillis());
 			//set the nonce+1
 			returnBody.add(1, hubNonce+1);
+			currentNonce = hubNonce+1;
 			//set the body
 			returnMsg.setBody(returnBody);
 			//set checksum
@@ -238,6 +239,16 @@ final class ServerSocketHandler {
 			
 			msg = (Message)serverAESObject.decryptObject(encryptedMsg);
 			
+			//do nonce check
+			long newNonce = msg.getNonce();
+			if (DEBUG) System.out.println("oldNonce: " + currentNonce + " newNonce: "+ newNonce);
+			if (newNonce != currentNonce+1){
+				if (DEBUG) System.out.println("Nonce mismatch");
+				return false;
+			}
+			//set current nonce
+			currentNonce = newNonce;
+			
 			//do checksum
 			long oldChecksum = msg.getChecksum();
 			long newChecksum = msg.generateCheckSum();
@@ -270,6 +281,9 @@ final class ServerSocketHandler {
 	 * 
 	 */
 	private void returnAndEncryptMessage(Message msg){
+		//set up nonce
+		msg.setNonce(currentNonce + 1);
+		currentNonce = currentNonce + 1;
 		//calculate checksum
 		long thisChecksum = msg.generateCheckSum();
 		msg.setChecksum(thisChecksum);
