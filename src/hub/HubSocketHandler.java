@@ -191,13 +191,13 @@ final class HubSocketHandler extends Thread{
 		}
 		
 		//Checksum
-		long newChecksum = CheckSum.getChecksum(body);
+		String newChecksum = CheckSum.getMD5Checksum(body);
 		if (DEBUG) System.out.println("New checksum: " + newChecksum);
 		
-		long oldChecksum = msg.getChecksum();
+		String oldChecksum = msg.getChecksum();
 		if (DEBUG) System.out.println("Old checksum: " + oldChecksum);
 		
-		if (newChecksum != oldChecksum){
+		if (!newChecksum.equals(oldChecksum)){
 			return false;
 		}
 		
@@ -247,7 +247,7 @@ final class HubSocketHandler extends Thread{
 			//set the body 
 			returnMsg.setBody(returnBody);
 			//set checksum
-			long checksum = returnMsg.generateCheckSum();
+			String checksum = returnMsg.generateCheckSum();
 			
 			if (DEBUG) System.out.println("Returning checksum: " + checksum);
 			
@@ -360,13 +360,13 @@ final class HubSocketHandler extends Thread{
 			currentNonce = newNonce;
 			
 			//do checksum
-			long oldChecksum = msg.getChecksum();
-			long newChecksum = msg.generateCheckSum();
+			String oldChecksum = msg.getChecksum();
+			String newChecksum = msg.generateCheckSum();
 			
 			if (DEBUG) System.out.println("oldChecksum = " + oldChecksum);
 			if (DEBUG) System.out.println("newChecksum = " + newChecksum);
 			
-			return (oldChecksum == newChecksum);
+			return (oldChecksum.equals(newChecksum));
 		} catch (Exception e){
 			e.printStackTrace();
 			System.out.println("Possible socket closure");
@@ -415,7 +415,7 @@ final class HubSocketHandler extends Thread{
 		msg.setNonce(currentNonce + 1);
 		currentNonce = currentNonce + 1;
 		//calculate checksum
-		long thisChecksum = msg.generateCheckSum();
+		String thisChecksum = msg.generateCheckSum();
 		msg.setChecksum(thisChecksum);
 		//encrypt message why client aes key
 		byte[] eMsg = clientAESObject.encrypt(msg);
@@ -463,7 +463,7 @@ final class HubSocketHandler extends Thread{
 		
 		
 		//Set checksum
-		long checksum = msg.generateCheckSum();
+		String checksum = msg.generateCheckSum();
 		msg.setChecksum(checksum);
 		
 		//encrypt

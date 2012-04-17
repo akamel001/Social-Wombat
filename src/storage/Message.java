@@ -73,8 +73,8 @@ public final class Message implements Serializable{
 		return nonce;
 	}
 
-	public void setNonce(long naunce) {
-		this.nonce = naunce;
+	public void setNonce(long nonce) {
+		this.nonce = nonce;
 	}
 
 	public String generateCheckSum(){
