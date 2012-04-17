@@ -8,6 +8,10 @@ import java.util.zip.Checksum;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import org.junit.Test;
+
+import storage.Message;
+
 /**
  * A class with a single static 
  * @author chris d
@@ -81,9 +85,6 @@ public final class CheckSum {
 		}
 	}
 	
-
-	
-	
 	private static String byteToHexString(byte[] digest){
 		String out = new String();
 		for (int i=0;i<digest.length;i++) {
@@ -92,8 +93,8 @@ public final class CheckSum {
 		return out;
 	}	
 	
-	
-	public static void main(String args[]){
+	@Test
+	public static void testChecksum(String args[]){
 		Message m = new Message();
 		m.setBody((Object)new String("THIS IS THE BODY YO"));
 		m.setClassroom_ID("CLASSROOM ID");
