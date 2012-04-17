@@ -98,15 +98,12 @@ public final class Client {
 		}else
 			response.setBody(return_list);
 		
-		if(response.getChecksum() != response.generateCheckSum()){
+		if(!response.getChecksum().equals(response.generateCheckSum())){
 			if(DEBUG_OUTPUT) System.out.println("Checksum miss match!\n==> Received checksum: " + response.getChecksum() + "\n==> Generated Checksum" + response.generateCheckSum());
 			return false;
 		}else{
 			if(DEBUG_OUTPUT) System.out.println("Checksum passed!");
 		}
-		
-
-		
 		
 		long now =	c.getTimeInMillis();
 		long hub_time = return_list.get(0); 
@@ -172,7 +169,7 @@ public final class Client {
 			System.exit(-1);
 		}
 		
-		if(response.getChecksum() != response.generateCheckSum())
+		if(!response.getChecksum().equals(response.generateCheckSum()))
 			System.out.println("Checksum miss match!");
 		
 		return response;
