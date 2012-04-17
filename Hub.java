@@ -237,11 +237,13 @@ public final class Hub extends Thread {
 				if(!newSocketPackage.isConnected()){
 					
 					/*--------DEBUG-BEGIN--------------------*/
+					/*
 					System.out.println("IN SERVER: " + serverList.getServerList().toString());
 					System.out.println("SERVER PASS: " + Arrays.toString(serverList.getServerPass(i, hubAESObject)));
 					List<byte[]> b = serverList.getIvSalt(i, hubAESObject);
 					System.out.println("SERVER IV: " + Arrays.toString(b.get(0)));
 					System.out.println("SERVER SALT: " + Arrays.toString(b.get(1)));
+					*/
 					/*--------DEBUG-END--------------------*/
 					
 					//regenerate serverAES object
