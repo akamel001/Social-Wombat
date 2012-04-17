@@ -17,7 +17,7 @@ import util.SocketPackage;
 public final class Client {
 	
 	private static final boolean DEBUG = false;
-	private static final boolean DEBUG_OUTPUT = false;
+	private static final boolean DEBUG_OUTPUT = true;
 
 	private static final String hub_addr = "127.0.0.1";
 	private static final int HUB_PORT = 4444;
@@ -79,20 +79,19 @@ public final class Client {
 		message.setBody(aes.encrypt(list));
 		
 		if(DEBUG_OUTPUT) System.out.println("Sending authenticating message");
-		if(DEBUG_OUTPUT) System.out.println("Sending nonce " + nonce);
+		if(DEBUG_OUTPUT) System.out.println("(Authentication) Sending nonce " + nonce);
 		socket.send(message);
 
 		
 		// Get timestamp message
 		Message response = socket.receive();
-		if(DEBUG_OUTPUT) System.out.println("Received a response");
 		
 		if(response.getCode() == -1) return false;
 		
 		byte[] encryptedBody = (byte[])response.getBody();
 		
 		ArrayList<Long> return_list = (ArrayList<Long>)aes.decryptObject(encryptedBody);
-		
+
 		if (return_list==null){
 			System.out.println("unable to decrypt msg body");
 			return false;
@@ -105,6 +104,7 @@ public final class Client {
 		}else{
 			if(DEBUG_OUTPUT) System.out.println("Checksum passed!");
 		}
+		
 
 		
 		
@@ -114,6 +114,8 @@ public final class Client {
 		
 		boolean allowed = false;
 		
+		if(DEBUG_OUTPUT) System.out.println("(Authentication) Received nonce " + hub_nonce);
+
 		if( now <= hub_time+300000 && hub_time-300000 <= now && hub_nonce==nonce+1){
 			allowed=true;
 			nonce = hub_nonce;
@@ -158,8 +160,8 @@ public final class Client {
 		
 		Message response = (Message) aes.decryptObject(encMessage);
 		
-		if(response.getNonce() != nonce+1){
-			System.out.println("Received a bad nonce! System exiting");
+		if(response.getNonce() != (nonce+1)){
+			System.out.println("Received a bad nonce!\n Expected " + (nonce+1) + "\n Got " + response.getNonce() + "\nSystem exiting!");
 			System.exit(-1);
 		}else //Nonce is good continue
 			nonce = response.getNonce();
