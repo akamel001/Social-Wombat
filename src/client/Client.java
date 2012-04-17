@@ -78,8 +78,8 @@ public final class Client {
 		
 		message.setBody(aes.encrypt(list));
 		
-		if(DEBUG_OUTPUT) System.out.println("Sending authenticating message...");
-		
+		if(DEBUG_OUTPUT) System.out.println("Sending authenticating message");
+		if(DEBUG_OUTPUT) System.out.println("Sending nonce " + nonce);
 		socket.send(message);
 
 		
@@ -149,11 +149,9 @@ public final class Client {
 		message.setType(mType);
 		message.setClassroom_ID(classroomName);
 		message.setBody(body);
-		message.setNonce(nonce);
-		
+		message.setNonce(++nonce);
 		message.setChecksum(message.generateCheckSum());
-		
-		//TODO add a message param for nonce and check nonce+1 on response message 	
+		if(DEBUG_OUTPUT) System.out.println("Sending nonce " + nonce);
 		socket.sendEncrypted(aes.encrypt(message));
 		
 		byte[] encMessage = socket.receiveEncrypted();
