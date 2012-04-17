@@ -243,7 +243,7 @@ final class HubSocketHandler extends Thread{
 			returnBody.add(0, Calendar.getInstance().getTimeInMillis());
 			//set the nonce+1
 			currentNonce = clientNonce+1;
-			returnBody.add(1, clientNonce++);
+			returnBody.add(1, clientNonce+1);
 			//set the body 
 			returnMsg.setBody(returnBody);
 			//set checksum
@@ -261,9 +261,6 @@ final class HubSocketHandler extends Thread{
 			//put thread in a state to receive future messages
 			return true;
 		}
-		
-		
-		// TODO: if user login fails, sleep for .2 to .8 seconds
 		
 		SecureRandom s = new SecureRandom();
 		int pause = (int)((s.nextDouble()*600)+200);
@@ -354,11 +351,13 @@ final class HubSocketHandler extends Thread{
 			
 			//do nonce check
 			long newNonce = msg.getNonce();
-			if (DEBUG) System.out.println("oldNonce: " + newNonce);
+			if (DEBUG) System.out.println("oldNonce: " + currentNonce + " newNonce: "+ newNonce);
 			if (newNonce != currentNonce+1){
 				if (DEBUG) System.out.println("Expected nonce mismatch");
 				return false;
 			}
+			//set current nonce
+			currentNonce = newNonce + 1;
 			
 			//do checksum
 			long oldChecksum = msg.getChecksum();
@@ -381,9 +380,6 @@ final class HubSocketHandler extends Thread{
 	 */
 	private void sendEncryptedMessage(byte[] msg){
 		try {
-			
-			//TODO: add nonce in here
-			
 			//send the length along first
 			oos.writeInt(msg.length);
 			oos.write(msg);
@@ -415,6 +411,9 @@ final class HubSocketHandler extends Thread{
 	 * 
 	 */
 	private void returnAndEncryptMessage(Message msg){
+		//set up nonce
+		msg.setNonce(currentNonce + 1);
+		currentNonce = currentNonce + 1;
 		//calculate checksum
 		long thisChecksum = msg.generateCheckSum();
 		msg.setChecksum(thisChecksum);

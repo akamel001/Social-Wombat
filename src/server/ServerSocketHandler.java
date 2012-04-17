@@ -25,6 +25,7 @@ final class ServerSocketHandler {
 	ObjectInputStream ois;
 	AES serverAESObject;
 	char[] password;
+	Long currentNonce = null;
 	
 	private static final boolean DEBUG = false;
 
