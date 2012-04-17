@@ -242,8 +242,8 @@ final class HubSocketHandler extends Thread{
 			//set my timestamp
 			returnBody.add(0, Calendar.getInstance().getTimeInMillis());
 			//set the nonce+1
-			currentNonce = clientNonce+1;
 			returnBody.add(1, clientNonce+1);
+			currentNonce = clientNonce+1;
 			//set the body 
 			returnMsg.setBody(returnBody);
 			//set checksum
@@ -353,11 +353,11 @@ final class HubSocketHandler extends Thread{
 			long newNonce = msg.getNonce();
 			if (DEBUG) System.out.println("oldNonce: " + currentNonce + " newNonce: "+ newNonce);
 			if (newNonce != currentNonce+1){
-				if (DEBUG) System.out.println("Expected nonce mismatch");
+				if (DEBUG) System.out.println("Nonce mismatch");
 				return false;
 			}
 			//set current nonce
-			currentNonce = newNonce + 1;
+			currentNonce = newNonce;
 			
 			//do checksum
 			long oldChecksum = msg.getChecksum();
