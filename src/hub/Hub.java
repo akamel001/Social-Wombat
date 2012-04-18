@@ -321,7 +321,7 @@ public final class Hub extends Thread {
 		//set nonce
 		long myNonce = new SecureRandom().nextLong();
 		body.add(1,myNonce);
-		initial.setChecksum(CheckSum.getChecksum(body));
+		initial.setChecksum(CheckSum.getMD5Checksum(body));
 		//set and encrypt body
 		initial.setBody(socketAES.encrypt(body));
 		
@@ -350,10 +350,10 @@ public final class Hub extends Thread {
 		//reset the body to the decrypted body
 		reply.setBody(replyBody);
 		//verify fields
-		long newChecksum = reply.generateCheckSum();
-		long oldChecksum = reply.getChecksum();
+		String newChecksum = reply.generateCheckSum();
+		String oldChecksum = reply.getChecksum();
 		
-		if(newChecksum != oldChecksum){
+		if(!newChecksum.equals(oldChecksum)){
 			if(DEBUG) System.out.println("HUB: checksums don't match."); // TODO: when connecting to a server, the connection seems overall successful, however, the checksums don't match
 			if(DEBUG) System.out.println("New checksum: " + newChecksum);
 			if(DEBUG) System.out.println("Old checksum: " + oldChecksum);

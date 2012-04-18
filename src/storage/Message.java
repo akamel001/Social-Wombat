@@ -12,7 +12,7 @@ public final class Message implements Serializable{
 	private InetAddress recipient;
 	private Object body;
 	private MessageType type;
-	private long checksum;
+	private String checksum;
 	private long nonce;
 	private byte[] salt;
 	private byte[] iv;
@@ -73,13 +73,15 @@ public final class Message implements Serializable{
 		return nonce;
 	}
 
-	public void setNonce(long naunce) {
-		this.nonce = naunce;
+	public void setNonce(long nonce) {
+		this.nonce = nonce;
 	}
 
-	public long generateCheckSum(){
-		return CheckSum.getChecksum(body);
+	public String generateCheckSum(){
+		//return CheckSum.getChecksum(body);
+		return CheckSum.getMD5Checksum(body);
 	}
+	
 	public void setClassroom_ID(String classroom_id) {
 		this.classroom_id = classroom_id;
 	}
@@ -145,11 +147,11 @@ public final class Message implements Serializable{
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	public long getChecksum() {
+	public String getChecksum() {
 		return checksum;
 	}
 
-	public void setChecksum(long checksum) {
+	public void setChecksum(String checksum) {
 		this.checksum = checksum;
 	}
 }

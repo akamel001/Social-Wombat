@@ -37,7 +37,7 @@ public final class Client {
 		}
 	}
 	/**
-	 * A function that preforms the authentication protocal described in our documentation 
+	 * A function that performs the authentication protocol described in our documentation 
 	 * @param uName
 	 * @param password
 	 * @return
@@ -98,15 +98,12 @@ public final class Client {
 		}else
 			response.setBody(return_list);
 		
-		if(response.getChecksum() != response.generateCheckSum()){
+		if(!response.getChecksum().equals(response.generateCheckSum())){
 			if(DEBUG_OUTPUT) System.out.println("Checksum miss match!\n==> Received checksum: " + response.getChecksum() + "\n==> Generated Checksum" + response.generateCheckSum());
 			return false;
 		}else{
 			if(DEBUG_OUTPUT) System.out.println("Checksum passed!");
 		}
-		
-
-		
 		
 		long now =	c.getTimeInMillis();
 		long hub_time = return_list.get(0); 
@@ -166,14 +163,13 @@ public final class Client {
 		}else //Nonce is good continue
 			nonce = response.getNonce();
 		
-		//TODO Inform Julia of response that the hub is not responding and needs to be handled
 		if(response.getType() == Message.MessageType.Hub_Shutdown){
 			System.out.println("The hub is shut down, try again later.");
 			System.exit(-1);
 		}
 		
-		if(response.getChecksum() != response.generateCheckSum())
-			System.out.println("Checksum miss match!");
+		if(!response.getChecksum().equals(response.generateCheckSum()))
+			System.out.println("Checksum mismatch!");
 		
 		return response;
 	}

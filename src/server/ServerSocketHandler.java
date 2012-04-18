@@ -120,10 +120,10 @@ final class ServerSocketHandler {
 		@SuppressWarnings("unchecked")
 		ArrayList<Long> firstList = (ArrayList<Long>)serverAESObject.decryptObject(eBody);
 		firstMessage.setBody(firstList);
-		long oldchecksum = firstMessage.getChecksum();
-		long newchecksum = firstMessage.generateCheckSum();
+		String oldchecksum = firstMessage.getChecksum();
+		String newchecksum = firstMessage.generateCheckSum();
 		if(DEBUG) System.out.println("Checking checksums");
-		if (oldchecksum != newchecksum){
+		if (!oldchecksum.equals(newchecksum)){
 			if(DEBUG) System.out.println("Checksum mismatch, returning");
 			return false;
 		}
@@ -159,7 +159,7 @@ final class ServerSocketHandler {
 			//set the body
 			returnMsg.setBody(returnBody);
 			//set checksum
-			long checksum = returnMsg.generateCheckSum();
+			String checksum = returnMsg.generateCheckSum();
 			if(DEBUG) System.out.println("Generated checksum is: " + checksum);
 			returnMsg.setChecksum(checksum);
 			returnMsg.setBody(serverAESObject.encrypt(returnBody));
@@ -250,10 +250,10 @@ final class ServerSocketHandler {
 			currentNonce = newNonce;
 			
 			//do checksum
-			long oldChecksum = msg.getChecksum();
-			long newChecksum = msg.generateCheckSum();
+			String oldChecksum = msg.getChecksum();
+			String newChecksum = msg.generateCheckSum();
 			
-			return (oldChecksum == newChecksum);
+			return (oldChecksum.equals(newChecksum));
 		} catch (Exception e){
 			e.printStackTrace();
 			System.out.println("Possible socket closure");
@@ -285,7 +285,7 @@ final class ServerSocketHandler {
 		msg.setNonce(currentNonce + 1);
 		currentNonce = currentNonce + 1;
 		//calculate checksum
-		long thisChecksum = msg.generateCheckSum();
+		String thisChecksum = msg.generateCheckSum();
 		msg.setChecksum(thisChecksum);
 		//encrypt message why client aes key
 		byte[] eMsg = serverAESObject.encrypt(msg);
