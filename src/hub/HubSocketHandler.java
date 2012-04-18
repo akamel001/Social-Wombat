@@ -542,11 +542,20 @@ final class HubSocketHandler extends Thread{
 					return;
 				}
 			}
+			//only allow a certain number of authentication attempts
+			int allowedRetries = 7;
 			//All further communications
 			while ((listen && valid) || relogin){
 				//for future logins
 				while(!listen){
 					relogin = false;
+					//decrement
+					allowedRetries--;
+					//exit if max allowed retries reached
+					if (allowedRetries <= 0){
+						if (DEBUG) System.out.println("Max allowed retries reached");
+						return;
+					}
 					try {
 						listen = authenticate();
 					} catch (Exception e){
@@ -612,6 +621,8 @@ final class HubSocketHandler extends Thread{
 							listen = false;
 							valid = true;
 							relogin = true;
+							//reset allowed retries
+							allowedRetries = 7;
 							//remove user
 							currentUsers.remove(currentUser);
 							msg = new Message();
