@@ -86,6 +86,11 @@ public final class Client {
 		// Get timestamp message
 		Message response = socket.receive();
 		
+		if(response.getType() == Message.MessageType.Hub_Shutdown){
+			System.out.println("The hub is shut down, try again later.");
+			System.exit(-1);
+		}
+		
 		if(response.getCode() == -1) return false;
 		
 		byte[] encryptedBody = (byte[])response.getBody();
@@ -98,6 +103,7 @@ public final class Client {
 		}else
 			response.setBody(return_list);
 		
+
 		if(!response.getChecksum().equals(response.generateCheckSum())){
 			if(DEBUG_OUTPUT) System.out.println("Checksum miss match!\n==> Received checksum: " + response.getChecksum() + "\n==> Generated Checksum" + response.generateCheckSum());
 			return false;
