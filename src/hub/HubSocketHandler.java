@@ -531,22 +531,50 @@ final class HubSocketHandler extends Thread{
 			boolean valid = true;
 			boolean relogin = false;
 			
+			//only allow a certain number of authentication attempts
+			int allowedRetries = 7;
+			
 			//Authenticate, if listen is false, the socket is problematic, close connections
 			//loop to allow continuous authentication
 			while(!listen){
 				try {
 					listen = authenticate();
+					//decrement
+					allowedRetries--;
+					if (DEBUG) System.out.println("Retries left: " + allowedRetries);
+					//exit if max allowed retries reached
+					if (allowedRetries <= 0){
+						if (DEBUG) System.out.println("Max allowed retries reached");
+						Message failReply = new Message();
+						failReply.setCode(-1);
+						failReply.setType(Message.MessageType.Hub_Shutdown);
+						returnMessage(failReply);
+						return;
+					}
 				} catch (Exception e){
 					//Handles junk injections to our port
 					if (DEBUG) System.out.println("Junk seen on port, killing that particular thread.");
 					return;
 				}
 			}
+			
 			//All further communications
 			while ((listen && valid) || relogin){
 				//for future logins
 				while(!listen){
 					relogin = false;
+					//decrement
+					allowedRetries--;
+					if (DEBUG) System.out.println("Retries left: " + allowedRetries);
+					//exit if max allowed retries reached
+					if (allowedRetries <= 0){
+						if (DEBUG) System.out.println("Max allowed retries reached");
+						Message failReply = new Message();
+						failReply.setCode(-1);
+						failReply.setType(Message.MessageType.Hub_Shutdown);
+						returnMessage(failReply);
+						return;
+					}
 					try {
 						listen = authenticate();
 					} catch (Exception e){
@@ -612,6 +640,8 @@ final class HubSocketHandler extends Thread{
 							listen = false;
 							valid = true;
 							relogin = true;
+							//reset allowed retries
+							allowedRetries = 7;
 							//remove user
 							currentUsers.remove(currentUser);
 							msg = new Message();
