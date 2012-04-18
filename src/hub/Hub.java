@@ -21,7 +21,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import util.DataObject;
 import security.AES;
 import security.CheckSum;
 import storage.ClassList;
@@ -388,19 +388,24 @@ public final class Hub extends Thread {
 	 * Reads a given object from the filesystem
 	 */
 	private static Object readFromDisk(String name){
-		Object o = null;
+		DataObject o = null;
+		
 		try {
 		    FileInputStream fin = new FileInputStream(name);
 		    ObjectInputStream ois = new ObjectInputStream(fin);
-		    if (name.equals(classListName)){
-		    	//if(DEBUG) System.out.println("We are reading in ClassList");
-		    	o = (ClassList) ois.readObject();
-		    } else if (name.equals(userListName)){
-		    	//if(DEBUG) System.out.println("We are reading in UserList");
-		    	o = (UserList) ois.readObject();
-		    } else if (name.equals(serverListName)){
-		    	//if(DEBUG) System.out.println("We are reading in ServerList");
-		    	o = (ServerList) ois.readObject();
+		    
+		    
+		    o = (DataObject) ois.readObject();
+		    
+		    String diskChecksum = o.getChecksum();
+		    String expectedChecksum = CheckSum.getMD5Checksum(o.getData());
+		    
+		    if(!diskChecksum.equals(expectedChecksum)){
+		    	ois.close();
+		    	if(DEBUG) System.out.println("Woops! bad checksum when reading data from disk\n Expected " 
+		    			+ expectedChecksum + "\n Got " + diskChecksum);
+		    	
+		    	return null;
 		    }
 		    ois.close();
 		} catch (IOException e) { 
@@ -408,28 +413,21 @@ public final class Hub extends Thread {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		return o;
+		return o.getData();
 	}
 	
 	/*
 	 * Writes a given object to the filesystem
 	 */
-	private void writeToDisk(Object o, String name){
+	private void writeToDisk(Object write, String name){
+		DataObject o = new DataObject(write, CheckSum.getMD5Checksum(write));
+		
 		FileOutputStream fos;
 		try {
 			fos = new FileOutputStream(name);
-			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			if (o instanceof UserList){
-				//if(DEBUG) System.out.println("We have have an instance of UserList");
-				oos.writeObject((UserList)o);
-			} else if (o instanceof ClassList){
-				//if(DEBUG) System.out.println("We have have an instance of ClassList");
-				oos.writeObject((ClassList)o);
-			} else if (o instanceof ServerList){
-				//if(DEBUG) System.out.println("We have have an instance of ServerList");
-				oos.writeObject((ServerList)o);
-			}
 			
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(o);
 			oos.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -453,18 +451,38 @@ public final class Hub extends Thread {
 		//Create or import ClassList, UserList, ServerList
 		if (fileExists(classListName)){
 			classList = (ClassList) readFromDisk(classListName);
+			
+			if(DEBUG) System.out.println("Loaded classlist from disk");
+			
+			if(classList == null){
+				if(DEBUG) System.out.println("Files on disk where not read, possibly tampered with");
+				classList = new ClassList();
+			}
 		} else {
 			//create new ClassList
 			classList = new ClassList();
 		}
+		
 		if (fileExists(userListName)){
 			userList = (UserList) readFromDisk(userListName);
+			if(DEBUG) System.out.println("Loaded userList from disk ");
+
+			if(userList == null){
+				if(DEBUG) System.out.println("Files on disk where not read, possibly tampered with");
+				userList = new UserList();
+			}
 		} else {
 			//create new Userlist
 			userList = new UserList();
 		}
 		if (fileExists(serverListName)){
 			serverList = (ServerList) readFromDisk(serverListName);
+			if(DEBUG) System.out.println("Loaded serverList from disk");
+
+			if(serverList == null){
+				if(DEBUG) System.out.println("Files on disk where not read, possibly tampered with");
+				serverList = new ServerList();
+			}
 		} else {
 			//create new ServerList
 			serverList = new ServerList();

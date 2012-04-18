@@ -25,12 +25,12 @@ public final class CheckSum {
 	private CheckSum(){}
 	
 	/**
-	 * @deprecated
+	 *deprecated
 	 * Give the checksum for a passed object
 	 * @param o The object to be checksumed. NOTE: This object must be completely serializable!!!!
 	 * @return Returns the checksum on success, -1 if the object is not serializable.
 	 */
-	public static long getChecksum(Object o){
+	/*public static long getChecksum(Object o){
 		long out = -1;
 		
 		ByteArrayOutputStream byte_out = new ByteArrayOutputStream();
@@ -48,7 +48,7 @@ public final class CheckSum {
 			return -1;
 		}
 		return out;
-	}
+	}*/
 	
 	public static String getMD5Checksum(Object o){
 		return byteToHexString(getChecksum_(o, "MD5"));
