@@ -69,7 +69,8 @@ public final class SysAdminInterface {
 	private static final String mSTART_HUB_SUCCESS =		UserInterfaceHelper.addFormattingAlignLeft("You have successfully start up the hub.");
 	private static final String mSHUT_DOWN_HUB_SUCCESS = 	UserInterfaceHelper.addFormattingAlignLeft("You have successfully shut down the hub.");
 	private static final String mADD_SERVER_SUCCESS = 		UserInterfaceHelper.addFormattingAlignLeft("You have successfully added a server.");
-	private static final String mCONNECT_SERVERS_MESSAGE = 	UserInterfaceHelper.addFormattingAlignLeft("Server connection has been attempted.");
+	private static final String mCONNECT_SERVERS_MESSAGE_1 ="You have been successfully connect to ";
+	private static final String mCONNECT_SERVERS_MESSAGE_2 =" servers.";
 	
 	private static void systemLoginPage(String messages) {
 		displayPage(sLOG_IN, messages, null, null, null);	
@@ -128,8 +129,8 @@ public final class SysAdminInterface {
 		        break;
 		    // Connect to all servers.
 		    case 5: 
-		    	int connectedServers = hub.connectServers();
-		    	systemHomePage(mCONNECT_SERVERS_MESSAGE);
+		    	int numConnectedServers = hub.connectServers();
+		    	systemHomePage(UserInterfaceHelper.addFormattingAlignLeft(mCONNECT_SERVERS_MESSAGE_1 + numConnectedServers + mCONNECT_SERVERS_MESSAGE_2));
 		        break;
 		     // Shut down the hub.
 		    case 6:
