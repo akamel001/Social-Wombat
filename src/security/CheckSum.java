@@ -8,6 +8,8 @@ import java.util.zip.Checksum;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import storage.Message;
+
 /**
  * A class with a single static 
  * @author chris d
@@ -47,10 +49,14 @@ public final class CheckSum {
 	}
 	
 	public static String getMD5Checksum(Object o){
-		return byteToHexString(getMD5Checksum_(o));
+		return byteToHexString(getChecksum_(o, "MD5"));
 	}
 	
-	private static byte[] getMD5Checksum_(Object o){
+	public static String getSHA_1Checksum(Object o){
+		return byteToHexString(getChecksum_(o, "SHA-256"));
+	}
+	
+	private static byte[] getChecksum_(Object o, String algo){
 		
 		ByteArrayOutputStream byte_out = new ByteArrayOutputStream();
 		ObjectOutputStream object_out;
@@ -62,7 +68,7 @@ public final class CheckSum {
 			
 			// Create the MessageDigest object
 			// The MessageDigest class provides the functionality to do hash functions on arbitrary data
-			MessageDigest md = MessageDigest.getInstance("MD5");
+			MessageDigest md = MessageDigest.getInstance(algo);
 			
 			// MessageDigest.update() is used to process the data. It can be called multiple times (eg in case the 
 			// data cannot fit into a single buffer)
@@ -82,7 +88,24 @@ public final class CheckSum {
 	}
 	
 
-	
+	/**
+	 * 
+	 * @param password
+	 * @param password_hash
+	 * @return Returns true if the hash of 
+	 */
+	private static boolean validatePassword(char[] password, String password_hash){
+		char[] temp = Arrays.copyOf(password, password.length+1);
+		for (int i=0; i<10; i++){
+			temp[password.length-1]=(char)i;
+			if (password_hash.equals(getMD5Checksum(temp))){
+				Arrays.fill(temp, '0');
+				return true;
+			}
+		}
+		Arrays.fill(temp, '0');
+		return false;
+	}
 	
 	private static String byteToHexString(byte[] digest){
 		String out = new String();
@@ -100,16 +123,22 @@ public final class CheckSum {
 		m.setCode(1234567890);
 		m.setUserName("USER NAME");
 
-		byte[] test = getMD5Checksum_(new String("Password"));
-		System.out.println("Size: " + test.length);
-		System.out.println("byteToHexString: " + CheckSum.byteToHexString(test));
+		byte[] test = getChecksum_(new String("Password"), "MD5");
+		String out = CheckSum.byteToHexString(test);
+		System.out.println("Size in bytes: " + test.length);
+		System.out.println("Length of string: " + out.length());
+		System.out.println("byteToHexString: " + out);
 		
-		byte[] test1 = getMD5Checksum_(new String("Password1"));
+		byte[] test1 = getChecksum_(new String("Password1"), "MD5");
+		String out1 = CheckSum.byteToHexString(test1);
 		System.out.println("Size: " + test1.length);
+		System.out.println("Length of string: " + out1.length());
 		System.out.println("byteToHexString: " + CheckSum.byteToHexString(test1));
 		
-		byte[] test2 = getMD5Checksum_(new String("Password2"));
+		byte[] test2 = getChecksum_(new String("Password2"), "MD5");
+		String out2 = CheckSum.byteToHexString(test2);
 		System.out.println("Size: " + test2.length);
+		System.out.println("Length of string: " + out2.length());
 		System.out.println("byteToHexString: " + CheckSum.byteToHexString(test2));		
 	}
 }
