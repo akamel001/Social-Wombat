@@ -23,9 +23,6 @@ public final class Message implements Serializable{
 
 	
 	public enum MessageType {
-		// Hub->Client
-		Login_Denied,
-		
 	    // Client -> Hub only
 		Client_LogIn, 
 		Client_Logout,

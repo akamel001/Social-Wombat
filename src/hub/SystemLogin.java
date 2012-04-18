@@ -50,7 +50,6 @@ public final class SystemLogin implements Serializable {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
 		}
 		return null;
 	}
