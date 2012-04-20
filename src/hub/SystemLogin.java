@@ -20,8 +20,6 @@ import security.AES;
  * @author Julia
  */
 
-// TODO: black out sensitive variables
-
 public final class SystemLogin implements Serializable {
 	private static final long serialVersionUID = 732364698179994154L;
 	// This is the hub key encrypted with the system admin password.
@@ -67,13 +65,12 @@ public final class SystemLogin implements Serializable {
 		AES aes = validateSystemPassword(oldPassword);
 		if (aes != null) {
 			if (Arrays.equals(newPassword,confirmNewPassword)) {
-				//TODO: cd: new pass, old iv?
-				AES aesNew = new AES(newPassword); //, system_admin_init_vector, system_admin_salt); 
+				AES aesNew = new AES(newPassword);
 				system_admin_init_vector = aesNew.getIv();
 				system_admin_salt = aesNew.getSalt();
 				system_admin_enc = aesNew.encrypt(newPassword); // re-encrypt the "system admin" string
 				SecretKey temp = (SecretKey)aes.decryptObject(hub_key_enc);
-				hub_key_enc = aesNew.encrypt(temp);	   // and hub key // TODO: possible error here in encrypt
+				hub_key_enc = aesNew.encrypt(temp);
 				
 				writeToDisk(this, "system_startup");
 				return true;
@@ -95,6 +92,7 @@ public final class SystemLogin implements Serializable {
 		if (password==null)
 			return null;
 		AES aes = new AES(password, system_admin_init_vector, system_admin_salt);
+		
 		if (aes==null){
 			return null;
 		}

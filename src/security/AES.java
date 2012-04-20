@@ -28,7 +28,6 @@ import javax.crypto.spec.SecretKeySpec;
  * This is the class used for AES encryption and decryption.
  */
 
-// TODO: destruct any sensitive information
 public final class AES implements Serializable {
 
 	private static final long serialVersionUID = -7942831124421437491L;
@@ -53,6 +52,7 @@ public final class AES implements Serializable {
 	        secretKey = new SecretKeySpec(factory.generateSecret(spec).getEncoded(), "AES");
 	        ecipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 	        dcipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+	        Arrays.fill(password, '0');
 	        init();	
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
@@ -70,6 +70,7 @@ public final class AES implements Serializable {
 	        secretKey = new SecretKeySpec(factory.generateSecret(spec).getEncoded(), "AES");
 	        ecipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 	        dcipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+	        Arrays.fill(password, '0');
 	        init(iv, salt);		
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
