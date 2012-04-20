@@ -18,16 +18,19 @@ public class SystemTest {
 	static AES clientAESObject;
 	static Hub hub;
 	
+	@SuppressWarnings("unused")
 	private static void aesInitialize(){
 		hubAESObject = new AES("password".toCharArray());	//default
 		clientAESObject = new AES("password".toCharArray());	//default
 	}
 	
+	@SuppressWarnings("unused")
 	private static void hubInitialize(){
 		hub = new Hub(hubAESObject);
 		hub.start();
 	}
 	
+	@SuppressWarnings("unused")
 	private static boolean testAES(){
 		
 		return false;
@@ -37,6 +40,7 @@ public class SystemTest {
 	 * Add a user 'User' with password 'password'
 	 * into the hub and test if they can log in
 	 */
+	@SuppressWarnings("unused")
 	private static void setupUser(){
 		System.out.println("Testing adding a user");
 		//add the user
@@ -54,6 +58,7 @@ public class SystemTest {
 			
 	}
 	
+	@SuppressWarnings("unused")
 	private static boolean testAuthentication(){
 		
 		return false;
