@@ -34,9 +34,6 @@ public final class SocketPackage {
 	 */
 	public SocketPackage(InetAddress addr,int port){
 		if (DEBUG) System.out.println("Creating a socket");
-		
-		//TODO: I commented out this line and added it to socketConnect b/c if the connection fails, you need a new socket object.
-		
 		socket = new Socket();
 		this.port = port;
 		this.addr = addr;

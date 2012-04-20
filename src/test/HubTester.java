@@ -39,7 +39,6 @@ public class HubTester {
 			oos = new ObjectOutputStream(server.getOutputStream());
 			ois = new ObjectInputStream(server.getInputStream());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -48,10 +47,8 @@ public class HubTester {
 		try {
 			readArray = (ArrayList<String>)ois.readObject();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		//print out the result
@@ -63,10 +60,8 @@ public class HubTester {
 		try {
 			readArray2 = (ArrayList<byte[]>)ois.readObject();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		byte[] iv = readArray2.get(0);
@@ -80,7 +75,6 @@ public class HubTester {
 		try {
 			length = ois.readInt();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 		
@@ -89,7 +83,6 @@ public class HubTester {
 		try {
 			ois.readFully(eMsg);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 		//decrypt into what should be the array
@@ -104,7 +97,6 @@ public class HubTester {
 		try {
 			l = ois.readInt();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 		
@@ -113,7 +105,6 @@ public class HubTester {
 		try {
 			ois.readFully(encryptedMsg);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 		//decrypt into what should be the array

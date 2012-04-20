@@ -238,7 +238,6 @@ public class ClassDBTest {
 	 */
 	@Test
 	public final void testGetThreadList() {
-		//fail("Not yet implemented"); // TODO
 	}
 
 	/**
@@ -246,6 +245,5 @@ public class ClassDBTest {
 	 */
 	@Test
 	public final void testGetThread() {
-		//fail("Not yet implemented"); // TODO
 	}
 }
