@@ -7,6 +7,7 @@ import storage.Message;
 
 
 
+@SuppressWarnings("unused")
 public class CheckSumTest {
 
 	@Test

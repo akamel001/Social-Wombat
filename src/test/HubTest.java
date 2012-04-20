@@ -15,6 +15,7 @@ public class HubTest {
 	static Hub testHub;
 	
 	
+	@SuppressWarnings("unused")
 	private static void testAddUsers(){
 		
 	}

@@ -6,8 +6,10 @@ import security.AES;
 public class TestHub extends Thread {
 	
 	private static AES hubAESObject;
+	@SuppressWarnings("unused")
 	private static Hub hub;
 	
+	@SuppressWarnings("unused")
 	private void initialize(){
 		//AES initialize
 		hubAESObject = new AES("password".toCharArray());	//default
