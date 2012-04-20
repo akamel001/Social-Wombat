@@ -120,10 +120,8 @@ public final class AES implements Serializable {
 			ecipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(iv));
 			
 		} catch (InvalidKeyException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InvalidAlgorithmParameterException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

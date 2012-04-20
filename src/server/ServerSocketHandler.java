@@ -53,6 +53,7 @@ final class ServerSocketHandler {
 	 * 
 	 * @return true if the hub is authenticated, false otherwise
 	 */
+	@SuppressWarnings("unchecked")
 	private boolean authenticate(){
 		if(DEBUG) System.out.println("Handling first contact");
 		Message firstMessage = null;
@@ -117,7 +118,6 @@ final class ServerSocketHandler {
 		
 		//decrypt body
 		byte[] eBody = (byte[])firstMessage.getBody();
-		@SuppressWarnings("unchecked")
 		ArrayList<Long> firstList = (ArrayList<Long>)serverAESObject.decryptObject(eBody);
 		firstMessage.setBody(firstList);
 		String oldchecksum = firstMessage.getChecksum();
@@ -175,27 +175,10 @@ final class ServerSocketHandler {
 		return false;	
 	}
 	
-	/**
-	 * Method to send an encrypted message to the precreated streams.
-	 */
-	private void sendEncryptedMessage(byte[] msg){
-		try {
-			//write length first
-			oos.writeInt(msg.length);
-			//the write the msg
-			oos.write(msg);
-			oos.flush();
-			oos.reset();
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Sending an encrypted message failed");
-		}
-		
-	}
-	
 	/**@deprecated
 	 * Deserialize transmission in socket and convert to a message
 	 */
+	@SuppressWarnings("unused")
 	private void getMessage(){
 		try {
 			msg = (Message) ois.readObject();

@@ -83,7 +83,6 @@ public final class CheckSum {
 			//e.printStackTrace();
 			return null;
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}

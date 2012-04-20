@@ -293,6 +293,7 @@ final class HubSocketHandler extends Thread{
 	/**@deprecated
 	 * Deserialize transmission in socket and convert to a message
 	 */
+	@SuppressWarnings("unused")
 	private void getMessage(){
 		try {
 			// blocking read
@@ -373,22 +374,6 @@ final class HubSocketHandler extends Thread{
 			return false;
 		}
 		
-	}
-	
-	/**
-	 * Method to send an encrypted message to the precreated streams.
-	 */
-	private void sendEncryptedMessage(byte[] msg){
-		try {
-			//send the length along first
-			oos.writeInt(msg.length);
-			oos.write(msg);
-			oos.flush();
-			oos.reset();
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Sending an encrypted message failed");
-		}
 	}
 	
 	/**
@@ -781,19 +766,6 @@ final class HubSocketHandler extends Thread{
 						case Client_GetLastLogin:
 							msg.setBody(lastLogin);
 							msg.setCode(1);
-							returnAndEncryptMessage(msg);
-							break;
-						
-						case Client_DeleteSelf:
-							String u = msg.getUserName();
-							if(userList.removeUser(u)==1){
-								//success
-								//TODO: remove the users from classList and if prof, remove serverlist
-								msg.setCode(1);
-							} else{
-								//fail
-								msg.setCode(-1);
-							}
 							returnAndEncryptMessage(msg);
 							break;
 						// Request to be added to a class

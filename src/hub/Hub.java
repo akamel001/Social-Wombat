@@ -99,11 +99,10 @@ public final class Hub extends Thread {
 		if (username == null){
 			return false;
 		}
-		//TODO: debug check
-		if(userList == null) System.out.println("userlist is null");
+
+		if (DEBUG) {if(userList == null) System.out.println("userlist is null");}
 		
 		//Add
-		//TODO: check the output of userlist
 		// UserList now returns -1 if username or pass is invalid -	cd
 		if(userList.addUser(username, password, hubAESObject) != -1){
 			if(DEBUG) System.out.println("User " + username + " added successfully!");
@@ -182,8 +181,6 @@ public final class Hub extends Thread {
 			//create new socket to add
 			SocketPackage newSocketPackage = new SocketPackage(server,SERVER_SOCKET);
 			serverPackages.put(r, newSocketPackage);
-			//TODO: change to not automatically add
-			//connectServers();
 			return r;
 		}
 	}
@@ -262,16 +259,6 @@ public final class Hub extends Thread {
 				SocketPackage newSocketPackage = 
 						new SocketPackage(serverList.getAddress(i), SERVER_SOCKET);
 				if(!newSocketPackage.isConnected()){
-					
-					/*--------DEBUG-BEGIN--------------------*/
-					/*
-					System.out.println("IN SERVER: " + serverList.getServerList().toString());
-					System.out.println("SERVER PASS: " + Arrays.toString(serverList.getServerPass(i, hubAESObject)));
-					List<byte[]> b = serverList.getIvSalt(i, hubAESObject);
-					System.out.println("SERVER IV: " + Arrays.toString(b.get(0)));
-					System.out.println("SERVER SALT: " + Arrays.toString(b.get(1)));
-					*/
-					/*--------DEBUG-END--------------------*/
 					
 					//regenerate serverAES object
 					//grab pass
@@ -354,7 +341,7 @@ public final class Hub extends Thread {
 		String oldChecksum = reply.getChecksum();
 		
 		if(!newChecksum.equals(oldChecksum)){
-			if(DEBUG) System.out.println("HUB: checksums don't match."); // TODO: when connecting to a server, the connection seems overall successful, however, the checksums don't match
+			if(DEBUG) System.out.println("HUB: checksums don't match."); 
 			if(DEBUG) System.out.println("New checksum: " + newChecksum);
 			if(DEBUG) System.out.println("Old checksum: " + oldChecksum);
 			return false;
@@ -487,17 +474,6 @@ public final class Hub extends Thread {
 			//create new ServerList
 			serverList = new ServerList();
 		}
-		
-		//TODO: Remove for multiple computers
-		/*
-		try {
-			//TODO: possible error because we're making the inet address into a string now
-			addServer(InetAddress.getLocalHost().getHostAddress(),"password".toCharArray());
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-			System.out.println("Could not add a local host server");
-		}*/
-		
 	}
 	
 	/*

@@ -29,7 +29,6 @@ public final class Message implements Serializable{
 	    Client_GetClassEnrollment,
 	    Client_GetUserEnrollment,
 	    Client_SetPermissions,	//of users in a class
-	    Client_DeleteSelf,
 	    Client_RequestEnrollment,
 	    Client_ListClassroomRequests,
 	    Client_CloseSocket,
