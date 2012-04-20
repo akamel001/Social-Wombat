@@ -3,8 +3,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Arrays;
-import java.util.zip.CRC32;
-import java.util.zip.Checksum;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -95,6 +93,7 @@ public final class CheckSum {
 	 * @param password_hash
 	 * @return Returns true if the hash of 
 	 */
+	@SuppressWarnings("unused")
 	private static boolean validatePassword(char[] password, String password_hash){
 		char[] temp = Arrays.copyOf(password, password.length+1);
 		for (int i=0; i<10; i++){
