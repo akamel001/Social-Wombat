@@ -168,7 +168,6 @@ public final class SysAdminInterface {
 		    	try {
 			        hub = new Hub(aesHub);
 			        if (aesHub == null) System.out.println("AES OBJECT IN HUB IS NULL!");
-			        //Arrays.fill(aesHub, '0'); // TODO: check this
 			        hub.start();
 		    	} catch (Exception e) {
 		    		systemHomePage(eSTART_HUB_ERROR);
@@ -320,7 +319,7 @@ public final class SysAdminInterface {
 		AES aes = systemLogin.handleSystemLogin(password);
 		if (aes != null) {
 			Arrays.fill(password, '0');
-			return aes;			//TODO: cd: is this the correct aes to be handed to the hub?
+			return aes;
 		}
 		Arrays.fill(password, '0');
 		return null;
