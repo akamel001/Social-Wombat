@@ -42,17 +42,17 @@ public final class AES implements Serializable {
     
     /**
      * Creates and initializes an AES object with a given pass.
-     * @param password
+     * @param hashedpassword
      */
-	public AES(char[] password){
+	public AES(char[] hashedpassword){
 		try {		
     		random.nextBytes(salt);
 	        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-	        KeySpec spec = new PBEKeySpec(password, salt, 1024, 128);
+	        KeySpec spec = new PBEKeySpec(hashedpassword, salt, 1024, 128);
 	        secretKey = new SecretKeySpec(factory.generateSecret(spec).getEncoded(), "AES");
 	        ecipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 	        dcipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-	        Arrays.fill(password, '0');
+	        Arrays.fill(hashedpassword, '0');
 	        init();	
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
@@ -63,14 +63,14 @@ public final class AES implements Serializable {
 		}
 	}
 	
-	public AES(char[] password, byte[] iv, byte[] salt){
+	public AES(char[] hashedpassword, byte[] iv, byte[] salt){
 		try {
 	        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-	        KeySpec spec = new PBEKeySpec(password, salt, 1024, 128);
+	        KeySpec spec = new PBEKeySpec(hashedpassword, salt, 1024, 128);
 	        secretKey = new SecretKeySpec(factory.generateSecret(spec).getEncoded(), "AES");
 	        ecipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 	        dcipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-	        Arrays.fill(password, '0');
+	        Arrays.fill(hashedpassword, '0');
 	        init(iv, salt);		
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();

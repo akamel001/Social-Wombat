@@ -149,11 +149,11 @@ final class HubSocketHandler extends Thread{
 			return false;
 		}
 		//check if the user exists
-		//Pull out the password
-		char[] password = userList.getUserPass(usr, hubAESObject);
-		if (DEBUG) System.out.println("PASSWORD: " + Arrays.toString(password));
+		//Pull out the hash
+		String hash = userList.getUserPass(usr, hubAESObject);
+		if (DEBUG) System.out.println("hashedpassword: " + hash);
 		// check existence of username
-		if (password == null){
+		if (hash == null){
 			//send back error code
 			Message returnMsg = new Message();
 			returnMsg.setType(Message.MessageType.Client_LogIn);
@@ -165,10 +165,7 @@ final class HubSocketHandler extends Thread{
 		}
 		
 		//Create client aes object
-		clientAESObject = new AES(password, iv, salt);
-		
-		//Zero out password
-		Arrays.fill(password,'0');
+		clientAESObject = new AES(hash.toCharArray(), iv, salt);
 		
 		//null check aes object
 		if (clientAESObject == null){
@@ -650,13 +647,13 @@ final class HubSocketHandler extends Thread{
 								allowed = false;
 							}
 							//lookup pass
-							char[] oldPass = userList.getUserPass(msg.getUserName(), hubAESObject);
+							String oldPass = userList.getUserPass(msg.getUserName(), hubAESObject);
 							//check oldpass matches with lookup pass
-							if(!Arrays.equals(oldPass, body.get(0))){
+							if(!oldPass.equals(body.get(0))){
 								allowed = false;
 							}
 							//clear oldpass
-							Arrays.fill(oldPass, '0');
+							//Arrays.fill(oldPass, '0');
 							Arrays.fill(body.get(0), '0');
 							//check newpass arrays.equals confirm new pass
 							if(!Arrays.equals(body.get(1), body.get(2))){
@@ -665,7 +662,7 @@ final class HubSocketHandler extends Thread{
 							//if all success, then change pass
 							if (allowed){
 								if (DEBUG) System.out.println("Client change password allowed, changing...");
-								int ret = userList.changeUserPassword(currentUser, body.get(1), hubAESObject);
+								int ret = userList.changeUserPassword(currentUser, SecureUtils.getSalt(),body.get(1), hubAESObject);
 								if(ret==1){
 									//successful system change
 									if (DEBUG) System.out.println("userList password changed");
