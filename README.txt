@@ -61,22 +61,22 @@ through sockets.
 
 ***INSTRUCTIONS***
 
-Navigate to the Social-Wombat directory and compile the source code 
+1. Navigate to the Social-Wombat directory and compile the source code:
 
     $ javac *.java
     
-Simulating startup of a server 
+2. Simulate the startup of a server:
 
     $ java StartServers
 
-Starting the system admin interface:
+3. Start the system admin interface:
 
     $ java SysAdminInterface
-`default startup password for a System Administrator is "system admin". They are encouraged to change it.`
+The default startup password for a System Administrator is "system admin". The System Administrator is encouraged to change it.
 
-*After the system administrator logs in he can start the hub by selecting to do so from the interface. Once the hub has been started, servers can be added by ip which is obtained from StartServers. The administrator can also enroll users by username and a password.*  
+After the system administrator logs in he can start the hub by selecting to do so from the interface. Once the hub has been started, servers can be added by ip which is obtained from StartServers. The administrator can also enroll users by username and a password.*  
 
-Starting a client and logging in: 
+4. Start a client and log in: 
 
     $ java UserInterface
     
