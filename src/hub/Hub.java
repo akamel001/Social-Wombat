@@ -104,7 +104,8 @@ public final class Hub extends Thread {
 		
 		//Add
 		// UserList now returns -1 if username or pass is invalid -	cd
-		if(userList.addUser(username, password, hubAESObject) != -1){
+		if(userList.addUser(username, SecureUtils.getSalt(), password, hubAESObject) != -1){
+			Arrays.fill(password, '0');
 			if(DEBUG) System.out.println("User " + username + " added successfully!");
 			return true;
 		} else {
@@ -138,9 +139,8 @@ public final class Hub extends Thread {
 	 * Replaced the deprecated validate user in user list
 	 */
 	private boolean userExists(String username){
-		char[] pass = userList.getUserPass(username, hubAESObject);
+		String pass = userList.getUserPass(username, hubAESObject);
 		if (pass != null){
-			Arrays.fill(pass, '0');
 			return true;
 		}
 		return false;
