@@ -41,25 +41,16 @@ public final class UserList implements Serializable{
 	 * @param encryptor
 	 * @return True if the user password combo exist.
 	 */	
-	private boolean validateUser(String user_name, char[] pass, char[] salt, AES encryptor){
-		if (user_name==null || pass==null || salt==null){
+	private boolean validateUser(String user_name, String test_hash, AES encryptor){
+		if (user_name==null || test_hash==null){
 			return false;
 		}
-		
-		// Create salt+pass concatenation to compare against stored value
-		char[] temp_pass = new char[salt.length + pass.length];
-		System.arraycopy(salt, 0, temp_pass, 0, salt.length);
-		System.arraycopy(pass, 0, temp_pass, salt.length, pass.length);
-	
-		// Get temp hash String, zero-out temp_pass
-		String temp_hash = CheckSum.getSHA_1Checksum(temp_pass);
-		Arrays.fill(temp_pass, '0');
-
+			
 		// Get User and then User's hashed salt+pass
 		User temp_user = getUser(user_name, encryptor);
 		String user_hash = temp_user.getPassHash();
 		
-		if(temp_hash.equals(user_hash))
+		if(test_hash.equals(user_hash))
 			return true;
 		else 
 			return false;
