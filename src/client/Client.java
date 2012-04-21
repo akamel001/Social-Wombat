@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import security.AES;
+import security.SecureUtils;
 import storage.Message;
 import util.SocketPackage;
 
@@ -49,11 +50,17 @@ public final class Client {
 
 		if(password.length == 0)
 			return false;
-
-		aes = new AES(password);
+		
+		char[] conSalt = SecureUtils.getSalt();
+		char[] temp_pass = new char[conSalt.length + password.length];
+		System.arraycopy(conSalt, 0, temp_pass, 0, conSalt.length);
+		System.arraycopy(password, 0, temp_pass, conSalt.length, password.length);
+		String hashedPassword = SecureUtils.getSHA_1Hash(temp_pass);
+			
+		aes = new AES(hashedPassword.toCharArray());
 		Calendar c = Calendar.getInstance();
 		SecureRandom r = new SecureRandom();
-
+		
 		nonce= r.nextLong();
 
 		//Zeros out password
