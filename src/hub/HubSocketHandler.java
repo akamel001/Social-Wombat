@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import security.AES;
-import security.CheckSum;
+import security.SecureUtils;
 import storage.ClassData;
 import storage.ClassList;
 import storage.Message;
@@ -191,7 +191,7 @@ final class HubSocketHandler extends Thread{
 		}
 		
 		//Checksum
-		String newChecksum = CheckSum.getMD5Checksum(body);
+		String newChecksum = SecureUtils.getMD5Hash(body);
 		if (DEBUG) System.out.println("New checksum: " + newChecksum);
 		
 		String oldChecksum = msg.getChecksum();

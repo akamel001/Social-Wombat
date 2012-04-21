@@ -11,7 +11,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import security.CheckSum;
+import security.SecureUtils;
 import storage.ClassDB;
 import util.DataObject;
 
@@ -65,7 +65,7 @@ public final class Server extends Thread{
 		    o = (DataObject) ois.readObject();
 		    
 		    String diskChecksum = o.getChecksum();
-		    String expectedChecksum = CheckSum.getMD5Checksum(o.getData());
+		    String expectedChecksum = SecureUtils.getMD5Hash(o.getData());
 		    
 		    if(!diskChecksum.equals(expectedChecksum)){
 		    	ois.close();
@@ -87,7 +87,7 @@ public final class Server extends Thread{
 	 * Writes a given object to the filesystem
 	 */
 	private void writeToDisk(Object write, String name){
-		DataObject o = new DataObject(write, CheckSum.getMD5Checksum(write));
+		DataObject o = new DataObject(write, SecureUtils.getMD5Hash(write));
 		
 		FileOutputStream fos;
 		try {

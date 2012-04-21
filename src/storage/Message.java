@@ -2,7 +2,7 @@ package storage;
 import java.io.Serializable;
 import java.net.InetAddress;
 
-import security.CheckSum;
+import security.SecureUtils;
 
 
 public final class Message implements Serializable{
@@ -74,8 +74,8 @@ public final class Message implements Serializable{
 	}
 
 	public String generateCheckSum(){
-		//return CheckSum.getChecksum(body);
-		return CheckSum.getMD5Checksum(body);
+		//return SecureUtils.getChecksum(body);
+		return SecureUtils.getMD5Hash(body);
 	}
 	
 	public void setClassroom_ID(String classroom_id) {

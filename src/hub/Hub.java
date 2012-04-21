@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import util.DataObject;
 import security.AES;
-import security.CheckSum;
+import security.SecureUtils;
 import storage.ClassList;
 import storage.Message;
 import storage.ServerList;
@@ -308,7 +308,7 @@ public final class Hub extends Thread {
 		//set nonce
 		long myNonce = new SecureRandom().nextLong();
 		body.add(1,myNonce);
-		initial.setChecksum(CheckSum.getMD5Checksum(body));
+		initial.setChecksum(SecureUtils.getMD5Hash(body));
 		//set and encrypt body
 		initial.setBody(socketAES.encrypt(body));
 		
@@ -385,7 +385,7 @@ public final class Hub extends Thread {
 		    o = (DataObject) ois.readObject();
 		    
 		    String diskChecksum = o.getChecksum();
-		    String expectedChecksum = CheckSum.getMD5Checksum(o.getData());
+		    String expectedChecksum = SecureUtils.getMD5Hash(o.getData());
 		    
 		    if(!diskChecksum.equals(expectedChecksum)){
 		    	ois.close();
@@ -407,7 +407,7 @@ public final class Hub extends Thread {
 	 * Writes a given object to the filesystem
 	 */
 	private void writeToDisk(Object write, String name){
-		DataObject o = new DataObject(write, CheckSum.getMD5Checksum(write));
+		DataObject o = new DataObject(write, SecureUtils.getMD5Hash(write));
 		
 		FileOutputStream fos;
 		try {
