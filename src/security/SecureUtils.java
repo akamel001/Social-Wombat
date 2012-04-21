@@ -2,9 +2,10 @@ package security;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.util.Arrays;
+import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import org.junit.Test;
 
@@ -15,7 +16,9 @@ import storage.Message;
  * @author chris d
  *
  */
-public final class SecureUtils {
+public final class SecureUtils implements Serializable{
+	private static final long serialVersionUID = 1L;
+	
 	private static byte[] salt = new byte[]
 	                                      {0x05, 0x0a, 0x04, 0x08, 
 		0x04, 0x01, 0x0e, 0x07, 
