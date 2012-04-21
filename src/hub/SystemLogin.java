@@ -13,6 +13,7 @@ import java.util.Arrays;
 import javax.crypto.SecretKey;
 
 import security.AES;
+import security.SecureUtils;
 
 
 /**
@@ -28,7 +29,7 @@ public final class SystemLogin implements Serializable {
 	private byte[] hub_salt;
 	
 	// This is the string "system_admin" encrypted with the system admin password.
-	private byte[] system_admin_enc;
+	private String system_admin_hashed_pw;
 	private byte[] system_admin_init_vector;
 	private byte[] system_admin_salt;
 	
@@ -65,10 +66,21 @@ public final class SystemLogin implements Serializable {
 		AES aes = validateSystemPassword(oldPassword);
 		if (aes != null) {
 			if (Arrays.equals(newPassword,confirmNewPassword)) {
-				AES aesNew = new AES(newPassword);
+				char[] salt = SecureUtils.getSalt();
+				
+				char[] temp_pass = new char[salt.length + newPassword.length];
+				System.arraycopy(salt, 0, temp_pass, 0, salt.length);
+				System.arraycopy(newPassword, 0, temp_pass, salt.length, newPassword.length);
+				Arrays.fill(newPassword, '0');
+
+				// Create hash, then zero-out temp_pass
+				system_admin_hashed_pw = SecureUtils.getSHA_1Hash(temp_pass);
+				Arrays.fill(temp_pass, '0');
+				
+				AES aesNew = new AES(system_admin_hashed_pw.toCharArray());
 				system_admin_init_vector = aesNew.getIv();
 				system_admin_salt = aesNew.getSalt();
-				system_admin_enc = aesNew.encrypt(newPassword); // re-encrypt the "system admin" string
+				
 				SecretKey temp = (SecretKey)aes.decryptObject(hub_key_enc);
 				hub_key_enc = aesNew.encrypt(temp);
 				
@@ -91,15 +103,22 @@ public final class SystemLogin implements Serializable {
 	private AES validateSystemPassword(char[] password) {
 		if (password==null)
 			return null;
-		AES aes = new AES(password, system_admin_init_vector, system_admin_salt);
 		
-		byte[] test_password_enc = aes.encrypt(password);
-		if (test_password_enc==null)
-			return null;
+		char[] salt = SecureUtils.getSalt();
+		
+		char[] temp_pass = new char[salt.length + password.length];
+		System.arraycopy(salt, 0, temp_pass, 0, salt.length);
+		System.arraycopy(password, 0, temp_pass, salt.length, password.length);
+		Arrays.fill(password, '0');
 
-		if (Arrays.equals( test_password_enc, system_admin_enc)) {
-			return aes;
+		// Create hash, then zero-out temp_pass
+		String tempHashedPassword = SecureUtils.getSHA_1Hash(temp_pass);
+		Arrays.fill(temp_pass, '0');
+		
+		if (tempHashedPassword.equals(system_admin_hashed_pw)){
+			return new AES(password, system_admin_init_vector, system_admin_salt);
 		}
+		
 		return null;
 	}
 	
@@ -178,16 +197,18 @@ public final class SystemLogin implements Serializable {
 			// System admin password
 			systemStartup = new SystemLogin();
 			char[] systemAdminPassword = "system admin".toCharArray();
+			char[] salt = SecureUtils.getSalt();
 			
-//			System.arraycopy(salt, 0, temp_pass, 0, salt.length);
-//			System.arraycopy(pass, 0, temp_pass, salt.length, pass.length);
-//
-//			//(c) Create hash, then zero-out temp_pass
-//			String hashed_pass = CheckSum.getSHA_1Checksum(temp_pass);
-//			Arrays.fill(temp_pass, '0');
+			char[] temp_pass = new char[salt.length + systemAdminPassword.length];
+			System.arraycopy(salt, 0, temp_pass, 0, salt.length);
+			System.arraycopy(systemAdminPassword, 0, temp_pass, salt.length, systemAdminPassword.length);
+			Arrays.fill(systemAdminPassword, '0');
+
+			// Create hash, then zero-out temp_pass
+			systemStartup.system_admin_hashed_pw = SecureUtils.getSHA_1Hash(temp_pass);
+			Arrays.fill(temp_pass, '0');		
 			
-			AES systemAdminAES = new AES(systemAdminPassword);
-			systemStartup.system_admin_enc = systemAdminAES.encrypt(systemAdminPassword);
+			AES systemAdminAES = new AES(systemStartup.system_admin_hashed_pw.toCharArray());
 			systemStartup.system_admin_init_vector = systemAdminAES.getIv();
 			systemStartup.system_admin_salt = systemAdminAES.getSalt();
 
