@@ -3,8 +3,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Arrays;
-import java.util.zip.CRC32;
-import java.util.zip.Checksum;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -25,12 +23,12 @@ public final class CheckSum {
 	private CheckSum(){}
 	
 	/**
-	 * @deprecated
+	 *deprecated
 	 * Give the checksum for a passed object
 	 * @param o The object to be checksumed. NOTE: This object must be completely serializable!!!!
 	 * @return Returns the checksum on success, -1 if the object is not serializable.
 	 */
-	public static long getChecksum(Object o){
+	/*public static long getChecksum(Object o){
 		long out = -1;
 		
 		ByteArrayOutputStream byte_out = new ByteArrayOutputStream();
@@ -48,7 +46,7 @@ public final class CheckSum {
 			return -1;
 		}
 		return out;
-	}
+	}*/
 	
 	public static String getMD5Checksum(Object o){
 		return byteToHexString(getChecksum_(o, "MD5"));
@@ -83,7 +81,6 @@ public final class CheckSum {
 			//e.printStackTrace();
 			return null;
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
@@ -96,6 +93,7 @@ public final class CheckSum {
 	 * @param password_hash
 	 * @return Returns true if the hash of 
 	 */
+	@SuppressWarnings("unused")
 	private static boolean validatePassword(char[] password, String password_hash){
 		char[] temp = Arrays.copyOf(password, password.length+1);
 		for (int i=0; i<10; i++){

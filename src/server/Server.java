@@ -11,7 +11,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import security.CheckSum;
 import storage.ClassDB;
+import util.DataObject;
 
 
 public final class Server extends Thread{
@@ -53,29 +55,57 @@ public final class Server extends Thread{
 	 * Reads a ClassDB from the filesystem
 	 */
 	private static ClassDB readFromDisk(String name){
-		ClassDB c = null;
+		DataObject o = null;
+		
 		try {
 		    FileInputStream fin = new FileInputStream(name);
 		    ObjectInputStream ois = new ObjectInputStream(fin);
-		    c = (ClassDB) ois.readObject();
+		    
+		    
+		    o = (DataObject) ois.readObject();
+		    
+		    String diskChecksum = o.getChecksum();
+		    String expectedChecksum = CheckSum.getMD5Checksum(o.getData());
+		    
+		    if(!diskChecksum.equals(expectedChecksum)){
+		    	ois.close();
+		    	if(DEBUG) System.out.println("Woops! bad checksum when reading data from disk\n Expected " 
+		    			+ expectedChecksum + "\n Got " + diskChecksum);
+		    	
+		    	return null;
+		    }
 		    ois.close();
 		} catch (IOException e) { 
 			e.printStackTrace(); 
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		return c;
+		return (ClassDB) o.getData();
 	}
 	
 	/*
 	 * Writes a given object to the filesystem
 	 */
-	private static void writeToDisk(Object o, String name){
+	private void writeToDisk(Object write, String name){
+		DataObject o = new DataObject(write, CheckSum.getMD5Checksum(write));
+		
 		FileOutputStream fos;
 		try {
 			fos = new FileOutputStream(name);
+			
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			oos.writeObject((ClassDB)o);
+			oos.writeObject(o);
+			/*if (o instanceof UserList){
+				//if(DEBUG) System.out.println("We have have an instance of UserList");
+				oos.writeObject((UserList)o);
+			} else if (o instanceof ClassList){
+				//if(DEBUG) System.out.println("We have have an instance of ClassList");
+				oos.writeObject((ClassList)o);
+			} else if (o instanceof ServerList){
+				//if(DEBUG) System.out.println("We have have an instance of ServerList");
+				oos.writeObject((ServerList)o);
+			}*/
+			
 			oos.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -100,7 +130,15 @@ public final class Server extends Thread{
 		//Check if ServerList exists
 		if (fileExists(classDBName)){
 			//import file
-			classDB = readFromDisk(classDBName);
+			classDB = (ClassDB) readFromDisk(classDBName);
+			
+			if(DEBUG) System.out.println("Loaded classlist from disk");
+			
+			if(classDB == null){
+				if(DEBUG) System.out.println("Files on disk where not read, possibly tampered with");
+				classDB = new ClassDB();
+			}
+						
 		} else {
 			//create new ServerList
 			classDB = new ClassDB();

@@ -15,7 +15,7 @@ import util.SocketPackage;
 
 
 public final class Client {
-	
+
 	private static final boolean DEBUG = false;
 	private static final boolean DEBUG_OUTPUT = true;
 
@@ -24,7 +24,7 @@ public final class Client {
 	private SocketPackage socket;
 	private AES aes = null;
 	private Long nonce = null;
-	
+
 	public Client(){
 		InetAddress hub;
 		try {			
@@ -44,18 +44,18 @@ public final class Client {
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean handleLogin(String uName, char[] password){
-		
+
 		if(DEBUG) return true; 
-		
+
 		if(password.length == 0)
 			return false;
-		
+
 		aes = new AES(password);
 		Calendar c = Calendar.getInstance();
 		SecureRandom r = new SecureRandom();
-		
+
 		nonce= r.nextLong();
-		
+
 		//Zeros out password
 		Arrays.fill(password, '0');
 
@@ -68,28 +68,33 @@ public final class Client {
 		ArrayList<Long> list = new ArrayList<Long>();
 		list.add(0, c.getTimeInMillis());
 		list.add(1, nonce);
-		
+
 		if(DEBUG_OUTPUT) System.out.println("Sending time in sec: " + list.get(0));
 
 		message.setBody(list);
 		message.setChecksum(message.generateCheckSum());
-		
+
 		if(DEBUG_OUTPUT) System.out.println("Checksum: " + message.getChecksum());
-		
+
 		message.setBody(aes.encrypt(list));
-		
+
 		if(DEBUG_OUTPUT) System.out.println("Sending authenticating message");
 		if(DEBUG_OUTPUT) System.out.println("(Authentication) Sending nonce " + nonce);
 		socket.send(message);
 
-		
+
 		// Get timestamp message
 		Message response = socket.receive();
-		
+
+		if(response.getType() == Message.MessageType.Hub_Shutdown){
+			System.out.println("The hub is shut down, try again later.");
+			System.exit(-1);
+		}
+
 		if(response.getCode() == -1) return false;
-		
+
 		byte[] encryptedBody = (byte[])response.getBody();
-		
+
 		ArrayList<Long> return_list = (ArrayList<Long>)aes.decryptObject(encryptedBody);
 
 		if (return_list==null){
@@ -97,27 +102,27 @@ public final class Client {
 			return false;
 		}else
 			response.setBody(return_list);
-		
+
 		if(!response.getChecksum().equals(response.generateCheckSum())){
 			if(DEBUG_OUTPUT) System.out.println("Checksum miss match!\n==> Received checksum: " + response.getChecksum() + "\n==> Generated Checksum" + response.generateCheckSum());
 			return false;
 		}else{
 			if(DEBUG_OUTPUT) System.out.println("Checksum passed!");
 		}
-		
+
 		long now =	c.getTimeInMillis();
 		long hub_time = return_list.get(0); 
 		long hub_nonce = return_list.get(1);
-		
+
 		boolean allowed = false;
-		
+
 		if(DEBUG_OUTPUT) System.out.println("(Authentication) Received nonce " + hub_nonce);
 
 		if( now <= hub_time+300000 && hub_time-300000 <= now && hub_nonce==nonce+1){
 			allowed=true;
 			nonce = hub_nonce;
 		}
-		
+
 		if(allowed){
 			if(DEBUG_OUTPUT) System.out.println("Authenticated!!");
 			nonce = hub_nonce;
@@ -127,7 +132,7 @@ public final class Client {
 			if(DEBUG_OUTPUT) System.out.println("Failed to Authenticate!!");
 			return false;
 		}
-			
+
 	}
 
 	/**
@@ -139,9 +144,9 @@ public final class Client {
 	 * @return
 	 */
 	public Message SendAndReceiveEncrypted(String userName, 
-										String classroomName, 
-										Object body,
-										Message.MessageType mType){
+			String classroomName, 
+			Object body,
+			Message.MessageType mType){
 
 		Message message = new Message();
 		message.setUserName(userName);
@@ -152,28 +157,28 @@ public final class Client {
 		message.setChecksum(message.generateCheckSum());
 		if(DEBUG_OUTPUT) System.out.println("Sending nonce " + nonce);
 		socket.sendEncrypted(aes.encrypt(message));
-		
+
 		byte[] encMessage = socket.receiveEncrypted();
-		
+
 		Message response = (Message) aes.decryptObject(encMessage);
-		
+
 		if(response.getNonce() != (nonce+1)){
 			System.out.println("Received a bad nonce!\n Expected " + (nonce+1) + "\n Got " + response.getNonce() + "\nSystem exiting!");
 			System.exit(-1);
 		}else //Nonce is good continue
 			nonce = response.getNonce();
-		
+
 		if(response.getType() == Message.MessageType.Hub_Shutdown){
 			System.out.println("The hub is shut down, try again later.");
 			System.exit(-1);
 		}
-		
+
 		if(!response.getChecksum().equals(response.generateCheckSum()))
 			System.out.println("Checksum mismatch!");
-		
+
 		return response;
 	}
-	
+
 	/**
 	 * This methods logs out a user corresponding to currentUserName.
 	 * @param currentUserName
@@ -183,7 +188,7 @@ public final class Client {
 		Message reply = SendAndReceiveEncrypted(currentUserName, null, 0, Message.MessageType.Client_Logout);
 		return (reply.getCode() == 1 || (DEBUG))? true : false;	
 	}
-	
+
 	/**
 	 * This method is used to create a classroom.
 	 * It takes in a classroom name and returns true if the classroom can be created,
@@ -207,7 +212,7 @@ public final class Client {
 	 */
 	public boolean requestToJoinClassroom(String classroomRequestName, String requesterUserName) {
 		Message reply = SendAndReceiveEncrypted(requesterUserName, classroomRequestName, 0, Message.MessageType.Client_RequestEnrollment);	
-		
+
 		return (reply.getCode() == 1 || (DEBUG))? true : false;	 
 	}
 
@@ -219,7 +224,7 @@ public final class Client {
 	 */
 	@SuppressWarnings("unchecked")
 	public Map<String, Integer> getClassroomMapForUser(String userName) {
-		
+
 		if(DEBUG){
 			Map<String, Integer> classroomList = new HashMap<String, Integer>();
 			classroomList.put("CS 4820", 1);
@@ -267,7 +272,7 @@ public final class Client {
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(0, userName);
 		list.add(1, "-1");
-		
+
 		Message reply = SendAndReceiveEncrypted(userName, classroomName, list, Message.MessageType.Client_SetPermissions);	
 		return (reply.getCode() == 1 || (DEBUG))? true : false;	 
 	}
@@ -301,7 +306,7 @@ public final class Client {
 	 */
 	@SuppressWarnings("unchecked")
 	public Map<Integer, String> getThreadGivenID(Integer threadID, String classroomName, String userName) {
-		
+
 		if(DEBUG){
 			Map<Integer, String> defaultMap = new HashMap<Integer, String>();
 			defaultMap.put(new Integer(4), "Initial Post");
@@ -309,17 +314,17 @@ public final class Client {
 			defaultMap.put(new Integer(7), "I like to comment on stuff!");
 			return defaultMap;	
 		}
-		
+
 		Message reply = SendAndReceiveEncrypted(userName, classroomName, threadID, Message.MessageType.Client_GoToThread);	
 		return (Map<Integer, String>) ((reply.getCode() == 1)? reply.getBody() : null);	
 	}
 
 	public boolean createComment(String commentContent, int threadID, String classroomName, String userName) {
-		
+
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(0, Integer.toString(threadID));
 		list.add(1, commentContent);
-		
+
 		Message reply = SendAndReceiveEncrypted(userName, classroomName, list, Message.MessageType.Client_CreateComment);		
 		return (reply.getCode() == 1 || (DEBUG))? true : false;	 
 	}
@@ -341,7 +346,7 @@ public final class Client {
 			defaultMap.put("Nikolai", new Integer(2));
 			return defaultMap;	
 		}
-		
+
 		Message reply = SendAndReceiveEncrypted(userName, classroomName, 0, Message.MessageType.Client_GetClassEnrollment);		
 		return (Map<String, Integer>) ((reply.getCode() == 1)? reply.getBody() : null);	
 	}
@@ -353,11 +358,11 @@ public final class Client {
 	 * @param userName
 	 */
 	public boolean removeMember(String memberName, String classroomName, String userName) {
-		
+
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(0, memberName);
 		list.add(1, "-1");
-		
+
 		Message reply = SendAndReceiveEncrypted(userName, classroomName, list, Message.MessageType.Client_SetPermissions);
 		return (reply.getCode() == 1 || (DEBUG))? true : false;	 
 	}
@@ -369,7 +374,7 @@ public final class Client {
 	 * @param classroomName
 	 */													
 	public boolean changeStatus(String currentMemberName, int currentMemberPerm, String userName, String classroomName) {
-		
+
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(0, currentMemberName);
 		list.add(1, Integer.toString(currentMemberPerm));
@@ -387,7 +392,7 @@ public final class Client {
 	@SuppressWarnings("unchecked")
 	public List<String> getRequestListForClassroom(String currentClassroomName, String userName) {
 		if(DEBUG) return Arrays.asList("Bob", "Julia", "Cornelia");
-		
+
 		Message reply = SendAndReceiveEncrypted(userName, currentClassroomName, 0, Message.MessageType.Client_ListClassroomRequests);
 		return (List<String>) ((reply.getCode() == 1)? reply.getBody() : null);
 	}
@@ -399,11 +404,11 @@ public final class Client {
 	 * @param userName
 	 */
 	public boolean confirmAsMemberOfClassroom(String pendingMember, String classroomName, String userName) {
-		
+
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(0, pendingMember);
 		list.add(1, "1");
-		
+
 		Message reply = SendAndReceiveEncrypted(userName, classroomName, list, Message.MessageType.Client_SetPermissions);
 		return (reply.getCode() == 1 || (DEBUG))? true : false;	 
 	}
@@ -419,11 +424,11 @@ public final class Client {
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(0, pendingMember);
 		list.add(1, "-1");
-		
+
 		Message reply = SendAndReceiveEncrypted(userName, classroomName, list, Message.MessageType.Client_SetPermissions);
 		return (reply.getCode() == 1 || (DEBUG))? true : false;	 
 	}
-	
+
 	/**
 	 * Deletes a comment.
 	 * @param commentID
@@ -433,15 +438,15 @@ public final class Client {
 	 * @return
 	 */
 	public boolean deleteComment(Integer commentID, Integer threadID, String userName, String classroomName) {
-		
+
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		list.add(0, threadID);
 		list.add(1, commentID);
-		
+
 		Message reply = SendAndReceiveEncrypted(userName, classroomName, list, Message.MessageType.Client_DeleteComment);
 		return (reply.getCode() == 1 || (DEBUG))? true : false;	 
 	}
-	
+
 	/**
 	 * Deletes a thread.
 	 * @param currentThreadID
@@ -453,7 +458,7 @@ public final class Client {
 		Message reply = SendAndReceiveEncrypted(userName, classroomName, threadID, Message.MessageType.Client_DeleteThread);
 		return (reply.getCode() == 1 || (DEBUG))? true : false;	 
 	}
-	
+
 	/**
 	 * This a method for changing a user's password.
 	 * Before changing a password, it must:
@@ -469,21 +474,21 @@ public final class Client {
 	 * @param currentUserName <- this is the name of the current user
 	 * @return
 	 */
-	
+
 	public boolean changePassword(char[] oldPassword, char[] newPassword,
 			char[] confirmNewPassword, String userNameTemp, String currentUserName) {
-		
+
 		ArrayList<char []> list = new ArrayList<char []>();
 		list.add(0, oldPassword);
 		list.add(1, newPassword);
 		list.add(2, confirmNewPassword);
 		list.add(3, userNameTemp.toCharArray());
-		
+
 		//Clearing password arrays
 		Arrays.fill(oldPassword, '0');
 		Arrays.fill(newPassword, '0');
 		Arrays.fill(confirmNewPassword, '0');
-		
+
 		Message reply = SendAndReceiveEncrypted(currentUserName, null, list, Message.MessageType.Client_ChangePassword);
 		return (reply.getCode() == 1 || (DEBUG))? true : false;	 
 	}

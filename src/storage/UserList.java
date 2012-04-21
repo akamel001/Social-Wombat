@@ -87,6 +87,7 @@ public final class UserList implements Serializable{
 	 * @param userId The user name to be searched
 	 * @return Returns true if the username is present in the user list, false otherwise.
 	 */
+	@SuppressWarnings("unused")
 	private boolean contains(String userId){
 		if (userId==null)
 			return false;
@@ -437,6 +438,7 @@ public final class UserList implements Serializable{
 		 * NOTE: you MUST zero out the returned array AS SOON AS you are done with it.
 		 * @return Returns a copy of the char[] containing the password. Zero out with Arrays.fill(password, (byte)0)
 		 */
+		@SuppressWarnings("unused")
 		private char[] getPass(){
 			return null; //Arrays.copyOf(password, password.length);
 		}

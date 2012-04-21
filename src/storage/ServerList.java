@@ -24,6 +24,7 @@ public final class ServerList implements Serializable{
 	private static final long serialVersionUID = -5018052157599076338L;
 	private Map<Integer, ServerData> serverList;
 	private int nextId; 
+	private static final boolean DEBUG = false;
 	
 	/**
 	 * Creates a list of servers. First server created has an id of 1.
@@ -50,12 +51,6 @@ public final class ServerList implements Serializable{
 		if(ip==null || port<0 || port>49150 || pass==null || encrypter==null)
 			return -1;
 		
-		/* TODO: DELETE COMMENTS!!!
-		// Check if the password is legal
-		if(!StringLegalityChecker.checkIfPasswordStringIsLegal(pass))
-			return -1;
-		*/	
-		
 		// check to see if ip/port combo exists
 		// if it does, disallow
 		Set<Integer> set = serverList.keySet();  		
@@ -77,10 +72,9 @@ public final class ServerList implements Serializable{
 			out.add(0, encryptor.getIv());
 			out.add(1, encryptor.getSalt());
 			
-			//TODO: DELETE
-			System.out.println("NEW SERVER IV?SALT:");
-			System.out.println("    " + Arrays.toString(out.get(0)));
-			System.out.println("    " + Arrays.toString(out.get(1)));
+			if (DEBUG) System.out.println("NEW SERVER IV?SALT:");
+			if (DEBUG) System.out.println("    " + Arrays.toString(out.get(0)));
+			if (DEBUG) System.out.println("    " + Arrays.toString(out.get(1)));
 			
 			temp_serve_data.iv_salt = out;
 			// Zero out passed password
@@ -221,7 +215,6 @@ public final class ServerList implements Serializable{
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<byte[]> getIvSalt(int server_id, AES encryptor){
 		ServerData temp_server = serverList.get(server_id);
 		return temp_server.iv_salt;

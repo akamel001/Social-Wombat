@@ -25,10 +25,8 @@ static ObjectInputStream ois;
 		try {
 			socket = new Socket(InetAddress.getLocalHost(),5000);
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -37,7 +35,6 @@ static ObjectInputStream ois;
 			oos = new ObjectOutputStream(socket.getOutputStream());
 			ois = new ObjectInputStream(socket.getInputStream());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -52,7 +49,6 @@ static ObjectInputStream ois;
 			oos.reset();
 			System.out.println("Sent something");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -76,7 +72,6 @@ static ObjectInputStream ois;
 			oos.reset();
 			System.out.println("Sent over encryption info");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -92,7 +87,6 @@ static ObjectInputStream ois;
 			oos.reset();
 			System.out.println("Sent over encrypted message");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -110,7 +104,6 @@ static ObjectInputStream ois;
 			oos.reset();
 			System.out.println("Sent over encrypted message 2");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
