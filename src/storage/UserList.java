@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import security.AES;
+import security.CheckSum;
 import util.StringLegalityChecker;
 
 
@@ -35,33 +36,34 @@ public final class UserList implements Serializable{
 	}
 
 	/**
-	 * @deprecated
 	 * @param user_name The username to be checked
 	 * @param pass The password to be checked. Zero out with Arrays.fill(pass, '0') when no longer needed.
 	 * @param encryptor
 	 * @return True if the user password combo exist.
-	 */	@SuppressWarnings("unused")
-	private boolean validateUser(String user_name, char[] pass, AES encryptor){
-		if (user_name==null){
+	 */	
+	private boolean validateUser(String user_name, char[] pass, char[] salt, AES encryptor){
+		if (user_name==null || pass==null || salt==null){
 			return false;
 		}
-		if ( !user_list.containsKey(user_name))
-			return false;
 		
-		// (a) get user
-		User temp_guy = this.getAndDecryptUser(user_name, encryptor);
+		// Create salt+pass concatenation to compare against stored value
+		char[] temp_pass = new char[salt.length + pass.length];
+		System.arraycopy(salt, 0, temp_pass, 0, salt.length);
+		System.arraycopy(pass, 0, temp_pass, salt.length, pass.length);
+	
+		// Get temp hash String, zero-out temp_pass
+		String temp_hash = CheckSum.getSHA_1Checksum(temp_pass);
+		Arrays.fill(temp_pass, '0');
+
+		// Get User and then User's hashed salt+pass
+		User temp_user = getUser(user_name, encryptor);
+		String user_hash = temp_user.getPassHash();
 		
-		// (b) test user's pass against passed pass
-		if (Arrays.equals(pass, temp_guy.password)){
-			// Must zero out password in temp user
-			temp_guy.zeroUser();
+		if(temp_hash.equals(user_hash))
 			return true;
-		}
-		else{
-			temp_guy.zeroUser();
+		else 
 			return false;
-		}
-	}
+}
 	
 	/**
 	 * Returns the user's password
@@ -69,14 +71,14 @@ public final class UserList implements Serializable{
 	 * @param encryptor The hub encryption
 	 * @return A char[] with the user's pass. NOTE: MUST BE ZEROED> Use Arrays.fill(pass, '0')
 	 */
-	public char[] getUserPass(String user_name, AES encryptor){
+	public String getUserPass(String user_name, AES encryptor){
 		// (a) get user
 		if(user_name==null || encryptor==null)
 			return null;
 		User temp_guy = this.getAndDecryptUser(user_name, encryptor);
 		if (temp_guy==null)
 			return null;
-		return temp_guy.password;
+		return temp_guy.hashed_password;
 	}
 
 	/**
@@ -101,6 +103,8 @@ public final class UserList implements Serializable{
 	}
 	
 
+	
+
 	/**
 	 * Adds a new user to the userlist.<br>
 	 * <br>
@@ -111,7 +115,7 @@ public final class UserList implements Serializable{
 	 * @return Returns true if the user was added. Returns false if (a) the user already exists, (b) the username is invalid, or 
 	 *          (c) the password is invalid.
 	 */
-	public int addUser(String new_id, char[] pass, AES encryptor){
+	public int addUser(String new_id, char[] salt, char[] pass, AES encryptor){
 		// Sanity checks
 		if (new_id==null || pass==null || encryptor==null){
 			return -1;
@@ -127,7 +131,7 @@ public final class UserList implements Serializable{
 
 		synchronized(user_list){
 			if (!user_list.containsKey(new_id)){
-				User new_guy = new User(new_id, pass);
+				User new_guy = new User(new_id, salt,  pass);
 				int out =  this.encryptAndAddUser(new_guy, encryptor);
 				Arrays.fill(pass, '0');
 				return out;
@@ -146,28 +150,35 @@ public final class UserList implements Serializable{
 	 * @return Returns 1 if the password has been changed. Returns -1 if (a) invalid params, (b) new password is invalid,
 	 *                    or (c) User does not exist
 	 */
-	public int changeUserPassword(String user_name, char[] p, AES encryptor){
-		if(user_name==null || p==null || encryptor==null)
+	public int changeUserPassword(String user_name, char[] salt, char[] pass, AES encryptor){
+		if(user_name==null || pass==null || salt==null || encryptor==null)
 			return -1;
 		
 		// Check if the password is legal
-		else if(!StringLegalityChecker.checkIfPasswordStringIsLegal(p))
+		else if(!StringLegalityChecker.checkIfPasswordStringIsLegal(pass))
 			return -1;
 		
 		else{
 			synchronized(user_list){
 				// (a) get user
-				System.out.println("USER's NEW PASS1: " + Arrays.toString(p));
 				User temp_guy = this.getAndDecryptUser(user_name, encryptor);
 				if (temp_guy==null)
 					return -1;
 				
-				// (b) reset pass
-				temp_guy.setPass(p);
+				// (b) Concatenate new password and salt
+				char[] temp_pass = new char[salt.length + pass.length];
+				System.arraycopy(salt, 0, temp_pass, 0, salt.length);
+				System.arraycopy(pass, 0, temp_pass, salt.length, pass.length);
 				
-				// (c) reenter user into user list;
+				//(c) Create hash, then zero-out temp_pass
+				String hashed_pass = CheckSum.getSHA_1Checksum(temp_pass);
+				Arrays.fill(temp_pass, '0');
+				
+				// (d) reset pass
+				temp_guy.setPass(hashed_pass);
+				
+				// (e) reenter user into user list;
 				this.encryptAndAddUser(temp_guy, encryptor);
-				temp_guy.zeroUser();	
 			}
 			return 1;
 		}
@@ -250,6 +261,18 @@ public final class UserList implements Serializable{
 	
 
 	/**
+	 * Returns true is the passed user name exists in the list.
+	 * @param user_name
+	 * @return
+	 */
+	public boolean exists(String user_name){
+		if(user_list.containsKey(user_name))
+			return true;
+		else
+			return false;
+	}
+	
+	/**
 	 * Removes a user from the userlist.
 	 * @param id The username of the user to be removed.
 	 * @return Returns 1 if the user was successfully removed. Returns -1 if the user was not 
@@ -301,6 +324,7 @@ public final class UserList implements Serializable{
 		}
 	}
 	
+	
 	/**
 	 * Returns a list containing every user
 	 * @param encryptor Hub encryptor
@@ -341,7 +365,8 @@ public final class UserList implements Serializable{
 
 		private static final long serialVersionUID = 2971288288578571927L;
 		private final String name;
-		private char[] password;
+		//private char[] password;
+		private String hashed_password;
 		private Date last_login_time;
 		private InetAddress last_login_address;
 
@@ -356,23 +381,32 @@ public final class UserList implements Serializable{
 		 * @param p The password. Note that a new char[] is created to store the password. The original 
 		 * array should be zeroed out. Otherwise, it will stay in memory. Zero out with Arrays.fill(password, '0')
 		 */
-		public User(String u, char[] p){
+		public User(String u, char[] salt, char[] pass){
 			if (u==null)
 				name = "void";
 			else
 				name = u;
-			password = Arrays.copyOf(p, p.length);
-			Arrays.fill(p, '0');
+			
+			// Create salt+pass concatenation to compare against stored value
+			char[] temp_pass = new char[salt.length + pass.length];
+			System.arraycopy(salt, 0, temp_pass, 0, salt.length);
+			System.arraycopy(pass, 0, temp_pass, salt.length, pass.length);
+			
+			// Set hashed_password, and zero=out temp_pass
+			hashed_password = CheckSum.getSHA_1Checksum(temp_pass);
+			Arrays.fill(temp_pass, '0');
+			
 			last_login_time = null;
 			last_login_address = null;
 		}
 		
 		/**
+		 * @deprecated
 		 * Zeros out a user's password.
 		 */
 		public void zeroUser(){
-			if(password!=null){
-				Arrays.fill(password, '0');
+			if(hashed_password!=null){
+				//Arrays.fill(password, '0');
 			}
 		}
 
@@ -389,23 +423,28 @@ public final class UserList implements Serializable{
 		 * @param p An encrypted version of the new password. NOTE: this parameter will NOT be 
 		 * zeroed out after the password is set!!! Use Arrays.fill(password, (byte)0)
 		 */
-		public void setPass(char[] p){
+		public void setPass(String p){
 			if (p==null)
 				return;
 			
 			// Create and fill a new pass.
-			password = Arrays.copyOf(p, p.length);
+			hashed_password = p;
 		}
 
 		/**
+		 * @deprecated
 		 * Returns a copy of the byte[] array containing the encrypted password. </br>
 		 * NOTE: you MUST zero out the returned array AS SOON AS you are done with it.
 		 * @return Returns a copy of the char[] containing the password. Zero out with Arrays.fill(password, (byte)0)
 		 */
 		private char[] getPass(){
-			return Arrays.copyOf(password, password.length);
+			return null; //Arrays.copyOf(password, password.length);
 		}
 
+		private String getPassHash(){
+			return hashed_password;
+		}
+		
 		/**
 		 * Returns the InetAddress currently held in the user object
 		 * @return InetAddress 
