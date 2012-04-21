@@ -9,7 +9,7 @@ public final class StartServers {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Server s1 = new Server("1","password".toCharArray());
+		Server s1 = new Server("1","password");
 		System.out.println("IP of 1: " + s1.getIP());
 		s1.start();
 	}

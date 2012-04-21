@@ -455,7 +455,7 @@ final class HubSocketHandler extends Thread{
 		//get salt
 		byte[] salt = ivsalt.get(1);
 		//get pass
-		char[] pass = serverList.getServerPass(serverID, hubAESObject);
+		char[] pass = serverList.getServerHash(serverID, hubAESObject);
 		AES aesObj = new AES(pass,iv,salt);
 		//clear pass
 		Arrays.fill(pass, '0');

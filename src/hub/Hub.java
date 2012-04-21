@@ -38,7 +38,6 @@ public final class Hub extends Thread {
 	private static int CLIENT_SOCKET = 4444;
 	private static int SERVER_SOCKET = 5050;
 	static volatile boolean listening = true;
-	private static volatile boolean demo = false;
 	
 	static ClassList classList;
 	static UserList userList;
@@ -56,7 +55,7 @@ public final class Hub extends Thread {
 	static ServerSocket hubSocket = null;
 	String hubIP = null;
 	
-	private static final boolean DEBUG = false;
+	private static final boolean DEBUG = true;
 	
 	public Hub(AES aesObject){
 		this.hubAESObject = aesObject;
@@ -170,9 +169,12 @@ public final class Hub extends Thread {
 		}
 		//Specifically written for demo to allow a startup script
 		//In the real world the servers would have to be started up manually
-		if (demo) password = "password".toCharArray();
+		String hash = SecureUtils.getSHA_1Hash(password);
 		
-		int r = serverList.addServer(server, SERVER_SOCKET,password,hubAESObject);
+		//clear password
+		Arrays.fill(password,'0');
+		
+		int r = serverList.addServer(server, SERVER_SOCKET, SecureUtils.getSalt(),hash.toCharArray(),hubAESObject);
 		if (r == -1){
 			if(DEBUG) System.out.println("Adding server " + server + "failed. It might already exist in serverList."); 
 			return r;
@@ -240,12 +242,12 @@ public final class Hub extends Thread {
 				if(!tempSocket.isConnected()){
 					//regenerate serverAES object
 					//grab pass
-					char[] servPass = serverList.getServerPass(i, hubAESObject);
+					char[] serverHash = serverList.getServerHash(i, hubAESObject);
 					//grab iv(0), salt(1)
 					List<byte[]> serveIvSalt = serverList.getIvSalt(i, hubAESObject);
-					AES servAES = new AES(servPass,serveIvSalt.get(0),serveIvSalt.get(1));
+					AES servAES = new AES(serverHash,serveIvSalt.get(0),serveIvSalt.get(1));
 					//zero out password
-					Arrays.fill(servPass, '0');
+					Arrays.fill(serverHash, '0');
 					if (authenticatedConnect(tempSocket, servAES)){
 						//add to connected servers
 						if (DEBUG) System.out.println("Server: " + i + " connected successfully.");
@@ -262,7 +264,7 @@ public final class Hub extends Thread {
 					
 					//regenerate serverAES object
 					//grab pass
-					char[] servPass = serverList.getServerPass(i, hubAESObject);
+					char[] servPass = serverList.getServerHash(i, hubAESObject);
 					//grab iv(0), salt(1)
 					List<byte[]> serveIvSalt = serverList.getIvSalt(i, hubAESObject);
 					AES servAES = new AES(servPass,serveIvSalt.get(0),serveIvSalt.get(1));

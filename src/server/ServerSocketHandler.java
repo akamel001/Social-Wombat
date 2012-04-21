@@ -24,18 +24,18 @@ final class ServerSocketHandler {
 	ObjectOutputStream oos;
 	ObjectInputStream ois;
 	AES serverAESObject;
-	char[] password;
+	String hash;
 	Long currentNonce = null;
 	
-	private static final boolean DEBUG = false;
+	private static final boolean DEBUG = true;
 
 	/*
 	 * A handler thread that is spawned for each message sent to server
 	 */
-	public ServerSocketHandler(Socket ser, ClassDB classDB, char[] password){
+	public ServerSocketHandler(Socket ser, ClassDB classDB, String hash){
 		this.socket = ser;
 		this.classDB = classDB;
-		this.password = password;
+		this.hash = hash;
 		// Create datastreams
 		try {
 			oos = new ObjectOutputStream(this.socket.getOutputStream());
@@ -93,10 +93,7 @@ final class ServerSocketHandler {
 		
 		
 		//Create server aes object
-		serverAESObject = new AES(password, iv, salt);
-		
-		//Zero out password
-		Arrays.fill(password,'0');
+		serverAESObject = new AES(hash.toCharArray(), iv, salt);
 		
 		//null check aes object
 		if (serverAESObject == null){

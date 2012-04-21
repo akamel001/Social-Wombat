@@ -23,19 +23,19 @@ public final class Server extends Thread{
 	
 	//datastructure that will be passed to every spawned serversockethandler thread
 	private static ClassDB classDB;
-	private static char[] password;
+	private static String hash;
 	private static String ip;
 	
-	private static final boolean DEBUG = false;
+	private static final boolean DEBUG = true;
 	
 	//default, is reset in constructor
 	static String classDBName = "server.classDB";	
 
 	// Constructor
-	public Server(String name, char[] password2) {
+	public Server(String name, String password) {
 		// Constructor
 		classDBName = name + ".classDB";
-		password = password2;	//needs to wait for an iv, and salt
+		hash = SecureUtils.getSHA_1Hash(password);	//needs to wait for an iv, and salt
 		//get ip
 		InetAddress thisIp = null;
 		try {
@@ -182,7 +182,7 @@ public final class Server extends Thread{
 					Socket hub = serverSocket.accept();
 					//Spawn new ServerSocketHandler thread, we assume that the
 					//hub has directed this message to the correct Server
-					ServerSocketHandler newRequest = new ServerSocketHandler(hub,classDB,password);
+					ServerSocketHandler newRequest = new ServerSocketHandler(hub,classDB,hash);
 					System.out.println("New socket handler created");
 					//Starts running function
 					newRequest.run(); 

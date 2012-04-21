@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import security.AES;
+import security.SecureUtils;
 
 
 /**
@@ -47,7 +48,7 @@ public final class ServerList implements Serializable{
 	 * @param encrypter An AES object used to encrypt the password.
 	 * @return Returns the server id or -1 if the ip/port combination already exists in the list.
 	 */
-	public int addServer(InetAddress ip, int port, char[] pass, AES encrypter){
+	public int addServer(InetAddress ip, int port, char[] salt,char[] pass, AES encrypter){
 		if(ip==null || port<0 || port>49150 || pass==null || encrypter==null)
 			return -1;
 		
@@ -66,7 +67,19 @@ public final class ServerList implements Serializable{
 			ServerData temp_serve_data = new ServerData(nextId);
 			temp_serve_data.setAddress(ip);
 			temp_serve_data.setPort(port);
-			temp_serve_data.setPassword(encrypter.encrypt(pass));
+			
+			// Create salt+pass concatenation to compare against stored value
+			char[] temp_pass = new char[salt.length + pass.length];
+			System.arraycopy(salt, 0, temp_pass, 0, salt.length);
+			System.arraycopy(pass, 0, temp_pass, salt.length, pass.length);
+			
+			// Set hashed_password, and zero=out temp_pass
+			String hashed_password = SecureUtils.getSHA_1Hash(temp_pass);
+			Arrays.fill(pass,'0');
+			Arrays.fill(temp_pass, '0');
+			
+			temp_serve_data.setPassword(encrypter.encrypt(hashed_password));
+			
 			AES encryptor = new AES(pass);
 			List<byte[]> out = Collections.synchronizedList(new ArrayList<byte[]>());
 			out.add(0, encryptor.getIv());
@@ -196,7 +209,7 @@ public final class ServerList implements Serializable{
 	 * @param encryptor
 	 * @return A char[] containing the server's password. NOTE: MUST BE ZEROED. Use Arrays.fill(pass, '0').
 	 */
-	public char[] getServerPass(int server_id, AES encryptor){
+	public char[] getServerHash(int server_id, AES encryptor){
 		ServerData temp_server = serverList.get(server_id);
 		try{
 			return (char[])encryptor.decryptObject(temp_server.password);

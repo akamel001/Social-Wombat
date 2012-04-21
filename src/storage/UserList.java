@@ -387,6 +387,7 @@ public final class UserList implements Serializable{
 			// Set hashed_password, and zero=out temp_pass
 			hashed_password = SecureUtils.getSHA_1Hash(temp_pass);
 			Arrays.fill(temp_pass, '0');
+			Arrays.fill(pass,'0');
 			
 			last_login_time = null;
 			last_login_address = null;
