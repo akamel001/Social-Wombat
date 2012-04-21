@@ -93,9 +93,6 @@ public final class SystemLogin implements Serializable {
 			return null;
 		AES aes = new AES(password, system_admin_init_vector, system_admin_salt);
 		
-		if (aes==null){
-			return null;
-		}
 		byte[] test_password_enc = aes.encrypt(password);
 		if (test_password_enc==null)
 			return null;
@@ -181,6 +178,14 @@ public final class SystemLogin implements Serializable {
 			// System admin password
 			systemStartup = new SystemLogin();
 			char[] systemAdminPassword = "system admin".toCharArray();
+			
+//			System.arraycopy(salt, 0, temp_pass, 0, salt.length);
+//			System.arraycopy(pass, 0, temp_pass, salt.length, pass.length);
+//
+//			//(c) Create hash, then zero-out temp_pass
+//			String hashed_pass = CheckSum.getSHA_1Checksum(temp_pass);
+//			Arrays.fill(temp_pass, '0');
+			
 			AES systemAdminAES = new AES(systemAdminPassword);
 			systemStartup.system_admin_enc = systemAdminAES.encrypt(systemAdminPassword);
 			systemStartup.system_admin_init_vector = systemAdminAES.getIv();
@@ -193,10 +198,7 @@ public final class SystemLogin implements Serializable {
 			systemStartup.hub_init_vector = hubAES.getIv();
 			systemStartup.hub_salt = hubAES.getSalt();
 			
-			System.out.println("HUB PASS: " + Arrays.toString(hubPassword));
-			System.out.println("HUB KEY: " + hubAES.getSecretKey());
-			System.out.println("HUB IV: "+ Arrays.toString(systemStartup.hub_init_vector));
-			System.out.println("HUB SALT: " + Arrays.toString(systemStartup.hub_salt));
+			Arrays.fill(hubPassword, '0');
 			
 			writeToDisk(systemStartup, "system_startup");			
 		} else {
