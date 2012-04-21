@@ -1,25 +1,4 @@
-INSTRUCTION
-
-Navigate to the Social-Wombat directory and compile the source code 
-
-    $ javac *.java
-    
-Simulating startup of a server 
-
-    $ java StartServers
-
-Starting the system admin interface:
-
-    $ java SysAdminInterface
-`default startup password for a System Administrator is "system admin". They are encouraged to change it.`
-
-*After the system administrator logs in he can start the hub by selecting to do so from the interface. Once the hub has been started, servers can be added by ip which is obtained from StartServers. The administrator can also enroll users by username and a password.*  
-
-Starting a client and logging in: 
-
-    $ java UserInterface
-
-
+***NAMES AND DESCRIPTIONS OF FILES***
 DATA STORAGE CLASSES  
  
 * [ClassData.java] - Used on the Hub to store permissions for a class
@@ -52,14 +31,14 @@ for the SystemUserInterface.
 
 * [UserInterfaceHelper.java] - Helper class for the UserInterface.
 
-###SECURITY CLASSES
+SECURITY CLASSES
 
 * [AES.java] - A class the handles AES encryption and decryption
 
 * [CheckSum.java] - Used to calculate a checksum for an object
 
 
-###CLIENT - HUB - SERVER CLASSES 
+CLIENT - HUB - SERVER CLASSES 
 
 * [Client.java] - Background functions class, does communication with hub.
 
@@ -79,5 +58,28 @@ to HubSocketHandler.
 through sockets.
 
 * [StartServers.java] - Simulation class to act as the system admin starting up a remote server.
+
+***INSTRUCTIONS***
+
+Navigate to the Social-Wombat directory and compile the source code 
+
+    $ javac *.java
+    
+Simulating startup of a server 
+
+    $ java StartServers
+
+Starting the system admin interface:
+
+    $ java SysAdminInterface
+`default startup password for a System Administrator is "system admin". They are encouraged to change it.`
+
+*After the system administrator logs in he can start the hub by selecting to do so from the interface. Once the hub has been started, servers can be added by ip which is obtained from StartServers. The administrator can also enroll users by username and a password.*  
+
+Starting a client and logging in: 
+
+    $ java UserInterface
+    
+***TUTORIAL***
 
 
