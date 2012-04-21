@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import security.AES;
-import security.CheckSum;
+import security.SecureUtils;
 import util.StringLegalityChecker;
 
 
@@ -163,7 +163,7 @@ public final class UserList implements Serializable{
 				System.arraycopy(pass, 0, temp_pass, salt.length, pass.length);
 				
 				//(c) Create hash, then zero-out temp_pass
-				String hashed_pass = CheckSum.getSHA_1Checksum(temp_pass);
+				String hashed_pass = SecureUtils.getSHA_1Hash(temp_pass);
 				Arrays.fill(temp_pass, '0');
 				
 				// (d) reset pass
@@ -385,7 +385,7 @@ public final class UserList implements Serializable{
 			System.arraycopy(pass, 0, temp_pass, salt.length, pass.length);
 			
 			// Set hashed_password, and zero=out temp_pass
-			hashed_password = CheckSum.getSHA_1Checksum(temp_pass);
+			hashed_password = SecureUtils.getSHA_1Hash(temp_pass);
 			Arrays.fill(temp_pass, '0');
 			
 			last_login_time = null;
