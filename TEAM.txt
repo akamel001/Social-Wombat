@@ -1,19 +1,16 @@
-Chris Ducharme (cgd39)
-Tasks:
+Yilok Wong		-- ylw3
+Julia Tazin 	-- jmt272
+Abdel Kamel		-- ak883
+Chris Ducharme	-- cgd39
 
-Hours Required:
 
-Abdelrahman Kamel (ak883)
-Tasks:
 
-Hours Required:
+Chris Ducharme -- Authentication. Cleanup. Bug fixes from last phase. Designed and implemented database backend. Designed communication between Client, Hub, and Server. Unit tested data structures. Tested communication and storage between Server, Hub, and data structures. Did manual testing on the overall system as a whole. Tracked down bugs and helped resolve them. (35 hrs)
 
-Julia Tazin (jmt272)
-Tasks:
+Abdelrahman Kamel -- Authentication. Cleanup. Bug fixes from last phase. Reorganization of files. Designed and implemented client-side socket communication between the Client, ClientSocketHandler and the Hub. Designed and implemented persistent storage system. Tested User Interface, Client, and ClientSocketHandler. Did manual testing on the overall system as a whole. Tracked down bugs and helped resolve them. (35 hrs)
 
-Hours Required:
+Julia Tazin -- Authentication. Cleanup. Bug fixes from last phase. Designed and implemented user interface as well as the client interface. Tested User Interface, Client, and ClientSocketHandler code. Wrote test cases for the user interface helper functions. Did manual testing on the user interface and the overall system as a whole. Tracked down bugs and helped resolve them. (30 hrs)
 
-Yilok Wong (ylw3)
-Tasks:
+Yilok Wong -- Authentication. Cleanup. Bug fixes from last phase. Designed and implemented Hub, Server, HubSocketHandler and ServerSocketHandler. Designed communication between Client, Hub, and Server. Designed and implemented persistent storage system. Tested Client to Hub to Server to FileSystem code. Did manual testing on the overall system as a whole. Tracked down bugs and helped resolve them. (30 hrs)
 
-Hours Required:
+
