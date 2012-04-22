@@ -318,6 +318,7 @@ final class HubSocketHandler extends Thread{
 			//read the length of the byte [] first
 			try {
 				length = ois.readInt();
+				if (DEBUG) System.out.println("Length of message we're decrypting: " + length);
 				
 			} catch (EOFException e){
 				System.out.println("Attempting to read from a closed socket.");
@@ -335,8 +336,8 @@ final class HubSocketHandler extends Thread{
 			//read encrypted message
 			try {
 				
-				ois.read(encryptedMsg, 0, length);
-				//ois.readFully(encryptedMsg);
+				//ois.read(encryptedMsg, 0, length);
+				ois.readFully(encryptedMsg);
 			} catch (EOFException e){
 				System.out.println("Unable to read from socket. Socket possibly closed.");
 				return false;

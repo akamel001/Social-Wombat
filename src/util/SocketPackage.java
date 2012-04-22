@@ -165,6 +165,7 @@ public final class SocketPackage {
 	public void sendEncrypted(byte[] msg){
 		try {
 			//write an int of the byte[] length first
+			if (DEBUG) System.out.println("Write out a msg of length: " + msg.length);
 			oos.writeInt(msg.length);
 			oos.flush();
 			oos.reset();
@@ -189,11 +190,13 @@ public final class SocketPackage {
 		int length = 0;
 		try {
 			length = ois.readInt();
+			if (DEBUG) System.out.println("Received a msg of length: " + length);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		byte[] encryptedMsg = new byte[length];
 		try {
+			if (DEBUG) System.out.println("Bytes available to read w/o blocking: " + ois.available());
 			ois.readFully(encryptedMsg);
 		} catch (IOException e) {
 			e.printStackTrace();
