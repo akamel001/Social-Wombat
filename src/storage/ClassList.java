@@ -98,9 +98,9 @@ public final class ClassList implements Serializable{
 			return -1;
 		if (per<-1 || per>2)
 			return -1;
-		
+
 		synchronized(classList){
-			
+
 			// (a): get class
 			ClassData temp_class = this.getAndDecryptClass(class_name, encryptor);
 			if (temp_class==null)
@@ -108,11 +108,11 @@ public final class ClassList implements Serializable{
 
 			// (b): set user permissions
 			if (temp_class.setPermission(user, per)==-1)
-				return -1;;
+				return -1;
 
 			// (c): reencrypt and re-add class
 			return this.encryptAndAddClass(temp_class, encryptor);
-	}
+		}
 	}
 
 	/**
@@ -124,7 +124,7 @@ public final class ClassList implements Serializable{
 	public String getInstructor(String class_name, AES encryptor){
 		if (class_name==null || encryptor==null)
 			return null;
-		
+
 		// Get class
 		ClassData temp_class = this.getAndDecryptClass(class_name, encryptor);
 		if (temp_class==null)
@@ -145,7 +145,7 @@ public final class ClassList implements Serializable{
 	protected Map<String, Integer> getClassAll(String class_name, AES encryptor){
 		if (class_name == null || encryptor==null)
 			return null;
-		
+
 		// Get class
 		ClassData temp_class = this.getAndDecryptClass(class_name, encryptor);
 		if (temp_class==null)
@@ -165,7 +165,7 @@ public final class ClassList implements Serializable{
 	public Map<String, Integer> getClassEnrolled(String class_name, AES encryptor){
 		if (class_name == null || encryptor==null)
 			return null;
-		
+
 		// Get class
 		ClassData temp_class = this.getAndDecryptClass(class_name, encryptor);
 		if (temp_class==null)
@@ -184,7 +184,7 @@ public final class ClassList implements Serializable{
 	public List<String> getClassPending(String class_name, AES encryptor){
 		if (class_name == null || encryptor==null)
 			return null;
-		
+
 		// Get class
 		ClassData temp_class = this.getAndDecryptClass(class_name, encryptor);
 		if (temp_class==null)
@@ -205,7 +205,7 @@ public final class ClassList implements Serializable{
 		// Sanity check
 		if(userName==null || encryptor==null)
 			return null;
-		
+
 		Map<String, Integer> out = Collections.synchronizedMap(new TreeMap<String, Integer>());
 		boolean found = false;
 		Set<String> s = classList.keySet();
@@ -285,7 +285,7 @@ public final class ClassList implements Serializable{
 		//sanity check
 		if(userName==null || encryptor==null)
 			return null;
-		
+
 		List<String> classesToBeDeleted = Collections.synchronizedList(new ArrayList<String>());
 		Set<String> s = classList.keySet();
 		synchronized(classList) {  
@@ -298,14 +298,14 @@ public final class ClassList implements Serializable{
 				if (current_class==null){
 					//noop
 				}
-				
+
 				// (b): if the user is the instructor, delete the classroom and
 				//		add the classroom to the list of classes to be deleted
 				else if (current_class.getInstructor().equals(userName)){
 					classList.remove(class_name);
 					classesToBeDeleted.add(class_name);
 				}
-				
+
 				// if the user is not the instructor, call removeUser on the class
 				else{
 					current_class.removeUser(userName);
@@ -327,24 +327,21 @@ public final class ClassList implements Serializable{
 		// sanity check
 		if (c==null || encryptor==null)
 			return -1;
-		
+
 		synchronized(classList){
-			if (classList.containsKey(c.getClassName()))
-				return -1;
-			else{
-				// (a) encrypt + add class
-				try{
-					byte[] cipher = encryptor.encrypt((Object)c);
-					if(cipher!=null){
-						classList.put(c.getClassName(), cipher);
-						return 1;
-					}
-					else 
-						return -1;
-				}catch(ClassCastException e){ 
-					return -1;
+			// (a) encrypt + add class
+			try{
+				byte[] cipher = encryptor.encrypt((Object)c);
+				if(cipher!=null){
+					classList.put(c.getClassName(), cipher);
+					return 1;
 				}
+				else 
+					return -1;
+			}catch(ClassCastException e){ 
+				return -1;
 			}
+
 		}	
 	}
 
