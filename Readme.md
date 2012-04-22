@@ -103,7 +103,7 @@ through sockets.
     
 5. a) Start a client and log in: 
 
-    $ ./startUserInterface
+	$ ./startUserInterface
    
     b) Log in with one of the username/password combos from step 4. f).
    
