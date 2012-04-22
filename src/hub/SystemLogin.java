@@ -77,7 +77,7 @@ public final class SystemLogin implements Serializable {
 				system_admin_hashed_pw = SecureUtils.getSHA_1Hash(temp_pass);
 				Arrays.fill(temp_pass, '0');
 				
-				AES aesNew = new AES(system_admin_hashed_pw.toCharArray());
+				AES aesNew = new AES(newPassword);
 				system_admin_init_vector = aesNew.getIv();
 				system_admin_salt = aesNew.getSalt();
 				
@@ -202,13 +202,13 @@ public final class SystemLogin implements Serializable {
 			char[] temp_pass = new char[salt.length + systemAdminPassword.length];
 			System.arraycopy(salt, 0, temp_pass, 0, salt.length);
 			System.arraycopy(systemAdminPassword, 0, temp_pass, salt.length, systemAdminPassword.length);
-			Arrays.fill(systemAdminPassword, '0');
 
-			// Create hash, then zero-out temp_pass
+			// Create hash of system, then zero-out temp_pass
 			systemStartup.system_admin_hashed_pw = SecureUtils.getSHA_1Hash(temp_pass);
 			Arrays.fill(temp_pass, '0');		
 			
-			AES systemAdminAES = new AES(systemStartup.system_admin_hashed_pw.toCharArray());
+			// Encrypt Hub key with sysadmin pass
+			AES systemAdminAES = new AES(systemAdminPassword);
 			systemStartup.system_admin_init_vector = systemAdminAES.getIv();
 			systemStartup.system_admin_salt = systemAdminAES.getSalt();
 
@@ -220,6 +220,7 @@ public final class SystemLogin implements Serializable {
 			systemStartup.hub_salt = hubAES.getSalt();
 			
 			Arrays.fill(hubPassword, '0');
+			Arrays.fill(systemAdminPassword, '0');
 			
 			writeToDisk(systemStartup, "system_startup");			
 		} else {
