@@ -193,7 +193,7 @@ public final class Server extends Thread{
 					//Spawn new ServerSocketHandler thread, we assume that the
 					//hub has directed this message to the correct Server
 					ServerSocketHandler newRequest = new ServerSocketHandler(hub,classDB,hash);
-					System.out.println("New socket handler created");
+					System.out.println("Connected to a hub");
 					//Starts running function
 					newRequest.run(); 
 				} 

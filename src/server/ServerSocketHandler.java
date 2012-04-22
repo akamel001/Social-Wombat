@@ -311,11 +311,11 @@ final class ServerSocketHandler {
 					// Client -> Hub -> Server
 					case Client_CreateClassroom:
 						
-						System.out.println(msg.getUserName()+ "wants to add: " + msg.getClassroom_ID());
+						if (DEBUG) System.out.println(msg.getUserName()+ "wants to add: " + msg.getClassroom_ID());
 						
 						returnCode = classDB.addClassRoom(msg.getClassroom_ID(), serverAESObject);
 						if (returnCode == 1){
-							System.out.println(msg.getClassroom_ID() + " added.");
+							if (DEBUG) System.out.println(msg.getClassroom_ID() + " added.");
 						}
 						msg.setCode(returnCode);
 						returnAndEncryptMessage(msg);
@@ -328,7 +328,7 @@ final class ServerSocketHandler {
 					 * Array[1] = Post_body 	
 					 */
 					case Client_CreateThread:
-						System.out.println(msg.getUserName()+ "wants to create a thread");
+						if (DEBUG) System.out.println(msg.getUserName()+ "wants to create a thread");
 						@SuppressWarnings("unchecked")
 						ArrayList<String> post = (ArrayList<String>) msg.getBody();
 						String postName = (String)post.get(0);
@@ -342,7 +342,7 @@ final class ServerSocketHandler {
 					 * [0] and [1] respectively in the msg.body as an ArrayList.
 					 */
 					case Client_CreateComment:
-						System.out.println(msg.getUserName()+ "posting a comment");
+						if (DEBUG) System.out.println(msg.getUserName()+ "posting a comment");
 						@SuppressWarnings("unchecked")
 						ArrayList<String> com = (ArrayList<String>)msg.getBody();
 						int postId = Integer.parseInt(com.get(0));
@@ -352,7 +352,7 @@ final class ServerSocketHandler {
 						returnAndEncryptMessage(msg);
 						break;
 					case Client_GoToClassroom:
-						System.out.println(msg.getUserName()+ "wants to enter: " + msg.getClassroom_ID());
+						if (DEBUG) System.out.println(msg.getUserName()+ "wants to enter: " + msg.getClassroom_ID());
 						Map<Integer, String> threadList = classDB.getThreadList(msg.getClassroom_ID(), serverAESObject);
 						if (threadList == null){
 							//return failure
@@ -373,7 +373,7 @@ final class ServerSocketHandler {
 						}
 						//Thread id embedded in body
 						int threadID = (Integer)msg.getBody();
-						System.out.println(msg.getUserName() + " wants to view thread #: " + threadID);
+						if (DEBUG) System.out.println(msg.getUserName() + " wants to view thread #: " + threadID);
 						
 						Map<Integer, String> thread = classDB.getThread(msg.getClassroom_ID(), threadID, serverAESObject);
 						if (thread == null){
@@ -387,14 +387,14 @@ final class ServerSocketHandler {
 						returnAndEncryptMessage(msg);
 						break;
 					case Client_DeleteClassroom:
-						System.out.println(msg.getUserName()+ "wants to delete: " + msg.getClassroom_ID());
+						if (DEBUG) System.out.println(msg.getUserName()+ "wants to delete: " + msg.getClassroom_ID());
 						returnCode = classDB.removeClassRoom(msg.getClassroom_ID());
-						System.out.println("Return code: " + returnCode);
+						if (DEBUG) System.out.println("Return code: " + returnCode);
 						msg.setCode(returnCode);
 						returnAndEncryptMessage(msg);
 						break;
 					case Client_DeleteThread:
-						System.out.println(msg.getUserName()+ "wants to delete a thread.");
+						if (DEBUG) System.out.println(msg.getUserName()+ "wants to delete a thread.");
 						int p = (Integer)msg.getBody();
 						returnCode = classDB.removePost(msg.getClassroom_ID(), p, serverAESObject);
 						msg.setCode(returnCode);
@@ -405,7 +405,7 @@ final class ServerSocketHandler {
 					 * msg.body() as an ArrayList<Integer>
 					 */
 					case Client_DeleteComment:
-						System.out.println(msg.getUserName() + "wants to delete a comment.");
+						if (DEBUG) System.out.println(msg.getUserName() + "wants to delete a comment.");
 						@SuppressWarnings("unchecked")
 						ArrayList<Integer> commentParams = (ArrayList<Integer>)msg.getBody();
 						int postID = commentParams.get(0);
