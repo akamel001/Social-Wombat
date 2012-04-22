@@ -18,7 +18,7 @@ import util.SocketPackage;
 public final class Client {
 
 	private static final boolean DEBUG = false;
-	private static final boolean DEBUG_OUTPUT = true;
+	private static final boolean DEBUG_OUTPUT = false;
 
 	private static final String hub_addr = "127.0.0.1";
 	private static final int HUB_PORT = 4444;
