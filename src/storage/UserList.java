@@ -41,6 +41,7 @@ public final class UserList implements Serializable{
 	 * @param encryptor
 	 * @return True if the user password combo exist.
 	 */	
+	@SuppressWarnings("unused")
 	private boolean validateUser(String user_name, String test_hash, AES encryptor){
 		if (user_name==null || test_hash==null){
 			return false;

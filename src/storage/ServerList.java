@@ -25,7 +25,7 @@ public final class ServerList implements Serializable{
 	private static final long serialVersionUID = -5018052157599076338L;
 	private Map<Integer, ServerData> serverList;
 	private int nextId; 
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 	
 	/**
 	 * Creates a list of servers. First server created has an id of 1.

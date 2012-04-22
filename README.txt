@@ -19,6 +19,8 @@ DATA STORAGE CLASSES
 
 * [UserList.java] - Stores a list of users. Contains access methods. 
 
+* [DataObject.java] - Wrapper around the List classes so that checksumming can be done.
+
 
 INTERFACE CLASSES
 
@@ -33,9 +35,11 @@ for the SystemUserInterface.
 
 SECURITY CLASSES
 
-* [AES.java] - A class the handles AES encryption and decryption
+* [AES.java] - A class the handles AES encryption and decryption.
 
-* [CheckSum.java] - Used to calculate a checksum for an object
+* [SecureUtils.java] - Used for hashing, checksuming, generating salts, as well as validating passwords.
+
+* [StringLegalityChecker.java] - Checks that password/username inputs follow the rules.
 
 
 CLIENT - HUB - SERVER CLASSES 

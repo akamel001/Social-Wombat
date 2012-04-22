@@ -31,7 +31,7 @@ final class HubSocketHandler extends Thread{
 	//private static int CLIENT_SOCKET = 4444;
 	private static int SERVER_SOCKET = 5050;
 	
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 	
 	AES hubAESObject = null;
 	AES clientAESObject = null;

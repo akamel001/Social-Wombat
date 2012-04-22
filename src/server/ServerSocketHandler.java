@@ -6,7 +6,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Map;
 
@@ -27,7 +26,7 @@ final class ServerSocketHandler {
 	String hash;
 	Long currentNonce = null;
 	
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 
 	/*
 	 * A handler thread that is spawned for each message sent to server
