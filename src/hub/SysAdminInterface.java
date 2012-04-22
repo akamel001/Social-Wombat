@@ -43,7 +43,7 @@ public final class SysAdminInterface {
 															UserInterfaceHelper.addFormattingAlignLeft("2. Log out.");
 	private static final String sREGISTRATION_INSTRUCTIONS = UserInterfaceHelper.addFormattingAlignLeft("Specify a username and password in the prompt below.");
 	private static final String sADD_SERVER_INSTRUCTIONS = 	UserInterfaceHelper.addFormattingAlignLeft("Specify the IP address of the server you would like to add below.");
-	private static final String sCHANGE_PASSWORD_INSTRUCTIONS = UserInterfaceHelper.addFormattingAlignLeft("Specify your username and old/new passwords below.");
+	private static final String sCHANGE_PASSWORD_INSTRUCTIONS = UserInterfaceHelper.addFormattingAlignLeft("Specify your old/new passwords below.");
 	
 	private static final String sHUB_IS_RUNNING = 			UserInterfaceHelper.addFormattingAlignLeft("The hub is running.");
 	private static final String sHUB_IS_NOT_RUNNING = 		UserInterfaceHelper.addFormattingAlignLeft("The hub is not running.");
