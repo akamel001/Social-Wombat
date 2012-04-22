@@ -85,19 +85,18 @@ public final class ServerList implements Serializable{
 			
 			temp_serve_data.setPassword(encrypter.encrypt(hashed_password));
 			
-			AES encryptor = new AES(pass);
+			AES encryptor = new AES(hashed_password.toCharArray());
 			List<byte[]> out = Collections.synchronizedList(new ArrayList<byte[]>());
 			out.add(0, encryptor.getIv());
 			out.add(1, encryptor.getSalt());
-			
+	
+
 			if (DEBUG) System.out.println("NEW SERVER IV?SALT:");
 			if (DEBUG) System.out.println("    " + Arrays.toString(out.get(0)));
 			if (DEBUG) System.out.println("    " + Arrays.toString(out.get(1)));
 			
 			temp_serve_data.iv_salt = out;
-			// Zero out passed password
-			for(int j=0; j<pass.length; j++)
-				pass[j]='0';
+
 			serverList.put(nextId, temp_serve_data);
 		}
 		int out = nextId;
@@ -214,11 +213,13 @@ public final class ServerList implements Serializable{
 	 * @param encryptor
 	 * @return A char[] containing the server's password. NOTE: MUST BE ZEROED. Use Arrays.fill(pass, '0').
 	 */
-	public char[] getServerHash(int server_id, AES encryptor){
+	public String getServerHash(int server_id, AES encryptor){
+		
 		ServerData temp_server = serverList.get(server_id);
-		try{
-			return (char[])encryptor.decryptObject(temp_server.password);
+		try{			
+			return (String)encryptor.decryptObject(temp_server.password);
 		}catch(ClassCastException e){
+			e.printStackTrace();
 			return null;
 		}
 	}

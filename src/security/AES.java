@@ -162,6 +162,7 @@ public final class AES implements Serializable {
 	 */
 	public Object decryptObject(byte[] o){
 		if (o==null) {
+			System.out.println("****** AES DECRYPT-OBJECT (INPUT) IS NULL *****");
 			return null;
 		}
         try {

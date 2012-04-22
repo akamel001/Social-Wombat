@@ -173,6 +173,11 @@ public final class Hub extends Thread {
 		if (DEBUG) System.out.println("hubAESObject: " + hubAESObject.getIv());
 		
 		if (DEBUG) System.out.println("SecureUtils salt: " + Arrays.toString(SecureUtils.getSalt()));
+		String message = "hello";
+		
+		byte[] enc = hubAESObject.encrypt(message);
+		String deMessage = (String) hubAESObject.decryptObject(enc);
+		System.out.println("****deMessage: " + deMessage + "****");
 		
 		int r = serverList.addServer(server, SERVER_SOCKET, SecureUtils.getSalt(),password,hubAESObject);
 		if (r == -1){
@@ -242,12 +247,17 @@ public final class Hub extends Thread {
 				if(!tempSocket.isConnected()){
 					//regenerate serverAES object
 					//grab pass
-					char[] serverHash = serverList.getServerHash(i, hubAESObject);
+					String serverHash = serverList.getServerHash(i, hubAESObject);
+					if(serverHash == null){
+						
+						System.out.println("(HUB) serverHash is null!!\n System exiting");
+						System.exit(-1);
+					}
+					
 					//grab iv(0), salt(1)
 					List<byte[]> serveIvSalt = serverList.getIvSalt(i, hubAESObject);
-					AES servAES = new AES(serverHash,serveIvSalt.get(0),serveIvSalt.get(1));
-					//zero out password
-					Arrays.fill(serverHash, '0');
+					AES servAES = new AES(serverHash.toCharArray(),serveIvSalt.get(0),serveIvSalt.get(1));
+
 					if (authenticatedConnect(tempSocket, servAES)){
 						//add to connected servers
 						if (DEBUG) System.out.println("Server: " + i + " connected successfully.");
@@ -263,13 +273,12 @@ public final class Hub extends Thread {
 				if(!newSocketPackage.isConnected()){
 					
 					//regenerate serverAES object
-					//grab pass
-					char[] servPass = serverList.getServerHash(i, hubAESObject);
+					//grab hash
+					String servHash = serverList.getServerHash(i, hubAESObject);
 					//grab iv(0), salt(1)
 					List<byte[]> serveIvSalt = serverList.getIvSalt(i, hubAESObject);
-					AES servAES = new AES(servPass,serveIvSalt.get(0),serveIvSalt.get(1));
-					//zero out password
-					Arrays.fill(servPass, '0');
+					AES servAES = new AES(servHash.toCharArray(),serveIvSalt.get(0),serveIvSalt.get(1));
+
 					if (authenticatedConnect(newSocketPackage, servAES)){
 						//add to connected servers
 						if (DEBUG) System.out.println("Server: " + i + " connected successfully.");

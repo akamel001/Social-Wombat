@@ -454,11 +454,10 @@ final class HubSocketHandler extends Thread{
 		byte[] iv = ivsalt.get(0);
 		//get salt
 		byte[] salt = ivsalt.get(1);
-		//get pass
-		char[] pass = serverList.getServerHash(serverID, hubAESObject);
-		AES aesObj = new AES(pass,iv,salt);
-		//clear pass
-		Arrays.fill(pass, '0');
+		//get hash
+		String hash = serverList.getServerHash(serverID, hubAESObject);
+		AES aesObj = new AES(hash.toCharArray(),iv,salt);
+
 		byte[] eMsg = aesObj.encrypt(msg);
 		
 		//Only one user can be communicating with a server at one time

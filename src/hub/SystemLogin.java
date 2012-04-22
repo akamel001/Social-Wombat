@@ -45,6 +45,10 @@ public final class SystemLogin implements Serializable {
 		if (aes != null) {			
 			try {
 				SecretKey hub_key = (SecretKey)aes.decryptObject(hub_key_enc);
+				if(hub_key == null){
+					System.out.println("***** HUB KEY IS NULL! ***** \n Sysetm exiting");
+					System.exit(-1);
+				}
 				return new AES(hub_key, hub_init_vector, hub_salt);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -71,7 +75,7 @@ public final class SystemLogin implements Serializable {
 				char[] temp_pass = new char[salt.length + newPassword.length];
 				System.arraycopy(salt, 0, temp_pass, 0, salt.length);
 				System.arraycopy(newPassword, 0, temp_pass, salt.length, newPassword.length);
-				Arrays.fill(newPassword, '0');
+				//Arrays.fill(newPassword, '0');
 
 				// Create hash, then zero-out temp_pass
 				system_admin_hashed_pw = SecureUtils.getSHA_1Hash(temp_pass);
@@ -109,7 +113,7 @@ public final class SystemLogin implements Serializable {
 		char[] temp_pass = new char[salt.length + password.length];
 		System.arraycopy(salt, 0, temp_pass, 0, salt.length);
 		System.arraycopy(password, 0, temp_pass, salt.length, password.length);
-		Arrays.fill(password, '0');
+		//Arrays.fill(password, '0');
 
 		// Create hash, then zero-out temp_pass
 		String tempHashedPassword = SecureUtils.getSHA_1Hash(temp_pass);
