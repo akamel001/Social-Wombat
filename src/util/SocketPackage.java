@@ -134,7 +134,7 @@ public final class SocketPackage {
 			oos.flush();
 			oos.reset();
 		} catch (IOException e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 			System.out.println("System send failed");
 			System.exit(-1);
 		}
@@ -173,7 +173,7 @@ public final class SocketPackage {
 			oos.flush();
 			oos.reset();
 		} catch (IOException e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 			System.out.println("System send encrypted failed");
 			System.exit(-1);
 		}

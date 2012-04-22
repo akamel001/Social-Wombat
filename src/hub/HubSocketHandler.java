@@ -438,8 +438,9 @@ final class HubSocketHandler extends Thread{
 		if(DEBUG) System.out.println("Message forwarded to: " + getServer(msg));
 		int serverID = getServer(msg);
 		forwardSocketPackage = serverPackages.get(serverID);
-		
+		if (DEBUG) System.out.println("We got a package name of: " + forwardSocketPackage.getSocketName());
 		Long forwardNonce = forwardSocketPackage.getNonce();
+		if (DEBUG) System.out.println("forwardNonce: " + forwardNonce);
 		msg.setNonce(forwardNonce+1);
 		forwardSocketPackage.setNonce(forwardNonce+1);
 		

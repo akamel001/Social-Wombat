@@ -318,6 +318,7 @@ public final class Hub extends Thread {
 		body.add(0, Calendar.getInstance().getTimeInMillis());
 		//set nonce
 		long myNonce = new SecureRandom().nextLong();
+		socketPack.setNonce(myNonce);
 		body.add(1,myNonce);
 		initial.setChecksum(SecureUtils.getMD5Hash(body));
 		//set and encrypt body

@@ -10,6 +10,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 
 import security.SecureUtils;
 import storage.ClassDB;
@@ -34,8 +35,17 @@ public final class Server extends Thread{
 	// Constructor
 	public Server(String name, String password) {
 		// Constructor
+		char[] p = password.toCharArray();
 		classDBName = name + ".classDB";
-		hash = SecureUtils.getSHA_1Hash(password);	//needs to wait for an iv, and salt
+		char[] salt = SecureUtils.getSalt();
+		char[] temp_pass = new char[salt.length + p.length];
+		System.arraycopy(salt, 0, temp_pass, 0, salt.length);
+		System.arraycopy(p, 0, temp_pass, salt.length, p.length);
+		
+		hash = SecureUtils.getSHA_1Hash(temp_pass);	//needs to wait for an iv, and salt
+		Arrays.fill(p, '0');
+		Arrays.fill(temp_pass, '0');
+		
 		//get ip
 		InetAddress thisIp = null;
 		try {
