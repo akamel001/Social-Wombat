@@ -30,7 +30,11 @@ public final class SecureUtils implements Serializable{
 	public static String getMD5Hash(Object o){
 		return byteToHexString(getHash_(o, "MD5"));
 	}
-
+	
+	public static String getSHA_1Hash(Object o){
+		return byteToHexString(getHash_(o, "SHA-256"));
+	}
+	
 	public static char[] getSalt(){
 		return (new String(salt)).toCharArray();
 	}
