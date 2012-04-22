@@ -174,6 +174,10 @@ public final class Hub extends Thread {
 		//clear password
 		Arrays.fill(password,'0');
 		
+		if (DEBUG) System.out.println("hubAESObject: " + hubAESObject.getIv());
+		
+		if (DEBUG) System.out.println("SecureUtils salt: " + Arrays.toString(SecureUtils.getSalt()));
+		
 		int r = serverList.addServer(server, SERVER_SOCKET, SecureUtils.getSalt(),hash.toCharArray(),hubAESObject);
 		if (r == -1){
 			if(DEBUG) System.out.println("Adding server " + server + "failed. It might already exist in serverList."); 
