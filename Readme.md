@@ -1,3 +1,64 @@
+###INSTRUCTIONS
+
+1. Navigate to the Social-Wombat directory and compile the source code:
+
+		$ javac *.java
+    
+2. Switch into the scripts directory:
+
+		$ cd scripts
+    
+3. Simulate the startup of a server:
+
+		$ ./startServer
+    
+    `Remember the IP(s) listed here.`
+
+4. a) Start the system admin interface:
+
+		$ ./startSysAdminInterface
+    
+   b) The default startup password for a System Administrator is "system admin". The System Administrator is encouraged to change it. 
+   Type in "system admin" and press "Enter"
+   
+   c) Start the hub.
+   
+		Select option "1" ("Start the hub. ") and press "Enter"
+   
+   d) Add a server(s)
+   
+		Select option "4" ("Add a server.") and press "Enter"
+		Specify the IP address(es) from step 3.
+   
+   e) Connect to all added servers.
+   
+		Select option "5" ("Connect to all servers.") and press "Enter"
+   
+   f) Register a user(s).
+   
+		Select option "2" ("Register a user in the system.") and press "Enter".
+	`Follow the on screen instructions.`
+    
+5. a) Start a client and log in: 
+
+		$ ./startUserInterface
+   
+    b) Log in with one of the username/password combos from step 4. f).
+   
+**Note: To completely wipe the system run ./cleanup in the scripts directory.**
+    
+###TUTORIAL
+Follow the onscreen directions to:
+
+	* Create a classroom.
+	* Request enrollment in a particular classroom.
+	* Confirm or deny enrollment requests.
+	* Promote students to teaching assistant status or demote teaching assistants to student status.
+	* Create threads within a classroom.
+	* Comment on threads.
+	* Delete your classroom.
+	* Remove yourself from enrolled user for a particular classroom.
+
 ###NAMES AND DESCRIPTIONS OF FILES
 
 DATA STORAGE CLASSES  
@@ -59,67 +120,4 @@ to HubSocketHandler.
 through sockets.
 
 * [StartServers.java] - Simulation class to act as the system admin starting up a remote server.
-
-###INSTRUCTIONS
-
-1. Navigate to the Social-Wombat directory and compile the source code:
-
-    $ javac *.java
-    
-2. Switch into the scripts directory:
-
-    $ cd scripts
-    
-3. Simulate the startup of a server:
-
-    $ ./startServer
-    
-    `Remember the IP(s) listed here.`
-
-4. a) Start the system admin interface:
-
-    $ ./startSysAdminInterface
-    
-   b) The default startup password for a System Administrator is "system admin". The System Administrator is encouraged to change it. 
-   Type in "system admin" and press "Enter"
-   
-   c) Start the hub.
-   
-    Select option "1" ("Start the hub. ") and press "Enter"
-   
-   d) Add a server(s)
-   
-    Select option "4" ("Add a server.") and press "Enter"
-    Specify the IP address(es) from step 3.
-   
-   e) Connect to all added servers.
-   
-    Select option "5" ("Connect to all servers.") and press "Enter"
-   
-   f) Register a user(s).
-   
-    Select option "2" ("Register a user in the system.") and press "Enter".
-    Follow the on screen instructions.
-    
-5. a) Start a client and log in: 
-
-	$ ./startUserInterface
-   
-    b) Log in with one of the username/password combos from step 4. f).
-   
-**Note: To completely wipe the system run ./cleanup in the scripts directory.**
-    
-###TUTORIAL
-Follow the onscreen directions to:
-
-	* Create a classroom.
-	* Request enrollment in a particular classroom.
-	* Confirm or deny enrollment requests.
-	* Promote students to teaching assistant status or demote teaching assistants to student status.
-	* Create threads within a classroom.
-	* Comment on threads.
-	* Delete your classroom.
-	* Remove yourself from enrolled user for a particular classroom.
-
-
 
