@@ -169,16 +169,12 @@ public final class Hub extends Thread {
 		}
 		//Specifically written for demo to allow a startup script
 		//In the real world the servers would have to be started up manually
-		String hash = SecureUtils.getSHA_1Hash(password);
-		
-		//clear password
-		Arrays.fill(password,'0');
 		
 		if (DEBUG) System.out.println("hubAESObject: " + hubAESObject.getIv());
 		
 		if (DEBUG) System.out.println("SecureUtils salt: " + Arrays.toString(SecureUtils.getSalt()));
 		
-		int r = serverList.addServer(server, SERVER_SOCKET, SecureUtils.getSalt(),hash.toCharArray(),hubAESObject);
+		int r = serverList.addServer(server, SERVER_SOCKET, SecureUtils.getSalt(),password,hubAESObject);
 		if (r == -1){
 			if(DEBUG) System.out.println("Adding server " + server + "failed. It might already exist in serverList."); 
 			return r;
