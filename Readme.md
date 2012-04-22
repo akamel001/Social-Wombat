@@ -1,4 +1,5 @@
-***NAMES AND DESCRIPTIONS OF FILES***
+###NAMES AND DESCRIPTIONS OF FILES
+
 DATA STORAGE CLASSES  
  
 * [ClassData.java] - Used on the Hub to store permissions for a class
@@ -110,7 +111,8 @@ through sockets.
     
 ###TUTORIAL
 Follow the onscreen directions to:
-    * Create a classroom.
+
+	* Create a classroom.
 	* Request enrollment in a particular classroom.
 	* Confirm or deny enrollment requests.
 	* Promote students to teaching assistant status or demote teaching assistants to student status.
