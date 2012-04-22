@@ -25,7 +25,7 @@ public final class ServerList implements Serializable{
 	private static final long serialVersionUID = -5018052157599076338L;
 	private Map<Integer, ServerData> serverList;
 	private int nextId; 
-	private static final boolean DEBUG = false;
+	private static final boolean DEBUG = true;
 	
 	/**
 	 * Creates a list of servers. First server created has an id of 1.
@@ -48,7 +48,7 @@ public final class ServerList implements Serializable{
 	 * @param encrypter An AES object used to encrypt the password.
 	 * @return Returns the server id or -1 if the ip/port combination already exists in the list.
 	 */
-	public int addServer(InetAddress ip, int port, char[] salt,char[] pass, AES encrypter){
+	public int addServer(InetAddress ip, int port, char[] salt,char[] pass, AES encrypter){		
 		if(ip==null || port<0 || port>49150 || pass==null || encrypter==null)
 			return -1;
 		
@@ -68,6 +68,9 @@ public final class ServerList implements Serializable{
 			temp_serve_data.setAddress(ip);
 			temp_serve_data.setPort(port);
 			
+			
+			if (DEBUG) System.out.println("salt: " + Arrays.toString(salt) + " pass: " + Arrays.toString(pass));
+			
 			// Create salt+pass concatenation to compare against stored value
 			char[] temp_pass = new char[salt.length + pass.length];
 			System.arraycopy(salt, 0, temp_pass, 0, salt.length);
@@ -77,6 +80,8 @@ public final class ServerList implements Serializable{
 			String hashed_password = SecureUtils.getSHA_1Hash(temp_pass);
 			Arrays.fill(pass,'0');
 			Arrays.fill(temp_pass, '0');
+			
+			if (DEBUG) System.out.println("Hashed pass: " + hashed_password);
 			
 			temp_serve_data.setPassword(encrypter.encrypt(hashed_password));
 			
