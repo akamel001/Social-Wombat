@@ -242,6 +242,7 @@ public final class Hub extends Thread {
 				SocketPackage tempSocket = serverPackages.get(i);
 				if (tempSocket.isConnected()) {
 					System.out.println("Server: " + i + " is connected");
+					numConnected++;
 				}
 				//make sure not already connected
 				if(!tempSocket.isConnected()){
